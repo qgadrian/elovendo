@@ -21,24 +21,23 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @RequestMapping("/")
-    public String index() {
-        return "Greetings from Spring Boot!";
-    }
+//    @RequestMapping("/")
+//    public String index() {
+//        return "Greetings from Spring Boot!";
+//    }
 
-    @RequestMapping(value="/users", method = RequestMethod.GET)
-    public List<User> getUsers()
-    {
-        Iterable<User> all = userRepository.findAll();
-        List<User> list = new ArrayList<User>();
-        for (User user: all) list.add(user);
-        return list;
-    }
+//    @RequestMapping(value="/users", method = RequestMethod.GET)
+//    public List<User> getUsers()
+//    {
+//        Iterable<User> all = userRepository.findAll();
+//        List<User> list = new ArrayList<User>();
+//        for (User user: all) list.add(user);
+//        return list;
+//    }
 
-    @RequestMapping(value="/users/{id}", method = RequestMethod.GET)
-    public User getUser( @PathVariable("id") long id )
-    {
-        return userRepository.findOne( id );
+    @RequestMapping(value="/users/{userid}", method = RequestMethod.GET)
+    public User getUser( @PathVariable("userid") long userId ) {
+        return userRepository.findOne(userId);
     }
 
     @RequestMapping(value="/users/findbylogin/{login}", method = RequestMethod.GET)

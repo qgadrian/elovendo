@@ -23,7 +23,7 @@ public class Item {
     //    private Subcategory subcategory;
     private String title;
     private String description;
-    private BigDecimal price;
+    private BigDecimal prize;
 
     @Column(columnDefinition="DATETIME", name = "startdate")
     @Temporal(TemporalType.TIMESTAMP)
@@ -32,10 +32,10 @@ public class Item {
     public Item() {
     }
 
-    public Item(String title, String description, BigDecimal price, Calendar startDate) {
+    public Item(String title, String description, BigDecimal prize, Calendar startDate) {
         this.title = title;
         this.description = description;
-        this.price = price;
+        this.prize = prize;
         this.startDate = startDate;
     }
 
@@ -59,12 +59,12 @@ public class Item {
         this.description = description;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getPrize() {
+        return prize;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setPrize(BigDecimal prize) {
+        this.prize = prize;
     }
 
     public Calendar getStartDate() {
@@ -74,4 +74,5 @@ public class Item {
     public void setStartDate(Calendar startDate) {
         this.startDate = startDate;
     }
+
 }

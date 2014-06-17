@@ -15,6 +15,6 @@ import org.springframework.stereotype.Repository;
 public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
 
     @Query("SELECT i FROM Item i WHERE i.title LIKE %:title%")
-    Item findByTitle(@Param("title") String title);
+    Iterable<Item> findByTitle(@Param("title") String title);
 
 }

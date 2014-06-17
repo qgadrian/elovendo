@@ -41,8 +41,16 @@ public class ItemRepositoryTest extends TestCase {
     @Test
     public void testFindByTitle() throws Exception {
         itemRepository.save(item);
-        Assert.assertEquals(item, itemRepository.findByTitle("tle"));
-        Assert.assertEquals("title", itemRepository.findByTitle("tle").getTitle());
+        // There is only one
+        Item i = itemRepository.findByTitle("tle").iterator().next();
+
+        Assert.assertEquals(item.getItemId(), i.getItemId());
+        Assert.assertEquals(item.getTitle(), i.getTitle());
+        Assert.assertEquals(item.getDescription(), i.getDescription());
+        Assert.assertEquals(item.getPrize(), i.getPrize());
+        Assert.assertEquals(item.getStartDate(), i.getStartDate());
+
+        Assert.assertEquals("title", itemRepository.findByTitle("tle").iterator().next().getTitle());
     }
 
 }
