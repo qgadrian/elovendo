@@ -1,10 +1,11 @@
-package es.telocompro.rest;
+package es.telocompro.rest.controller;
 
 import es.telocompro.model.item.Item;
-import es.telocompro.service.ItemService;
+import es.telocompro.model.item.category.Category;
+import es.telocompro.model.item.category.CategoryRepository;
+import es.telocompro.service.item.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.google.common.collect.Lists;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
 public class ItemController {
 
     @Autowired
-    ItemService itemService;
+    private ItemService itemService;
 
 //    @RequestMapping(value="/items", method = RequestMethod.GET)
 //    public List<Item> getAllItems() {
@@ -34,6 +35,11 @@ public class ItemController {
         return itemService.getItemById(itemId);
     }
 
+    @RequestMapping(value="/items/user/{userid}", method = RequestMethod.GET)
+    public List<Item> getItemsByUserId(@PathVariable("userid") Long userId) {
+        return itemService.getAllItemsByUserId(userId);
+    }
+
     /**
      * Search for items by title
      */
@@ -46,16 +52,17 @@ public class ItemController {
      * Add an item
      */
     @RequestMapping(value="/items/item", method=RequestMethod.POST)
-    public Item addItem( @RequestParam("title") String title, @RequestParam("description") String description,
-                         @RequestParam("prize") double prize) {
-        return itemService.addItem(title, description, prize);
+    public Item addItem( @RequestParam("userid") Long userId, @RequestParam("title") String title,
+                         @RequestParam("description") String description, @RequestParam("prize") double prize) {
+        return itemService.addItem(userId, title, description, prize);
     }
 
     /**
      * Updates an item
      */
-    @RequestMapping(value="/items/{itemid}", method=RequestMethod.PUT)
-    public Item updateItem(@PathVariable("itemid") Long itemId, @RequestParam("title") String title, @RequestParam("description") String description,
+    @RequestMapping(value="/items/{userid}/{itemid}", method=RequestMethod.PUT)
+    public Item updateItem(@PathVariable("itemid") Long userId, @PathVariable("itemid") Long itemId,
+                           @RequestParam("title") String title, @RequestParam("description") String description,
                            @RequestParam("prize") double prize) {
         return itemService.updateItem(itemId, title, description, prize);
     }

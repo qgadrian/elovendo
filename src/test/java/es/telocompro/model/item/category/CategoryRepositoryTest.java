@@ -1,7 +1,5 @@
-import es.telocompro.model.user.User;
-import es.telocompro.model.user.UserRepository;
-import es.telocompro.util.Role;
-import junit.framework.TestCase;
+package es.telocompro.model.item.category;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,24 +10,32 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
+
+/**
+ * Created by @adrian on 18/06/14.
+ * All rights reserved.
+ */
 @Configuration
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:/spring-config-test.xml")
 //@ContextConfiguration(classes = {BeanConfTest.class})
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
-public class UserRepositoryTest extends TestCase {
+public class CategoryRepositoryTest {
 
     @Autowired
-    UserRepository userRepository;
+    private CategoryRepository categoryRepository;
 
     @Test
-    public void testFindByLogin() throws Exception {
-        User user = new User("login", "password", "fn", "ln", "addr", "phone", "email",
-                Role.ROLE_USER, null);
+    public void testGetAllCategories() {
+        int numberOfCategories = 0;
+        for (Category category : categoryRepository.findAll()) {
+            numberOfCategories++;
+        }
 
-        userRepository.save(user);
+        // Total categories inserted are 10
+        Assert.assertEquals(10, numberOfCategories);
 
-        Assert.assertEquals(user, userRepository.findByLogin("login"));
     }
 }

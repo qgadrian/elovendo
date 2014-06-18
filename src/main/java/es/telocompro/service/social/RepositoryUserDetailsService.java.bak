@@ -1,0 +1,42 @@
+package es.telocompro.service.social;
+
+import es.telocompro.model.socialuser.SocialUserDetails;
+import es.telocompro.model.user.User;
+import es.telocompro.model.user.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+/**
+ * Created by @adrian on 17/06/14.
+ * All rights reserved.
+ */
+public class RepositoryUserDetailsService implements UserDetailsService {
+
+    private UserRepository repository;
+
+    @Autowired
+    public RepositoryUserDetailsService(UserRepository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = repository.findByEmail(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("No user found with username: " + username);
+        }
+
+        return SocialUserDetails.getBuilder()
+                .firstName(user.getFirstName())
+                .id(user.getUserId())
+                .lastName(user.getLastName())
+                .password(user.getPassword())
+                .role(user.getRole())
+                .socialSignInProvider(user.getSignInProvider())
+                .username(user.getEmail())
+                .build();
+    }
+}

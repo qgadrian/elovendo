@@ -1,8 +1,9 @@
-package es.telocompro.service;
+package es.telocompro.service.item;
 
 import es.telocompro.model.item.Item;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created by @adrian on 17/06/14.
@@ -14,18 +15,24 @@ public interface ItemService {
 
     /**
      * Adds an item
+     * @param userId
      * @param title
      * @param description
      * @param prize
      * @return
      */
-    public Item addItem(String title, String description, double prize);
+    public Item addItem(Long userId, String title, String description, double prize);
 
     /**
      * Get all items
      * @return
      */
     public Iterable<Item> getAllItems();
+
+    /**
+     * Get all user items
+     */
+    public List<Item> getAllItemsByUserId(Long userId);
 
     /**
      * Get an item given its id

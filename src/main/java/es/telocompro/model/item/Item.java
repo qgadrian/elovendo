@@ -1,5 +1,7 @@
 package es.telocompro.model.item;
 
+import es.telocompro.model.user.User;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -19,8 +21,12 @@ public class Item {
     @Column(name = "itemid")
     private Long itemId;
 
+    @ManyToOne(optional=false, fetch=FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private User user;
+
     //    private Category category;
-    //    private Subcategory subcategory;
+    //    private SubCategory subCategory;
     private String title;
     private String description;
     private BigDecimal prize;
@@ -32,11 +38,20 @@ public class Item {
     public Item() {
     }
 
-    public Item(String title, String description, BigDecimal prize, Calendar startDate) {
+    public Item(User user, String title, String description, BigDecimal prize, Calendar startDate) {
+        this.user = user;
         this.title = title;
         this.description = description;
         this.prize = prize;
         this.startDate = startDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Long getItemId() {

@@ -56,6 +56,9 @@
 
                 <!-- Hibernate properties -->
                 <hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
+
+                <!--Spring security-->
+                <!--<springsecurity.version>3.0.5.RELEASE</springsecurity.version>-->
             </properties>
         </profile>
     </profiles>
@@ -124,6 +127,72 @@
             <artifactId>log4j</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <!--SECURITY-->
+        <!-- Spring Security -->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.security</groupId>-->
+            <!--<artifactId>spring-security-config</artifactId>-->
+            <!--<version>3.2.4.RELEASE</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.security</groupId>-->
+            <!--<artifactId>spring-security-web</artifactId>-->
+            <!--<version>3.2.4.RELEASE</version>-->
+        <!--</dependency>-->
+
+
+        <!--<dependency>-->
+        <!--<groupId>org.springframework.security</groupId>-->
+        <!--<artifactId>spring-security-core</artifactId>-->
+        <!--<version>3.2.4.RELEASE</version>-->
+        <!--<version>${springsecurity.version}</version>-->
+        <!--<version>3.2.0.RELEASE</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.springframework.security</groupId>-->
+        <!--<artifactId>spring-security-taglibs</artifactId>-->
+        <!--<version>3.2.4.RELEASE</version>-->
+        <!--<version>${springsecurity.version}</version>-->
+        <!--<version>3.2.0.RELEASE</version>-->
+        <!--</dependency>-->
+
+        <!--SOCIAL-->
+        <!-- Spring Social -->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.social</groupId>-->
+            <!--<artifactId>spring-social-config</artifactId>-->
+            <!--<version>1.1.0.RELEASE</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.social</groupId>-->
+            <!--<artifactId>spring-social-core</artifactId>-->
+            <!--<version>1.1.0.RELEASE</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.social</groupId>-->
+            <!--<artifactId>spring-social-security</artifactId>-->
+            <!--<version>1.1.0.RELEASE</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.social</groupId>-->
+            <!--<artifactId>spring-social-web</artifactId>-->
+            <!--<version>1.1.0.RELEASE</version>-->
+        <!--</dependency>-->
+
+        <!-- Spring Social Facebook -->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.social</groupId>-->
+            <!--<artifactId>spring-social-facebook</artifactId>-->
+            <!--<version>1.1.0.RELEASE</version>-->
+        <!--</dependency>-->
+
+        <!-- Spring Social Twitter -->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.social</groupId>-->
+            <!--<artifactId>spring-social-twitter</artifactId>-->
+            <!--<version>1.1.0.RELEASE</version>-->
+        <!--</dependency>-->
 
         <!-- TEST DEPENDENCIES -->
         <!-- Ver http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-integration-testing/ -->
@@ -198,14 +267,14 @@
             </resource>
 
             <!-- Filter Jetty configuration -->
-            <resource>
-                <directory>src/main/jetty</directory>
-                <includes>
-                    <include>jetty-env.xml</include>
-                </includes>
-                <targetPath>../jetty</targetPath>
-                <filtering>true</filtering>
-            </resource>
+            <!--<resource>-->
+                <!--<directory>src/main/jetty</directory>-->
+                <!--<includes>-->
+                    <!--<include>jetty-env.xml</include>-->
+                <!--</includes>-->
+                <!--<targetPath>../jetty</targetPath>-->
+                <!--<filtering>true</filtering>-->
+            <!--</resource>-->
         </resources>
 
         <plugins>
