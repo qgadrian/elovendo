@@ -12,7 +12,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "userprofile")
-@SuppressWarnings("unused")
 public class User {
 
     @Id

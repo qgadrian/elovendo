@@ -1,10 +1,3 @@
-import es.telocompro.model.item.Item;
-import es.telocompro.model.item.category.Category;
-import es.telocompro.model.item.category.subcategory.SubCategory;
-import es.telocompro.model.user.User;
-import es.telocompro.model.user.UserRepository;
-import es.telocompro.util.Role;
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +9,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
+import es.telocompro.model.user.User;
+import es.telocompro.model.user.UserRepository;
+import es.telocompro.util.Role;
 
 @Configuration
 @RunWith(SpringJUnit4ClassRunner.class)

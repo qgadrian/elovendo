@@ -1,13 +1,9 @@
 package es.telocompro.model.item;
 
-import es.telocompro.model.item.category.Category;
-import es.telocompro.model.item.category.CategoryRepository;
-import es.telocompro.model.item.category.subcategory.SubCategory;
-import es.telocompro.model.item.category.subcategory.SubCategoryRepository;
-import es.telocompro.model.user.User;
-import es.telocompro.model.user.UserRepository;
-import es.telocompro.util.Role;
-import junit.framework.TestCase;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Iterator;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,9 +15,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Iterator;
+import es.telocompro.model.item.category.Category;
+import es.telocompro.model.item.category.CategoryRepository;
+import es.telocompro.model.item.category.subcategory.SubCategory;
+import es.telocompro.model.item.category.subcategory.SubCategoryRepository;
+import es.telocompro.model.user.User;
+import es.telocompro.model.user.UserRepository;
+import es.telocompro.util.Role;
 
 
 @Configuration
@@ -91,7 +91,7 @@ public class ItemRepositoryTest {
         itemRepository.save(item);
         // There is only one
 //        Iterator i = itemRepository.findByTitle("PS").iterator();
-        Iterator i = itemRepository.findByTitle("zzzzz").iterator();
+        Iterator<Item> i = itemRepository.findByTitle("zzzzz").iterator();
 
         Assert.assertFalse(i.hasNext());
     }

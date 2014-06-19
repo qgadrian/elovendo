@@ -1,6 +1,5 @@
 package es.telocompro.model.item.category.subcategory;
 
-import es.telocompro.model.item.category.Category;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 

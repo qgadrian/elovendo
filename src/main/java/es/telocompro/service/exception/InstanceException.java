@@ -5,6 +5,7 @@ package es.telocompro.service.exception;
  * All rights reserved.
  */
 
+@SuppressWarnings("serial")
 public abstract class InstanceException extends Exception {
 
     private Object key;

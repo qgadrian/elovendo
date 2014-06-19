@@ -1,7 +1,5 @@
 package es.telocompro;
 
-import es.telocompro.model.item.category.Category;
-import es.telocompro.model.item.category.subcategory.SubCategory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;

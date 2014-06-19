@@ -15,7 +15,6 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories
-@SuppressWarnings("unused")
 public class BeanConf {
 	
 	/**

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
  * All rights reserved.
  */
 
-@SuppressWarnings(value = "unused")
 @Service("userService")
 public class UserServiceImpl implements UserService {
 

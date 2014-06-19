@@ -10,7 +10,7 @@ import java.util.List;
  * All rights reserved.
  */
 
-@SuppressWarnings({"unused", "JavaDoc"})
+@SuppressWarnings({"unused", "javadoc"})
 public interface ItemService {
 
     /**

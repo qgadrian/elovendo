@@ -10,8 +10,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Iterator;
-
 /**
  * Created by @adrian on 18/06/14.
  * All rights reserved.
@@ -30,7 +28,7 @@ public class CategoryRepositoryTest {
     @Test
     public void testGetAllCategories() {
         int numberOfCategories = 0;
-        for (Category category : categoryRepository.findAll()) {
+        for (@SuppressWarnings("unused") Category category : categoryRepository.findAll()) {
             numberOfCategories++;
         }
 

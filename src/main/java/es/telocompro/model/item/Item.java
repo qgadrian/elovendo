@@ -14,7 +14,6 @@ import java.util.Calendar;
 
 @Entity
 @Table(name = "item")
-@SuppressWarnings("unused")
 public class Item {
 
     @Id
