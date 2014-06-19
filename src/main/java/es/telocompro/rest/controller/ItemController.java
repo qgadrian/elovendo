@@ -30,14 +30,24 @@ public class ItemController {
     /**
      * Get an item by id
      */
-    @RequestMapping(value="/items/{itemid}", method = RequestMethod.GET)
+    @RequestMapping(value="/bazar/items/{itemid}", method = RequestMethod.GET)
     public Item getItem( @PathVariable("itemid") Long itemId ) {
         return itemService.getItemById(itemId);
     }
 
-    @RequestMapping(value="/items/user/{userid}", method = RequestMethod.GET)
+    /**
+     * Get items from a given user
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value="/bazar/items/user/{userid}", method = RequestMethod.GET)
     public List<Item> getItemsByUserId(@PathVariable("userid") Long userId) {
         return itemService.getAllItemsByUserId(userId);
+    }
+
+    @RequestMapping(value="/bazar/c/{subcategoryname}", method = RequestMethod.GET)
+    public Iterable<Item> getItemsBySubCategory(@PathVariable("subcategoryname") String subCategoryName) {
+        return itemService.getAllItemsBySubCategory(subCategoryName);
     }
 
     /**
@@ -52,9 +62,10 @@ public class ItemController {
      * Add an item
      */
     @RequestMapping(value="/items/item", method=RequestMethod.POST)
-    public Item addItem( @RequestParam("userid") Long userId, @RequestParam("title") String title,
-                         @RequestParam("description") String description, @RequestParam("prize") double prize) {
-        return itemService.addItem(userId, title, description, prize);
+    public Item addItem( @RequestParam("userid") Long userId, @RequestParam("subcategory") String subCategoryName,
+                         @RequestParam("title") String title, @RequestParam("description") String description,
+                         @RequestParam("prize") double prize) {
+        return itemService.addItem(userId, subCategoryName, title, description, prize);
     }
 
     /**

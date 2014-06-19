@@ -1,7 +1,6 @@
 package es.telocompro.model.item.category.subcategory;
 
 import es.telocompro.model.item.category.Category;
-import es.telocompro.model.user.User;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
@@ -27,7 +26,12 @@ public class SubCategory {
     @Column(name = "subcategoryname")
     private String subCategoryName;
 
-    public SubCategory() {
+    protected SubCategory() {
+    }
+
+    public SubCategory(Category category, String subCategoryName) {
+        this.category = category;
+        this.subCategoryName = subCategoryName;
     }
 
     public Long getId() {

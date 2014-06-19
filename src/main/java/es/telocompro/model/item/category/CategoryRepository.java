@@ -26,4 +26,10 @@ public interface CategoryRepository extends PagingAndSortingRepository<Category,
     @Query("SELECT s FROM SubCategory s WHERE s.category.categoryName = :categoryName ORDER BY subcategoryid")
     Iterable<SubCategory> findAllSubCategoryByCategoryName(@Param("categoryName") String categoryName);
 
+    @Query("SELECT c FROM Category c WHERE categoryname = :categoryName")
+    Category findCategoryByName(@Param("categoryName") String categoryName);
+
+    @Query("SELECT s FROM SubCategory s WHERE subcategoryname = :subCategoryName")
+    SubCategory findSubCategoryByName(@Param("subCategoryName") String subCategoryName);
+
 }

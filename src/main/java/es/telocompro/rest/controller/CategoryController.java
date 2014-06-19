@@ -22,7 +22,7 @@ public class CategoryController {
     /**
      * Get category list
      */
-    @RequestMapping(value="/categories", method = RequestMethod.GET)
+    @RequestMapping(value="/bazar/categories", method = RequestMethod.GET)
     public Iterable<Category> getCategories() {
         return categoryService.findAllCategoriesOrderByCategoryId();
     }
@@ -30,7 +30,7 @@ public class CategoryController {
     /**
      * Get all subcategories from a category
      */
-    @RequestMapping(value = "/{category}", method = RequestMethod.GET)
+    @RequestMapping(value = "/bazar/{category}", method = RequestMethod.GET)
     public Iterable<SubCategory> getSubCategories(@PathVariable("category") String categoryName) {
         return categoryService.findAllSubCatByCategoryIdOrdBySubCatId(categoryName);
     }

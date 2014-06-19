@@ -2,6 +2,9 @@ package es.telocompro.service.item;
 
 import es.telocompro.model.item.Item;
 import es.telocompro.model.item.ItemRepository;
+import es.telocompro.model.item.category.CategoryRepository;
+import es.telocompro.model.item.category.subcategory.SubCategory;
+import es.telocompro.model.item.category.subcategory.SubCategoryRepository;
 import es.telocompro.model.user.User;
 import es.telocompro.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +27,14 @@ public class ItemServiceImpl implements ItemService {
     ItemRepository itemRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @Override
-    public Item addItem(Long userId, String title, String description, double prize) {
+    public Item addItem(Long userId, String subCategoryName, String title, String description, double prize) {
         User user = userRepository.findOne(userId);
-        Item item = new Item(user, title, description, new BigDecimal(prize), Calendar.getInstance());
+        SubCategory subCategory = categoryRepository.findSubCategoryByName(subCategoryName);
+        Item item = new Item(user, subCategory, title, description, new BigDecimal(prize), Calendar.getInstance());
         return itemRepository.save(item);
     }
 
@@ -50,6 +56,11 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Iterable<Item> getItemByTitle(String title) {
         return itemRepository.findByTitle(title);
+    }
+
+    @Override
+    public Iterable<Item> getAllItemsBySubCategory(String subCategoryName) {
+        return itemRepository.findItemsBySubCategoryName(subCategoryName);
     }
 
     @Override

@@ -32,7 +32,10 @@ public class User {
     private String address;
     private String phone;
     private String email;
-//    private Vote vote;
+    @Column(name = "votespositive")
+    private int votesPositive;
+    @Column(name = "votesnegative")
+    private int votesNegative;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", length = 20, nullable = false)
@@ -46,15 +49,17 @@ public class User {
     protected User() {
     }
 
-    public User(String login, String password, String firstName, String lastName, String address,
-                String phone, String email, Role role, SocialMediaService signInProvider) {
-        this.password = password;
+    public User(String login, String password, String firstName, String lastName, String address, String phone,
+                String email, int votesPositive, int votesNegative, Role role, SocialMediaService signInProvider) {
         this.login = login;
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.phone = phone;
         this.email = email;
+        this.votesPositive = votesPositive;
+        this.votesNegative = votesNegative;
         this.role = role;
         this.signInProvider = signInProvider;
     }
@@ -133,5 +138,27 @@ public class User {
 
     public void setSignInProvider(SocialMediaService signInProvider) {
         this.signInProvider = signInProvider;
+    }
+
+    public int getVotesPositive() {
+        return votesPositive;
+    }
+
+    public void setVotesPositive(int votesPositive) {
+        this.votesPositive = votesPositive;
+    }
+
+    public int getVotesNegative() {
+        return votesNegative;
+    }
+
+    public void setVotesNegative(int votesNegative) {
+        this.votesNegative = votesNegative;
+    }
+
+    @Transient
+    public int getVoteRating() {
+//        return Math.round((votesPositive/(votesPositive+votesNegative)) * 100);
+        return Math.round((votesPositive*100)/(votesPositive+votesNegative));
     }
 }

@@ -1,8 +1,6 @@
 //package es.telocompro;
 //
 //import es.telocompro.model.user.UserRepository;
-//import es.telocompro.service.social.RepositoryUserDetailsService;
-//import es.telocompro.service.social.SimpleSocialUserDetailsService;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
@@ -13,13 +11,11 @@
 //import org.springframework.security.core.userdetails.UserDetailsService;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.social.security.SocialUserDetailsService;
-//import org.springframework.social.security.SpringSocialConfigurer;
 //
 ///**
-// * Created by @adrian on 17/06/14.
-// * All rights reserved.
-// */
+//* Created by @adrian on 17/06/14.
+//* All rights reserved.
+//*/
 //
 //@Configuration
 //@EnableWebMvcSecurity

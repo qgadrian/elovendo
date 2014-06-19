@@ -5,6 +5,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -20,5 +21,8 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
 
     @Query("SELECT i FROM Item i WHERE i.user.userId = :userid")
     List<Item> findByUserId(@Param("userid") Long userId);
+
+    @Query("SELECT i FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName ORDER BY startdate")
+    Iterable<Item> findItemsBySubCategoryName(@Param("subCategoryName") String subCategoryName);
 
 }

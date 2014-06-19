@@ -1,5 +1,9 @@
 package es.telocompro.model.item;
 
+import es.telocompro.model.item.category.Category;
+import es.telocompro.model.item.category.CategoryRepository;
+import es.telocompro.model.item.category.subcategory.SubCategory;
+import es.telocompro.model.item.category.subcategory.SubCategoryRepository;
 import es.telocompro.model.user.User;
 import es.telocompro.model.user.UserRepository;
 import es.telocompro.util.Role;
@@ -26,32 +30,45 @@ import java.util.Iterator;
 //@ContextConfiguration(classes = {BeanConfTest.class})
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
-public class ItemRepositoryTest extends TestCase {
+public class ItemRepositoryTest {
 
     @Autowired
     ItemRepository itemRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    CategoryRepository categoryRepository;
+    @Autowired
+    SubCategoryRepository subCategoryRepository;
+
     Item item;
     User user;
+    Category category;
+    SubCategory subCategory;
 
     @Before
     public void setUp() {
+        category = new Category("Categoria Test");
+        subCategory = new SubCategory(category, "SubCategoria Test");
+
+        categoryRepository.save(category);
+        subCategoryRepository.save(subCategory);
+
         user = new User("login", "password", "fn", "ln", "addr", "phone", "email",
-                Role.ROLE_USER, null);
+                0, 0, Role.ROLE_USER, null);
         userRepository.save(user);
 
-        item = new Item(user, "title", "description", new BigDecimal(10), Calendar.getInstance());
+        item = new Item(user, subCategory, "title", "description", new BigDecimal(10), Calendar.getInstance());
     }
 
     @Test
-    public void testCreateItem() throws Exception {
+    public void testCreateItem() {
         Long id = itemRepository.save(item).getItemId();
         Assert.assertEquals(item, itemRepository.findOne(id));
     }
 
     @Test
-    public void testFindByTitle() throws Exception {
+    public void testFindByTitle() {
         itemRepository.save(item);
         // There is only one
         Item i = itemRepository.findByTitle("tle").iterator().next();
@@ -62,6 +79,9 @@ public class ItemRepositoryTest extends TestCase {
         Assert.assertEquals(item.getDescription(), i.getDescription());
         Assert.assertEquals(item.getPrize(), i.getPrize());
         Assert.assertEquals(item.getStartDate(), i.getStartDate());
+        Assert.assertEquals(item.getSubCategory(), i.getSubCategory());
+        Assert.assertEquals(item.getSubCategory().getCategory().getCategoryName(),
+                i.getSubCategory().getCategory().getCategoryName());
 
         Assert.assertEquals("title", itemRepository.findByTitle("tle").iterator().next().getTitle());
     }
@@ -79,9 +99,9 @@ public class ItemRepositoryTest extends TestCase {
     @Test
     public void testFindAllItemsByUserId() {
         itemRepository.save(item);
-        Item item2 = new Item(user, "title", "description", new BigDecimal(10), Calendar.getInstance());
+        Item item2 = new Item(user, subCategory, "title", "description", new BigDecimal(10), Calendar.getInstance());
         itemRepository.save(item2);
-        Item item3 = new Item(user, "title", "description", new BigDecimal(10), Calendar.getInstance());
+        Item item3 = new Item(user, subCategory, "title", "description", new BigDecimal(10), Calendar.getInstance());
         itemRepository.save(item3);
 
         Assert.assertEquals(3, itemRepository.findByUserId(user.getUserId()).size());

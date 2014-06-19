@@ -21,7 +21,7 @@ public interface ItemService {
      * @param prize
      * @return
      */
-    public Item addItem(Long userId, String title, String description, double prize);
+    public Item addItem(Long userId, String subCategoryName, String title, String description, double prize);
 
     /**
      * Get all items
@@ -47,6 +47,13 @@ public interface ItemService {
      * @return
      */
     public Iterable<Item> getItemByTitle(String title);
+
+    /**
+     * Finds all items from a subcategory
+     * @param subCategoryName
+     * @return
+     */
+    public Iterable<Item> getAllItemsBySubCategory(String subCategoryName);
 
     /**
      * Updates an item

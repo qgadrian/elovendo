@@ -10,9 +10,9 @@
     <url>http://maven.apache.org</url>
 
     <!--<parent>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-starter-parent</artifactId>-->
-        <!--<version>1.0.0.RC1</version>-->
+    <!--<groupId>org.springframework.boot</groupId>-->
+    <!--<artifactId>spring-boot-starter-parent</artifactId>-->
+    <!--<version>1.0.0.RC1</version>-->
     <!--</parent>-->
 
     <parent>
@@ -30,6 +30,8 @@
         <testDataSource.password>${dataSource.password}</testDataSource.password>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <spring.version>4.0.2.RELEASE</spring.version>
     </properties>
 
     <!-- ========================================================== -->
@@ -51,8 +53,8 @@
                 <!--  Data source properties -->
                 <dataSource.url>jdbc:mysql://localhost/telocompro</dataSource.url>
                 <testDataSource.url>${dataSource.url}test</testDataSource.url>
+                <dataSource.createDataScript>create-database.sql</dataSource.createDataScript>
                 <dataSource.createTablesScript>create-schema.sql</dataSource.createTablesScript>
-                <dataSource.createDataScript>create-schema-2.sql</dataSource.createDataScript>
 
                 <!-- Hibernate properties -->
                 <hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
@@ -85,10 +87,22 @@
             <artifactId>spring-plugin-core</artifactId>
             <version>0.8.0.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+            <!--<scope>compile</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
         <!-- Spring context -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -130,16 +144,16 @@
 
         <!--SECURITY-->
         <!-- Spring Security -->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.security</groupId>-->
-            <!--<artifactId>spring-security-config</artifactId>-->
-            <!--<version>3.2.4.RELEASE</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.security</groupId>-->
-            <!--<artifactId>spring-security-web</artifactId>-->
-            <!--<version>3.2.4.RELEASE</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>3.2.4.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>3.2.4.RELEASE</version>
+        </dependency>
 
 
         <!--<dependency>-->
@@ -160,38 +174,38 @@
         <!--SOCIAL-->
         <!-- Spring Social -->
         <!--<dependency>-->
-            <!--<groupId>org.springframework.social</groupId>-->
-            <!--<artifactId>spring-social-config</artifactId>-->
-            <!--<version>1.1.0.RELEASE</version>-->
+        <!--<groupId>org.springframework.social</groupId>-->
+        <!--<artifactId>spring-social-config</artifactId>-->
+        <!--<version>1.1.0.RELEASE</version>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>org.springframework.social</groupId>-->
-            <!--<artifactId>spring-social-core</artifactId>-->
-            <!--<version>1.1.0.RELEASE</version>-->
+        <!--<groupId>org.springframework.social</groupId>-->
+        <!--<artifactId>spring-social-core</artifactId>-->
+        <!--<version>1.1.0.RELEASE</version>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>org.springframework.social</groupId>-->
-            <!--<artifactId>spring-social-security</artifactId>-->
-            <!--<version>1.1.0.RELEASE</version>-->
+        <!--<groupId>org.springframework.social</groupId>-->
+        <!--<artifactId>spring-social-security</artifactId>-->
+        <!--<version>1.1.0.RELEASE</version>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>org.springframework.social</groupId>-->
-            <!--<artifactId>spring-social-web</artifactId>-->
-            <!--<version>1.1.0.RELEASE</version>-->
+        <!--<groupId>org.springframework.social</groupId>-->
+        <!--<artifactId>spring-social-web</artifactId>-->
+        <!--<version>1.1.0.RELEASE</version>-->
         <!--</dependency>-->
 
         <!-- Spring Social Facebook -->
         <!--<dependency>-->
-            <!--<groupId>org.springframework.social</groupId>-->
-            <!--<artifactId>spring-social-facebook</artifactId>-->
-            <!--<version>1.1.0.RELEASE</version>-->
+        <!--<groupId>org.springframework.social</groupId>-->
+        <!--<artifactId>spring-social-facebook</artifactId>-->
+        <!--<version>1.1.0.RELEASE</version>-->
         <!--</dependency>-->
 
         <!-- Spring Social Twitter -->
         <!--<dependency>-->
-            <!--<groupId>org.springframework.social</groupId>-->
-            <!--<artifactId>spring-social-twitter</artifactId>-->
-            <!--<version>1.1.0.RELEASE</version>-->
+        <!--<groupId>org.springframework.social</groupId>-->
+        <!--<artifactId>spring-social-twitter</artifactId>-->
+        <!--<version>1.1.0.RELEASE</version>-->
         <!--</dependency>-->
 
         <!-- TEST DEPENDENCIES -->
@@ -268,12 +282,12 @@
 
             <!-- Filter Jetty configuration -->
             <!--<resource>-->
-                <!--<directory>src/main/jetty</directory>-->
-                <!--<includes>-->
-                    <!--<include>jetty-env.xml</include>-->
-                <!--</includes>-->
-                <!--<targetPath>../jetty</targetPath>-->
-                <!--<filtering>true</filtering>-->
+            <!--<directory>src/main/jetty</directory>-->
+            <!--<includes>-->
+            <!--<include>jetty-env.xml</include>-->
+            <!--</includes>-->
+            <!--<targetPath>../jetty</targetPath>-->
+            <!--<filtering>true</filtering>-->
             <!--</resource>-->
         </resources>
 
@@ -315,7 +329,7 @@
                     <password>${dataSource.password}</password>
                     <autocommit>true</autocommit>
                     <onError>continue</onError>
-                    <orderFile>ascending</orderFile>
+                    <orderFile>descending</orderFile>
                     <fileset>
                         <basedir>${basedir}</basedir>
                         <includes>

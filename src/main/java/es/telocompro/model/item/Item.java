@@ -1,5 +1,6 @@
 package es.telocompro.model.item;
 
+import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.user.User;
 
 import javax.persistence.*;
@@ -25,8 +26,10 @@ public class Item {
     @JoinColumn(name = "userId")
     private User user;
 
-    //    private Category category;
-    //    private SubCategory subCategory;
+    @ManyToOne(optional=false, fetch=FetchType.LAZY)
+    @JoinColumn(name = "subcategoryid")
+    private SubCategory subCategory;
+
     private String title;
     private String description;
     private BigDecimal prize;
@@ -38,12 +41,21 @@ public class Item {
     public Item() {
     }
 
-    public Item(User user, String title, String description, BigDecimal prize, Calendar startDate) {
+    public Item(User user, SubCategory subCategory, String title, String description, BigDecimal prize, Calendar startDate) {
         this.user = user;
+        this.subCategory = subCategory;
         this.title = title;
         this.description = description;
         this.prize = prize;
         this.startDate = startDate;
+    }
+
+    public SubCategory getSubCategory() {
+        return subCategory;
+    }
+
+    public void setSubCategory(SubCategory subCategory) {
+        this.subCategory = subCategory;
     }
 
     public User getUser() {
