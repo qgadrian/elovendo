@@ -1,12 +1,14 @@
 package es.telocompro.service.user;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
+
 import es.telocompro.model.user.User;
 
 /**
  * Created by @adrian on 17/06/14.
  * All rights reserved.
  */
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     // TODO: TEMPORAL
     public Iterable<User> findAllUsers();
@@ -21,6 +23,11 @@ public interface UserService {
      * Finds a user by its id
      */
     public User findUserById(Long userId);
+    
+    /**
+     * Finds a user by its login
+     */
+    public User findUserByLogin(String login);
 
     /**
      * Updates an user

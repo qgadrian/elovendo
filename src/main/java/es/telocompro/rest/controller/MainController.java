@@ -32,11 +32,11 @@ public class MainController {
         return "helloworld";
     }
 
-    @RequestMapping("/login")
-    public ModelAndView getLoginPage() {
-        System.out.println("Login called here");
-        return new ModelAndView("hello");
-    }
+//    @RequestMapping("/login")
+//    public ModelAndView getLoginPage() {
+//        System.out.println("Login called here");
+//        return new ModelAndView("hello");
+//    }
 
 //    @Override
 //    @RequestMapping("/login")

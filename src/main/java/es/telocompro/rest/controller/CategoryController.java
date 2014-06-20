@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.subcategory.SubCategory;
+import es.telocompro.rest.controller.exception.CategoriesNotFoundException;
 import es.telocompro.service.item.category.CategoryService;
 
 /**
@@ -16,6 +17,7 @@ import es.telocompro.service.item.category.CategoryService;
  */
 
 @RestController
+@RequestMapping(value = "/bazaar/")  
 public class CategoryController {
 
     @Autowired
@@ -24,7 +26,7 @@ public class CategoryController {
     /**
      * Get category list
      */
-    @RequestMapping(value="/bazar/categories", method = RequestMethod.GET)
+    @RequestMapping(value="categories", method = RequestMethod.GET)
     public Iterable<Category> getCategories() {
         return categoryService.findAllCategoriesOrderByCategoryId();
     }
@@ -32,9 +34,32 @@ public class CategoryController {
     /**
      * Get all subcategories from a category
      */
-    @RequestMapping(value = "/bazar/{category}", method = RequestMethod.GET)
-    public Iterable<SubCategory> getSubCategories(@PathVariable("category") String categoryName) {
-        return categoryService.findAllSubCatByCategoryIdOrdBySubCatId(categoryName);
+    @RequestMapping(value = "{category}", method = RequestMethod.GET)
+    public Iterable<SubCategory> getSubCategories(@PathVariable("category") String categoryName) 
+    throws Exception {
+        Iterable<SubCategory> subCategories =
+        		categoryService.findAllSubCatByCategoryIdOrdBySubCatId(categoryName);
+        
+        if (subCategories == null) {
+        	throw new CategoriesNotFoundException(categoryName);
+        }
+        
+        return subCategories;
     }
+    
+    
+//    @ExceptionHandler(CategoriesNotFoundException.class)
+//    protected @ResponseBody ResponseEntity<RestApiError> handleNoteNotFoundException(
+//    		CategoriesNotFoundException categoriesNotFoundException, HttpServletRequest request, 
+//    		HttpServletResponse response) {  
+//        RestApiError restApiError = new RestApiError(HttpStatus.NOT_FOUND, 
+//        		categoriesNotFoundException.getMessage(), categoriesNotFoundException.getMessage(), 
+//        		this.getInfoUrl());  
+//        return CategoryControllerHelper.createAndSendResponse(restApiError);
+//    }
+//    
+//    private String getInfoUrl(){  
+//        return "http://localhost.com/api/support/"; //+ code.ordinal();  
+//    } 
 
 }

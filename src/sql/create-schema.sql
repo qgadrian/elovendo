@@ -15,7 +15,7 @@
 	CREATE TABLE userprofile (
 		  userid BIGINT NOT NULL AUTO_INCREMENT,
 		  login VARCHAR(20) NOT NULL,
-		  password BLOB,
+		  password VARCHAR(200),
 		  firstname VARCHAR(20) NOT NULL,
 		  lastname VARCHAR(20) NOT NULL,
 		  address VARCHAR(50),
@@ -24,6 +24,7 @@
 		  votespositive INT NOT NULL DEFAULT 0,
 		  votesnegative INT NOT NULL DEFAULT 0,
 		  role VARCHAR(20) NOT NULL,
+		  enabled BOOLEAN NOT NULL,
 		  sign_in_provider VARCHAR(20),
 		  CONSTRAINT pk_userid PRIMARY KEY (userid),
 		  CONSTRAINT u_login UNIQUE(login),

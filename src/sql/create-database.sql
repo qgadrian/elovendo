@@ -4,7 +4,7 @@
 
 -- USER
 
-INSERT INTO userprofile VALUES (1, 'charlieHarper', 'password', 'Charlie', 'Harper', 'charlie address', 'charliephone', 'charlieemail', 0, 0, 'ROLE_USER', NULL);
+INSERT INTO userprofile VALUES (1, 'charlieHarper', 'password', 'Charlie', 'Harper', 'charlie address', 'charliephone', 'charlieemail', 0, 0, 'ROLE_USER', true, NULL);
 
 -- CATEGORY
 

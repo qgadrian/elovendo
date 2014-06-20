@@ -1,9 +1,23 @@
 package es.telocompro.model.user;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import es.telocompro.util.Role;
 import es.telocompro.util.SocialMediaService;
-
-import javax.persistence.*;
 
 /**
  * Created by @adrian on 13/06/14.
@@ -12,9 +26,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "userprofile")
-public class User {
+public class User implements UserDetails {
+	private static final long serialVersionUID = -8564691953630292818L;
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "userid")
     private Long userId;
@@ -39,10 +54,15 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", length = 20, nullable = false)
     private Role role;
+    
+    private boolean enabled;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "sign_in_provider", length = 20)
     private SocialMediaService signInProvider;
+    
+    @Transient
+    private Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
 
 
     protected User() {
@@ -62,8 +82,16 @@ public class User {
         this.role = role;
         this.signInProvider = signInProvider;
     }
+    
+    public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+    
+    public boolean getEnabled() {
+    	return this.enabled;
+    }
 
-    public Long getUserId() {
+	public Long getUserId() {
         return userId;
     }
 
@@ -160,4 +188,45 @@ public class User {
 //        return Math.round((votesPositive/(votesPositive+votesNegative)) * 100);
         return Math.round((votesPositive*100)/(votesPositive+votesNegative));
     }
+    
+    /**
+     * User details Overrides
+     */
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return this.authorities;
+	}
+	
+	//TODO temporary authorities implementation - will revise in the next example
+    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
+
+	@Override
+	@Transient
+	public String getUsername() {
+		return login;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+	
+	@Override
+	public boolean isEnabled() {
+		return this.getEnabled();
+	}
+
 }

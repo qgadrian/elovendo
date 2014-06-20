@@ -4,7 +4,9 @@ import es.telocompro.model.item.Item;
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.CategoryRepository;
 import es.telocompro.service.item.ItemService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 
 @RestController
 @SuppressWarnings("unused")
+@RequestMapping(value = "/bazaar/")
 public class ItemController {
 
     @Autowired
@@ -30,7 +33,8 @@ public class ItemController {
     /**
      * Get an item by id
      */
-    @RequestMapping(value="/bazar/items/{itemid}", method = RequestMethod.GET)
+//    @Secured("ROLE_USER")
+    @RequestMapping(value="/items/{itemid}", method = RequestMethod.GET)
     public Item getItem( @PathVariable("itemid") Long itemId ) {
         return itemService.getItemById(itemId);
     }
@@ -40,12 +44,12 @@ public class ItemController {
      * @param userId
      * @return
      */
-    @RequestMapping(value="/bazar/items/user/{userid}", method = RequestMethod.GET)
+    @RequestMapping(value="/items/user/{userid}", method = RequestMethod.GET)
     public List<Item> getItemsByUserId(@PathVariable("userid") Long userId) {
         return itemService.getAllItemsByUserId(userId);
     }
 
-    @RequestMapping(value="/bazar/c/{subcategoryname}", method = RequestMethod.GET)
+    @RequestMapping(value="/c/{subcategoryname}", method = RequestMethod.GET)
     public Iterable<Item> getItemsBySubCategory(@PathVariable("subcategoryname") String subCategoryName) {
         return itemService.getAllItemsBySubCategory(subCategoryName);
     }
