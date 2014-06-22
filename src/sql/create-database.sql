@@ -2,9 +2,13 @@
 -- Sentencias de creación de tablas y secuencias --
 ---------------------------------------------------
 
+-- ROLES
+
+INSERT INTO role VALUES (1, 'ROLE_USER');
+
 -- USER
 
-INSERT INTO userprofile VALUES (1, 'charlieHarper', 'password', 'Charlie', 'Harper', 'charlie address', 'charliephone', 'charlieemail', 0, 0, 'ROLE_USER', true, NULL);
+INSERT INTO userprofile VALUES (1, 'charlieHarper', 'password', 'Charlie', 'Harper', 'charlie address', 'charliephone', 'charlieemail', 0, 0, 1, true, NULL);
 
 -- CATEGORY
 

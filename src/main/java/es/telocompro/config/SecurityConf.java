@@ -8,6 +8,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import es.telocompro.rest.handler.FailureHandler;
+import es.telocompro.rest.handler.SuccessHandler;
+import es.telocompro.rest.handler.UserLogoutSuccessHandler;
+
 /**
  * Created by @adrian on 19/06/14.
  * All rights reserved.
@@ -27,6 +31,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 
     // DOCUMENTATION: http://docs.spring.io/spring-security/site/docs/3.2.x/guides/form.html
 
+	//TODO: Logout no funciona
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -36,9 +41,22 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                 .antMatchers("/bazaar/**").authenticated()
                 .and()
             .formLogin()
+            	.failureHandler(new FailureHandler())
+            	.successHandler(new SuccessHandler())
+            	.defaultSuccessUrl("/bazaar/moda")
 //                .loginPage("/login").permitAll()
             	.and()
-            .logout().permitAll();
+            .logout()
+            	.invalidateHttpSession(true)
+//            	.logoutUrl("/logout")
+//            	.addLogoutHandler(new SecurityContextLogoutHandler())
+            	.logoutSuccessHandler(new UserLogoutSuccessHandler())
+                .logoutSuccessUrl("/bazaar")
+            	.deleteCookies("jsessionid", "JSESSIONID")
+            	.permitAll()
+            	.and()
+            .sessionManagement()
+            .maximumSessions(1);
     }
 
 }

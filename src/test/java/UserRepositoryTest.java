@@ -12,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.telocompro.model.user.User;
 import es.telocompro.model.user.UserRepository;
-import es.telocompro.util.Role;
+import es.telocompro.model.user.role.RoleRepository;
+import es.telocompro.util.RoleEnum;
 
 @Configuration
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -25,13 +26,15 @@ public class UserRepositoryTest {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    RoleRepository roleRepository;
 
     User user;
 
     @Before
     public void setUp() {
         user = new User("login", "password", "fn", "ln", "addr", "phone", "email",
-                8, 3, Role.ROLE_USER, null);
+                8, 3, roleRepository.findByRoleName(RoleEnum.ROLE_USER), null);
     }
 
     @Test
@@ -46,7 +49,7 @@ public class UserRepositoryTest {
         Assert.assertEquals("addr", user.getAddress());
         Assert.assertEquals("phone", user.getPhone());
         Assert.assertEquals("email", user.getEmail());
-        Assert.assertEquals(Role.ROLE_USER, user.getRole());
+        Assert.assertEquals(RoleEnum.ROLE_USER, user.getRole().getRoleName());
         Assert.assertEquals(null, user.getSignInProvider());
         Assert.assertEquals(8, user.getVotesPositive());
         Assert.assertEquals(3, user.getVotesNegative());

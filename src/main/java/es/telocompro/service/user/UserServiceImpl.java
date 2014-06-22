@@ -5,7 +5,9 @@ import java.util.Collection;
 
 import es.telocompro.model.user.User;
 import es.telocompro.model.user.UserRepository;
-import es.telocompro.util.Role;
+import es.telocompro.model.user.role.Role;
+import es.telocompro.model.user.role.RoleRepository;
+import es.telocompro.util.RoleEnum;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,6 +25,8 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserRepository userRepository;
+	@Autowired
+	RoleRepository roleRepository;
 
 	@Override
 	public Iterable<User> findAllUsers() {
@@ -32,8 +36,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User addUser(String login, String password, String firstName,
 			String lastName, String address, String phone, String email) {
+		// At this point, all new users alwats will be ROLE_USER
+		Role role = roleRepository.findByRoleName(RoleEnum.ROLE_USER);
 		User user = new User(login, password, firstName, lastName, address,
-				phone, email, 0, 0, Role.ROLE_USER, null);
+				phone, email, 0, 0, role, null);
 		return userRepository.save(user);
 	}
 
@@ -69,20 +75,25 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
-		Collection<GrantedAuthority> authorities = new ArrayList<>();
-		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(
-				"ROLE_ADMIN");
-		authorities.add(authority);
-
-		User userObject = findUserByLogin(username);
-
-		// TODO: Workaround
-		if (userObject == null)
-			throw new UsernameNotFoundException("Username not found => " + UserService.class.getName());
+//		Collection<GrantedAuthority> authorities = new ArrayList<>();
+//		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(
+//				"ROLE_ADMIN");
+//		authorities.add(authority);
+//
+//		User userObject = findUserByLogin(username);
+//
+//		// TODO: Workaround
+//		if (userObject == null)
+//			throw new UsernameNotFoundException("Username not found => " + UserService.class.getName());
+//		
+//		else {
+//			userObject.setAuthorities(authorities);
+//			return userObject;
+//		}
+		User user = userRepository.findByLogin(username);
 		
-		else {
-			userObject.setAuthorities(authorities);
-			return userObject;
-		}
+		if (user == null) throw new UsernameNotFoundException("Username not found => " + UserService.class.getName());
+		
+		return user;
 	}
 }

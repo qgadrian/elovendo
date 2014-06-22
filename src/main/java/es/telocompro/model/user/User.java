@@ -7,16 +7,20 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import es.telocompro.util.Role;
+import es.telocompro.model.user.role.Role;
 import es.telocompro.util.SocialMediaService;
 
 /**
@@ -51,8 +55,11 @@ public class User implements UserDetails {
     @Column(name = "votesnegative")
     private int votesNegative;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", length = 20, nullable = false)
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "role", length = 20, nullable = false)
+//    @Column(name = "roleid")
+    @ManyToOne(optional=false, fetch=FetchType.EAGER)
+    @JoinColumn(name = "roleid")
     private Role role;
     
     private boolean enabled;
@@ -61,8 +68,8 @@ public class User implements UserDetails {
     @Column(name = "sign_in_provider", length = 20)
     private SocialMediaService signInProvider;
     
-    @Transient
-    private Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
+//    @Transient
+//    private Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
 
 
     protected User() {
@@ -195,13 +202,19 @@ public class User implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.authorities;
+		Collection<GrantedAuthority> authorities = new ArrayList<>();
+        Role userRol = this.getRole();
+        if(userRol != null) {
+        	SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRol.getRoleNameString());
+            authorities.add(authority);
+        }
+        return authorities;
 	}
 	
-	//TODO temporary authorities implementation - will revise in the next example
-    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
-        this.authorities = authorities;
-    }
+//	//TODO temporary authorities implementation - will revise in the next example
+//    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+//        this.authorities = authorities;
+//    }
 
 	@Override
 	@Transient

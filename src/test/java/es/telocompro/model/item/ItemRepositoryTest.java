@@ -22,7 +22,8 @@ import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.item.category.subcategory.SubCategoryRepository;
 import es.telocompro.model.user.User;
 import es.telocompro.model.user.UserRepository;
-import es.telocompro.util.Role;
+import es.telocompro.model.user.role.RoleRepository;
+import es.telocompro.util.RoleEnum;
 
 
 @Configuration
@@ -42,6 +43,8 @@ public class ItemRepositoryTest {
     CategoryRepository categoryRepository;
     @Autowired
     SubCategoryRepository subCategoryRepository;
+    @Autowired
+    RoleRepository roleRepository;
 
     Item item;
     User user;
@@ -57,7 +60,7 @@ public class ItemRepositoryTest {
         subCategoryRepository.save(subCategory);
 
         user = new User("login", "password", "fn", "ln", "addr", "phone", "email",
-                0, 0, Role.ROLE_USER, null);
+                0, 0, roleRepository.findByRoleName(RoleEnum.ROLE_USER), null);
         userRepository.save(user);
 
         item = new Item(user, subCategory, "title", "description", new BigDecimal(10), Calendar.getInstance());

@@ -8,9 +8,19 @@
     DROP TABLE IF EXISTS category CASCADE;
 	DROP TABLE IF EXISTS votes CASCADE;
 	DROP TABLE IF EXISTS userprofile CASCADE;
+	DROP TABLE IF EXISTS role CASCADE;
 
 ---
 
+-- ROLE
+
+	CREATE TABLE role (
+		roleid BIGINT NOT NULL AUTO_INCREMENT,
+		rolename VARCHAR(50) NOT NULL,
+		CONSTRAINT pk_roleid PRIMARY KEY (roleid),
+		CONSTRAINT u_rolename UNIQUE(rolename)
+	);	
+	
 -- USER TABLE
 	CREATE TABLE userprofile (
 		  userid BIGINT NOT NULL AUTO_INCREMENT,
@@ -23,16 +33,15 @@
 		  email VARCHAR(20) NOT NULL,
 		  votespositive INT NOT NULL DEFAULT 0,
 		  votesnegative INT NOT NULL DEFAULT 0,
-		  role VARCHAR(20) NOT NULL,
+		  roleid BIGINT NOT NULL,
 		  enabled BOOLEAN NOT NULL,
 		  sign_in_provider VARCHAR(20),
 		  CONSTRAINT pk_userid PRIMARY KEY (userid),
 		  CONSTRAINT u_login UNIQUE(login),
+		  CONSTRAINT fk_user_roleid FOREIGN KEY (roleid) REFERENCES role(roleid) ON UPDATE CASCADE ON DELETE CASCADE,
 		  CONSTRAINT check_votespositive CHECK (votespositive > 0),
 		  CONSTRAINT check_votesnegative CHECK (votesnegative > 0)
 	);
-
--- INSERT INTO userprofile VALUES (NULL, 'charlieHarper', 'password', 'Charlie', 'Harper', 'charlie address', 'charliephone', 'charlieemail', 'ROLE_USER', NULL);
 
 -- CATEGORY
 

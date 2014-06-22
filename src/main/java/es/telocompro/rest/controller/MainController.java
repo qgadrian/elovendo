@@ -1,73 +1,37 @@
 package es.telocompro.rest.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by @adrian on 18/06/14.
  * All rights reserved.
  */
 
-//@RestController
-@Controller
+@RestController
 public class MainController {
 
-//    @RequestMapping(value="/hello/{name}", method = RequestMethod.GET)
-//    public String getGreeting(@PathVariable("name") String name) {
-//        return "Hello " + name;
-//    }
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String hello() {
+    	System.out.println("We are in main controller");
 
-//    @RequestMapping("/hello")
-//    public String hello(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
-//        model.addAttribute("name", name);
-//        return "helloworld";
-//    }
-
-    @RequestMapping("/hello")
-    public String hello(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
-        model.addAttribute("name", name);
-        return "helloworld";
+        return "";
     }
-
-//    @RequestMapping("/login")
-//    public ModelAndView getLoginPage() {
-//        System.out.println("Login called here");
-//        return new ModelAndView("hello");
-//    }
-
-//    @Override
-//    @RequestMapping("/login")
-//    protected ModelAndView handleRequestInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
-//        System.out.println("handleRequestInternal");
-//        return new ModelAndView("hello");
-//    }
-
-//    @RequestMapping("/listUsers")
-//    public ModelAndView listUsers() {
-//        RestTemplate restTemplate = new RestTemplate();
-//        String url="http://localhost:8080/users/all";
-//        List<LinkedHashMap> users = restTemplate.getForObject(url, List.class);
-//        return new ModelAndView("listUsers", "users", users);
-//    }
-//
-//    @RequestMapping("/dispUser/{userid}")
-//    public ModelAndView dispUser(@PathVariable("userid") Long userid) {
-//        RestTemplate restTemplate = new RestTemplate();
-//        String url="http://localhost:8080/users/{userid}";
-//        User user = restTemplate.getForObject(url, User.class, userid);
-//        return new ModelAndView("dispUser", "user", user);
-//    }
-//
-//
-//    @RequestMapping("/dispUser2")
-//    public ModelAndView dispUser() {
-//        RestTemplate restTemplate = new RestTemplate();
-//        String url="http://localhost:8080/users/{userid}";
-//        User user = restTemplate.getForObject(url, User.class, (long) 2);
-//        return new ModelAndView("dispUser", "user", user);
-//    }
+    
+    @RequestMapping(value="/logout")
+    public String logout(HttpServletResponse response) {
+    	System.out.println("logout controller");
+    	
+    	SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
+    	Cookie cookie = new Cookie("JSESSIONID", null);
+    	response.addCookie(cookie);
+    	
+    	return "logged out";
+    }
 
 }
