@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -16,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MainController {
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String hello() {
+    @RequestMapping(value = "/login")
+    public String login(HttpServletResponse response) {
     	System.out.println("We are in main controller");
 
         return "";
@@ -31,7 +30,7 @@ public class MainController {
     	Cookie cookie = new Cookie("JSESSIONID", null);
     	response.addCookie(cookie);
     	
-    	return "logged out";
+    	return null;
     }
 
 }

@@ -2,6 +2,8 @@ package es.telocompro.model.item;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -21,7 +23,10 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     @Query("SELECT i FROM Item i WHERE i.user.userId = :userid")
     List<Item> findByUserId(@Param("userid") Long userId);
 
-    @Query("SELECT i FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName ORDER BY startdate")
-    Iterable<Item> findItemsBySubCategoryName(@Param("subCategoryName") String subCategoryName);
+    @Query("SELECT i, i.user.login AS username, i.subCategory.subCategoryName AS subCategory,"
+    		+ " i.subCategory.category.categoryName AS category"
+    		+ " FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName ORDER BY startdate")
+//    Page<Item> findItemsBySubCategoryName(@Param("subCategoryName") String subCategoryName);
+    Page<Item> findItemsBySubCategoryName(@Param("subCategoryName") String subCategoryName, Pageable pageable);
 
 }

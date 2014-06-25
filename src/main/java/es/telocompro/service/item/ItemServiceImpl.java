@@ -7,7 +7,12 @@ import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.item.category.subcategory.SubCategoryRepository;
 import es.telocompro.model.user.User;
 import es.telocompro.model.user.UserRepository;
+import es.telocompro.rest.util.RestItemObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -59,8 +64,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Iterable<Item> getAllItemsBySubCategory(String subCategoryName) {
-        return itemRepository.findItemsBySubCategoryName(subCategoryName);
+    public Page<Item> getAllItemsBySubCategory(String subCategoryName, int page, int size) {
+        return itemRepository.findItemsBySubCategoryName(subCategoryName, 
+        		new PageRequest(page, size));
     }
 
     @Override

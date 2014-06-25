@@ -3,12 +3,16 @@ package es.telocompro.rest.controller;
 import es.telocompro.model.item.Item;
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.CategoryRepository;
+import es.telocompro.rest.util.RestItemObject;
 import es.telocompro.service.item.ItemService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -34,9 +38,20 @@ public class ItemController {
      * Get an item by id
      */
 //    @Secured("ROLE_USER")
+//    @RequestMapping(value="/items/{itemid}", method = RequestMethod.GET)
+//    public Item getItem( @PathVariable("itemid") Long itemId ) {
+//        return itemService.getItemById(itemId);
+//    }
     @RequestMapping(value="/items/{itemid}", method = RequestMethod.GET)
-    public Item getItem( @PathVariable("itemid") Long itemId ) {
-        return itemService.getItemById(itemId);
+    public RestItemObject getItem( @PathVariable("itemid") Long itemId ) {
+    	
+    	Item item = itemService.getItemById(itemId); 
+    	
+    	RestItemObject restItemObject = new RestItemObject(item,
+    			item.getUser().getLogin(), 
+    			item.getSubCategory().getCategory().getCategoryName(), 
+    			item.getSubCategory().getSubCategoryName());
+        return restItemObject;
     }
 
     /**
@@ -49,9 +64,13 @@ public class ItemController {
         return itemService.getAllItemsByUserId(userId);
     }
 
-    @RequestMapping(value="/c/{subcategoryname}", method = RequestMethod.GET)
-    public Iterable<Item> getItemsBySubCategory(@PathVariable("subcategoryname") String subCategoryName) {
-        return itemService.getAllItemsBySubCategory(subCategoryName);
+    @RequestMapping(value="/c/{subcategoryname}", params = {"p","s"},
+    		method = RequestMethod.GET)
+    public Page<Item> getItemsBySubCategory(@PathVariable("subcategoryname") String subCategoryName,
+    		@RequestParam("p") int page, @RequestParam( "s" ) int size) {
+    	
+    	return itemService.getAllItemsBySubCategory(subCategoryName, page, size);
+    	
     }
 
     /**
