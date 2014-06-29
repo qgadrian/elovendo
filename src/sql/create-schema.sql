@@ -3,6 +3,7 @@
 ---------------------------------------------------
 
 -- Eliminamos tablas.
+	DROP TABLE IF EXISTS image CASCADE;
     DROP TABLE IF EXISTS item CASCADE;
     DROP TABLE IF EXISTS subcategory CASCADE;
     DROP TABLE IF EXISTS category CASCADE;
@@ -73,12 +74,23 @@
     	    description VARCHAR(250) NOT NULL,
     	    prize DECIMAL(6,2) NOT NULL,
     	    startdate DATETIME NOT NULL,
-    	    CONSTRAINT pk_itemid PRIMARY KEY (itemid),
+    	    imghome LONGBLOB,
+    	    CONSTRAINT pk_item_itemid PRIMARY KEY (itemid),
     	    CONSTRAINT fk_item_userid FOREIGN KEY (userid) REFERENCES userprofile(userid) ON UPDATE CASCADE ON DELETE CASCADE,
     	    CONSTRAINT fk_item_subcategoryid FOREIGN KEY (subcategoryid) REFERENCES subcategory(subcategoryid) ON UPDATE CASCADE ON DELETE CASCADE
     	);
 
-    -- INSERT INTO item VALUES (NULL, 1, 'PS4', 'Play station 4', 200.5, NOW());
+    -- IMAGES
+	CREATE TABLE image (
+		itemid BIGINT NOT NULL,
+		imghome BLOB,
+		img2 BLOB,
+		img3 BLOB,
+		img4 BLOB,
+		img5 BLOB,
+		img6 BLOB,
+		CONSTRAINT pk_image_itemid PRIMARY KEY (itemid)
+	);
 
 -- VOTEs
 

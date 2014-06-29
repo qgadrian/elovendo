@@ -9,6 +9,7 @@ INSERT INTO role VALUES (1, 'ROLE_USER');
 -- USER
 
 INSERT INTO userprofile VALUES (1, 'charlieHarper', 'password', 'Charlie', 'Harper', 'charlie address', 'charliephone', 'charlieemail', 0, 0, 1, true, NULL);
+INSERT INTO userprofile VALUES (2, 'user', 'password', 'User', 'LastName', 'user address', 'userphone', 'userEmail', 0, 0, 1, true, NULL);
 
 -- CATEGORY
 
@@ -41,25 +42,7 @@ INSERT INTO subcategory VALUES(11, 2, 'Accesorios');
 
 -- ITEMS
 
-INSERT INTO item VALUES (NULL, 1, 2, 'PS4', 'Play station 4', 200, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 3, 'PC', 'Nuevo', 500.5, NOW());
-INSERT INTO item VALUES (NULL, 1, 4, 'TV', 'Muy grande', 1200, NOW());
+INSERT INTO item VALUES (NULL, 1, 2, 'PS4', 'Play station 4', 200, NOW(), null);
+INSERT INTO item VALUES (NULL, 2, 2, 'XBOX ONE', 'De Microsoft', 250.5, NOW(), null);
+INSERT INTO item VALUES (NULL, 1, 3, 'PC', 'Nuevo', 500.5, NOW(), null);
+INSERT INTO item VALUES (NULL, 1, 4, 'TV', 'Muy grande', 1200, NOW(), null);

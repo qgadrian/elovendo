@@ -1,7 +1,5 @@
 package es.telocompro.model.item;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -17,16 +15,15 @@ import org.springframework.stereotype.Repository;
 @Repository("itemRepository")
 public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
 
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title%")
-    Iterable<Item> findByTitle(@Param("title") String title);
-
-    @Query("SELECT i FROM Item i WHERE i.user.userId = :userid")
-    List<Item> findByUserId(@Param("userid") Long userId);
+    @Query("SELECT i, i.user.login AS username, i.subCategory.subCategoryName AS subCategory,"
+    		+ " i.subCategory.category.categoryName FROM Item i WHERE i.title LIKE %:title%")
+    Page<Item> findByTitle(@Param("title") String title, Pageable pageable);
 
     @Query("SELECT i, i.user.login AS username, i.subCategory.subCategoryName AS subCategory,"
-    		+ " i.subCategory.category.categoryName AS category"
-    		+ " FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName ORDER BY startdate")
-//    Page<Item> findItemsBySubCategoryName(@Param("subCategoryName") String subCategoryName);
+    		+ " i.subCategory.category.categoryName FROM Item i WHERE i.user.login = :username")
+    Page<Item> findByUserName(@Param("username") String userName, Pageable pageable);
+
+    @Query("SELECT i FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName ORDER BY startdate")
     Page<Item> findItemsBySubCategoryName(@Param("subCategoryName") String subCategoryName, Pageable pageable);
 
 }

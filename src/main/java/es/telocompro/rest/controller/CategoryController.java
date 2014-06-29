@@ -36,7 +36,7 @@ public class CategoryController {
      */
     @RequestMapping(value = "{category}", method = RequestMethod.GET)
     public Iterable<SubCategory> getSubCategories(@PathVariable("category") String categoryName) 
-    throws Exception {
+    throws CategoriesNotFoundException {
         Iterable<SubCategory> subCategories =
         		categoryService.findAllSubCatByCategoryIdOrdBySubCatId(categoryName);
         

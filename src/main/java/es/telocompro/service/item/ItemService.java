@@ -2,8 +2,10 @@ package es.telocompro.service.item;
 
 import es.telocompro.model.item.Item;
 import es.telocompro.rest.util.RestItemObject;
+import es.telocompro.service.exception.WrongItemNameException;
 
 import java.math.BigDecimal;
+import java.sql.Blob;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -24,7 +26,8 @@ public interface ItemService {
      * @param prize
      * @return
      */
-    public Item addItem(Long userId, String subCategoryName, String title, String description, double prize);
+    public Item addItem(String userName, String subCategoryName, String title, String description, 
+    		double prize, byte[] imgHome) throws WrongItemNameException;
 
     /**
      * Get all items
@@ -35,7 +38,7 @@ public interface ItemService {
     /**
      * Get all user items
      */
-    public List<Item> getAllItemsByUserId(Long userId);
+    public Page<Item> getAllItemsByUserName(String userName, int page, int size);
 
     /**
      * Get an item given its id
@@ -49,7 +52,7 @@ public interface ItemService {
      * @param title
      * @return
      */
-    public Iterable<Item> getItemByTitle(String title);
+    public Page<Item> getItemByTitle(String title, int page, int size);
 
     /**
      * Finds all items from a subcategory

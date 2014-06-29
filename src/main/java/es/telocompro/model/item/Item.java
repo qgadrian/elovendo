@@ -1,11 +1,24 @@
 package es.telocompro.model.item;
 
-import es.telocompro.model.item.category.subcategory.SubCategory;
-import es.telocompro.model.user.User;
-
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Calendar;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import es.telocompro.model.item.category.subcategory.SubCategory;
+import es.telocompro.model.user.User;
 
 /**
  * Created by @adrian on 17/06/14.
@@ -36,17 +49,24 @@ public class Item {
     @Column(columnDefinition="DATETIME", name = "startdate")
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar startDate;
+    
+    @Column(name="imghome")
+    @Lob
+    @Basic(fetch=FetchType.LAZY)
+    private String imgHome;
 
     public Item() {
     }
 
-    public Item(User user, SubCategory subCategory, String title, String description, BigDecimal prize, Calendar startDate) {
+    public Item(User user, SubCategory subCategory, String title, String description, 
+    		BigDecimal prize, Calendar startDate, String imgHome) {
         this.user = user;
         this.subCategory = subCategory;
         this.title = title;
         this.description = description;
         this.prize = prize;
         this.startDate = startDate;
+        this.imgHome = imgHome;
     }
 
     public SubCategory getSubCategory() {
@@ -100,5 +120,17 @@ public class Item {
     public void setStartDate(Calendar startDate) {
         this.startDate = startDate;
     }
+
+	public String getImgHome() {
+		return imgHome;
+	}
+
+	public void setImgHome(String imgHome) {
+		this.imgHome = imgHome;
+	}
+
+	public void setItemId(Long itemId) {
+		this.itemId = itemId;
+	}
 
 }

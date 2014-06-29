@@ -39,8 +39,10 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 //            	.antMatchers("/resources/**", "/signup").permitAll()
 //                .antMatchers("/bazaar/*").permitAll()
 //                .antMatchers("/bazaar/items/**").authenticated()
+            	.antMatchers("/login").permitAll()
             	.antMatchers("/bazaar/**").permitAll()
             	.antMatchers("/items/item**").authenticated()
+            	.antMatchers("/logout").authenticated()
                 .and()
             .formLogin()
             	.failureHandler(new FailureHandler())
@@ -53,12 +55,14 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 //            	.logoutUrl("/logout")
 //            	.addLogoutHandler(new SecurityContextLogoutHandler())
             	.logoutSuccessHandler(new UserLogoutSuccessHandler())
-                .logoutSuccessUrl("/bazaar")
+                .logoutSuccessUrl("/bazaar/categories")
             	.deleteCookies("jsessionid", "JSESSIONID")
             	.permitAll()
             	.and()
             .sessionManagement()
-            .maximumSessions(1);
+            .maximumSessions(5);
+        
+        http.csrf().disable();
     }
 
 }
