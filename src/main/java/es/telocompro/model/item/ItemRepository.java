@@ -1,5 +1,7 @@
 package es.telocompro.model.item;
 
+import java.math.BigDecimal;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -25,5 +27,15 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
 
     @Query("SELECT i FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName ORDER BY startdate")
     Page<Item> findItemsBySubCategoryName(@Param("subCategoryName") String subCategoryName, Pageable pageable);
+    
+    @Query("SELECT i FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName AND prize >= :prizeMin "
+    		+ "ORDER BY startdate")
+    Page<Item> findItemsBySubCategoryName(@Param("subCategoryName") String subCategoryName, 
+    		@Param("prizeMin") BigDecimal prizeMin, Pageable pageable);
+    
+    @Query("SELECT i FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName AND prize >= :prizeMin "
+    		+ "AND prize <= :prizeMax ORDER BY startdate")
+    Page<Item> findItemsBySubCategoryName(@Param("subCategoryName") String subCategoryName, 
+    		@Param("prizeMin") BigDecimal prizeMin, @Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
 
 }

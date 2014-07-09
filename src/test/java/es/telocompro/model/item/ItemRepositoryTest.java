@@ -21,6 +21,8 @@ import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.CategoryRepository;
 import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.item.category.subcategory.SubCategoryRepository;
+import es.telocompro.model.province.Province;
+import es.telocompro.model.province.ProvinceRepository;
 import es.telocompro.model.user.User;
 import es.telocompro.model.user.UserRepository;
 import es.telocompro.model.user.role.RoleRepository;
@@ -46,11 +48,14 @@ public class ItemRepositoryTest {
     SubCategoryRepository subCategoryRepository;
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    ProvinceRepository provinceRepository;
 
     Item item;
     User user;
     Category category;
     SubCategory subCategory;
+    Province province;
 
     @Before
     public void setUp() {
@@ -59,13 +64,16 @@ public class ItemRepositoryTest {
 
         categoryRepository.save(category);
         subCategoryRepository.save(subCategory);
+        
+        province = new Province("Valladolid");
+    	provinceRepository.save(province);
 
-        user = new User("login", "password", "fn", "ln", "addr", "phone", "email",
-                0, 0, roleRepository.findByRoleName(RoleEnum.ROLE_USER), null);
+        user = new User("login", "password", "fn", "ln", "addr", "phone", "email", province, null,
+        		roleRepository.findByRoleName(RoleEnum.ROLE_USER), null);
         userRepository.save(user);
 
-        item = new Item(user, subCategory, "title", "description", new BigDecimal(10), Calendar.getInstance(),
-        		null);
+        item = new Item(user, subCategory, "title", "description", province, new BigDecimal(10), 
+        		Calendar.getInstance(), null);
     }
 
     @Test
@@ -115,9 +123,11 @@ public class ItemRepositoryTest {
     @Test
     public void testFindAllItemsByUserId() {
         itemRepository.save(item);
-        Item item2 = new Item(user, subCategory, "title", "description", new BigDecimal(10), Calendar.getInstance(), null);
+        Item item2 = new Item(user, subCategory, "title", "description", province, 
+        		new BigDecimal(10), Calendar.getInstance(), null);
         itemRepository.save(item2);
-        Item item3 = new Item(user, subCategory, "title", "description", new BigDecimal(10), Calendar.getInstance(), null);
+        Item item3 = new Item(user, subCategory, "title", "description", 
+        		province, new BigDecimal(10), Calendar.getInstance(), null);
         itemRepository.save(item3);
 
         Assert.assertEquals(3, itemRepository.findByUserName(user.getLogin(), 

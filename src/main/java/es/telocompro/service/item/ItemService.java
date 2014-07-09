@@ -1,9 +1,13 @@
 package es.telocompro.service.item;
 
 import es.telocompro.model.item.Item;
-import es.telocompro.rest.util.RestItemObject;
-import es.telocompro.service.exception.WrongItemNameException;
+import es.telocompro.model.province.Province;
+import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
+import es.telocompro.rest.controller.exception.SubCategoryNotFoundException;
+import es.telocompro.rest.controller.exception.UserNotFoundException;
+import es.telocompro.service.exception.InvalidItemNameMinLenghtException;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.util.List;
@@ -25,9 +29,15 @@ public interface ItemService {
      * @param description
      * @param prize
      * @return
+     * @throws UserNotFoundException 
+     * @throws SubCategoryNotFoundException 
+     * @throws ProvinceNotFoundException
+     * @throws IOException 
      */
     public Item addItem(String userName, String subCategoryName, String title, String description, 
-    		double prize, byte[] imgHome) throws WrongItemNameException;
+    		String provinceName, double prize, byte[] image1)
+    				throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException, 
+    				ProvinceNotFoundException, IOException;
 
     /**
      * Get all items
@@ -55,11 +65,24 @@ public interface ItemService {
     public Page<Item> getItemByTitle(String title, int page, int size);
 
     /**
-     * Finds all items from a subcategory
+     * Finds all items from a subCategory
      * @param subCategoryName
      * @return
      */
+    @Deprecated
     public Page<Item> getAllItemsBySubCategory(String subCategoryName, int page, int size);
+    
+    /**
+     * Finds all items from a subCategory
+     * @param subCategoryName
+     * @param prizeMin Minimum prize
+     * @param prizeMax Maximum prize
+     * @param page Page number
+     * @param size Page size
+     * @return
+     */
+    public Page<Item> getAllItemsBySubCategory(String subCategoryName, int prizeMin, int prizeMax, 
+    		int page, int size);
 
     /**
      * Updates an item

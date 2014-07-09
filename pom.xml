@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>telocompro</groupId>
 	<artifactId>telocompro</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<version>1.0</version>
 	<name>telocompro</name>
 	<url>http://maven.apache.org</url>
@@ -37,6 +37,9 @@
 
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<thymeleaf.version>2.1.2.RELEASE</thymeleaf.version>
+		
+		<!-- Tapestry -->
+<!-- 		<tapestry.version>5.3.7</tapestry.version> -->
 
 		<!-- Java -->
 		<servlet-version>3.1.0</servlet-version>
@@ -80,6 +83,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+<!-- 			<exclusions> -->
+<!-- 				<exclusion> -->
+<!-- 					<artifactId>log4j-over-slf4j</artifactId> -->
+<!-- 					<groupId>org.slf4j</groupId> -->
+<!-- 				</exclusion> -->
+<!-- 			</exclusions> -->
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -98,6 +107,7 @@
 			<artifactId>spring-plugin-core</artifactId>
 			<version>0.8.0.RELEASE</version>
 		</dependency>
+		<!-- Spring MVC -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -124,6 +134,11 @@
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
 		</dependency>
+		<!-- Spring mobile -->
+		<dependency>
+            <groupId>org.springframework.mobile</groupId>
+            <artifactId>spring-mobile-device</artifactId>
+        </dependency>
 		<!-- Apache dbcp -->
 		<dependency>
 			<groupId>commons-dbcp</groupId>
@@ -139,6 +154,13 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
+		<!-- SLF4J (required by Hibernate and Tapestry) -->
+<!--         <dependency> -->
+<!--             <groupId>org.slf4j</groupId> -->
+<!--             <artifactId>slf4j-simple</artifactId> -->
+<!--             <version>${slf4j.version}</version> -->
+<!--             <scope>runtime</scope> -->
+<!--         </dependency> -->
 		<!-- slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -152,6 +174,27 @@
 			<artifactId>log4j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		
+		<!-- JSON -->
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+		
+		
+		<!-- TAPESTRY -->
+<!-- 		<dependency> -->
+<!--   			<groupId>org.apache.tapestry</groupId> -->
+<!--   			<artifactId>tapestry-core</artifactId> -->
+<!--   			<version>${tapestry.version}</version> -->
+<!-- 		</dependency> -->
+<!--         <dependency> -->
+<!--             <groupId>org.apache.tapestry</groupId> -->
+<!--             <artifactId>tapestry-spring</artifactId> -->
+<!--             <version>${tapestry.version}</version> -->
+<!--         </dependency> -->
 
 		<!--SECURITY -->
 		<!-- Spring Security -->
@@ -247,31 +290,31 @@
 		<!--</dependency> -->
 
 		<!-- THYEMLEAF -->
-		<dependency>
-			<groupId>org.thymeleaf</groupId>
-			<artifactId>thymeleaf</artifactId>
-			<version>${thymeleaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.thymeleaf</groupId>
-			<artifactId>thymeleaf-spring4</artifactId>
-			<version>${thymeleaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-springsecurity3</artifactId>
-			<version>2.1.0.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.dandelion</groupId>
-			<artifactId>datatables-thymeleaf</artifactId>
-			<version>0.9.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>${org.aspectj-version}</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.thymeleaf</groupId> -->
+<!-- 			<artifactId>thymeleaf</artifactId> -->
+<!-- 			<version>${thymeleaf.version}</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.thymeleaf</groupId> -->
+<!-- 			<artifactId>thymeleaf-spring4</artifactId> -->
+<!-- 			<version>${thymeleaf.version}</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.thymeleaf.extras</groupId> -->
+<!-- 			<artifactId>thymeleaf-extras-springsecurity3</artifactId> -->
+<!-- 			<version>2.1.0.RELEASE</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.github.dandelion</groupId> -->
+<!-- 			<artifactId>datatables-thymeleaf</artifactId> -->
+<!-- 			<version>0.9.3</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.aspectj</groupId> -->
+<!-- 			<artifactId>aspectjrt</artifactId> -->
+<!-- 			<version>${org.aspectj-version}</version> -->
+<!-- 		</dependency> -->
 
 		<!-- TEST DEPENDENCIES -->
 		<!-- Ver http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-integration-testing/ -->
@@ -325,6 +368,24 @@
 			<artifactId>scala-library</artifactId>
 			<version>2.10.3</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-remote-shell</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>
+				spring-boot-starter-data-elasticsearch
+			</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -345,16 +406,30 @@
 				<directory>src/main/resources</directory>
 			</resource>
 
-			<!-- Filter Jetty configuration -->
-			<!--<resource> -->
-			<!--<directory>src/main/jetty</directory> -->
-			<!--<includes> -->
-			<!--<include>jetty-env.xml</include> -->
-			<!--</includes> -->
-			<!--<targetPath>../jetty</targetPath> -->
-			<!--<filtering>true</filtering> -->
-			<!--</resource> -->
 		</resources>
+		
+		<testResources>
+            <!--
+                Apply filtering to files matching the following
+                expressions in src/test/resources.
+            -->
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>spring-config-test.xml</include>
+                    <include>hibernate-config-experiments.xml</include>
+                </includes>
+            </testResource>
+
+            <!--
+                Continue considering resources the files in
+                src/test/resources, but without applying filtering.
+            -->
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
 
 		<plugins>
 			<plugin>

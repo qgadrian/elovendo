@@ -21,8 +21,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,122 +45,12 @@ public class ItemController {
 
     @Autowired
     private ItemService itemService;
-
-    /**
-     * Get an items page for a desired subcategory
-     * @param subCategoryName
-     * @param page Page number
-     * @param size Elements size of page
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-	@RequestMapping(value="{subcategoryname}", params = {"p","s"},
-    		method = RequestMethod.GET)
-//    public Page<Item> getItemsBySubCategory(@PathVariable("subcategoryname") String subCategoryName,
-    public JSONObject getItemsBySubCategory(@PathVariable("subcategoryname") String subCategoryName,
-    		@RequestParam("p") int page, @RequestParam( "s" ) int size,
-    		HttpServletResponse response) {
-//    	HttpServletResponse response appliction/json
-    	
-    	Page<Item> p = itemService.getAllItemsBySubCategory(subCategoryName, page, size);
-    	List<Item> list = p.getContent();
-    	
-    	JSONObject jsonResponse = new JSONObject();
-    	JSONArray jsonArray = new JSONArray();
-    	JSONArray itemArray = new JSONArray();
-    	for (Item i : list) {
-        	JSONObject itemJsonObject = new JSONObject();
-    		itemJsonObject.put("itemid", i.getItemId());
-    		itemJsonObject.put("title", i.getTitle());
-    		itemJsonObject.put("description", i.getDescription());
-    		itemJsonObject.put("prize", i.getPrize());
-    		itemJsonObject.put("username", i.getUser().getLogin());
-    		itemJsonObject.put("subcategory", i.getSubCategory().getSubCategoryName());
-    		itemJsonObject.put("category", i.getSubCategory().getCategory().getCategoryName());
-//    		itemJsonObject.put("imghome", i.getImgHome());
-				itemJsonObject.put("filename", 
-						IOUtil.calculateFileName(i.getUser().getLogin(), i.getItemId().intValue()));
-    		itemArray.add(itemJsonObject);
-    	}
-    	JSONObject pageNumber = new JSONObject();
-    	JSONObject pageSize = new JSONObject();
-    	JSONObject pageTotalPages = new JSONObject();
-    	JSONObject pageSizeTotalElements = new JSONObject();
-    	pageNumber.put("pageNumber", p.getNumber());
-    	pageSize.put("pageElements", p.getNumberOfElements());
-    	pageTotalPages.put("totalPages", p.getTotalPages());
-    	pageSizeTotalElements.put("totalElements", p.getTotalElements());
-    	jsonArray.add(pageNumber);
-    	jsonArray.add(pageSize);
-    	jsonArray.add(pageTotalPages);
-    	jsonArray.add(pageSizeTotalElements);
-    	
-    	
-    	jsonResponse.put("content", itemArray);
-    	jsonResponse.put("page", jsonArray);
-    	
-    	response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.setStatus(HttpServletResponse.SC_OK);
-    	
-//    	System.out.println("going to respond " + jsonResponse.toJSONString());
-    	
-//    	return itemService.getAllItemsBySubCategory(subCategoryName, page, size);
-    	return jsonResponse;
-    	
-//    	Page<Item> pages = itemService.getAllItemsBySubCategory(subCategoryName, page, size);
-//    	
-//    	System.out.println("##########################################");
-//		System.out.println("Te image received from database is...");
-//		BufferedImage img = null;
-//		try {
-//			ByteArrayInputStream b = new ByteArrayInputStream(pages.getContent().get(2).getImgHome());
-//			img = ImageIO.read(b);
-//		} catch (IOException e) { e.printStackTrace(); }
-//		Integer width = img.getWidth();
-//    	Integer height = img.getHeight();
-//    	System.out.println("Image height " + height);
-//    	System.out.println("image width " + width);
-//    	
-//    	FileOutputStream fos = null;
-//    	try {
-//    		fos = new FileOutputStream("/home/adrian/Desktop/pruebaImage.jpg");
-//    	    fos.write(pages.getContent().get(2).getImgHome());
-//    	    fos.close();
-//    	} catch (IOException e) {}
-//    	
-//    	return pages;
-    	
-    }
-    
-    @RequestMapping(value="{subcategory}/{itemid}/image", method = RequestMethod.GET)
-    public String getItemImage( @PathVariable("subcategory") String subcategory,
-    		@PathVariable("itemid") Long itemId ) throws WrongItemSubCategoryRequestException {
-    	
-    	Item item = itemService.getItemById(itemId);
-    	
-    	if (!item.getSubCategory().getSubCategoryName()
-    			.equalsIgnoreCase(subcategory)) {
-    		throw new WrongItemSubCategoryRequestException(subcategory, itemId);
-    	}
-    	// TODO check if item is receveided or launch exception or think about it
-    	
-//    	JSONObject jsonResponse = new JSONObject();
-//    	jsonResponse.put("imghome", item.getImgHome());
-    	    	
-    	return item.getImgHome();
-    	
-    }
     
     /**
-     * Get an item by its id. Asks for subcategory too to avoid increasing id search.
+     * Get an item by its id. Asks for subCategory to avoid "cheating" by increasing id search.
      * @throws WrongItemSubCategoryRequestException 
      */
 //    @Secured("ROLE_USER")
-//    @RequestMapping(value="/items/{itemid}", method = RequestMethod.GET)
-//    public Item getItem( @PathVariable("itemid") Long itemId ) {
-//        return itemService.getItemById(itemId);
-//    }
     @RequestMapping(value="{subcategory}/{itemid}", method = RequestMethod.GET)
     public RestItemObject getItem( @PathVariable("subcategory") String subcategory,
     		@PathVariable("itemid") Long itemId ) throws WrongItemSubCategoryRequestException {
@@ -191,9 +84,122 @@ public class ItemController {
      * @return
      */
     @RequestMapping(value="items/user/{userName}", method = RequestMethod.GET)
-    public Page<Item> getItemsByUserName(@PathVariable("userid") String userName,
+    public Page<Item> getItemsByUserName(@PathVariable("userName") String userName,
     		@RequestParam("p") int page, @RequestParam( "s" ) int size) {
         return itemService.getAllItemsByUserName(userName, page, size);
     }
 
+    
+    /**
+     * Get an items page for a desired subCategory
+     * @param subCategoryName
+     * @param page Page number
+     * @param size Elements size of page
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+	@RequestMapping(value="/2/{subcategoryname}", params = {"p","s"}, method = RequestMethod.GET)
+    public JSONObject getItemsBySubCategory2(@PathVariable("subcategoryname") String subCategoryName,
+    		@RequestParam(value="filter", required=false) String filter, 
+    		@RequestParam(value="prizeMin", required=false, defaultValue="0") int prizeMin,
+    		@RequestParam(value="prizeMax", required=false, defaultValue="0") int prizeMax,
+    		@RequestParam("p") int page, @RequestParam( "s" ) int size,
+    		HttpServletResponse response) {
+    	
+    	String[] filterParams = filter.split(",");
+    	
+    	//TODO: Maybe could be better a query with the params in filter?
+    	Page<Item> p = itemService.getAllItemsBySubCategory(subCategoryName, prizeMin, prizeMax, page, size);
+    	List<Item> list = p.getContent();
+
+    	// Obtain the desired page and format a JSON with data
+    	JSONObject jsonResponse = new JSONObject();
+    	JSONArray jsonArray = new JSONArray();
+    	JSONArray itemArray = new JSONArray();
+    	for (Item item : list) {
+    		System.out.println("Item found " + item.getItemId() + " - " + item.getTitle());
+    		JSONObject itemJsonObject = new JSONObject();
+    		if (filterParams != null)
+    			itemJsonObject = getJSONObjectFromFilter(filterParams, item);
+    		else
+    			itemJsonObject = getJSONObjectFromItem(item);
+    		itemArray.add(itemJsonObject);
+    	}
+    	JSONObject pageJSONObject = new JSONObject();
+    	pageJSONObject.put("pageNumber", p.getNumber());
+    	pageJSONObject.put("pageElements", p.getNumberOfElements());
+    	pageJSONObject.put("totalPages", p.getTotalPages());
+    	pageJSONObject.put("totalElements", p.getTotalElements());
+    	jsonArray.add(pageJSONObject);
+    	
+    	jsonResponse.put("content", itemArray);
+    	jsonResponse.put("page", jsonArray);
+    	
+    	response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(HttpServletResponse.SC_OK);
+    	        
+    	return jsonResponse;  	
+    }
+    
+    @SuppressWarnings("unchecked")
+	private JSONObject getJSONObjectFromFilter(String[] filterParams, Item item) {
+    	
+    	JSONObject itemJsonObject = new JSONObject();
+    	
+    	for (String field : filterParams) {
+			switch (field) {
+    			case "itemId": 
+    				itemJsonObject.put("itemid", item.getItemId()); break;
+    			case "title": 
+    				itemJsonObject.put("title", item.getTitle()); break;
+    			case "description": 
+    				itemJsonObject.put("description", item.getDescription()); break;
+    			case "province": 
+    				itemJsonObject.put("province", item.getProvince().getProvinceName()); break;
+    			case "prize": 
+    				itemJsonObject.put("prize", item.getPrize()); break;
+    			case "userName": 
+    				itemJsonObject.put("userName", item.getUser().getLogin()); break;
+    			case "profilePic": 
+    				itemJsonObject.put("profilePic", 
+//    						"http://192.168.0.5:8080/" + item.getUser().getAvatar()); break;
+    						"http://83.165.60.132:8080/" + item.getUser().getAvatar()); break;
+    			case "userValue": 
+    				itemJsonObject.put("userValue", item.getUser().getUserValue()); break;
+    			case "subCategory": 
+    				itemJsonObject.put("subcategory", item.getSubCategory().getSubCategoryName()); break;
+    			case "category": 
+    				itemJsonObject.put("category", item.getSubCategory().getCategory().getCategoryName()); break;
+    			case "imageHome": 
+//    				itemJsonObject.put("imageHome", "http://192.168.0.5:8080/" + item.getImgHome()); break;
+    				itemJsonObject.put("imageHome", "http://83.165.60.132:8080/" + item.getImgHome()); break;
+			}
+		}
+    	
+    	return itemJsonObject;
+    	
+    }
+
+    @SuppressWarnings("unchecked")
+	private JSONObject getJSONObjectFromItem(Item item) {
+    	
+    	JSONObject itemJsonObject = new JSONObject();
+    	
+    	itemJsonObject.put("itemid", item.getItemId());
+		itemJsonObject.put("title", item.getTitle());
+		itemJsonObject.put("description", item.getDescription());
+		itemJsonObject.put("province", item.getProvince().getProvinceName());
+		itemJsonObject.put("prize", item.getPrize());
+		itemJsonObject.put("userName", item.getUser().getLogin());
+		itemJsonObject.put("profilePic", 
+				"http://192.168.0.5:8080/" + item.getUser().getAvatar());
+		itemJsonObject.put("userValue", item.getUser().getUserValue());
+		itemJsonObject.put("subcategory", item.getSubCategory().getSubCategoryName());
+		itemJsonObject.put("category", item.getSubCategory().getCategory().getCategoryName());
+		itemJsonObject.put("imageHome", "http://192.168.0.5:8080/" + item.getImgHome());
+		
+		return itemJsonObject;
+    }
+    
 }

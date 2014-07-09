@@ -15,7 +15,7 @@ public class FailureHandler implements AuthenticationFailureHandler {
 	public void onAuthenticationFailure(HttpServletRequest arg0,
 			HttpServletResponse arg1, AuthenticationException arg2)
 			throws IOException, ServletException {
-		arg1.sendError(HttpServletResponse.SC_FORBIDDEN);
+		arg1.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 	}
 
 }

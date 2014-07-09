@@ -20,5 +20,12 @@ public interface CategoryService {
      * @param categoryName
      * @return
      */
-    public Iterable<SubCategory> findAllSubCatByCategoryIdOrdBySubCatId(String categoryName);
+    public Iterable<SubCategory> getAllSubCatByCategoryIdOrderBySubCatId(String categoryName);
+    
+    /**
+     * Returns subCategory searching by its name
+     * @param subCategoryName
+     * @return
+     */
+    public SubCategory getSubCategoryByName(String subCategoryName);
 }
