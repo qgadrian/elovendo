@@ -53,15 +53,13 @@ public class ItemController {
     @SuppressWarnings("unchecked")
 	@RequestMapping(value="{subcategoryname}", params = {"p","s"},
     		method = RequestMethod.GET)
-//    public Page<Item> getItemsBySubCategory(@PathVariable("subcategoryname") String subCategoryName,
     public JSONObject getItemsBySubCategory(@PathVariable("subcategoryname") String subCategoryName,
     		@RequestParam("p") int page, @RequestParam( "s" ) int size,
     		HttpServletResponse response) {
-//    	HttpServletResponse response appliction/json
     	
     	Page<Item> p = itemService.getAllItemsBySubCategory(subCategoryName, page, size);
     	List<Item> list = p.getContent();
-    	
+    	// Obtain the desired paege and format a json with data
     	JSONObject jsonResponse = new JSONObject();
     	JSONArray jsonArray = new JSONArray();
     	JSONArray itemArray = new JSONArray();
@@ -74,9 +72,8 @@ public class ItemController {
     		itemJsonObject.put("username", i.getUser().getLogin());
     		itemJsonObject.put("subcategory", i.getSubCategory().getSubCategoryName());
     		itemJsonObject.put("category", i.getSubCategory().getCategory().getCategoryName());
-//    		itemJsonObject.put("imghome", i.getImgHome());
-				itemJsonObject.put("filename", 
-						IOUtil.calculateFileName(i.getUser().getLogin(), i.getItemId().intValue()));
+			itemJsonObject.put("filename", 
+					IOUtil.calculateFileName(i.getUser().getLogin(), i.getItemId().intValue()));
     		itemArray.add(itemJsonObject);
     	}
     	JSONObject pageNumber = new JSONObject();
@@ -100,34 +97,8 @@ public class ItemController {
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_OK);
     	
-//    	System.out.println("going to respond " + jsonResponse.toJSONString());
-    	
-//    	return itemService.getAllItemsBySubCategory(subCategoryName, page, size);
-    	return jsonResponse;
-    	
-//    	Page<Item> pages = itemService.getAllItemsBySubCategory(subCategoryName, page, size);
-//    	
-//    	System.out.println("##########################################");
-//		System.out.println("Te image received from database is...");
-//		BufferedImage img = null;
-//		try {
-//			ByteArrayInputStream b = new ByteArrayInputStream(pages.getContent().get(2).getImgHome());
-//			img = ImageIO.read(b);
-//		} catch (IOException e) { e.printStackTrace(); }
-//		Integer width = img.getWidth();
-//    	Integer height = img.getHeight();
-//    	System.out.println("Image height " + height);
-//    	System.out.println("image width " + width);
-//    	
-//    	FileOutputStream fos = null;
-//    	try {
-//    		fos = new FileOutputStream("/home/adrian/Desktop/pruebaImage.jpg");
-//    	    fos.write(pages.getContent().get(2).getImgHome());
-//    	    fos.close();
-//    	} catch (IOException e) {}
-//    	
-//    	return pages;
-    	
+
+    	return jsonResponse;  	
     }
     
     @RequestMapping(value="{subcategory}/{itemid}/image", method = RequestMethod.GET)

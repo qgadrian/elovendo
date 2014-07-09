@@ -1,5 +1,7 @@
 package es.telocompro.rest.controller;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,8 +36,9 @@ public class CategoryController {
     /**
      * Get all subcategories from a category
      */
-    @RequestMapping(value = "{category}", method = RequestMethod.GET)
-    public Iterable<SubCategory> getSubCategories(@PathVariable("category") String categoryName) 
+    @SuppressWarnings("unchecked")
+	@RequestMapping(value = "{category}", method = RequestMethod.GET)
+    public JSONArray getSubCategories(@PathVariable("category") String categoryName) 
     throws CategoriesNotFoundException {
         Iterable<SubCategory> subCategories =
         		categoryService.findAllSubCatByCategoryIdOrdBySubCatId(categoryName);
@@ -44,7 +47,15 @@ public class CategoryController {
         	throw new CategoriesNotFoundException(categoryName);
         }
         
-        return subCategories;
+    	JSONArray jsonArray = new JSONArray();
+    	for (SubCategory subCategory : subCategories) {
+    		JSONObject object = new JSONObject();
+    		object.put("subCategoryName", subCategory.getSubCategoryName());
+    		object.put("categoryName", subCategory.getCategory().getCategoryName());
+    		jsonArray.add(object);
+    	}
+        
+        return jsonArray;
     }
     
     

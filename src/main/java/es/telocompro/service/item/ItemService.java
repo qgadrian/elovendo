@@ -1,8 +1,11 @@
 package es.telocompro.service.item;
 
 import es.telocompro.model.item.Item;
-import es.telocompro.rest.util.RestItemObject;
-import es.telocompro.service.exception.WrongItemNameException;
+import es.telocompro.model.province.Province;
+import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
+import es.telocompro.rest.controller.exception.SubCategoryNotFoundException;
+import es.telocompro.rest.controller.exception.UserNotFoundException;
+import es.telocompro.service.exception.InvalidItemNameMinLenghtException;
 
 import java.math.BigDecimal;
 import java.sql.Blob;
@@ -25,9 +28,14 @@ public interface ItemService {
      * @param description
      * @param prize
      * @return
+     * @throws UserNotFoundException 
+     * @throws SubCategoryNotFoundException 
+     * @throws ProvinceNotFoundException 
      */
     public Item addItem(String userName, String subCategoryName, String title, String description, 
-    		double prize, byte[] imgHome) throws WrongItemNameException;
+    		String provinceName, double prize, byte[] imgHome)
+    				throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException, 
+    				ProvinceNotFoundException;
 
     /**
      * Get all items

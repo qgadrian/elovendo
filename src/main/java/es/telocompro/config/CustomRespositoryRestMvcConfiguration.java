@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 
+import es.telocompro.model.item.category.subcategory.SubCategory;
+
 /**
  * Created by @adrian on 18/06/14.
  * All rights reserved.
@@ -14,7 +16,7 @@ public class CustomRespositoryRestMvcConfiguration extends RepositoryRestMvcConf
 
     @Override
     protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
-        //config.exposeIdsFor(Category.class, SubCategory.class);
+//        config.exposeIdsFor(SubCategory.class);
     }
 
 }
