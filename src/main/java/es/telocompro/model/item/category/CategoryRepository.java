@@ -14,15 +14,10 @@ import org.springframework.stereotype.Repository;
 @Repository("categoryRepository")
 public interface CategoryRepository extends PagingAndSortingRepository<Category, Long> {
 
-//    @Query("SELECT c FROM category WHERE categoryname LIKE %:name%")
-//    Iterable<category> findByCategoryName(@Param("name") String name);
-
     // FAQ: El nombre de la tabla con mayúscula, si no da error
     @Query("SELECT c FROM Category c ORDER BY categoryid")
     Iterable<Category> findAllOrderByCategoryId();
 
-    //    @Query("SELECT s FROM Subcategory s WHERE s.category.categoryid = (SELECT c.categoryid FROM Category c WHERE c.categoryname LIKE" +
-    //            " :categoryName) ORDER BY s.subcategoryid")
     @Query("SELECT s FROM SubCategory s WHERE s.category.categoryName = :categoryName ORDER BY subcategoryid")
     Iterable<SubCategory> findAllSubCategoryByCategoryName(@Param("categoryName") String categoryName);
 

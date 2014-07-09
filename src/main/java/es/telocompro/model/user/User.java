@@ -20,7 +20,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import es.telocompro.model.province.Province;
 import es.telocompro.model.user.role.Role;
+import es.telocompro.util.Constant;
 import es.telocompro.util.SocialMediaService;
 
 /**
@@ -50,17 +52,19 @@ public class User implements UserDetails {
     private String address;
     private String phone;
     private String email;
-    @Column(name = "votespositive")
-    private int votesPositive;
-    @Column(name = "votesnegative")
-    private int votesNegative;
+    
+    private String avatar;
+    
+    @Column
+    private int userValue;
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "role", length = 20, nullable = false)
-//    @Column(name = "roleid")
     @ManyToOne(optional=false, fetch=FetchType.EAGER)
     @JoinColumn(name = "roleid")
     private Role role;
+    
+    @ManyToOne(optional = false, fetch=FetchType.LAZY)
+    @JoinColumn(name = "provinceId")
+    private Province province;
     
     private boolean enabled;
 
@@ -76,7 +80,7 @@ public class User implements UserDetails {
     }
 
     public User(String login, String password, String firstName, String lastName, String address, String phone,
-                String email, int votesPositive, int votesNegative, Role role, SocialMediaService signInProvider) {
+                String email, Province province, String avatar, Role role, SocialMediaService signInProvider) {
         this.login = login;
         this.password = password;
         this.firstName = firstName;
@@ -84,10 +88,12 @@ public class User implements UserDetails {
         this.address = address;
         this.phone = phone;
         this.email = email;
-        this.votesPositive = votesPositive;
-        this.votesNegative = votesNegative;
+        this.province = province;
+        this.avatar = avatar;
         this.role = role;
         this.signInProvider = signInProvider;
+        this.userValue = Constant.DEFAULT_USER_VALUE;
+        this.enabled = true;
     }
     
     public void setEnabled(boolean enabled) {
@@ -173,30 +179,32 @@ public class User implements UserDetails {
     public void setSignInProvider(SocialMediaService signInProvider) {
         this.signInProvider = signInProvider;
     }
-
-    public int getVotesPositive() {
-        return votesPositive;
-    }
-
-    public void setVotesPositive(int votesPositive) {
-        this.votesPositive = votesPositive;
-    }
-
-    public int getVotesNegative() {
-        return votesNegative;
-    }
-
-    public void setVotesNegative(int votesNegative) {
-        this.votesNegative = votesNegative;
-    }
-
-    @Transient
-    public int getVoteRating() {
-//        return Math.round((votesPositive/(votesPositive+votesNegative)) * 100);
-        return Math.round((votesPositive*100)/(votesPositive+votesNegative));
-    }
     
-    /**
+	public Province getProvince() {
+		return province;
+	}
+
+	public void setProvince(Province province) {
+		this.province = province;
+	}
+
+    public int getUserValue() {
+		return userValue;
+	}
+
+	public void setUserValue(int userValue) {
+		this.userValue = userValue;
+	}
+    
+    public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	/**
      * User details Overrides
      */
 
@@ -241,5 +249,15 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		return this.getEnabled();
 	}
-
+	
+	/** OVERRIDE **/
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof User)) return false;
+		
+		User user = (User) obj;
+		return user.getLogin() == this.login;
+	}
+	
 }

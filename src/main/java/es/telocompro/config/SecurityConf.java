@@ -31,7 +31,6 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 
     // DOCUMENTATION: http://docs.spring.io/spring-security/site/docs/3.2.x/guides/form.html
 
-	//TODO: Logout no funciona
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -39,15 +38,18 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 //            	.antMatchers("/resources/**", "/signup").permitAll()
 //                .antMatchers("/bazaar/*").permitAll()
 //                .antMatchers("/bazaar/items/**").authenticated()
+            	.antMatchers("/imgs/**").permitAll() //TODO: Not sure if necesary...
             	.antMatchers("/login").permitAll()
+            	.antMatchers("/site/user/**").permitAll()
             	.antMatchers("/bazaar/**").permitAll()
-            	.antMatchers("/items/item**").authenticated()
+            	.antMatchers("/items/item/**").authenticated()
+            	.antMatchers("/site/delete/**").authenticated()
             	.antMatchers("/logout").authenticated()
                 .and()
             .formLogin()
             	.failureHandler(new FailureHandler())
             	.successHandler(new SuccessHandler())
-//            	.defaultSuccessUrl("/bazaar/moda")
+            	.defaultSuccessUrl("/welcome")
 //                .loginPage("/login").permitAll()
             	.and()
             .logout()
@@ -63,6 +65,11 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             .maximumSessions(5);
         
         http.csrf().disable();
+        
+        http.rememberMe();
+        
+        /** HTTPS **/
+//        http.requiresChannel().anyRequest().requiresSecure();
     }
 
 }

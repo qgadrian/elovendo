@@ -3,7 +3,6 @@ package es.telocompro.model.item;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,13 +10,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import es.telocompro.model.item.category.subcategory.SubCategory;
+import es.telocompro.model.province.Province;
 import es.telocompro.model.user.User;
 
 /**
@@ -50,16 +49,16 @@ public class Item {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar startDate;
     
-    @Column(name="imghome")
-    @Lob
-    @Basic(fetch=FetchType.LAZY)
+    @ManyToOne(optional = false, fetch=FetchType.LAZY)
+    @JoinColumn(name = "provinceId")
+    private Province province;
+    
     private String imgHome;
 
-    public Item() {
-    }
+    public Item() { }
 
     public Item(User user, SubCategory subCategory, String title, String description, 
-    		BigDecimal prize, Calendar startDate, String imgHome) {
+    		Province province, BigDecimal prize, Calendar startDate, String imgHome) {
         this.user = user;
         this.subCategory = subCategory;
         this.title = title;
@@ -67,6 +66,7 @@ public class Item {
         this.prize = prize;
         this.startDate = startDate;
         this.imgHome = imgHome;
+        this.province = province;
     }
 
     public SubCategory getSubCategory() {
@@ -131,6 +131,14 @@ public class Item {
 
 	public void setItemId(Long itemId) {
 		this.itemId = itemId;
+	}
+
+	public Province getProvince() {
+		return province;
+	}
+
+	public void setProvince(Province province) {
+		this.province = province;
 	}
 
 }

@@ -3,6 +3,7 @@ package es.telocompro.service.item.category;
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.CategoryRepository;
 import es.telocompro.model.item.category.subcategory.SubCategory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Iterable<SubCategory> findAllSubCatByCategoryIdOrdBySubCatId(String categoryName) {
+    public Iterable<SubCategory> getAllSubCatByCategoryIdOrderBySubCatId(String categoryName) {
         return categoryRepository.findAllSubCategoryByCategoryName(categoryName);
     }
+
+	@Override
+	public SubCategory getSubCategoryByName(String subCategoryName) {
+		return categoryRepository.findSubCategoryByName(subCategoryName);
+	}
 }

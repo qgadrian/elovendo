@@ -1,12 +1,6 @@
 package es.telocompro.rest.util;
 
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 import es.telocompro.model.item.Item;
-import es.telocompro.model.item.category.Category;
-import es.telocompro.model.item.category.subcategory.SubCategory;
 
 public class RestItemObject {
 	
