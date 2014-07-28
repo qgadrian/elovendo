@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 
 @EnableAutoConfiguration
-//@Configuration
+@Configuration
 @ComponentScan("es.telocompro")
 @EnableJpaRepositories
 public class TelocomproMain extends SpringBootServletInitializer {
