@@ -1,6 +1,5 @@
 package es.telocompro.rest.controller;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.telocompro.model.item.Item;
