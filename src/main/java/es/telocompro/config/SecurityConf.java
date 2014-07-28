@@ -50,7 +50,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             	.failureHandler(new FailureHandler())
             	.successHandler(new SuccessHandler())
             	.defaultSuccessUrl("/welcome")
-//                .loginPage("/login").permitAll()
+                .loginPage("/login").permitAll()
             	.and()
             .logout()
             	.invalidateHttpSession(true)

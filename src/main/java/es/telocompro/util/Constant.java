@@ -10,7 +10,7 @@ public class Constant {
 	 * IMAGES
 	 */
 	
-	public static final String RESOURCE_IMAGES_PATH = "file:/home/adrian/Proyectos/springToolSuite/telocompro/imgs/";
+	public static final String RESOURCE_IMAGES_PATH = "file:/home/adrian/Proyectos/eclipse/elovendo/imgs/";
 	
 	/**
 	 * VOTE

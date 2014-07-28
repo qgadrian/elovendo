@@ -98,8 +98,9 @@ public class ItemController {
      * @return
      */
     @SuppressWarnings("unchecked")
-	@RequestMapping(value="/2/{subcategoryname}", params = {"p","s"}, method = RequestMethod.GET)
-    public JSONObject getItemsBySubCategory2(@PathVariable("subcategoryname") String subCategoryName,
+	@RequestMapping(value="/2/{subcategoryname}", params = {"p","s"}, 
+	method = RequestMethod.GET, produces = "application/json")
+    public JSONObject getItemsBySubCategory(@PathVariable("subcategoryname") String subCategoryName,
     		@RequestParam(value="filter", required=false) String filter, 
     		@RequestParam(value="prizeMin", required=false, defaultValue="0") int prizeMin,
     		@RequestParam(value="prizeMax", required=false, defaultValue="0") int prizeMax,
