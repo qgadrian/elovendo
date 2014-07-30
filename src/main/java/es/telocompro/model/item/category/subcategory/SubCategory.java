@@ -26,8 +26,7 @@ public class SubCategory {
     @Column(name = "subcategoryname")
     private String subCategoryName;
 
-    protected SubCategory() {
-    }
+    public SubCategory() { }
 
     public SubCategory(Category category, String subCategoryName) {
         this.category = category;

@@ -76,8 +76,7 @@ public class User implements UserDetails {
 //    private Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
 
 
-    protected User() {
-    }
+    public User() { }
 
     public User(String login, String password, String firstName, String lastName, String address, String phone,
                 String email, Province province, String avatar, Role role, SocialMediaService signInProvider) {

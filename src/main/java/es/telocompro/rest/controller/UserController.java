@@ -52,7 +52,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @SuppressWarnings("unused")
-@RequestMapping("/site/")
+@RequestMapping("/api/zorg/site/") //FIXME: Add /api/ to ALL REST url
 public class UserController {
 
 	@Autowired
@@ -90,7 +90,6 @@ public class UserController {
 					throws ProvinceNotFoundException, LoginNotAvailableException {
 		
 		byte[] avatarBytes = null;
-		String avatarBase64 = null;
 		try {
 			avatarBytes = avatar.getBytes();
 		} catch (IOException e) {

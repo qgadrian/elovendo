@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.IteratorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mobile.device.Device;
@@ -15,11 +16,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import es.telocompro.model.item.Item;
+import es.telocompro.model.item.category.Category;
+import es.telocompro.model.item.category.subcategory.SubCategory;
+import es.telocompro.model.province.Province;
 import es.telocompro.model.user.User;
 import es.telocompro.service.item.ItemService;
+import es.telocompro.service.item.category.CategoryService;
+import es.telocompro.service.province.ProvinceService;
 
 /**
  * Created by @adrian on 18/06/14.
@@ -31,6 +36,10 @@ public class MainController {
 	
     @Autowired
     private ItemService itemService;
+    @Autowired
+    private ProvinceService provinceService;
+    @Autowired
+    private CategoryService categoryService;
 	
 	/** Login **/
     
@@ -92,11 +101,39 @@ public class MainController {
     /** WEB PAGES **/
     
     @RequestMapping(value="/elovendo/index", method = RequestMethod.GET)
-    public String pageTest4() {
-//        response.setContentType("text/html");
-//        response.setCharacterEncoding("UTF-8");
+    public String indexPage() {
         return "elovendo/index";
-//        return "/elovendo/index";
+    }
+    
+    @RequestMapping(value="/elovendo/add_user", method = RequestMethod.GET)
+    public String addUserPage(Model model) {
+    	model.addAttribute("user", new User());
+    	model.addAttribute("provinceName", new String());
+    	
+    	@SuppressWarnings("unchecked")
+		List<Province> provinces = IteratorUtils.toList(provinceService.findAllProvinces().iterator());
+    	model.addAttribute("provinces", provinces);
+    	
+        return "elovendo/user/add_user";
+    }
+    
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value="/elovendo/add_item", method = RequestMethod.GET)
+    public String addItemPage(Model model) {
+    	model.addAttribute("item", new Item());
+    	model.addAttribute("provinceName", new String());
+    	model.addAttribute("categoryName", new Category());
+    	model.addAttribute("subCategoryName", new SubCategory());
+    	
+		List<Province> provinces = IteratorUtils.toList(provinceService.findAllProvinces().iterator());
+    	model.addAttribute("provinces", provinces);
+    	
+    	List<Category> categories = IteratorUtils.toList(categoryService.findAllCategories().iterator());
+    	model.addAttribute("categories", categories);
+    	List<SubCategory> subCategories = IteratorUtils.toList(categoryService.findAllSubCategories().iterator());
+    	model.addAttribute("subCategories", subCategories);
+    	
+        return "elovendo/item/add_item";
     }
     
     @RequestMapping(value="/elovendo/itemtest", method = RequestMethod.GET)
@@ -108,21 +145,5 @@ public class MainController {
         return "elovendo/left-sidebar";
 //    	return "elovendo/itemListTest";
     }
-    
-    @RequestMapping(value="about2", method = RequestMethod.GET)
-    public ModelAndView pageAbout2(HttpServletResponse response) {
-    	
-        ModelAndView model = new ModelAndView("elovendo/right-sidebar");
-        response.setContentType("text/html");
-        response.setCharacterEncoding("UTF-8");
-        return model;
-    }
-    
-//    @RequestMapping(value="/**")
-//    public String errorController(HttpServletResponse response) throws IOException {
-//    	
-//    	response.sendError(HttpServletResponse.SC_NOT_FOUND);
-//    	return "error";
-//    }
 
 }

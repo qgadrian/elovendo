@@ -40,6 +40,17 @@ public interface UserService extends UserDetailsService {
     public User addUser(String login, String password, String firstName, String lastName, String address,
                         String phone, String email, String provinceName, byte[] avatar) 
                         		throws LoginNotAvailableException, ProvinceNotFoundException;
+    
+    /**
+     * Adds an user
+     * @param user
+     * @param provinceName
+     * @return
+     * @throws LoginNotAvailableException
+     * @throws ProvinceNotFoundException
+     */
+    public User addUser(User user, String provinceName, byte[] profilePicBytes) 
+    		throws LoginNotAvailableException, ProvinceNotFoundException;
 
     /**
      * Finds a user by its id

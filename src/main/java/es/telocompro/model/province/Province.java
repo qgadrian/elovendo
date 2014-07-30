@@ -19,7 +19,7 @@ public class Province {
 	
 	private String provinceName;
 
-	protected Province() { }
+	public Province() { }
 
 	public Province(String provinceName) {
 		super();
@@ -33,5 +33,5 @@ public class Province {
 	public String getProvinceName() {
 		return provinceName;
 	}
-	
+
 }

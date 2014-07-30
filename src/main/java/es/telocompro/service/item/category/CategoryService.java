@@ -28,4 +28,7 @@ public interface CategoryService {
      * @return
      */
     public SubCategory getSubCategoryByName(String subCategoryName);
+    
+    public Iterable<Category> findAllCategories();
+    public Iterable<SubCategory> findAllSubCategories();
 }

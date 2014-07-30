@@ -22,4 +22,9 @@ public class ProvinceServiceImpl implements ProvinceService {
 		return provinceRepostory.findAll();
 	}
 
+	@Override
+	public Province findProvince(Province province) {
+		return provinceRepostory.findOne(province.getProvinceId());
+	}
+
 }

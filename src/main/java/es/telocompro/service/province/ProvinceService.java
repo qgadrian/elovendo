@@ -6,6 +6,8 @@ public interface ProvinceService {
 	
 	public Province findProvinceByName(String provinceName);
 	
+	public Province findProvince(Province province);
+	
 	public Iterable<Province> findAllProvinces();
 
 }

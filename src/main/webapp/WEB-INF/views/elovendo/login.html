@@ -3,10 +3,11 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
   <head>
     <title tiles:fragment="title">Messages : Create</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   </head>
   <body>
     <div tiles:fragment="content">
-        <form name="f" th:action="@{/login}" method="post">               
+        <form name="f" th:action="@{/login}" method="post">
             <fieldset>
                 <legend>Please Login</legend>
                 <div th:if="${param.error}" class="alert alert-error">    

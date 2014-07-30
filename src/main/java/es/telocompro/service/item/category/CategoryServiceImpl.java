@@ -3,6 +3,7 @@ package es.telocompro.service.item.category;
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.CategoryRepository;
 import es.telocompro.model.item.category.subcategory.SubCategory;
+import es.telocompro.model.item.category.subcategory.SubCategoryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private SubCategoryRepository subCategoryRepository;
 
     @Override
     public Iterable<Category> findAllCategoriesOrderByCategoryId() {
@@ -31,5 +34,15 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public SubCategory getSubCategoryByName(String subCategoryName) {
 		return categoryRepository.findSubCategoryByName(subCategoryName);
+	}
+
+	@Override
+	public Iterable<Category> findAllCategories() {
+		return categoryRepository.findAll();
+	}
+
+	@Override
+	public Iterable<SubCategory> findAllSubCategories() {
+		return subCategoryRepository.findAll();
 	}
 }

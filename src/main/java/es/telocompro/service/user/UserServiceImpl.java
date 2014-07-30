@@ -54,6 +54,9 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findAll();
 	}
 
+	//TODO: Both clases should be reversed, pass an user and do stuff there, and the below function just create 
+	// an user and pass it
+	// BE CAREFULL WITH USER DISABLED BY DEFAULT
 	@Override
 	public User addUser(String login, String password, String firstName,
 			String lastName, String address, String phone, String email, 
@@ -63,7 +66,7 @@ public class UserServiceImpl implements UserService {
 		Province province = provinceService.findProvinceByName(provinceName);
 		if (province == null) throw new ProvinceNotFoundException(provinceName);
 		
-		if (findUserByLogin(login) != null ) throw new LoginNotAvailableException(login); 
+		if (findUserByLogin(login) != null ) throw new LoginNotAvailableException(login);
 		
 		// At this point, all new users always will be ROLE_USER
 		Role role = roleRepository.findByRoleName(RoleEnum.ROLE_USER);
@@ -96,6 +99,35 @@ public class UserServiceImpl implements UserService {
 		
 		// return the updated user with the avatar path asigned
 		return userRepository.save(user);
+	}
+	
+	@Override
+	public User addUser(User user, String provinceName, byte[] profilePicBytes) throws LoginNotAvailableException,
+			ProvinceNotFoundException {
+		
+//		String login = user.getLogin();
+//		
+//		if (provinceName == null)
+//			throw new ProvinceNotFoundException("empty province");
+//		Province province = provinceService.findProvinceByName(provinceName);
+//		
+//		System.out.println("searched for " + login + " as login and province " + provinceName + "!");
+//		
+//		if (findUserByLogin(login) != null ) 
+//			throw new LoginNotAvailableException(login);
+//		if (province == null ) 
+//			throw new ProvinceNotFoundException(provinceName);
+//		
+//		Role role = roleRepository.findByRoleName(RoleEnum.ROLE_USER);
+//		
+//		user.setRole(role);
+//		user.setProvince(province);
+//		
+//		return userRepository.save(user);
+		
+		return addUser(user.getLogin(), user.getPassword(), user.getFirstName(),
+				user.getLastName(), user.getAddress(), user.getPhone(), user.getEmail(), 
+				provinceName, profilePicBytes);
 	}
 
 	@Override
@@ -190,4 +222,5 @@ public class UserServiceImpl implements UserService {
 		return voteService.addVote(userIdVote, userIdReceive, itemId, voteType, reability, voteMessage);
 		
 	}
+
 }

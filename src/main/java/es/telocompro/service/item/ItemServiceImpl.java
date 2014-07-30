@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.awt.image.BufferedImage;
@@ -101,6 +102,20 @@ public class ItemServiceImpl implements ItemService {
         item = itemRepository.save(item);
         // update the item with the image path (if processed OK)
         return item;
+    }
+    
+    @Override
+    public Item addItem(Item item, String subCategoryName, String provinceName, byte[] imgBytes) 
+    		throws InvalidItemNameMinLenghtException, UserNotFoundException, 
+    		SubCategoryNotFoundException, ProvinceNotFoundException, IOException {
+    	
+    	User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	
+    	item.setUser(user);
+    	
+    	return addItem(user.getLogin(), subCategoryName, item.getTitle(), 
+    			item.getDescription(), provinceName, item.getPrize().doubleValue(), imgBytes);
+    	
     }
     
     private String itemHash(Item item) {

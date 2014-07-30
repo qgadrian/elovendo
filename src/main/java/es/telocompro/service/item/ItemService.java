@@ -38,6 +38,10 @@ public interface ItemService {
     		String provinceName, double prize, byte[] image1)
     				throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException, 
     				ProvinceNotFoundException, IOException;
+    
+    public Item addItem(Item item, String subCategoryName, String provinceName, byte[] imgBytes) 
+    		throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException, 
+    		ProvinceNotFoundException, IOException;
 
     /**
      * Get all items

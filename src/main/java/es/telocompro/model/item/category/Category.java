@@ -22,8 +22,7 @@ public class Category {
     @Column(name = "categoryname")
     private String categoryName;
 
-    public Category() {
-    }
+    public Category() { }
 
     public Category(String categoryName) {
         this.categoryName = categoryName;
