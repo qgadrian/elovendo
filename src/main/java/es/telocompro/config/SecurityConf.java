@@ -8,8 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import es.telocompro.rest.handler.FailureHandler;
-import es.telocompro.rest.handler.SuccessHandler;
+import es.telocompro.rest.handler.LoginFailureHandler;
+import es.telocompro.rest.handler.LoginSuccessHandler;
 import es.telocompro.rest.handler.UserLogoutSuccessHandler;
 
 /**
@@ -47,8 +47,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             	.antMatchers("/logout").authenticated()
                 .and()
             .formLogin()
-            	.failureHandler(new FailureHandler())
-            	.successHandler(new SuccessHandler())
+            	.failureHandler(new LoginFailureHandler())
+            	.successHandler(new LoginSuccessHandler())
             	.defaultSuccessUrl("/welcome")
                 .loginPage("/login").permitAll()
             	.and()
