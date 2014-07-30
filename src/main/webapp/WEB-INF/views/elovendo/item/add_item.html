@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<title>Añadir anuncio</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+<!-- Login button -->
+<script src="/js/toggle-login.js"></script>
+<link rel="stylesheet" href="/css/style-login-button.css" />
+
+<!-- Form -->
+<link rel="stylesheet"
+	href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css" />
+
+</head>
+
+<body class="homepage">
+
+	<!-- Item form -->
+	<form class="pure-form pure-form-aligned" th:action="@{/site/items/item}" method="post" enctype="multipart/form-data">
+		<fieldset>
+			<div class="pure-control-group">
+				<label for="title">Title</label> <input id="title" type="text"
+					placeholder="Title" th:field="${item.title}"/>
+			</div>
+
+			<div class="pure-control-group">
+				<label for="description">Description</label> <input id="description"
+					type="text" placeholder="Description" th:field="${item.description}"/>
+			</div>
+
+			<div class="pure-control-group">
+				<label for="prize">Prize</label> <input id="prize"
+					type="text" placeholder="Prize" th:field="${item.prize}"/>
+			</div>
+			
+			<div class="pure-control-group">
+				<label for="foo">Provincia</label>
+				<select th:value="${provinceName}" name="provinceName">
+				  <option th:each="province : ${provinces}" 
+				          th:value="${province.provinceName}" 
+				          th:text="${province.provinceName}">Province</option>
+				</select>
+			</div>
+			
+			<div class="pure-control-group">
+				<label for="foo">Categoría</label>
+				<select th:value="${categoryName}" name="categoryName">
+				  <option th:each="category : ${categories}" 
+				          th:value="${category.categoryName}" 
+				          th:text="${category.categoryName}">Province</option>
+				</select>
+			</div>
+			
+			<div class="pure-control-group">
+				<label for="foo">SubCategoría</label>
+				<select th:value="${subCategoryName}" name="subCategoryName">
+				  <option th:each="subCategory : ${subCategories}" 
+				          th:value="${subCategory.subCategoryName}" 
+				          th:text="${subCategory.subCategoryName}">Province</option>
+				</select>
+			</div>
+			
+			<div class="pure-control-group">
+				<label for="foo">Imagen</label> <input type="file" name="image1" id="imgInp"/>
+				<img id="blah" src="#" alt="your image" />
+			</div>
+
+			<div class="pure-controls">
+				<label for="cb" class="pure-checkbox"> <input id="cb"
+					type="checkbox" /> I've read the terms and conditions
+				</label>
+
+				<button type="submit" class="pure-button pure-button-primary">Submit</button>
+			</div>
+		</fieldset>
+	</form>
+
+</body>
+</html>

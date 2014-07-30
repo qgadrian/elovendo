@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<title>Registrarse</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+<script src="/js/imagePreview.js"></script>
+
+<!-- Login button -->
+<script src="/js/toggle-login.js"></script>
+<link rel="stylesheet" href="/css/style-login-button.css" />
+
+<!-- Form -->
+<link rel="stylesheet"
+	href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css" />
+
+</head>
+
+<body class="homepage">
+
+	<!-- Item form -->
+	<form class="pure-form pure-form-aligned" th:action="@{/site/user}" method="post" enctype="multipart/form-data">
+		<fieldset>
+			<div class="pure-control-group">
+				<label for="name">Login</label> <input id="name" type="text"
+					placeholder="Username" th:field="${user.login}"/>
+			</div>
+
+			<div class="pure-control-group">
+				<label for="password">Password</label> <input id="password"
+					type="password" placeholder="Password" th:field="${user.password}"/>
+			</div>
+
+			<div class="pure-control-group">
+				<label for="email">Email Address</label> <input id="email"
+					type="email" placeholder="Email Address" th:field="${user.email}"/>
+			</div>
+
+			<div class="pure-control-group">
+				<label for="foo">First name</label> <input id="text"
+					type="text" placeholder="Enter something here..." th:field="${user.firstName}"/>
+			</div>
+			
+			<div class="pure-control-group">
+				<label for="foo">Last name</label> <input id="text"
+					type="text" placeholder="Enter something here..." th:field="${user.lastName}"/>
+			</div>
+			
+			<div class="pure-control-group">
+				<label for="foo">Phone</label> <input id="text"
+					type="text" placeholder="Enter something here..." th:field="${user.phone}"/>
+			</div>
+			
+<!-- 			<div class="pure-control-group"> -->
+<!-- 				<label for="foo">Province</label> <input id="text" -->
+<!-- 					type="text" placeholder="Enter something here..." th:value="${provinceName}" name="provinceName"/> -->
+<!-- 			</div> -->
+
+			<div class="pure-control-group">
+				<label for="foo">Provincia</label>
+				<select th:value="${provinceName}" name="provinceName">
+				  <option th:each="province : ${provinces}" 
+				          th:value="${province.provinceName}" 
+				          th:text="${province.provinceName}">Province</option>
+				</select>
+			</div>
+			
+			<div class="pure-control-group">
+				<label for="foo">Profile pic</label> <input type="file" name="profilePic" id="imgInp"/>
+				<img id="blah" src="#" alt="your image" />
+			</div>
+
+			<div class="pure-controls">
+				<label for="cb" class="pure-checkbox"> <input id="cb"
+					type="checkbox" /> I've read the terms and conditions
+				</label>
+
+				<button type="submit" class="pure-button pure-button-primary">Submit</button>
+			</div>
+		</fieldset>
+	</form>
+
+</body>
+</html>
