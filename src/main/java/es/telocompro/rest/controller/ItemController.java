@@ -71,7 +71,7 @@ public class ItemController {
     /**
      * Search for items by title
      */
-    @RequestMapping(value="search{title}", method = RequestMethod.GET)
+    @RequestMapping(value="search", method = RequestMethod.GET)
     public Page<Item> getItemsFindByTitle( @RequestParam("title") String title,
     		@RequestParam("p") int page, @RequestParam( "s" ) int size) {
         return itemService.getItemByTitle(title, page, size);
@@ -81,7 +81,7 @@ public class ItemController {
     /**
      * Get items from a given user
      * @param userId
-     * @return
+     * @return Item page
      */
     @RequestMapping(value="items/user/{userName}", method = RequestMethod.GET)
     public Page<Item> getItemsByUserName(@PathVariable("userName") String userName,
@@ -92,10 +92,11 @@ public class ItemController {
     
     /**
      * Get an items page for a desired subCategory
+     * @param filter Fields to retrieve from item
      * @param subCategoryName
      * @param page Page number
      * @param size Elements size of page
-     * @return
+     * @return JSON with item information requested by filter
      */
     @SuppressWarnings("unchecked")
 	@RequestMapping(value="/2/{subcategoryname}", params = {"p","s"}, 

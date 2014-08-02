@@ -11,21 +11,21 @@ public interface CategoryService {
 
     /**
      * Finds all categories ordering them by its id
-     * @return
+     * @return Categories
      */
     public Iterable<Category> findAllCategoriesOrderByCategoryId();
 
     /**
      * Return all subcategories from a given category
      * @param categoryName
-     * @return
+     * @return Categories
      */
     public Iterable<SubCategory> getAllSubCatByCategoryIdOrderBySubCatId(String categoryName);
     
     /**
      * Returns subCategory searching by its name
      * @param subCategoryName
-     * @return
+     * @return SubCategory
      */
     public SubCategory getSubCategoryByName(String subCategoryName);
     

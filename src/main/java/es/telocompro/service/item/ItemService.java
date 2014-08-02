@@ -24,11 +24,11 @@ public interface ItemService {
 
     /**
      * Adds an item
-     * @param userId
+     * @param userName
      * @param title
      * @param description
      * @param prize
-     * @return
+     * @return Item created
      * @throws UserNotFoundException 
      * @throws SubCategoryNotFoundException 
      * @throws ProvinceNotFoundException
@@ -45,7 +45,7 @@ public interface ItemService {
 
     /**
      * Get all items
-     * @return
+     * @return Items
      */
     public Iterable<Item> getAllItems();
 
@@ -57,20 +57,22 @@ public interface ItemService {
     /**
      * Get an item given its id
      * @param id
-     * @return
+     * @return Item
      */
     public Item getItemById(Long id);
 
     /**
      * Finds a list of items that match the title
      * @param title
-     * @return
+     * @return Item page
      */
     public Page<Item> getItemByTitle(String title, int page, int size);
 
     /**
      * Finds all items from a subCategory
      * @param subCategoryName
+     * @deprecated Use getAllItemsBySubCategory(String subCategoryName, int prizeMin, 
+     * int prizeMax, int page, int size) instead
      * @return
      */
     @Deprecated
@@ -83,7 +85,7 @@ public interface ItemService {
      * @param prizeMax Maximum prize
      * @param page Page number
      * @param size Page size
-     * @return
+     * @return Item page
      */
     public Page<Item> getAllItemsBySubCategory(String subCategoryName, int prizeMin, int prizeMax, 
     		int page, int size);
@@ -93,7 +95,7 @@ public interface ItemService {
      * @param title
      * @param description
      * @param prize
-     * @return
+     * @return Item updated
      */
     public Item updateItem(Long itemId, String title, String description, double prize);
 

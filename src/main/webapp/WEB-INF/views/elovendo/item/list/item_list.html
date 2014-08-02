@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+<meta charset="UTF-8" />
+<title>Insert title here</title>
+
+<!-- ************************* -->
+<!-- ******* Bootstrap ******* -->
+<!-- ************************* -->
+
+<!-- Latest compiled and minified CSS --> 
+<!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/> -->
+<!-- Optional theme -->
+<!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/> -->
+<!-- Latest compiled and minified JavaScript -->
+<!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> -->
+
+<!-- <link rel="stylesheet" href="/css/pureCSS3pagination.css"/> -->
+
+<!-- Form -->
+<link rel="stylesheet"
+	href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css" />
+	
+<link rel="stylesheet"
+	href="/css/pagination.css" />
+	
+	<style>
+		.estilo {
+			text-align: center;
+			color: blue;
+			float: left;
+			align: center;
+			margin-left: 
+		}
+	</style>
+
+</head>
+<body class="homepage">
+
+<!-- 				<table class="pure-table"> -->
+					<div class = "estilo" th:each="item : ${itemsList}">
+						<p th:text="${item.itemId}">-1</p>
+						<p th:text="${item.title}">Item title</p>
+						<p th:text="${item.user.login}">login</p>
+<!-- 						<td>  -->
+<!-- 						<img id="picture" th:src="@{'http://83.165.60.132:8080/' + ${item.imgHome}}"  -->
+<!-- 							width="100" height="100"/> -->
+<!-- 						</td> -->
+					</div>
+<!-- 				</table> -->
+
+<!-- 	<ul class="pure-paginator"> -->
+<!-- 		<li><a class="pure-button prev" th:href="@{/bazaar/zorg/moviles(p=${page-1}, s=${size})}">&#171;</a></li> -->
+<!-- 		<li><a class="pure-button" th:href="@{/bazaar/zorg/moviles(p=0, s=${size})}">1</a></li> -->
+<!-- 		<li><a class="pure-button pure-button-active" th:href="@{/bazaar/zorg/moviles(p=1, s=${size})}">2</a></li> -->
+<!-- 		<li><a class="pure-button" href="#">3</a></li> -->
+<!-- 		<li><a class="pure-button" href="#">4</a></li> -->
+<!-- 		<li><a class="pure-button" href="#">5</a></li> -->
+<!-- 		<li><a class="pure-button next" th:href="@{/bazaar/zorg/moviles(p=${page+1}, s=${size})}">&#187;</a></li> -->
+<!-- 	</ul> -->
+
+		<!-- Pagination Bar -->
+<!-- 		<div th:fragment='table-pagination'> -->
+		  <div class='pagination'>
+		    <ul class="pure-paginator">
+		      <li th:class="${page.firstPage}? 'page active' : ''">
+		        <span th:if='${page.firstPage}'>← First</span>
+		        <a class="page gradient" th:if='${not page.firstPage}' th:href='@{${page.url}(p=0,s=${page.size})}'>← First</a>
+		      </li>
+		      <li th:class="${page.hasPreviousPage}? '' : 'page active'">
+		        <span th:if='${not page.hasPreviousPage}'>«</span>
+		        <a class="page gradient" th:if='${page.hasPreviousPage}' th:href='@{${page.url}(p=${page.number-2},s=${page.size})}' title='Go to previous page'>«</a>
+		      </li>
+		      <li th:each="item : ${page.items}" th:class="${item.current}? 'page active' : ''">
+<!-- 		      			<span th:text="${item.itemId}">-1</span> -->
+<!-- 						<span th:text="${item.title}">Item title</span> -->
+		        <span th:if='${item.current}' th:text='${item.number}'>1</span>
+		        <a class="page gradient" th:if='${not item.current}' th:href='@{${page.url}(p=${item.number}-1,s=${page.size})}'><span th:text='${item.number}'>1</span></a>
+		      </li>
+		      <li th:class="${page.hasNextPage}? '' : 'page active'">
+		        <span th:if='${not page.hasNextPage}'>»</span>
+		        <a class="page gradient" th:if='${page.hasNextPage}' th:href='@{${page.url}(p=${page.number},s=${page.size})}' title='Go to next page'>»</a>
+		      </li>
+		      <li th:class="${page.lastPage}? 'page active' : ''">
+		        <span th:if='${page.lastPage}'>Last →</span>
+		        <a class="page gradient" th:if='${not page.lastPage}' th:href='@{${page.url}(p=${page.totalPages-1},s=${page.size})}'>Last →</a>
+		      </li>
+		    </ul>
+		  </div>
+<!-- 		</div> -->
+	
+
+
+  
+		<!--Pagination Start-->
+<!--   <section class="archive-pages"> -->
+<!--     <ul> -->
+<!--       <li class="first"><a th:href="@{/bazaar/zorg/moviles(p=0, s=${size})}" title="first page">first page</a></li> -->
+<!--       <li class="previous"><a th:href="@{/bazaar/zorg/moviles(p=${page-1}, s=${size})}" title="previous page">previous page</a></li> -->
+<!--       <li class="selected">1</li> -->
+<!--       <li><a href="#" title="Pagina 2">2</a></li> -->
+<!--       <li><a href="#" title="Pagina 3">3</a></li> -->
+<!--       <li><a href="#" title="Pagina 4">4</a></li> -->
+<!--       <li><a href="#" title="Pagina 5">5</a></li> -->
+<!--       <li class="next"><a th:href="@{/bazaar/zorg/moviles(p=${page+1}, s=${size})}" title="next page">next page</a></li> -->
+<!--       <li class="last"><a href="#" title="last page">last page</a></li> -->
+<!--     </ul> -->
+<!--   </section> -->
+		<!--End-->
+</body>
+</html>
