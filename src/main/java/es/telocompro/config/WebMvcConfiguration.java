@@ -45,6 +45,7 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 //        registry.addResourceHandler("/images/**").addResourceLocations("/resources/images/");
         registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
         registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
+        registry.addResourceHandler("/images/**").addResourceLocations("/resources/images/");
         registry.addResourceHandler("/imgs/**") // TODO: This folder its totally temporary
         	.addResourceLocations(Constant.RESOURCE_IMAGES_PATH);
     }

@@ -1,4 +1,8 @@
-<html>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	
 	<head>
 		<title> Elovendo </title>
 		<link rel="stylesheet" type="text/css" href="/css/styleweb.css" media="screen" />
@@ -12,14 +16,16 @@
 			</div>
 			<div id="sell">
 				<form method="GET" action="sell" name="sell">
-					<input class="sellbuttom" type="submit" value="Vender"/>
+					<input class="sellbuttom" type="submit" value="elovendo/item/add_item"/>
 				</form>
 			</div>
 		</div>
+<!-- 		<div th:replace="elovendo/cabecera"></div> -->
+		
 		<div id="content">
 			<div id="top">
 					<div class="imgprn">
-						<img src="img/logo.png"/>
+						<img src="/images/logo.png"/>
 					</div>
 			</div>
 			<div id="mid">
@@ -34,7 +40,7 @@
 				<div id="department">
 				<!-- PARTE UNICA -->
 					<a href="#"><div id="section">
-						<img class="department-section" src="/images/categories/tecnology.jpg"/>
+						<img class="department-section" src="/images/categories/technology.jpg"/>
 						<div class="titlesection"><span>Tecnología</span></div>
 					</div></a>
 				<!-- FIN PARTE UNICA -->			
