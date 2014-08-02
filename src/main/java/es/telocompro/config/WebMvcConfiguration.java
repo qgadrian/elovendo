@@ -110,12 +110,13 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 	
 	/** Internationalization **/
 	
-	@Bean
-    public LocaleResolver localeResolver() {
-        SessionLocaleResolver slr = new SessionLocaleResolver();
-        slr.setDefaultLocale(Locale.US);
-        return slr;
-    }
+	// FAQ: This force the default language to the setted in setDefaultLocale (you have to send "?lang=en to change it)
+//	@Bean
+//    public LocaleResolver localeResolver() {
+//        SessionLocaleResolver slr = new SessionLocaleResolver();
+//        slr.setDefaultLocale(Locale.forLanguageTag("es"));
+//        return slr;
+//    }
  
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
