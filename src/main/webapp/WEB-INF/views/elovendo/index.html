@@ -1,34 +1,37 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-	
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">	
 	<head>
 		<title> Elovendo </title>
 		<link rel="stylesheet" type="text/css" href="/css/styleweb.css" media="screen" />
 		<meta charset="utf-8" />
 		<meta name="description" content="Elovendo" />
+		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine|Inconsolata|Droid+Sans" />
 	</head>
 	<body>
+		<div id="erase"></div>
 		<div id="prehead">
 			<div id="headtitle">
-				<h1> Si aún no estás registrado, regístrate </h1>
+			<!-- Remplazar DIV - CODIGO 
+			<div th:replace="elovendo/cabecera"></div>  -->
 			</div>
-			<div id="sell">
+			<!-- <div id="sell">
 				<form method="GET" action="sell" name="sell">
-					<input class="sellbuttom" type="submit" value="elovendo/item/add_item"/>
+					<input class="sellbuttom" type="submit" value="Vender"/>
 				</form>
-			</div>
+			</div> -->
 		</div>
-<!-- 		<div th:replace="elovendo/cabecera"></div> -->
-		
 		<div id="content">
+		
 			<div id="top">
 					<div class="imgprn">
-						<img src="/images/logo.png"/>
+						<img src="/images/webimg/logo.png"/>
 					</div>
 			</div>
+			
 			<div id="mid">
+
 				<div id="seeker">
 					<!-- BUSCADOR -->
 					<form method="GET" action="search" name="search">
@@ -70,7 +73,7 @@
 					</div></a>
 					<a href="#"><div id="section">
 						<img class="department-section" src="/images/categories/jewelry.jpg"/>
-						<div class="titlesection"><span>Moda</span></div>
+						<div class="titlesection"><span>Joyería</span></div>
 					</div></a>
 					<a href="#"><div id="section">
 						<img class="department-section" src="/images/categories/toy.jpg"/>
@@ -86,6 +89,7 @@
 			</div>
 		</div>
 		<div id="bot">
+				
 		</div>
 	</body>
 </html>
