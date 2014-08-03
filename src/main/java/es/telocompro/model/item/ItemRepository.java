@@ -17,8 +17,9 @@ import org.springframework.stereotype.Repository;
 @Repository("itemRepository")
 public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
 
-    @Query("SELECT i, i.user.login AS username, i.subCategory.subCategoryName AS subCategory,"
-    		+ " i.subCategory.category.categoryName FROM Item i WHERE i.title LIKE %:title%")
+	//   @Query("SELECT i, i.user.login AS username, i.subCategory.subCategoryName AS subCategory,"
+    //		+ " i.subCategory.category.categoryName FROM Item i WHERE i.title LIKE %:title%")
+    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title%")
     Page<Item> findByTitle(@Param("title") String title, Pageable pageable);
 
     @Query("SELECT i, i.user.login AS username, i.subCategory.subCategoryName AS subCategory,"

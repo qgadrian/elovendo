@@ -67,6 +67,22 @@ public class ItemWebController {
     	
         return "elovendo/item/list/item_list";
     }
+    
+    @RequestMapping(value="search", method = RequestMethod.GET)
+    public String searchItemListPage(Model model, 
+    		@RequestParam("title") String title,
+    		@RequestParam(value = "p", required = false, defaultValue="0") int page, 
+    		@RequestParam(value = "s", required = false, defaultValue="5" ) int size) {
+    	
+    	Page<Item> p = itemService.getItemByTitle(title, page, size);
+    	PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, title);
+    	List<Item> items = p.getContent();
+    	
+    	model.addAttribute("page", pageWrapper);
+    	model.addAttribute("itemsList", items);
+    	
+        return "elovendo/item/list/item_list";
+    }
 	
 
 }
