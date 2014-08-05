@@ -4,10 +4,13 @@ import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,7 +35,7 @@ import es.telocompro.service.province.ProvinceService;
  */
 
 @Controller
-public class MainController {
+public class MainController implements ErrorController {
 	
     @Autowired
     private ItemService itemService;
@@ -44,24 +47,31 @@ public class MainController {
 	/** Login **/
     
 	@RequestMapping(value="/login")
-    public String loginPage() {
+    public String loginPage(HttpSession session, HttpServletRequest request) {
+		System.out.println("Referrer is " + request.getParameterValues("referrer")[0]);
+		String referrer = request.getParameterValues("referrer")[0];
+		session.setAttribute("referrer", referrer);
+		
+		
     	return "elovendo/login";
     }
 
-    @RequestMapping(value = "/welcome")
+    @RequestMapping(value = "/loginRedirect")
     @ResponseStatus(HttpStatus.OK) // TODO Testear esta notación
-    public String login(Model model, Device device, Principal principal) {
-    	System.out.println("We are in main controller");
+    public String login(Model model, Device device, Principal principal, HttpSession session) {
+    	System.out.println("Referrer in redirect is " + session.getAttribute("referrer"));
+    	String referrer = (String) session.getAttribute("referrer");
+    	return "redirect:"+referrer;
     	
-    	 User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	 String userId = String.valueOf(user.getUserId());
-    	 
-    	 model.addAttribute(user);
-
-    	if (device.isNormal())
-//    		return principal.getName() + " you are loggued motherfucker!!! and your id is " + userId + " btw";
-    		return "welcome";
-    	return "hola? " + principal.getName() +"? your id is " + userId + "?";
+//    	 User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//    	 String userId = String.valueOf(user.getUserId());
+//    	 
+//    	 model.addAttribute(user);
+//
+//    	if (device.isNormal())
+////    		return principal.getName() + " you are loggued motherfucker!!! and your id is " + userId + " btw";
+//    		return "welcome";
+//    	return "hola? " + principal.getName() +"? your id is " + userId + "?";
     }
     
     @RequestMapping(value="/logout")
@@ -86,35 +96,11 @@ public class MainController {
 //    	return new ResponseEntity<HttpStatus>(HttpStatus.OK);
 //    }
     
-    /** ERRORS */
-    
-    @RequestMapping(value="/error404")
-    public String error404Page() {
-    	return "elovendo/error/error404";
-    }
-    
-    @RequestMapping(value="/error401")
-    public String error401Page() {
-    	return "elovendo/error/error401";
-    }
-    
     /** WEB PAGES **/
     
     @RequestMapping(value="/elovendo/index", method = RequestMethod.GET)
     public String indexPage() {
         return "elovendo/index";
-    }
-    
-    @RequestMapping(value="/elovendo/add_user", method = RequestMethod.GET)
-    public String addUserPage(Model model) {
-    	model.addAttribute("user", new User());
-    	model.addAttribute("provinceName", new String());
-    	
-    	@SuppressWarnings("unchecked")
-		List<Province> provinces = IteratorUtils.toList(provinceService.findAllProvinces().iterator());
-    	model.addAttribute("provinces", provinces);
-    	
-        return "elovendo/user/add_user";
     }
     
     @SuppressWarnings("unchecked")
@@ -145,5 +131,27 @@ public class MainController {
         return "elovendo/left-sidebar";
 //    	return "elovendo/itemListTest";
     }
+    
+    /** ERRORS */
+    
+    @RequestMapping(value="/error")
+    public String errorPage() {
+    	return "elovendo/error/error";
+    }
+    
+    @RequestMapping(value="/error404")
+    public String error404Page() {
+    	return "elovendo/error/error404";
+    }
+    
+    @RequestMapping(value="/error401")
+    public String error401Page() {
+    	return "elovendo/error/error401";
+    }
+
+	@Override
+	public String getErrorPath() {
+		return "/elovendo/error";
+	}
 
 }

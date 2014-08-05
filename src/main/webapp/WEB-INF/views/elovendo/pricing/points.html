@@ -10,6 +10,8 @@
 </head>
 <body>
 
+<!-- <p> Hello <span th:text="${session.user.login}">Bob</span> </p> -->
+
 	<div id="container">
 		<div class="pricingtable">
 			<div class="top">
@@ -29,13 +31,50 @@
 			</h1>
 			<p>per month</p>
 
-			<!-- 			<a href="#" th:text="#{points.buy}">Buy</a> -->
-			<script async="async"
-				src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=adrianquintas-facilitator@gmail.com"
-				data-button="buynow" data-name="test" data-amount="5"
-				data-currency="EUR" data-callback="http://83.165.60.132:8080/site/paypalok"
-				data-env="sandbox">
+<!-- 						<a href="#" th:text="#{points.buy}">Buy</a> -->
+			<div th:switch="${user}">
+				<div th:case="null">
+					<form th:action="@{/login}" method="get">
+						<input type="hidden" name="referrer" value="site/pricing/points"/>
+						<input type="image" src="https://www.paypalobjects.com/es_ES/ES/i/btn/btn_buynowCC_LG.gif"
+							border="0" name="submit" alt="PayPal. La forma rápida y segura de pagar en Internet." />
+						<img alt="" border="0" src="https://www.paypalobjects.com/es_ES/i/scr/pixel.gif"
+							width="1" height="1" />
+					</form>
+				</div>
+				<div th:case="*">
+					<script async="async"
+						src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=adrianquintas-facilitator@gmail.com"
+						data-button="buynow" data-name="5 points"
+						th:attr="data-custom='userId'" data-amount="5" data-currency="EUR"
+						data-callback="http://83.165.60.132:8080/site/paypalok"
+						data-env="sandbox">
 			</script>
+
+				</div>
+			</div>
+
+			<!-- <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top"> -->
+<!-- 				<input type="hidden" name="cmd" value="_s-xclick" />  -->
+<!-- 				<input type="hidden" name="hosted_button_id" value="ZV8UTLQAJC8RN" />  -->
+<!-- 				<input type="image" src="https://www.paypalobjects.com/es_ES/ES/i/btn/btn_buynowCC_LG.gif" -->
+<!-- 					border="0" name="submit" alt="PayPal. La forma rápida y segura de pagar en Internet." />  -->
+<!-- 				<input type="hidden" name="custom" value="lot of stuff"/> -->
+<!-- 				<img alt="" border="0" src="https://www.paypalobjects.com/es_ES/i/scr/pixel.gif"  -->
+<!-- 					width="1" height="1" /> -->
+<!-- 			</form> -->
+			
+			
+<!-- 			th:attr="data-name='555'"  -->
+
+<!-- 			<form action="https://www.paypal.com/cgi-bin/webscr" method="post"> -->
+<!-- 			<input type="hidden" name="cmd" value="_xclick"/> -->
+<!-- 			<input type="hidden" name="hosted_button_id" value="KN7ACTU8MVZNE"/> -->
+<!-- <input type="hidden" name="custom" value="lot of stuff"/> -->
+<!-- 			<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_subscribeCC_LG.gif"  -->
+<!-- 			border="0" name="submit" alt="PayPal - The safer, easier way to pay online!"/> -->
+<!-- 			<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1"/> -->
+<!-- 			</form> -->
 		</div>
 
 		<div class="pricingtable">
@@ -83,8 +122,9 @@
 					type="image"
 					src="https://www.paypalobjects.com/es_ES/ES/i/btn/btn_buynowCC_LG.gif"
 					border="0" name="submit"
-					alt="PayPal. La forma rápida y segura de pagar en Internet." /> <img
-					alt="" border="0"
+					alt="PayPal. La forma rápida y segura de pagar en Internet." /> 
+					<input type="hidden" name="custom" value="lot of stuff"/>
+					<img alt="" border="0"
 					src="https://www.paypalobjects.com/es_ES/i/scr/pixel.gif" width="1"
 					height="1" />
 			</form>

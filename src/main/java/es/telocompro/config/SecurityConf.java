@@ -49,7 +49,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             .formLogin()
             	.failureHandler(new LoginFailureHandler())
             	.successHandler(new LoginSuccessHandler())
-            	.defaultSuccessUrl("/welcome")
+            	.defaultSuccessUrl("/loginRedirect")
                 .loginPage("/login").permitAll()
             	.and()
             .logout()
