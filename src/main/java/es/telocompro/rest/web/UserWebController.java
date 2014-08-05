@@ -311,6 +311,8 @@ public class UserWebController {
 				// annotation
 				// Remember to track completed transactions and don't process
 				// duplicates
+				
+				// user info: transaction_subject=*userId*
 				if (paymentStatus.equalsIgnoreCase(PAYMENT_COMPLETED)) System.out.println("processing payment");
 				System.out
 						.println("here comes the logic stuff (should be a good sign)");
