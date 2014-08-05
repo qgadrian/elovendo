@@ -48,6 +48,9 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,6 +73,7 @@ import es.telocompro.service.exception.InvalidItemNameMinLenghtException;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.province.ProvinceService;
 import es.telocompro.service.user.UserService;
+import es.telocompro.util.Constant;
 
 @Controller
 @SuppressWarnings("unused")
@@ -100,28 +104,51 @@ public class UserWebController {
     	
         return "elovendo/user/add_user";
     }
+    
+    @InitBinder("user")
+    public void binder(WebDataBinder binder) {
+       binder.addValidators(new FormValidator());
+    }
 	
 	@RequestMapping(value = "new_user", method = RequestMethod.POST)
 	public String processAddUserWeb(@Valid @ModelAttribute(value = "user") User user,
 			@ModelAttribute(value = "provinceName") String provinceName,
 			@ModelAttribute(value = "profilePic") MultipartFile profilePic,
-			BindingResult result) throws ProvinceNotFoundException, LoginNotAvailableException {
+			BindingResult result, ModelMap model) throws ProvinceNotFoundException, LoginNotAvailableException, 
+			UnsupportedEncodingException {
+		//FIXME: Edit input type email
 		
-		// Check html pattern bypass matching input values
-//		String loginPattern = "^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$";
-//		String passwordPattern = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
-//		
-//		Pattern loginMatcherPattern = Pattern.compile(loginPattern);
-//		Pattern passwordMatcherPattern = Pattern.compile(loginPattern);
-//		Matcher loginMatcher = loginMatcherPattern.matcher(user.getLogin());
-//		Matcher passwordMatcher = passwordMatcherPattern.matcher(user.getPassword());
-//		
-//		if (loginMatcher.find() && passwordMatcher.find()) {
-//		    System.out.println("Fields ok");
-//		} else {
-//		    System.out.println("Bad login or password format");
-//		    return "elovendo/index";
-//		}
+		System.gc();
+		
+		Pattern loginMatcherPattern = Pattern.compile(Constant.loginPattern);
+		Pattern passwordMatcherPattern = Pattern.compile(Constant.passwordPattern);
+		Matcher loginMatcher = loginMatcherPattern.matcher(user.getLogin());
+		Matcher passwordMatcher = passwordMatcherPattern.matcher(user.getPassword());
+		
+		if (loginMatcher.find() && passwordMatcher.find()) {
+		    System.out.println("Fields ok");
+		    
+			byte[] profilePicBytes = null;
+			if (!profilePic.isEmpty()) try {
+				profilePicBytes = profilePic.getBytes();
+			} catch (IOException e) {
+				System.out.println("Error converting to bytes image file");
+			}
+			
+			// TODO: Workaround because multipart/form-data don't send data as UTF-8
+			String firstName = new String (user.getFirstName().getBytes ("iso-8859-1"), "UTF-8");
+			user.setFirstName(firstName);
+			String lastName = new String (user.getLastName().getBytes ("iso-8859-1"), "UTF-8");
+			user.setLastName(lastName);
+			String province = new String (provinceName.getBytes ("iso-8859-1"), "UTF-8");
+		    
+			userService.addUser(user, province, profilePicBytes);
+		} else {
+		    System.out.println("Bad login or password format");
+		    return "redirect:/error";
+		}
+		
+		return "elovendo/user/registered_successful";
 		
 //		FormValidator formValidator = new FormValidator();
 //		formValidator.validate(user, result);
@@ -129,25 +156,25 @@ public class UserWebController {
 		//		result.addError(new FieldError("registrationform", "name", "rejected stuff"));
 //		return "elovendo/user/add_user";
 		
-		if (result.hasErrors()) {
-			System.out.println("Form has errors");
-//			result.addError(new FieldError("registrationform", "login", "rejected stuff"));
-			return "elovendo/user/add_user";
-		} 
-		else  {
-			System.out.println("Form is ok");
-
-			byte[] profilePicBytes = null;
-			if (!profilePic.isEmpty()) try {
-				profilePicBytes = profilePic.getBytes();
-			} catch (IOException e) {
-				System.out.println("Error converting to bytes image file");
-			}
-	
-			userService.addUser(user, provinceName, profilePicBytes);
-	
-			return "elovendo/user/registered_successful";
-		}
+//		if (result.hasErrors()) {
+//			System.out.println("Form has errors");
+////			result.addError(new FieldError("registrationform", "login", "rejected stuff"));
+//			return "elovendo/user/add_user";
+//		} 
+//		else  {
+//			System.out.println("Form is ok");
+//
+//			byte[] profilePicBytes = null;
+//			if (!profilePic.isEmpty()) try {
+//				profilePicBytes = profilePic.getBytes();
+//			} catch (IOException e) {
+//				System.out.println("Error converting to bytes image file");
+//			}
+//	
+//			userService.addUser(user, provinceName, profilePicBytes);
+//	
+//			return "elovendo/user/registered_successful";
+//		}
 	}
 
 	/**
@@ -183,41 +210,50 @@ public class UserWebController {
 	}
 
 	/** PAYPAL **/
-	// @RequestMapping(value = "paypalok", method = RequestMethod.POST)
-	// public void paypalProcessWeb(HttpServletRequest httpRequest) {
-	//
-	// System.out.println("request uri ---> " + httpRequest.getRequestURI());
-	// System.out.println("parameters...");
-	// for (String string : httpRequest.getParameterMap().keySet()) {
-	// System.out.println("Parameter " + string + " -- value: " +
-	// httpRequest.getParameter(string));
-	// }
-	//
-	// String paypalUrl = "https://www.paypal.com/cgi-bin/webscr";
-	// RestTemplate restTemplate = new RestTemplate();
-	//
-	// HttpMessageConverter formHttpMessageConverter = new
-	// FormHttpMessageConverter();
-	// HttpMessageConverter stringHttpMessageConverternew = new
-	// StringHttpMessageConverter();
-	// List<HttpMessageConverter> messageConverterList = new ArrayList<>();
-	// messageConverterList.add(formHttpMessageConverter);
-	// messageConverterList.add(stringHttpMessageConverternew);
-	// restTemplate.setMessageConverters(messageConverterList);
-	//
-	// ResponseEntity<String> response = restTemplate.postForEntity(paypalUrl,
-	// httpRequest.getParameterMap().keySet(), String.class);
-	// HttpStatus status = response.getStatusCode();
-	// String restCall = response.getBody();
-	// System.out.println("PAYPAL SAYS:");
-	// System.out.println("response code: " + response.getStatusCode());
-	// System.out.println("response code: " + response.getHeaders().toString());
-	// System.out.println("response from paypal " + restCall);
-	//
-	// }
+//	 @RequestMapping(value = "paypalok", method = RequestMethod.POST)
+//	 public void paypalProcessWeb(HttpServletRequest httpRequest) {
+//	
+//	 System.out.println("request uri ---> " + httpRequest.getRequestURI());
+//	 System.out.println("parameters...");
+//	 for (String string : httpRequest.getParameterMap().keySet()) {
+//	 System.out.println("Parameter " + string + " -- value: " +
+//	 httpRequest.getParameter(string));
+//	 }
+//	
+//	 String paypalUrl = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+//	 RestTemplate restTemplate = new RestTemplate();
+//	 
+//	 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+//	 // Append the required command
+//	 nameValuePairs.add(new BasicNameValuePair("cmd", "_notify-validate"));
+//	 for (String string : httpRequest.getParameterMap().keySet()) {
+//		 nameValuePairs.add(new BasicNameValuePair(string, httpRequest.getParameter(string)));
+//	 }
+//	
+////	 HttpMessageConverter formHttpMessageConverter = new
+////	 FormHttpMessageConverter();
+////	 HttpMessageConverter stringHttpMessageConverternew = new
+////	 StringHttpMessageConverter();
+////	 List<HttpMessageConverter> messageConverterList = new ArrayList<>();
+////	 messageConverterList.add(formHttpMessageConverter);
+////	 messageConverterList.add(stringHttpMessageConverternew);
+////	 restTemplate.setMessageConverters(messageConverterList);
+//	
+//	 ResponseEntity<String> response = restTemplate.postForEntity(paypalUrl,
+//	 nameValuePairs, String.class);
+//	 HttpStatus status = response.getStatusCode();
+//	 String restCall = response.getBody();
+//	 System.out.println("PAYPAL SAYS:");
+//	 System.out.println("response code: " + response.getStatusCode());
+//	 System.out.println("response code: " + response.getHeaders().toString());
+//	 System.out.println("response from paypal " + restCall);
+//	
+//	 }
 
+	//http://83.165.60.132:8080/site/paypalok
+	
 	@RequestMapping(value = "paypalok", method = RequestMethod.POST)
-	public void processIPN(HttpServletRequest request) {
+	public String processIPN(HttpServletRequest request) {
 
 		try {
 			request.setCharacterEncoding("UTF-8");
@@ -230,6 +266,9 @@ public class UserWebController {
 		String MIME_APP_URLENC = "application/x-www-form-urlencoded";
 		String PARAM_NAME_CMD = "cmd";
 		String PARAM_VAL_CMD = "_notify-validate";
+		String PAYMENT_COMPLETED = "Completed";
+		
+		String paymentStatus = "";
 
 		System.out.println("POST Confirm");
 
@@ -250,8 +289,7 @@ public class UserWebController {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 
 			// Append the required command
-			nameValuePairs.add(new BasicNameValuePair(PARAM_NAME_CMD,
-					PARAM_VAL_CMD));
+			nameValuePairs.add(new BasicNameValuePair(PARAM_NAME_CMD, PARAM_VAL_CMD));
 
 			// Process the parameters
 			Enumeration<String> names = request.getParameterNames();
@@ -262,31 +300,35 @@ public class UserWebController {
 				nameValuePairs.add(new BasicNameValuePair(param, value));
 				params.put(param, value);
 				System.out.println(param + "=" + value);
+				// Get the payment status
+				if (param.equalsIgnoreCase("payment_status")) paymentStatus = value;
 			}
 
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-			System.out.println("Going to send " + httppost.getURI().toString());
-			System.out
-					.println("With params " + httppost.getParams().toString());
 
 			if (verifyResponse(httpClient.execute(httppost))) {
 				// Implement your processing logic here, I used an @Asyn
 				// annotation
 				// Remember to track completed transactions and don't process
 				// duplicates
+				if (paymentStatus.equalsIgnoreCase(PAYMENT_COMPLETED)) System.out.println("processing payment");
 				System.out
 						.println("here comes the logic stuff (should be a good sign)");
+				return "elovendo/pricing/paymentOk";
 			} else {
 				System.out.println("shit, payment not confirmed");
+				return "elovendo/pricing/paymentFailed";
 			}
 
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
+			return "redirect:/error";
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
+			return "redirect:/error";
 		} catch (IOException e) {
 			e.printStackTrace();
+			return "redirect:/error";
 		}
 	}
 

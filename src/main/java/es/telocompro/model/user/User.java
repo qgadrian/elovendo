@@ -15,7 +15,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,9 +44,13 @@ public class User implements UserDetails {
     @Column(name = "userid")
     private Long userId;
 
+	@NotNull(message="Login cannot be null")
+	@Length(min = 2, max = 20, message="Invalid login lenght")
+	@Pattern(regexp=Constant.loginPattern, message="Invalid login name")
     private String login;
 
-    @Column(name = "password", length = 255)
+    @Column(name = "password")
+//    @Length(min = 8, max = 255)
     private String password;
 
     @Column(name = "firstname")

@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
 				phone, email, province, null, role, null);
 
 		/** SAVE AVATAR IMAGE IN THE RESOURCE FOLDER **/
-		try {
+		if (avatar != null) try {
 			// Save user for get an userId
 			user = userRepository.save(user);
 			// Create folder (if not created) for /img/avatars/{userId}.jpg

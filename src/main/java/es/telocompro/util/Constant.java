@@ -7,6 +7,12 @@ public class Constant {
 	public static int DEFAULT_USER_VALUE = 70;
 	
 	/**
+	 * PATTERNS
+	 */
+	public static final String loginPattern = "^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$";
+	public static final String passwordPattern = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
+	
+	/**
 	 * IMAGES
 	 */
 	

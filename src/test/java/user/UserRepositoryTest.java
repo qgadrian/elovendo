@@ -112,7 +112,7 @@ public class UserRepositoryTest {
     public void testVotePending() throws UserNotFoundException, ItemNotFoundException, 
     		LoginNotAvailableException, ProvinceNotFoundException, VoteDuplicateException, InvalidVoteUsersException {
     	
-        User user2 = userService.addUser("u", "p", "f", "l", "a", "p", "e", province.getProvinceName(), null);
+        User user2 = userService.addUser("usuario", "password", "f", "l", "a", "password", "e", province.getProvinceName(), null);
         
         userService.voteUser(user2.getUserId(), user.getUserId(), item.getItemId(), VOTE_POSITIVE, "vote message");
 
@@ -123,7 +123,7 @@ public class UserRepositoryTest {
     public void testVote() throws UserNotFoundException, ItemNotFoundException, 
     		LoginNotAvailableException, ProvinceNotFoundException, VoteDuplicateException, InvalidVoteUsersException {
     	
-        User user2 = userService.addUser("u", "p", "f", "l", "a", "p", "e", province.getProvinceName(), null);
+        User user2 = userService.addUser("usuario", "password", "f", "l", "a", "password", "e", province.getProvinceName(), null);
 
         userService.voteUser(user2.getUserId(), user.getUserId(), item.getItemId(), VOTE_POSITIVE, "vote message");
         userService.voteUser(user.getUserId(), user2.getUserId(), item.getItemId(), VOTE_POSITIVE, "vote message");
@@ -139,8 +139,8 @@ public class UserRepositoryTest {
     		LoginNotAvailableException, ProvinceNotFoundException, VoteDuplicateException, 
     		InvalidVoteUsersException {
     	
-        User user2 = userService.addUser("u", "p", "f", "l", "a", "p", "e", province.getProvinceName(), null);
-        User user3 = userService.addUser("u2", "p", "f", "l", "a", "p", "e", province.getProvinceName(), null);
+        User user2 = userService.addUser("usuario", "password", "f", "l", "a", "password", "e", province.getProvinceName(), null);
+        User user3 = userService.addUser("u2", "password", "f", "l", "a", "password", "e", province.getProvinceName(), null);
 
         userService.voteUser(user2.getUserId(), user.getUserId(), item.getItemId(), VOTE_POSITIVE, "vote message");
         userService.voteUser(user.getUserId(), user2.getUserId(), item.getItemId(), VOTE_POSITIVE, "vote message");
@@ -152,7 +152,7 @@ public class UserRepositoryTest {
     public void testVoteDuplicate() throws UserNotFoundException, ItemNotFoundException, 
     		LoginNotAvailableException, ProvinceNotFoundException, VoteDuplicateException, InvalidVoteUsersException {
     	
-        User user2 = userService.addUser("u", "p", "f", "l", "a", "p", "e", province.getProvinceName(), null);
+        User user2 = userService.addUser("usuario", "password", "f", "l", "a", "password", "e", province.getProvinceName(), null);
 
         userService.voteUser(user2.getUserId(), user.getUserId(), item.getItemId(), VOTE_POSITIVE, "vote message");
         userService.voteUser(user.getUserId(), user2.getUserId(), item.getItemId(), VOTE_POSITIVE, "vote message");
@@ -168,7 +168,7 @@ public class UserRepositoryTest {
     		LoginNotAvailableException, ProvinceNotFoundException, VoteDuplicateException, 
     		InvalidItemNameMinLenghtException, SubCategoryNotFoundException, InvalidVoteUsersException, IOException {
     	
-        User user2 = userService.addUser("u", "p", "f", "l", "a", "p", "e", province.getProvinceName(), null);
+        User user2 = userService.addUser("usuario", "password", "f", "l", "a", "password", "e", province.getProvinceName(), null);
         
         Item item2 = itemService.addItem(user2.getLogin(), subCategory.getSubCategoryName(), 
         		"title", "description", province.getProvinceName(), 2, null);
@@ -199,8 +199,8 @@ public class UserRepositoryTest {
     		LoginNotAvailableException, ProvinceNotFoundException, VoteDuplicateException, 
     		InvalidItemNameMinLenghtException, SubCategoryNotFoundException, InvalidVoteUsersException, IOException {
     	
-        User user2 = userService.addUser("u2", "p", "f", "l", "a", "p", "e", province.getProvinceName(), null);
-        User user3 = userService.addUser("u3", "p", "f", "l", "a", "p", "e", province.getProvinceName(), null);
+        User user2 = userService.addUser("u2", "password", "f", "l", "a", "password", "e", province.getProvinceName(), null);
+        User user3 = userService.addUser("u3", "password", "f", "l", "a", "password", "e", province.getProvinceName(), null);
         
         Item item2 = itemService.addItem(user2.getLogin(), subCategory.getSubCategoryName(), 
         		"title", "description", province.getProvinceName(), 2, null);
@@ -242,7 +242,7 @@ public class UserRepositoryTest {
     		InvalidItemNameMinLenghtException, SubCategoryNotFoundException, 
     		InvalidVoteUsersException, IOException {
     	
-        User user2 = userService.addUser("u", "p", "f", "l", "a", "p", "e", province.getProvinceName(), null);
+        User user2 = userService.addUser("usuario", "password", "f", "l", "a", "password", "e", province.getProvinceName(), null);
         
         Item item2 = itemService.addItem(user2.getLogin(), subCategory.getSubCategoryName(), 
         		"title", "description", province.getProvinceName(), 2, null);
