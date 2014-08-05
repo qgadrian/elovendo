@@ -1,7 +1,9 @@
 package es.telocompro.config;
 
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.ViewResolver;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
@@ -17,6 +19,7 @@ public class ThymeleafConfig {
         templateResolver.setPrefix("/WEB-INF/views/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode("HTML5");
+        templateResolver.setCharacterEncoding("UTF-8");
 //        templateResolver.setCacheable(false);
  
         return templateResolver;
@@ -37,6 +40,17 @@ public class ThymeleafConfig {
         viewResolver.setOrder(1);
  
         return viewResolver;
+    }
+    
+    @Bean
+    public MessageSource messageSource() {
+
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasenames("/resources/messages");
+        messageSource.setUseCodeAsDefaultMessage(true);
+        messageSource.setDefaultEncoding("UTF-8");
+        messageSource.setCacheSeconds(0);
+        return messageSource;
     }
 
 }
