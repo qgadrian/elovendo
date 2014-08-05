@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.Filter;
 
+import org.apache.catalina.connector.Connector;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.ErrorPage;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
@@ -78,17 +80,27 @@ public class WebAppConfiguration {
 //	    return characterEncodingFilter;
 //	  }
 	  
-	  @Bean
-	    public FilterRegistrationBean characterEncodingFilter() {
-	        CharacterEncodingFilter filter = new CharacterEncodingFilter();
-	        filter.setEncoding("UTF-8");
-	        filter.setForceEncoding(true);
-	        FilterRegistrationBean filterRegBean = new FilterRegistrationBean();
-	        filterRegBean.setFilter(filter);
-	        List<String> urlPatterns = new ArrayList<String>();
-	        urlPatterns.add("/*");
-	        filterRegBean.setUrlPatterns(urlPatterns);
-	        filterRegBean.setOrder(1); // first filter !
-	        return filterRegBean;
-	    }
+// FAQ: I had to remove this to make factory.setEncoding(UTF-8) work
+//	  @Bean
+//	    public FilterRegistrationBean characterEncodingFilter() {
+//	        CharacterEncodingFilter filter = new CharacterEncodingFilter();
+//	        filter.setEncoding("UTF-8");
+//	        filter.setForceEncoding(true);
+//	        FilterRegistrationBean filterRegBean = new FilterRegistrationBean();
+//	        filterRegBean.setFilter(filter);
+//	        List<String> urlPatterns = new ArrayList<String>();
+//	        urlPatterns.add("/*");
+//	        filterRegBean.setUrlPatterns(urlPatterns);
+//	        filterRegBean.setOrder(1); // first filter !
+//	        return filterRegBean;
+//	    }
+	
+// Another approach to the frost two up here	
+//    @Bean
+//    public Filter characterEncodingFilter() {
+//        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+//        characterEncodingFilter.setEncoding("UTF-8");
+//        characterEncodingFilter.setForceEncoding(true);
+//        return characterEncodingFilter;
+//    }
 }
