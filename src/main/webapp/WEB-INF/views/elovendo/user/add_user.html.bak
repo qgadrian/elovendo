@@ -30,15 +30,19 @@
 <!-- Username with 2-20 chars -->
 			<div class="pure-control-group">
 				<label for="login" th:text="#{label.user}">Login</label> <input id="login" name="login" type="text"
-					placeholder="Username" th:field="${user.login}" />
-					<p th:if="${#fields.hasErrors('user.login')}" th:errors="${user.login}">Incorrect stuff</p>
+					placeholder="Username" th:field="${user.login}" pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$" 
+					th:title="#{login.invalid}" required="required"/>
+<!-- 					<p th:if="${#fields.hasErrors('user.login')}" th:errors="ffggfgfgdf">Incorrect stuff</p> -->
+<!-- 					pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$" th:title="#{login.invalid}"  -->
 			</div>
 
 <!-- Password (UpperCase, LowerCase, Number/SpecialChar and min 8 Chars) -->
 			<div class="pure-control-group">
 				<label for="password" th:text="#{label.password}">Password</label>
 					<input id="password" name="password"
-					type="password" placeholder="Password" th:field="${user.password}"/>
+					type="password" placeholder="Password" th:field="${user.password}"
+					pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
+					th:title="#{password.invalid}" required="required" />
 <!-- 					pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" -->
 			</div>
 

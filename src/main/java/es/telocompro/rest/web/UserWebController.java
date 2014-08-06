@@ -35,6 +35,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -63,6 +64,7 @@ import org.springframework.web.multipart.MultipartFile;
 import es.telocompro.model.item.Item;
 import es.telocompro.model.province.Province;
 import es.telocompro.model.user.User;
+import es.telocompro.rest.controller.MainController;
 import es.telocompro.rest.controller.exception.LoginNotAvailableException;
 import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
 import es.telocompro.rest.controller.exception.SubCategoryNotFoundException;
@@ -85,6 +87,8 @@ public class UserWebController {
 	private ItemService itemService;
 	@Autowired
 	private ProvinceService provinceService;
+	
+	static Logger logger = Logger.getLogger(UserWebController.class.getName());
 
 	/**
 	 * USER STUFF
@@ -103,51 +107,45 @@ public class UserWebController {
     	
         return "elovendo/user/add_user";
     }
-    
-    @InitBinder("user")
-    public void binder(WebDataBinder binder) {
-       binder.addValidators(new FormValidator());
-    }
 	
 	@RequestMapping(value = "new_user", method = RequestMethod.POST)
-	public String processAddUserWeb(@Valid @ModelAttribute(value = "user") User user,
+	public String processAddUserWeb(@Valid @ModelAttribute(value = "user") User user, BindingResult result,
 			@ModelAttribute(value = "provinceName") String provinceName,
-			@ModelAttribute(value = "profilePic") MultipartFile profilePic,
-			BindingResult result, ModelMap model) throws ProvinceNotFoundException, LoginNotAvailableException, 
-			UnsupportedEncodingException {
+			@ModelAttribute(value = "profilePic") MultipartFile profilePic, ModelMap model) 
+					throws ProvinceNotFoundException, LoginNotAvailableException, UnsupportedEncodingException {
 		//FIXME: Edit input type email
 		
-		System.gc();
-		
-		Pattern loginMatcherPattern = Pattern.compile(Constant.loginPattern);
-		Pattern passwordMatcherPattern = Pattern.compile(Constant.passwordPattern);
-		Matcher loginMatcher = loginMatcherPattern.matcher(user.getLogin());
-		Matcher passwordMatcher = passwordMatcherPattern.matcher(user.getPassword());
-		
-		if (loginMatcher.find() && passwordMatcher.find()) {
-		    System.out.println("Fields ok");
-		    
-			byte[] profilePicBytes = null;
-			if (!profilePic.isEmpty()) try {
-				profilePicBytes = profilePic.getBytes();
-			} catch (IOException e) {
-				System.out.println("Error converting to bytes image file");
-			}
-			
-			// TODO: Workaround because multipart/form-data don't send data as UTF-8
-			String firstName = new String (user.getFirstName().getBytes ("iso-8859-1"), "UTF-8");
-			user.setFirstName(firstName);
-			String lastName = new String (user.getLastName().getBytes ("iso-8859-1"), "UTF-8");
-			user.setLastName(lastName);
-			String province = new String (provinceName.getBytes ("iso-8859-1"), "UTF-8");
-		    
-			userService.addUser(user, province, profilePicBytes);
-		} else {
-		    System.out.println("Bad login or password format");
-		    return "redirect:/error";
-		}
-		
-		return "elovendo/user/registered_successful";
+//		System.gc();
+//		
+//		Pattern loginMatcherPattern = Pattern.compile(Constant.loginPattern);
+//		Pattern passwordMatcherPattern = Pattern.compile(Constant.passwordPattern);
+//		Matcher loginMatcher = loginMatcherPattern.matcher(user.getLogin());
+//		Matcher passwordMatcher = passwordMatcherPattern.matcher(user.getPassword());
+//		
+//		if (loginMatcher.find() && passwordMatcher.find()) {
+//		    System.out.println("Fields ok");
+//		    
+//			byte[] profilePicBytes = null;
+//			if (!profilePic.isEmpty()) try {
+//				profilePicBytes = profilePic.getBytes();
+//			} catch (IOException e) {
+//				System.out.println("Error converting to bytes image file");
+//			}
+//			
+//			// TODO: Workaround because multipart/form-data don't send data as UTF-8
+//			String firstName = new String (user.getFirstName().getBytes ("iso-8859-1"), "UTF-8");
+//			user.setFirstName(firstName);
+//			String lastName = new String (user.getLastName().getBytes ("iso-8859-1"), "UTF-8");
+//			user.setLastName(lastName);
+//			String province = new String (provinceName.getBytes ("iso-8859-1"), "UTF-8");
+//		    
+//			userService.addUser(user, province, profilePicBytes);
+//		} else {
+//		    System.out.println("Bad login or password format");
+//		    return "redirect:/error";
+//		}
+//		
+//		return "elovendo/user/registered_successful";
 		
 //		FormValidator formValidator = new FormValidator();
 //		formValidator.validate(user, result);
@@ -155,25 +153,31 @@ public class UserWebController {
 		//		result.addError(new FieldError("registrationform", "name", "rejected stuff"));
 //		return "elovendo/user/add_user";
 		
-//		if (result.hasErrors()) {
-//			System.out.println("Form has errors");
-////			result.addError(new FieldError("registrationform", "login", "rejected stuff"));
-//			return "elovendo/user/add_user";
-//		} 
-//		else  {
-//			System.out.println("Form is ok");
+		if (result.hasErrors()) {
+//			logger.debug("Form has errors");
+			System.out.println("form has errores");
+			
+			@SuppressWarnings("unchecked")
+			List<Province> provinces = IteratorUtils.toList(provinceService.findAllProvinces().iterator());
+	    	model.addAttribute("provinces", provinces);
+	    	
+//			result.addError(new FieldError("registrationform", "login", "rejected stuff"));
+			return "elovendo/user/add_user";
+		} 
+		else  {
+			logger.debug("Form is ok");
 //
-//			byte[] profilePicBytes = null;
-//			if (!profilePic.isEmpty()) try {
-//				profilePicBytes = profilePic.getBytes();
-//			} catch (IOException e) {
-//				System.out.println("Error converting to bytes image file");
-//			}
+			byte[] profilePicBytes = null;
+			if (!profilePic.isEmpty()) try {
+				profilePicBytes = profilePic.getBytes();
+			} catch (IOException e) {
+				System.out.println("Error converting to bytes image file");
+			}
+	
+			userService.addUser(user, provinceName, profilePicBytes);
 //	
-//			userService.addUser(user, provinceName, profilePicBytes);
-//	
-//			return "elovendo/user/registered_successful";
-//		}
+			return "elovendo/user/registered_successful";
+		}
 	}
 
 	/**
