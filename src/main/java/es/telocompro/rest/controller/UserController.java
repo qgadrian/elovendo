@@ -28,8 +28,6 @@ import org.springframework.orm.hibernate3.SpringSessionContext;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.qos.logback.core.encoder.EncoderBase;
-
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;

@@ -60,7 +60,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.qos.logback.core.Context;
 import es.telocompro.model.item.Item;
 import es.telocompro.model.province.Province;
 import es.telocompro.model.user.User;
