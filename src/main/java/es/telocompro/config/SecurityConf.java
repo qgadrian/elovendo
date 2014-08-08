@@ -7,10 +7,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 
 import es.telocompro.rest.handler.LoginFailureHandler;
 import es.telocompro.rest.handler.LoginSuccessHandler;
 import es.telocompro.rest.handler.UserLogoutSuccessHandler;
+import es.telocompro.util.CharacterEncodingFilter;
 
 /**
  * Created by @adrian on 19/06/14.
@@ -33,6 +35,12 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+    	
+    	CharacterEncodingFilter filter = new CharacterEncodingFilter();
+        filter.setEncoding("UTF-8");
+        filter.setForceEncoding(true);
+        http.addFilterBefore(filter, WebAsyncManagerIntegrationFilter.class);
+        
         http
             .authorizeRequests()
 //            	.antMatchers("/resources/**", "/signup").permitAll()

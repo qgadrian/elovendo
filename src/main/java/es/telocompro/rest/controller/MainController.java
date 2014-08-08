@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.IteratorUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -43,15 +44,19 @@ public class MainController implements ErrorController {
     private ProvinceService provinceService;
     @Autowired
     private CategoryService categoryService;
+    
+    //TODO: Testint
+    static Logger logger = Logger.getLogger(MainController.class.getName());
 	
 	/** Login **/
     
 	@RequestMapping(value="/login")
     public String loginPage(HttpSession session, HttpServletRequest request) {
-		System.out.println("Referrer is " + request.getParameterValues("referrer")[0]);
-		String referrer = request.getParameterValues("referrer")[0];
-		session.setAttribute("referrer", referrer);
 		
+		String referrer = request.getParameter("referrer");
+		
+		if (referrer != null) 
+			session.setAttribute("referrer", referrer);
 		
     	return "elovendo/login";
     }
@@ -59,9 +64,17 @@ public class MainController implements ErrorController {
     @RequestMapping(value = "/loginRedirect")
     @ResponseStatus(HttpStatus.OK) // TODO Testear esta notación
     public String login(Model model, Device device, Principal principal, HttpSession session) {
-    	System.out.println("Referrer in redirect is " + session.getAttribute("referrer"));
+
     	String referrer = (String) session.getAttribute("referrer");
-    	return "redirect:"+referrer;
+    	
+    	logger.debug("Referrer is " + referrer);
+    	
+    	if (device.isNormal())
+	    	if (referrer != null)
+	    		return "redirect:"+referrer;
+	    	else
+	    		return "redirect:elovendo/index";
+    	else return "";
     	
 //    	 User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //    	 String userId = String.valueOf(user.getUserId());

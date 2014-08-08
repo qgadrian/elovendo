@@ -15,8 +15,8 @@
 <link rel="stylesheet" href="/css/style-login-button.css" />
 
 <!-- Form -->
-<link rel="stylesheet"
-	href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css" />
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css" />
+<link rel="stylesheet" href="/css/formStyle.css" />
 
 </head>
 
@@ -26,20 +26,23 @@
 	<form class="pure-form pure-form-aligned" id="registrationform" th:action="@{/site/new_user}" 
 	method="post" enctype="multipart/form-data" accept-charset="UTF-8">
 		<fieldset>
-
-<!-- Username with 2-20 chars -->
+					
+			<!-- Username with 2-20 chars -->
 			<div class="pure-control-group">
 				<label for="login" th:text="#{label.user}">Login</label> <input id="login" name="login" type="text"
-					placeholder="Username" th:field="${user.login}" />
-					<p th:if="${#fields.hasErrors('user.login')}" th:errors="${user.login}">Incorrect stuff</p>
+					placeholder="Username" th:field="${user.login}" 
+					th:title="#{login.invalid}" required="required"/>
+					<span th:if="${#fields.hasErrors('user.login')}" th:errors="${user.login}">Error</span>
+<!-- 					pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$"  -->
 			</div>
 
 <!-- Password (UpperCase, LowerCase, Number/SpecialChar and min 8 Chars) -->
 			<div class="pure-control-group">
 				<label for="password" th:text="#{label.password}">Password</label>
 					<input id="password" name="password"
-					type="password" placeholder="Password" th:field="${user.password}"/>
-<!-- 					pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" -->
+					type="password" placeholder="Password" th:field="${user.password}"
+					pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
+					th:title="#{password.invalid}" required="required" />
 			</div>
 
 			<div class="pure-control-group">

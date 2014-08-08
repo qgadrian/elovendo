@@ -3,12 +3,10 @@ package es.telocompro.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
@@ -20,16 +18,15 @@ import es.telocompro.util.Constant;
  */
 
 @Configuration
-//@EnableWebMvc
 @ComponentScan("es.telocompro")
 public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 
-	@Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-//        registry.addViewController("/login").setViewName("login");
-        
-        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-    }
+//	@Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+////        registry.addViewController("/login").setViewName("login");
+//        
+//        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+//    }
 
     // Maps resources path to webapp/resources
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -128,6 +125,35 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 //		ResourceBundleMessageSource source = new ResourceBundleMessageSource();
 //        source.setBasename("messages");
 //        return source;
+//	}
+    
+//    @Bean
+//    public ServletContextInitializer servletContextInitializer(ServletContext servletContext) {
+//	    final CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+//	    characterEncodingFilter.setEncoding("UTF-8");
+//	    characterEncodingFilter.setForceEncoding(false);
+//	    
+//	    servletContext.addFilter("characterEncodingFilter", characterEncodingFilter)
+//	    	.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/*");
+//	    
+//	    return servletContext;
+//    }
+//    
+//  @Bean
+//  public CharacterEncodingFilter characterEncodingFilter() {
+//      CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+//      characterEncodingFilter.setEncoding("UTF-8");
+//      characterEncodingFilter.setForceEncoding(true);
+//      return characterEncodingFilter;
+//  }
+    
+    // FAQ: This HAVE TO BE javax.filter to make utf-8 work, 
+//	@Bean
+//	public CharacterEncodingFilter characterEncodingFilter() {
+//		final CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+//		characterEncodingFilter.setEncoding("UTF-8");
+//		characterEncodingFilter.setForceEncoding(false);
+//		return characterEncodingFilter;
 //	}
 
 }

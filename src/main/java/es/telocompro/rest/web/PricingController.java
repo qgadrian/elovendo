@@ -30,5 +30,15 @@ public class PricingController {
     	
     	return "elovendo/pricing/points";
     }
+    
+    @RequestMapping(value="/paymentok", method = RequestMethod.GET)
+    public String paymentOkPage() {
+    	return "elovendo/pricing/paymentOk";
+    }
+    
+    @RequestMapping(value="/paymentfailed", method = RequestMethod.GET)
+    public String paymentFailedPage() {
+    	return "elovendo/pricing/paymentFailed";
+    }
 
 }
