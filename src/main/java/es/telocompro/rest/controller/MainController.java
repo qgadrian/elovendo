@@ -25,7 +25,6 @@ import es.telocompro.model.item.Item;
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.province.Province;
-import es.telocompro.model.user.User;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.item.category.CategoryService;
 import es.telocompro.service.province.ProvinceService;
@@ -45,36 +44,45 @@ public class MainController implements ErrorController {
     @Autowired
     private CategoryService categoryService;
     
-    //TODO: Testint
+    //TODO: Testing
     static Logger logger = Logger.getLogger(MainController.class.getName());
 	
-	/** Login **/
+	/**
+	 * 
+	 * USER SESSION MANAGEMENT
+	 * 
+	 */
     
 	@RequestMapping(value="/login")
-    public String loginPage(HttpSession session, HttpServletRequest request) {
+    public String loginPage(HttpSession session, HttpServletRequest request, Device device) {
+
+		if (device.isNormal()) {
+			String referrer = request.getParameter("referrer");
+			if (referrer != null) 
+				session.setAttribute("referrer", referrer);
+			
+	    	return "elovendo/login";
+		}
 		
-		String referrer = request.getParameter("referrer");
-		
-		if (referrer != null) 
-			session.setAttribute("referrer", referrer);
-		
-    	return "elovendo/login";
+		return "";
     }
 
-    @RequestMapping(value = "/loginRedirect")
-    @ResponseStatus(HttpStatus.OK) // TODO Testear esta notación
-    public String login(Model model, Device device, Principal principal, HttpSession session) {
+	@RequestMapping(value = "/loginRedirect")
+	@ResponseStatus(HttpStatus.OK)
+	// TODO Testear esta notación
+	public String login(Model model, Device device, Principal principal,
+			HttpSession session) {
 
-    	String referrer = (String) session.getAttribute("referrer");
-    	
-    	logger.debug("Referrer is " + referrer);
-    	
-    	if (device.isNormal())
-	    	if (referrer != null)
-	    		return "redirect:"+referrer;
-	    	else
-	    		return "redirect:elovendo/index";
-    	else return "";
+		if (device.isNormal()) {
+			String referrer = (String) session.getAttribute("referrer");
+			// logger.debug("Referrer is " + referrer);
+			if (referrer != null)
+				return "redirect:" + referrer;
+			else
+				return "redirect:elovendo/index";
+		} 
+		
+		return "";
     	
 //    	 User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //    	 String userId = String.valueOf(user.getUserId());
@@ -88,28 +96,23 @@ public class MainController implements ErrorController {
     }
     
     @RequestMapping(value="/logout")
-    public String logout(HttpServletResponse response) {
+    public String logout(HttpServletResponse response, Device device) {
     	System.out.println("logout controller");
     	
     	SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
     	Cookie cookie = new Cookie("JSESSIONID", null);
     	response.addCookie(cookie);
     	
-    	return null;
+    	if (device.isNormal()) return "elovendo/index";
+    	
+    	return "";
     }
     
-//    @RequestMapping(value="/logout")
-//    public ResponseEntity<?> logout(HttpServletResponse response) {
-//    	System.out.println("logout controller");
-//    	
-//    	SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
-//    	Cookie cookie = new Cookie("JSESSIONID", null);
-//    	response.addCookie(cookie);
-//    	
-//    	return new ResponseEntity<HttpStatus>(HttpStatus.OK);
-//    }
-    
-    /** WEB PAGES **/
+    /** 
+     * 
+     * WEB PAGES
+     * 
+     */
     
     @RequestMapping(value="/elovendo/index", method = RequestMethod.GET)
     public String indexPage() {

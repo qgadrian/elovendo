@@ -32,11 +32,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -344,85 +341,6 @@ public class UserWebController {
 			return "redirect:/error";
 		}
 	}
-	
-//	@RequestMapping(value = "paypalok", method = RequestMethod.POST)
-//	public String processIPN(HttpServletRequest request) {
-//
-//		String PAY_PAL_DEBUG = "https://www.sandbox.paypal.com/cgi-bin/webscr";
-//		String CONTENT_TYPE = "Content-Type";
-//		String MIME_APP_URLENC = "application/x-www-form-urlencoded";
-//		String PARAM_NAME_CMD = "cmd";
-//		String PARAM_VAL_CMD = "_notify-validate";
-//		String PAYMENT_COMPLETED = "Completed";
-//		
-//		String paymentStatus = "";
-//
-//		System.out.println("POST Confirm");
-//
-//		// Create client for Http communication
-//		HttpClient httpClient = new DefaultHttpClient();
-//		HttpParams clientParams = httpClient.getParams();
-//		HttpConnectionParams.setConnectionTimeout(clientParams, 40000);
-//		HttpConnectionParams.setSoTimeout(clientParams, 40000);
-//
-//		HttpPost httppost = new HttpPost(PAY_PAL_DEBUG);
-//		httppost.setHeader(CONTENT_TYPE, MIME_APP_URLENC);
-//
-//		try {
-//			// Store Payment info for passing to processing service
-//			Map<String, String> params = new HashMap<String, String>();
-//
-//			// Use name/value pair for building the encoded response string
-//			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-//
-//			// Append the required command
-//			nameValuePairs.add(new BasicNameValuePair(PARAM_NAME_CMD, PARAM_VAL_CMD));
-//
-//			// Process the parameters
-//			Enumeration<String> names = request.getParameterNames();
-//			while (names.hasMoreElements()) {
-//				String param = names.nextElement();
-//				String value = request.getParameter(param);
-//				
-////				String param = new String (names.nextElement().getBytes ("iso-8859-1"), "UTF-8");
-////				String value = new String (request.getParameter(param).getBytes ("iso-8859-1"), "UTF-8");
-//
-//				nameValuePairs.add(new BasicNameValuePair(param, value));
-//				params.put(param, value);
-//				System.out.println(param + "=" + value);
-//				// Get the payment status
-//				if (param.equalsIgnoreCase("payment_status")) paymentStatus = value;
-//			}
-//
-//			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-//
-//			if (verifyResponse(httpClient.execute(httppost))) {
-//				// Implement your processing logic here, I used an @Asyn
-//				// annotation
-//				// Remember to track completed transactions and don't process
-//				// duplicates
-//				
-//				// user info: transaction_subject=*userId*
-//				if (paymentStatus.equalsIgnoreCase(PAYMENT_COMPLETED)) System.out.println("processing payment");
-//				System.out
-//						.println("here comes the logic stuff (should be a good sign)");
-//				return "elovendo/pricing/paymentOk";
-//			} else {
-//				System.out.println("shit, payment not confirmed");
-//				return "elovendo/pricing/paymentFailed";
-//			}
-//
-//		} catch (UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//			return "redirect:/error";
-//		} catch (ClientProtocolException e) {
-//			e.printStackTrace();
-//			return "redirect:/error";
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			return "redirect:/error";
-//		}
-//	}
 
 	private boolean verifyResponse(HttpResponse response)
 			throws IllegalStateException, IOException {

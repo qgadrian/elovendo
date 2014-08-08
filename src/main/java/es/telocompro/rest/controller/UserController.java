@@ -50,7 +50,8 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @SuppressWarnings("unused")
-@RequestMapping("/api/zorg/site/") //FIXME: Add /api/ to ALL REST url
+@RequestMapping(Constant.MOBILE_API_URL_PREFIX_V1 + "site/") 
+//FIXME: Add /api/ to ALL REST url
 public class UserController {
 
 	@Autowired

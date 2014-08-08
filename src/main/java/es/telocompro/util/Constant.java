@@ -7,6 +7,11 @@ public class Constant {
 	public static int DEFAULT_USER_VALUE = 70;
 	
 	/**
+	 * URL PREFIXES
+	 */
+	public static final String MOBILE_API_URL_PREFIX_V1 = "/api/zorg/";
+	
+	/**
 	 * PATTERNS
 	 */
 	public static final String loginPattern = "^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$";

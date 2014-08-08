@@ -6,6 +6,7 @@ import es.telocompro.model.item.category.CategoryRepository;
 import es.telocompro.rest.controller.exception.WrongItemSubCategoryRequestException;
 import es.telocompro.rest.util.RestItemObject;
 import es.telocompro.service.item.ItemService;
+import es.telocompro.util.Constant;
 import es.telocompro.util.IOUtil;
 
 import org.json.simple.JSONArray;
@@ -40,7 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @SuppressWarnings("unused")
-@RequestMapping(value = "/bazaar/c/")
+@RequestMapping(Constant.MOBILE_API_URL_PREFIX_V1 + "/bazaar/c/")
 public class ItemController {
 
     @Autowired
