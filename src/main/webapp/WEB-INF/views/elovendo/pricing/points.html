@@ -53,22 +53,35 @@
 <!-- 			</script> -->			
 <!-- 									th:attr="data-custom='__${user.userId}__'"  -->
 
+<!-- 					<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" -->
+<!-- 						method="post" target="_top"> -->
+<!-- 						<input type="hidden" name="cmd" value="_s-xclick"/>  -->
+<!-- 						<input type="hidden" name="charset" value="utf-8"/> -->
+<!-- 						<input type="hidden" name="custom" th:value="__${user.userId}__"/> -->
+<!-- 						<input type="hidden" name="encrypted" -->
+<!-- 						<input type="image" -->
+<!-- 							src="https://www.sandbox.paypal.com/es_ES/ES/i/btn/btn_buynowCC_LG.gif" -->
+<!-- 							border="0" name="submit" -->
+<!-- 							alt="PayPal. La forma rápida y segura de pagar en Internet."/> -->
+<!-- 						<img alt="" border="0" -->
+<!-- 							src="https://www.sandbox.paypal.com/es_ES/i/scr/pixel.gif" -->
+<!-- 							width="1" height="1"/> -->
+<!-- 					</form> -->
+
 					<form action="https://www.sandbox.paypal.com/cgi-bin/webscr"
 						method="post" target="_top">
-						<input type="hidden" name="cmd" value="_s-xclick"/> 
-						<input type="hidden" name="charset" value="utf-8"/>
-						<input type="hidden" name="encrypted"
-							value="-----BEGIN PKCS7-----MIIIGwYJKoZIhvcNAQcEoIIIDDCCCAgCAQExggE6MIIBNgIBADCBnjCBmDELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExETAPBgNVBAcTCFNhbiBKb3NlMRUwEwYDVQQKEwxQYXlQYWwsIEluYy4xFjAUBgNVBAsUDXNhbmRib3hfY2VydHMxFDASBgNVBAMUC3NhbmRib3hfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tAgEAMA0GCSqGSIb3DQEBAQUABIGAeHyH/nb2D3zPnbeW1hltslq/mNYCyHVA7KodOtEVrlui2QwVjN6GAv03XlgxurSn2xWEj4NF5P+bJnUtocAqtVlRFpVwEZOFAT7f02dEyS2yaBK17a9pn1UWVFFh3vfYDaLyy431bcTiQ24eqxQwwR47FYhM4GmJPzUGB95Slr0xCzAJBgUrDgMCGgUAMIIBZQYJKoZIhvcNAQcBMBQGCCqGSIb3DQMHBAhzjEac8kG1kYCCAUAh8y7kaEyfC7twwKVTBM4/MXU7shoiDs5Z8n8+XRvnC+BgpJI2mUiq6POic4ndhy6k3+VtRW5lUo2YFEpeS/XxtPeRHpfXJrlA//t7x9eTJabTKRC+rfEiyj0jVax1gJ1qsFnfNfd6F1w0kc9EKx0A9roXqwqJEEH+IqLv6l6tJqveXLUuEh+qiY8711LMt2+8/vWQw7pXvOkeBB46tLXVMGj1tgUDrsNQZWtz247te7y5qAzmlTHQRUkl+2zvcY0D/2onx2d/GVVdB8qTbWW2jY1kyw54kmPuJcsVgfCsu9jrlHTMWNsXayAViwhSp/Juki8MwO3J+8ysCp8hQq6bW6iBkreS12782nv4GcTWQIszLYrldmAeb0TXV8jo8IkN+q6HLSPvP/g7ejfTu3rOrdZknzozOKHHwUIGglZ6yKCCA6UwggOhMIIDCqADAgECAgEAMA0GCSqGSIb3DQEBBQUAMIGYMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTERMA8GA1UEBxMIU2FuIEpvc2UxFTATBgNVBAoTDFBheVBhbCwgSW5jLjEWMBQGA1UECxQNc2FuZGJveF9jZXJ0czEUMBIGA1UEAxQLc2FuZGJveF9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20wHhcNMDQwNDE5MDcwMjU0WhcNMzUwNDE5MDcwMjU0WjCBmDELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExETAPBgNVBAcTCFNhbiBKb3NlMRUwEwYDVQQKEwxQYXlQYWwsIEluYy4xFjAUBgNVBAsUDXNhbmRib3hfY2VydHMxFDASBgNVBAMUC3NhbmRib3hfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3luO//Q3So3dOIEv7X4v8SOk7WN6o9okLV8OL5wLq3q1NtDnk53imhPzGNLM0flLjyId1mHQLsSp8TUw8JzZygmoJKkOrGY6s771BeyMdYCfHqxvp+gcemw+btaBDJSYOw3BNZPc4ZHf3wRGYHPNygvmjB/fMFKlE/Q2VNaic8wIDAQABo4H4MIH1MB0GA1UdDgQWBBSDLiLZqyqILWunkyzzUPHyd9Wp0jCBxQYDVR0jBIG9MIG6gBSDLiLZqyqILWunkyzzUPHyd9Wp0qGBnqSBmzCBmDELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExETAPBgNVBAcTCFNhbiBKb3NlMRUwEwYDVQQKEwxQYXlQYWwsIEluYy4xFjAUBgNVBAsUDXNhbmRib3hfY2VydHMxFDASBgNVBAMUC3NhbmRib3hfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tggEAMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADgYEAVzbzwNgZf4Zfb5Y/93B1fB+Jx/6uUb7RX0YE8llgpklDTr1b9lGRS5YVD46l3bKE+md4Z7ObDdpTbbYIat0qE6sElFFymg7cWMceZdaSqBtCoNZ0btL7+XyfVB8M+n6OlQs6tycYRRjjUiaNklPKVslDVvk8EGMaI/Q+krjxx0UxggGkMIIBoAIBATCBnjCBmDELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExETAPBgNVBAcTCFNhbiBKb3NlMRUwEwYDVQQKEwxQYXlQYWwsIEluYy4xFjAUBgNVBAsUDXNhbmRib3hfY2VydHMxFDASBgNVBAMUC3NhbmRib3hfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tAgEAMAkGBSsOAwIaBQCgXTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xNDA4MDcxNTQ2NTZaMCMGCSqGSIb3DQEJBDEWBBQzbDpIqy7J+8niM5OjF6T72rfQ3DANBgkqhkiG9w0BAQEFAASBgAIzmCe1UE9Ct02CQ6FGzbWljDdHbVLNOG+DWM1asnU/wYEiUXr9oY3dBpvWzLTH/YNy20XlK+FMOV5Vij/5EtxoS9Z5qHTF1qwyBclUuLtsg4WXCzIGbg4nkGQOYSBPcUy3GYgRnKaSNtws7qVd5iacA9wGdLPj+S+XdfPkD1Ns-----END PKCS7-----
-"/>
-						<input type="image"
+						<input type="hidden" name="cmd" value="_s-xclick" /> <input
+							type="hidden" name="hosted_button_id" value="WNB543K5GFJD6" /> <input
+							type="hidden" name="charset" value="utf-8" /> <input
+							type="hidden" name="custom" th:value="__${user.userId}__" /> <input
+							type="image"
 							src="https://www.sandbox.paypal.com/es_ES/ES/i/btn/btn_buynowCC_LG.gif"
 							border="0" name="submit"
-							alt="PayPal. La forma rápida y segura de pagar en Internet."/>
-						<img alt="" border="0"
+							alt="PayPal. La forma rápida y segura de pagar en Internet." /> <img
+							alt="" border="0"
 							src="https://www.sandbox.paypal.com/es_ES/i/scr/pixel.gif"
-							width="1" height="1"/>
+							width="1" height="1" />
 					</form>
-
 
 				</div>
 			</div>

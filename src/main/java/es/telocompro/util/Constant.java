@@ -2,9 +2,13 @@ package es.telocompro.util;
 
 public class Constant {
 	
-	public static int MIN_ITEM_TITLE_LENGHT = 4;
+	public static final int MIN_ITEM_TITLE_LENGHT = 4;
 	
-	public static int DEFAULT_USER_VALUE = 70;
+	public static final int DEFAULT_USER_VALUE = 70;
+	
+	public static final int INITIAL_POINTS = 0;
+	
+	public static final int ITEM_DEFAULT_DURATION = 15;
 	
 	/**
 	 * URL PREFIXES

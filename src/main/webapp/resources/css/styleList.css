@@ -1,0 +1,25 @@
+/*********************************************************************************/
+/* Basic                                                                         */
+/*********************************************************************************/
+
+/* '#' es id y '.' es class */
+
+#itemList {
+	color: #000;
+	float: left;
+	margin-left: 20px;
+	padding: 10px;
+}
+
+#itemList .itemField {
+	position: relative;
+}
+
+#itemList .itemTitle {
+	font-size: 20px;
+}
+
+#itemList .picture {
+	width: 100px;
+	height: 100px;
+}

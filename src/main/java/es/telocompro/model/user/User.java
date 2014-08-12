@@ -17,7 +17,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
@@ -65,6 +64,8 @@ public class User implements UserDetails {
     
     @Column
     private int userValue;
+    
+    private int points;
 
     @ManyToOne(optional=false, fetch=FetchType.EAGER)
     @JoinColumn(name = "roleid")
@@ -100,6 +101,7 @@ public class User implements UserDetails {
         this.role = role;
         this.signInProvider = signInProvider;
         this.userValue = Constant.DEFAULT_USER_VALUE;
+        this.points = Constant.INITIAL_POINTS;
         this.enabled = true;
     }
     
@@ -171,7 +173,15 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public Role getRole() {
+    public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
+	}
+
+	public Role getRole() {
         return role;
     }
 

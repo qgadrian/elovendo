@@ -34,7 +34,7 @@ public class CategoryController {
     }
 
     /**
-     * Get all subcategories from a category
+     * Get all subCategories from a category
      */
     @SuppressWarnings("unchecked")
 	@RequestMapping(value = "{category}", method = RequestMethod.GET)

@@ -14,9 +14,9 @@ INSERT INTO province VALUES (4, 'Lugo');
 INSERT INTO role VALUES (1, 'ROLE_USER');
 
 -- USER
--- prvince, avatar uservalue, roleid, you're welcome
-INSERT INTO userprofile VALUES (1, 'charlieHarper', 'password', 'Charlie', 'Harper', 'charlie address', 'charliephone', 'charlieemail', 1, NULL, 0, 1, true, NULL);
-INSERT INTO userprofile VALUES (2, 'user', 'password', 'User', 'LastName', 'user address', 'userphone', 'userEmail', 2, NULL, 0, 1, true, NULL);
+-- prvince, avatar uservalue, points, roleid, you're welcome
+INSERT INTO userprofile VALUES (1, 'usuario', 'password', 'Charlie', 'Harper', 'charlie address', 'charliephone', 'charlieemail', 1, NULL, 0, 0, 1, true, NULL);
+INSERT INTO userprofile VALUES (2, 'user', 'password', 'User', 'LastName', 'user address', 'userphone', 'userEmail', 2, NULL, 0, 0, 1, true, NULL);
 
 -- CATEGORY
 
@@ -49,7 +49,7 @@ INSERT INTO subcategory VALUES(11, 2, 'Accesorios');
 
 -- ITEMS
 
-INSERT INTO item VALUES (NULL, 1, 2, 'PS4 + 2 mandos + Juegos', 'Play station 4 original, comprada en Marruecos, está un poco rayada.', 1, 200, NOW(), null);
-INSERT INTO item VALUES (NULL, 2, 2, 'XBOX ONE + 3 mandos', 'Original, se vende porque me compré una gameboy', 2, 250.5, NOW(), null);
-INSERT INTO item VALUES (NULL, 1, 3, 'PC 3ghz + 8GB RAM Nvidia 964GTZ', 'Está como nuevo, vendo por no usar', 1, 500.5, NOW(), null);
-INSERT INTO item VALUES (NULL, 1, 4, 'Televisión 20 pulgadas', 'Un televisor grande y con muy buena pantalla', 2, 1200, NOW(), null);
+--INSERT INTO item VALUES (NULL, 1, 2, 'PS4 + 2 mandos + Juegos', 'Play station 4 original, comprada en Marruecos, está un poco rayada.', 1, 200, NOW(), null);
+--INSERT INTO item VALUES (NULL, 2, 2, 'XBOX ONE + 3 mandos', 'Original, se vende porque me compré una gameboy', 2, 250.5, NOW(), null);
+--INSERT INTO item VALUES (NULL, 1, 3, 'PC 3ghz + 8GB RAM Nvidia 964GTZ', 'Está como nuevo, vendo por no usar', 1, 500.5, NOW(), null);
+--INSERT INTO item VALUES (NULL, 1, 4, 'Televisión 20 pulgadas', 'Un televisor grande y con muy buena pantalla', 2, 1200, NOW(), null);

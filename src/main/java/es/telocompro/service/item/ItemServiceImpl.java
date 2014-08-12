@@ -108,7 +108,7 @@ public class ItemServiceImpl implements ItemService {
     public Item addItem(Item item, String subCategoryName, String provinceName, byte[] imgBytes) 
     		throws InvalidItemNameMinLenghtException, UserNotFoundException, 
     		SubCategoryNotFoundException, ProvinceNotFoundException, IOException {
-    	
+    	// FIXME: Check if user is loggued, apply security permissions
     	User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	
     	item.setUser(user);

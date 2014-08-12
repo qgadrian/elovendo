@@ -3,8 +3,9 @@
 ---------------------------------------------------
 
 -- Eliminamos tablas.
-	DROP TABLE IF EXISTS image CASCADE;
+	/*DROP TABLE IF EXISTS image CASCADE*/;
 	DROP TABLE IF EXISTS vote CASCADE;
+	DROP TABLE IF EXISTS purchase CASCADE;
     DROP TABLE IF EXISTS item CASCADE;
     DROP TABLE IF EXISTS subcategory CASCADE;
     DROP TABLE IF EXISTS category CASCADE;
@@ -32,6 +33,7 @@ CREATE TABLE province (
 	);	
 	
 -- USER TABLE
+--TODO: save register date to see how long is member
 	CREATE TABLE userprofile (
 		  userid BIGINT NOT NULL AUTO_INCREMENT,
 		  login VARCHAR(15) NOT NULL,
@@ -44,6 +46,7 @@ CREATE TABLE province (
 		  provinceId BIGINT NOT NULL,
 		  avatar VARCHAR(255),
 		  userValue INT NOT NULL DEFAULT 0,
+		  points INT NOT NULL DEFAULT 0,
 		  roleid BIGINT NOT NULL,
 		  enabled BOOLEAN NOT NULL,
 		  sign_in_provider VARCHAR(20),
@@ -54,6 +57,7 @@ CREATE TABLE province (
 		  CONSTRAINT fk_user_roleid FOREIGN KEY (roleid) REFERENCES role(roleid) ON UPDATE CASCADE ON DELETE CASCADE,
 		  CONSTRAINT check_votespositive CHECK (votespositive > 0),
 		  CONSTRAINT check_votesnegative CHECK (votesnegative > 0),
+		  CONSTRAINT check_points CHECK (points > 0),
 		  CONSTRAINT check_uservalue_min CHECK (userValue > 0),
 		  CONSTRAINT check_uservalue_max CHECK (userValue < 101)
 	);
@@ -89,6 +93,7 @@ CREATE TABLE province (
     	    provinceId BIGINT NOT NULL,
     	    prize DECIMAL(6,2) NOT NULL,
     	    startdate DATETIME NOT NULL,
+    	    endDate DATETIME NOT NULL,
     	    imgHome VARCHAR(255),
     	    CONSTRAINT pk_item PRIMARY KEY (itemid),
     	    CONSTRAINT fk_item_provinceId FOREIGN KEY (provinceId) REFERENCES province(provinceId) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -97,7 +102,8 @@ CREATE TABLE province (
     	);
 
     -- IMAGES
-	CREATE TABLE image (
+    -- TODO: Delte this stuff
+	/*CREATE TABLE image (
 		itemid BIGINT NOT NULL,
 		imghome BLOB,
 		img2 BLOB,
@@ -106,7 +112,7 @@ CREATE TABLE province (
 		img5 BLOB,
 		img6 BLOB,
 		CONSTRAINT pk_image_itemid PRIMARY KEY (itemid)
-	);
+	);*/
 
 -- VOTE
 
@@ -134,6 +140,43 @@ CREATE TABLE pendingVote(
 	userIdVoted BIGINT NOT NULL,
 );
 */
+
+-- PAYMENTS
+-- txn_id -> Transaction id
+-- payment_date
+-- payment_status
+-- item_name
+-- item_number -> USER ID
+-- ipn_track_id -< for paypal's internal purposes, save it for, "who knows"
+-- mc_gross -> Precio
+-- mc_fee -> Paypal commision
+-- receiver_id -> ID de recibo de usuario
+-- first_name
+-- last_name
+-- payer_email
+-- residence_country -> Country
+
+    CREATE TABLE purchase (
+		txn_id VARCHAR(255),
+		payment_date DATETIME NOT NULL,
+		payment_status VARCHAR(100),
+		item_name VARCHAR(100),
+		item_number INTEGER,
+		userid BIGINT NOT NULL,
+		ipn_track_id VARCHAR(255),
+		mc_gross DECIMAL(6,2) NOT NULL,
+		mc_fee DECIMAL(6,2) NOT NULL,
+		receiver_id VARCHAR(255),
+		first_name VARCHAR(100),
+		last_name VARCHAR(100),
+		payer_email VARCHAR(100),
+		residence_country VARCHAR(100),
+		CONSTRAINT pk_purchase_txn_id PRIMARY KEY (txn_id),
+		CONSTRAINT fk_purchase_userid FOREIGN KEY (userid) REFERENCES userprofile(userid) ON UPDATE CASCADE ON DELETE CASCADE,
+		CONSTRAINT check_purchase_item_number CHECK (item_number > 0)
+	);
+
+    
     
 -- MESSAGING
     

@@ -18,6 +18,7 @@ import javax.persistence.TemporalType;
 import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.province.Province;
 import es.telocompro.model.user.User;
+import es.telocompro.util.Constant;
 
 /**
  * Created by @adrian on 17/06/14.
@@ -49,6 +50,10 @@ public class Item {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar startDate;
     
+    @Column(columnDefinition="DATETIME", name = "endDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar endDate;
+    
     @ManyToOne(optional = false, fetch=FetchType.LAZY)
     @JoinColumn(name = "provinceId")
     private Province province;
@@ -67,6 +72,18 @@ public class Item {
         this.startDate = startDate;
         this.imgHome = imgHome;
         this.province = province;
+        
+        Calendar endDate = Calendar.getInstance();
+        endDate.set(startDate.get(Calendar.YEAR), 
+        		startDate.get(Calendar.MONTH), 
+        		startDate.get(Calendar.DATE),
+        		startDate.get(Calendar.HOUR_OF_DAY), 
+        		startDate.get(Calendar.MINUTE),
+        		startDate.get(Calendar.SECOND));
+        
+        endDate.add(Calendar.DATE, Constant.ITEM_DEFAULT_DURATION);
+        
+        this.endDate = endDate;
     }
 
     public SubCategory getSubCategory() {

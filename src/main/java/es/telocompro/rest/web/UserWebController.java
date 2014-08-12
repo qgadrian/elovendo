@@ -5,12 +5,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +46,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -66,12 +71,15 @@ import es.telocompro.model.user.User;
 import es.telocompro.rest.controller.MainController;
 import es.telocompro.rest.controller.exception.LoginNotAvailableException;
 import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
+import es.telocompro.rest.controller.exception.PurchaseDuplicateException;
+import es.telocompro.rest.controller.exception.PurchaseNotFoundException;
 import es.telocompro.rest.controller.exception.SubCategoryNotFoundException;
 import es.telocompro.rest.controller.exception.UserNotFoundException;
 import es.telocompro.rest.web.validator.FormValidator;
 import es.telocompro.service.exception.InvalidItemNameMinLenghtException;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.province.ProvinceService;
+import es.telocompro.service.purchase.PurchaseService;
 import es.telocompro.service.user.UserService;
 import es.telocompro.util.Constant;
 
@@ -79,6 +87,8 @@ import es.telocompro.util.Constant;
 @SuppressWarnings("unused")
 @RequestMapping("/site/")
 public class UserWebController {
+	
+	Logger logger = Logger.getLogger(UserWebController.class);
 
 	@Autowired
 	private UserService userService;
@@ -86,8 +96,8 @@ public class UserWebController {
 	private ItemService itemService;
 	@Autowired
 	private ProvinceService provinceService;
-	
-	static Logger logger = Logger.getLogger(UserWebController.class.getName());
+	@Autowired
+	private PurchaseService purchaseService;
 
 	/**
 	 * USER STUFF
@@ -217,51 +227,13 @@ public class UserWebController {
 		return "elovendo/item/item_create_successful";
 	}
 
-	/** PAYPAL **/
-//	 @RequestMapping(value = "paypalok", method = RequestMethod.POST)
-//	 public void paypalProcessWeb(HttpServletRequest httpRequest) {
-//	
-//	 System.out.println("request uri ---> " + httpRequest.getRequestURI());
-//	 System.out.println("parameters...");
-//	 for (String string : httpRequest.getParameterMap().keySet()) {
-//	 System.out.println("Parameter " + string + " -- value: " +
-//	 httpRequest.getParameter(string));
-//	 }
-//	
-//	 String paypalUrl = "https://www.sandbox.paypal.com/cgi-bin/webscr";
-//	 RestTemplate restTemplate = new RestTemplate();
-//	 
-//	 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-//	 // Append the required command
-//	 nameValuePairs.add(new BasicNameValuePair("cmd", "_notify-validate"));
-//	 for (String string : httpRequest.getParameterMap().keySet()) {
-//		 nameValuePairs.add(new BasicNameValuePair(string, httpRequest.getParameter(string)));
-//	 }
-//	
-////	 HttpMessageConverter formHttpMessageConverter = new
-////	 FormHttpMessageConverter();
-////	 HttpMessageConverter stringHttpMessageConverternew = new
-////	 StringHttpMessageConverter();
-////	 List<HttpMessageConverter> messageConverterList = new ArrayList<>();
-////	 messageConverterList.add(formHttpMessageConverter);
-////	 messageConverterList.add(stringHttpMessageConverternew);
-////	 restTemplate.setMessageConverters(messageConverterList);
-//	
-//	 ResponseEntity<String> response = restTemplate.postForEntity(paypalUrl,
-//	 nameValuePairs, String.class);
-//	 HttpStatus status = response.getStatusCode();
-//	 String restCall = response.getBody();
-//	 System.out.println("PAYPAL SAYS:");
-//	 System.out.println("response code: " + response.getStatusCode());
-//	 System.out.println("response code: " + response.getHeaders().toString());
-//	 System.out.println("response from paypal " + restCall);
-//	
-//	 }
-
+	/** PAYPAL 
+	 * @throws PurchaseDuplicateException 
+	 * @throws UserNotFoundException **/
 	//http://83.165.60.132:8080/site/paypalok
-	
 	@RequestMapping(value = "paypalok", method = RequestMethod.POST)
-	public String processIPN(HttpServletRequest request) {
+	@Async
+	public String processIPN(HttpServletRequest request) throws UserNotFoundException, PurchaseDuplicateException {
 
 		String PAY_PAL_DEBUG = "https://www.sandbox.paypal.com/cgi-bin/webscr";
 		String CONTENT_TYPE = "Content-Type";
@@ -315,15 +287,46 @@ public class UserWebController {
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 			if (verifyResponse(httpClient.execute(httppost))) {
-				// Implement your processing logic here, I used an @Asyn
-				// annotation
-				// Remember to track completed transactions and don't process
-				// duplicates
+				// Implement your processing logic here, I used an @Async annotation
+				// Remember to track completed transactions and don't process duplicates
 				
 				// user info: transaction_subject=*userId*
-				if (paymentStatus.equalsIgnoreCase(PAYMENT_COMPLETED)) System.out.println("processing payment");
-				System.out
-						.println("here comes the logic stuff (should be a good sign)");
+				
+				// Save payment
+				String txn_id = params.get("txn_id");
+				String payment_date = params.get("payment_date");
+				Long userId = Long.valueOf(params.get("custom"));
+				String payment_status = params.get("payment_status");
+				String item_name = params.get("item_name");
+				int item_number = Integer.valueOf(params.get("item_number"));
+				String ipn_track_id = params.get("ipn_track_id");
+				String receiver_id = params.get("receiver_id");
+				BigDecimal mc_gross = new BigDecimal(params.get("mc_gross"));
+				BigDecimal mc_fee = new BigDecimal(params.get("mc_fee"));
+				String first_name = params.get("first_name");
+				String last_name = params.get("last_name");
+				String payer_email = params.get("payer_email");
+				String residence_country = params.get("residence_country");
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss MMM d, yyyy z", Locale.ENGLISH);
+				Date _date = sdf.parse(payment_date, new java.text.ParsePosition(0));
+				Calendar date = Calendar.getInstance();
+				date.setTime(_date);
+				
+				try {
+					purchaseService.addPurchase(txn_id, date, userId, payment_status, item_name, 
+							item_number, ipn_track_id, receiver_id, mc_gross, mc_fee, first_name, 
+							last_name, payer_email, residence_country);
+				
+					if (paymentStatus.equalsIgnoreCase(PAYMENT_COMPLETED)) {
+						User user = userService.findUserById(userId);
+						user.setPoints(item_number);
+						userService.updateUser(user);
+					}
+				} catch (UserNotFoundException e) {
+					logger.error("PAYMENT FROM GOSTH: " + e.getMessage());
+				}
+				
 				return "elovendo/pricing/paymentOk";
 			} else {
 				System.out.println("shit, payment not confirmed");
