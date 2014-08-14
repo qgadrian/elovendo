@@ -39,20 +39,21 @@
 <!-- 					<span>Buscar</span> -->
 <!-- 				</button> -->
 <!-- 			</form> -->
-			<form class="form-wrapper cf" method="GET" action="search" name="search">
-				<input type="text" name="title" placeholder="¿Qué quieres buscar?" required=""/>
+			<form class="form-wrapper cf">
+				<input type="text" placeholder="¿Qué quieres buscar?" required=""/>
 				<button type="submit">Buscar</button>
 			</form>
 		</div>
 		<!-- MENU DE CATEGORIAS -->
-		<div id="categories">
+		<div id="department">
 			<!-- PARTE UNICA -->
-			<div id="category">
-				<a href="#">
-					<img class="imageSection" src="/images/categories/technology.jpg" />
-					<span id="titlesection">Tecnología</span>
-				</a>
-			</div>
+			<a href="#"><div id="section">
+					<img class="department-section"
+						src="/images/categories/technology.jpg" />
+					<div class="titlesection">
+						<span class="titlesectiontext">Tecnología</span>
+					</div>
+				</div></a>
 			<!-- FIN PARTE UNICA -->
 			<a href="#"><div id="section">
 					<img class="department-section" src="/images/categories/sport.jpg" />
@@ -103,20 +104,8 @@
 					</div>
 				</div></a>
 		</div>
-
-		<div id="featured">
-			<p class ="featuredTitle"> Patrocinados </p>
-			<div id="featuredSection">
-				<a href="#"> <img class="featuredImage"
-					src="/images/categories/technology.jpg" /> 
-					<span class="featuredTitle">PS4 Nueva</span>
-				</a>
-			</div>
-		</div>
-
 	</div>
-	
-<!-- 	<div id="prebot"></div> -->
-<!-- 	<div id="bot"></div> -->
+	<div id="prebot"></div>
+	<div id="bot"></div>
 </body>
 </html>

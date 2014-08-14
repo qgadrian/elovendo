@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">	
+	<head>
+		<title> Elovendo </title>
+		<link rel="stylesheet" type="text/css" href="/css/styleweb.css" media="screen" />
+		<meta charset="utf-8" />
+		<meta name="description" content="Elovendo" />
+		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine|Inconsolata|Droid+Sans" />
+	</head>
+	<body>
+		<div id="erase"></div>
+		<div id="prehead">
+			<div id="headtitle">
+			<!-- Remplazar DIV - CODIGO 
+			<div th:replace="elovendo/cabecera"></div>  -->
+			</div>
+			<!-- <div id="sell">
+				<form method="GET" action="sell" name="sell">
+					<input class="sellbuttom" type="submit" value="Vender"/>
+				</form>
+			</div> -->
+		</div>
+		<div id="content">
+		
+			<div id="top">
+					<div class="imgprn">
+						<img src="/images/webimg/logo.png"/>
+					</div>
+			</div>
+			
+			<div id="mid">
+
+				<div id="seeker">
+					<!-- BUSCADOR -->
+					<form method="GET" action="search" name="search">
+						<input class="search" placeholder="¿Qué buscas...?" type="text" name="searchelement"/>
+						<input class="searchbutton" type="submit" value="Buscar"/>
+					</form>
+				</div>
+				<!-- MENU DE CATEGORIAS -->
+				<div id="department">
+				<!-- PARTE UNICA -->
+					<a href="#"><div id="section">
+						<img class="department-section" src="/images/categories/technology.jpg"/>
+						<div class="titlesection"><span>Tecnología</span></div>
+					</div></a>
+				<!-- FIN PARTE UNICA -->			
+					<a href="#"><div id="section">
+						<img class="department-section" src="/images/categories/sport.jpg"/>
+						<div class="titlesection"><span>Deportes</span></div>
+					</div></a>
+					<a href="#"><div id="section">
+						<img class="department-section" src="/images/categories/house.jpg"/>
+						<div class="titlesection"><span>Hogar</span></div>
+					</div></a>
+					<a href="#"><div id="section">
+						<img class="department-section" src="/images/categories/car.jpg"/>
+						<div class="titlesection"><span>Coches</span></div>
+					</div></a>
+					<a href="#"><div id="section">
+						<img class="department-section" src="/images/categories/puppy.jpg"/>
+						<div class="titlesection"><span>Mascotas</span></div>
+					</div></a>
+					<a href="#"><div id="section">
+						<img class="department-section" src="/images/categories/book.jpg"/>
+						<div class="titlesection"><span>Libros</span></div>
+					</div></a>
+					<a href="#"><div id="section">
+						<img class="department-section" src="/images/categories/fashion.jpg"/>
+						<div class="titlesection"><span>Moda</span></div>
+					</div></a>
+					<a href="#"><div id="section">
+						<img class="department-section" src="/images/categories/jewelry.jpg"/>
+						<div class="titlesection"><span>Joyería</span></div>
+					</div></a>
+					<a href="#"><div id="section">
+						<img class="department-section" src="/images/categories/toy.jpg"/>
+						<div class="titlesection"><span>Niños</span></div>
+					</div></a>
+					<a href="#"><div id="section">
+						<img class="department-section" src="/images/categories/music.jpg"/>
+						<div class="titlesection"><span>Música</span></div>
+					</div></a>
+				</div>
+			</div>
+			<div id="prebot">			
+			</div>
+		</div>
+		<div id="bot">
+				
+		</div>
+	</body>
+</html>
