@@ -2,25 +2,70 @@
 /* Basic                                                                         */
 /*********************************************************************************/
 
-/* '#' es id y '.' es class */
+/* '#' es id y '.' es class .//&&//. top right bottom left */
+
+#content {
+	width: 1200px;
+	margin-right: auto;
+	position: absolute;
+	background-color: #F5F5F5; 
+/* 	left: 50%; */
+/* 	vertical-align: middle; */
+	margin:50px 0px 0px 400px;
+/* 	margin-top: 100px; height/2 = 500px / 2 */
+/* 	margin-left: 300px; */
+}
+
+#contentPagination {
+	width: 400px;
+	height: auto;
+	margin: 10px 50px auto;
+	position: relative;
+}
+
+#contentItemList {
+	width: 400px;
+	margin: 10px auto auto 100px;
+	position: relative;
+/* 	display: inline-block; */
+/* 	float: right; */
+}
+
 #itemList {
+	width: 800px;
 	color: #000;
-	float: left;
+	float: right;
 	margin-left: 20px;
 	padding: 10px;
+	position: relative;
+	display: inline-block;
 }
 
 #itemList .itemField {
 	position: relative;
 }
 
+#itemList .itemText {
+	position: relative;
+	display: inline-block;
+	float: right;
+}
+
+#itemList .itemUser {
+	position: relative;
+	float: right;
+	margin: 50px auto;
+}
+
 #itemList .itemTitle {
 	font-size: 20px;
+	position: relative;
+	float: right;
 }
 
 #itemList .picture {
-	width: 100px;
-	height: 100px;
+	width: 400px;
+	height: 200px;
 }
 
 /*********************************************************************************/

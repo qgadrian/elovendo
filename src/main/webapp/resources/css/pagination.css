@@ -1,8 +1,8 @@
-body {
-    background: #dfdfdf;
-    color: #666;
-    font: 14px/24px sans-serif;
-}
+/* body { */
+/*     background: #dfdfdf; */
+/*     color: #666; */
+/*     font: 14px/24px sans-serif; */
+/* } */
 
 #container {
     width: 600px;
@@ -19,8 +19,8 @@ body {
 }
 
 .pagination {
-    background: #f2f2f2;
-    padding: 20px;
+/*     background: #f2f2f2; */
+/*     padding: 20px; */
     margin-bottom: 20px;
 }
 
