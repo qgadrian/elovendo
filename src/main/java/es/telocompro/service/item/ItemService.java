@@ -67,6 +67,18 @@ public interface ItemService {
      * @return Item page
      */
     public Page<Item> getItemByTitle(String title, int page, int size);
+    
+    /**
+     * Finds all items from a category
+     * @param categoryName Category name
+     * @param prizeMin Minimum prize
+     * @param prizeMax Maximum prize
+     * @param page Page number
+     * @param size Page size
+     * @return Item page
+     */
+    public Page<Item> getAllItemsByCategory(String categoryName, int prizeMin, int prizeMax, 
+    		int page, int size);
 
     /**
      * Finds all items from a subCategory
@@ -80,7 +92,7 @@ public interface ItemService {
     
     /**
      * Finds all items from a subCategory
-     * @param subCategoryName
+     * @param subCategoryName SubCategory name
      * @param prizeMin Minimum prize
      * @param prizeMax Maximum prize
      * @param page Page number

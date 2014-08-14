@@ -29,6 +29,45 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     
     //TODO Find items caducated
 
+    /* CATEGORY */
+    
+    /**
+     * Find all items from a subCategory
+     * @param subCategoryName SubCategory name
+     * @param pageable
+     * @return Items
+     */
+    @Query("SELECT i FROM Item i WHERE i.subCategory.category.categoryName = :categoryName AND "
+    		+ "endDate > NOW() ORDER BY startdate")
+    Page<Item> findItemsByCategoryName(@Param("categoryName") String categoryName, Pageable pageable);
+    
+    /**
+     * Find all items from a subCategory filtering by a minimum prize
+     * @param subCategoryName SubCategory name
+     * @param prizeMin Minimum prize
+     * @param pageable
+     * @return Items
+     */
+    @Query("SELECT i FROM Item i WHERE i.subCategory.category.categoryName = :categoryName AND "
+    		+ "prize >= :prizeMin AND endDate > NOW() ORDER BY startdate")
+    Page<Item> findItemsByCategoryName(@Param("categoryName") String categoryName, 
+    		@Param("prizeMin") BigDecimal prizeMin, Pageable pageable);
+    
+    /**
+     * Find all items from a subCategory filtering by a minimum and maximum prize
+     * @param subCategoryName
+     * @param prizeMin Minimum prize
+     * @param prizeMax Maximum prize
+     * @param pageable
+     * @return
+     */
+    @Query("SELECT i FROM Item i WHERE i.subCategory.category.categoryName = :categoryName AND "
+    		+ "prize >= :prizeMin AND prize <= :prizeMax AND endDate > NOW() ORDER BY startdate")
+    Page<Item> findItemsByCategoryName(@Param("categoryName") String categoryName, 
+    		@Param("prizeMin") BigDecimal prizeMin, @Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
+
+    /* SUBCATEGORY */
+    
     /**
      * Find all items from a subCategory
      * @param subCategoryName SubCategory name

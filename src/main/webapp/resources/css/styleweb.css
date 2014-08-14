@@ -259,8 +259,16 @@ body {
 /*-------------------------------------*/
 .form-wrapper {
 	width: 100%;
-	padding: 15px;
+	padding: 1px;
 	margin: 0px auto 10px auto;
+/* 	outline: 0; */
+/* 	background: #fff; */
+/* 	-moz-box-shadow: 0 0 2px rgba(0, 0, 0, .8) inset; */
+/* 	-webkit-box-shadow: 0 0 2px rgba(0, 0, 0, .8) inset; */
+/* 	box-shadow: 0 0 2px rgba(0, 0, 0, .8) inset; */
+/* 	-moz-border-radius: 0 3px 3px 0; */
+/* 	-webkit-border-radius: 0 3px 3px 0; */
+/* 	border-radius: 0 3px 3px 0; */
 /* 	background: #444; */
 /* 	background: rgba(0, 0, 0, .2); */
 /* 	-moz-border-radius: 10px; */
@@ -320,6 +328,7 @@ body {
 	border: 0;
 	padding: 0;
 	margin-top: -43px;
+	margin-left: 10px;
 	cursor: pointer;
 	height: 43px;
 	width: 110px;

@@ -19,6 +19,9 @@
 
 <body class="homepage">
 
+	<!-- Header -->
+	<div th:replace="elovendo/header"></div>
+
 	<!-- Item form -->
 	<form class="pure-form pure-form-aligned" th:action="@{/site/items/item}" method="post" enctype="multipart/form-data">
 		<fieldset>

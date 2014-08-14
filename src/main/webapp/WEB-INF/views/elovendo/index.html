@@ -12,23 +12,9 @@
 <!-- <script src="/resources/js/toggle-login.js"></script> -->
 </head>
 <body>
-<div id="header-outer">
-	<div id="top">
-		<img class="banner-logo" src="/images/webimg/logonfull-123h.png" />
-		<a href="/elovendo/add_item.html" class="sellButton">Crea tu anuncio</a>
-	</div>
-</div>
-<!-- 	<div id="prehead"> -->
-		<!-- 			<div id="headtitle"> -->
-		<!-- Remplazar DIV - CODIGO 
-			<div th:replace="elovendo/cabecera"></div>  -->
-		<!-- 			</div> -->
-		<!-- <div id="sell">
-				<form method="GET" action="sell" name="sell">
-					<input class="sellbuttom" type="submit" value="Vender"/>
-				</form>
-			</div> -->
-<!-- 	</div> -->
+	<!-- Header -->
+	<div th:replace="elovendo/header"></div>
+
 	<div id="content">
 
 		<div id='search-box'>
@@ -47,7 +33,7 @@
 		<!-- MENU DE CATEGORIAS -->
 		<div id="categories">
 			<div id="category">
-				<a href="#">
+				<a href="/bazaar/category/tecnologia">
 					<img class="imageSection" src="/images/categories/technology.jpg" />
 					<span id="titlesection">Tecnología</span>
 				</a>
@@ -111,6 +97,12 @@
 
 		<div id="featured">
 			<p class ="featuredTitle"> Patrocinados </p>
+			<div id="featuredSection">
+				<a href="#"> <img class="featuredImage"
+					src="/images/categories/technology.jpg" /> 
+					<span class="featuredTitle">PS4 Nueva</span>
+				</a>
+			</div>
 			<div id="featuredSection">
 				<a href="#"> <img class="featuredImage"
 					src="/images/categories/technology.jpg" /> 

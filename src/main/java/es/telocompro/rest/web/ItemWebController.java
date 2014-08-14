@@ -16,11 +16,38 @@ import es.telocompro.service.item.ItemService;
 import es.telocompro.util.PageWrapper;
 
 @Controller
-@RequestMapping(value = "/bazaar/zorg/")
+@RequestMapping(value = "/bazaar/")
 public class ItemWebController {
 	
 	@Autowired
 	private ItemService itemService;
+	
+	/**
+	 * FIND BY CATEGORY
+	 */
+	
+	@RequestMapping(value="category/{categoryName}", method = RequestMethod.GET)
+    public String itemListByCategoryPage(Model model, 
+    		@PathVariable("categoryName") String categoryName,
+    		@RequestParam(value = "p", required = false, defaultValue="0") int page, 
+    		@RequestParam(value = "s", required = false, defaultValue="5" ) int size) {
+    	
+//    	String pageString = request.getParameter("page");
+//    	if ("previous".equals(pageString)) System.out.println("previous equaled");
+//    	else System.out.println("previous not equaled at all cause is " + pageString);
+    	
+//    	model.addAttribute("page", page);
+//    	model.addAttribute("size", size);
+    	
+    	Page<Item> p = itemService.getAllItemsByCategory(categoryName, 0, 0, page, size);
+    	PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, categoryName);
+    	List<Item> items = p.getContent();
+    	
+    	model.addAttribute("page", pageWrapper);
+    	model.addAttribute("itemsList", items);
+    	
+        return "elovendo/item/list/item_list";
+    }
     
 //    @RequestMapping(value="{subcategoryname}", params = {"p","s"}, method = RequestMethod.GET)
 //    public String itemListPage(Model model, 
@@ -43,7 +70,7 @@ public class ItemWebController {
 //        return "elovendo/item/list/item_list";
 //    }
 	
-    @RequestMapping(value="{subcategoryname}", method = RequestMethod.GET)
+    @RequestMapping(value="sub/{subcategoryname}", method = RequestMethod.GET)
     public String itemListPage(Model model, 
     		@PathVariable("subcategoryname") String subCategoryName,
     		@RequestParam(value = "p", required = false, defaultValue="0") int page, 

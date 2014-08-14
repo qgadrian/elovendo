@@ -21,9 +21,6 @@
 <!-- <link rel="stylesheet" href="/css/pureCSS3pagination.css"/> -->
 
 <!-- Form -->
-<link rel="stylesheet"
-	href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css" />
-	
 <link rel="stylesheet" href="/css/pagination.css" />
 <link rel="stylesheet" href="/css/styleList.css" />
 	
@@ -38,21 +35,21 @@
 	</style>
 
 </head>
-<body class="homepage">
+<!-- <body class="homepage"> -->
+<body>
 
-<!-- 				<table class="pure-table"> -->
-					<div id = "itemList" th:each="item : ${itemsList}">
-<!-- 						<p th:text="${item.itemId}">-1</p> -->
-						<p class="itemField itemTitle" th:text="${item.title}">Item title</p>
-						<p th:text="${item.user.login}">login</p>
-<!-- 						<td>  -->
-						<img class="picture" th:src="@{'http://83.165.60.132:8080/' + ${item.imgHome}}" 
-							width="100" height="100"/>
-<!-- 						</td> -->
-					</div>
-<!-- 				</table> -->
+	<!-- Header -->
+	<div th:replace="elovendo/header"></div>
 
-<!-- 	<ul class="pure-paginator"> -->
+	<div id="itemList" th:each="item : ${itemsList}">
+		<p class="itemField itemTitle" th:text="${item.title}">Item title</p>
+		<p th:text="${item.user.login}">login</p>
+		<img class="picture"
+			th:src="@{'http://83.165.60.132:8080/' + ${item.imgHome}}"
+			width="100" height="100" />
+	</div>
+
+	<!-- 	<ul class="pure-paginator"> -->
 <!-- 		<li><a class="pure-button prev" th:href="@{/bazaar/zorg/moviles(p=${page-1}, s=${size})}">&#171;</a></li> -->
 <!-- 		<li><a class="pure-button" th:href="@{/bazaar/zorg/moviles(p=0, s=${size})}">1</a></li> -->
 <!-- 		<li><a class="pure-button pure-button-active" th:href="@{/bazaar/zorg/moviles(p=1, s=${size})}">2</a></li> -->
@@ -91,24 +88,6 @@
 		    </ul>
 		  </div>
 <!-- 		</div> -->
-	
 
-
-  
-		<!--Pagination Start-->
-<!--   <section class="archive-pages"> -->
-<!--     <ul> -->
-<!--       <li class="first"><a th:href="@{/bazaar/zorg/moviles(p=0, s=${size})}" title="first page">first page</a></li> -->
-<!--       <li class="previous"><a th:href="@{/bazaar/zorg/moviles(p=${page-1}, s=${size})}" title="previous page">previous page</a></li> -->
-<!--       <li class="selected">1</li> -->
-<!--       <li><a href="#" title="Pagina 2">2</a></li> -->
-<!--       <li><a href="#" title="Pagina 3">3</a></li> -->
-<!--       <li><a href="#" title="Pagina 4">4</a></li> -->
-<!--       <li><a href="#" title="Pagina 5">5</a></li> -->
-<!--       <li class="next"><a th:href="@{/bazaar/zorg/moviles(p=${page+1}, s=${size})}" title="next page">next page</a></li> -->
-<!--       <li class="last"><a href="#" title="last page">last page</a></li> -->
-<!--     </ul> -->
-<!--   </section> -->
-		<!--End-->
 </body>
 </html>

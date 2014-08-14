@@ -142,6 +142,29 @@ public class ItemServiceImpl implements ItemService {
     public Page<Item> getItemByTitle(String title, int page, int size) {
         return itemRepository.findByTitle(title, new PageRequest(page, size));
     }
+    
+    /** For simplicity I will work with integers, but passing to repository BigDecimals **/
+    @Override
+	public Page<Item> getAllItemsByCategory(String categoryName,
+			int prizeMin, int prizeMax, int page, int size) {
+		BigDecimal bPrizeMin = new BigDecimal(prizeMin);
+		BigDecimal bPrizeMax = new BigDecimal(prizeMax);
+
+		// Don't know if a negative number can break this, so I'm preventing
+		if (prizeMin < 0)
+			bPrizeMin = new BigDecimal(0);
+		// Max prize its not present
+		if (prizeMax == 0)
+			return itemRepository.findItemsByCategoryName(categoryName,
+					bPrizeMin, new PageRequest(page, size));
+		// Take care of minimum number grater than maximum number, ignoring the request
+		if (prizeMin > prizeMax)
+			return itemRepository.findItemsByCategoryName(categoryName,
+					new PageRequest(page, size));
+		// Otherwise, use min and max prize for query
+		return itemRepository.findItemsByCategoryName(categoryName,
+				bPrizeMin, bPrizeMax, new PageRequest(page, size));
+	}
 
     @Override
     @Deprecated
