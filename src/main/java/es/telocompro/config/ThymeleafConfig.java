@@ -20,8 +20,8 @@ public class ThymeleafConfig {
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode("HTML5");
         templateResolver.setCharacterEncoding("UTF-8");
-//        templateResolver.setCacheable(false);
- 
+        templateResolver.setCacheable(false);
+        
         return templateResolver;
     }
  

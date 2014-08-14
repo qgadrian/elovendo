@@ -23,16 +23,15 @@
 <!-- Form -->
 <link rel="stylesheet" href="/css/pagination.css" />
 <link rel="stylesheet" href="/css/styleList.css" />
-	
-	<style>
-		.estilo {
-			text-align: center;
-			color: blue;
-			float: left;
-			align: center;
-			margin-left: 
-		}
-	</style>
+
+<script src="/js/jquery-1.11.0.min.js"></script>
+<script src="/js/filter.js"></script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<!-- Latest compiled and minified JavaScript -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/> -->
 
 </head>
 <!-- <body class="homepage"> -->
@@ -51,38 +50,70 @@
 				<img class="picture"
 					th:src="@{'http://83.165.60.132:8080/' + ${item.imgHome}}"
 					width="100" height="100" />
+					
+				<div class="starButton">
+					<form action="/elovendo/index" method="GET">
+						<button type="submit" class="btn btn-default btn-m">
+	  						<span class="glyphicon glyphicon-star-empty"></span> Favorito
+						</button>
+					</form>
+				</div>
 			</div>
 		</div>
 		
-		<!-- Pagination Bar -->
-		<div id="contentPagination">
-		  <div class='pagination'>
-		    <ul class="pure-paginator">
-		      <li th:class="${page.firstPage}? 'page active' : ''">
-		        <span th:if='${page.firstPage}'>← First</span>
-		        <a class="page gradient" th:if='${not page.firstPage}' th:href='@{${page.url}(p=0,s=${page.size})}'>← First</a>
-		      </li>
-		      <li th:class="${page.hasPreviousPage}? '' : 'page active'">
-		        <span th:if='${not page.hasPreviousPage}'>«</span>
-		        <a class="page gradient" th:if='${page.hasPreviousPage}' th:href='@{${page.url}(p=${page.number-2},s=${page.size})}' title='Go to previous page'>«</a>
-		      </li>
-		      <li th:each="item : ${page.items}" th:class="${item.current}? 'page active' : ''">
-<!-- 		      			<span th:text="${item.itemId}">-1</span> -->
-<!-- 						<span th:text="${item.title}">Item title</span> -->
-		        <span th:if='${item.current}' th:text='${item.number}'>1</span>
-		        <a class="page gradient" th:if='${not item.current}' th:href='@{${page.url}(p=${item.number}-1,s=${page.size})}'><span th:text='${item.number}'>1</span></a>
-		      </li>
-		      <li th:class="${page.hasNextPage}? '' : 'page active'">
-		        <span th:if='${not page.hasNextPage}'>»</span>
-		        <a class="page gradient" th:if='${page.hasNextPage}' th:href='@{${page.url}(p=${page.number},s=${page.size})}' title='Go to next page'>»</a>
-		      </li>
-		      <li th:class="${page.lastPage}? 'page active' : ''">
-		        <span th:if='${page.lastPage}'>Last →</span>
-		        <a class="page gradient" th:if='${not page.lastPage}' th:href='@{${page.url}(p=${page.totalPages-1},s=${page.size})}'>Last →</a>
-		      </li>
-		    </ul>
-		  </div>
-		</div>
+		<!-- Filter menu -->
+<!-- 		<div id="contentFilter"> -->
+						<!-- Province select -->
+			<select class="form-control">
+			  <option th:each="province : ${provinces}" 
+			  	th:value="${province.provinceName}" th:text="${province.provinceName}">
+			  	Province </option>
+			</select>
+			
+			<form method="post" action="/elovendo/index">
+				<select id="categorySelect" class="form-control">
+				  <option th:each="subCategory : ${subCategories}" 
+				  	th:value="${subCategory.subCategoryName}" th:text="${subCategory.subCategoryName}">
+				  	SubCategory </option>
+				</select>
+			</form>
+			
+			<form class="navbar-form navbar-left" th:action="@{'/bazaar/' + ${url}}" method="GET">
+			  <div class="form-group">
+			    <input type="number" min="0" class="form-control" placeholder="Introduce un valor" 
+			    	th:value="${prizeMin}" name="min"/>
+			    <input type="number" min="0" class="form-control" placeholder="Introduce un valor" 
+			    	th:value="${prizeMax}" name="max"/>
+			  </div>
+			  <button type="submit" class="btn btn-default">Filtrar precio</button>
+			</form>
+<!-- 		</div> -->
+
+	<!-- Pagination Bar -->
+			<div id="contentPagination">
+			    <ul class="pagination">
+			      <li th:class="${page.firstPage}? 'active' : ''">
+			        <span th:if='${page.firstPage}'>← First</span>
+			        <a th:if='${not page.firstPage}' th:href='@{${page.url}(p=0,s=${page.size})}'>← First</a>
+			      </li>
+			      <li th:class="${page.hasPreviousPage}? '' : 'active'">
+			        <span th:if='${not page.hasPreviousPage}'>«</span>
+			        <a th:if='${page.hasPreviousPage}' th:href='@{${page.url}(p=${page.number-2},s=${page.size})}' title='Go to previous page'>«</a>
+			      </li>
+			      <li th:each="item : ${page.items}" th:class="${item.current}? 'active' : ''">
+			        <span th:if='${item.current}' th:text='${item.number}'>1</span>
+			        <a th:if='${not item.current}' th:href='@{${page.url}(p=${item.number}-1,s=${page.size})}'><span th:text='${item.number}'>1</span></a>
+			      </li>
+			      <li th:class="${page.hasNextPage}? '' : 'active'">
+			        <span th:if='${not page.hasNextPage}'>»</span>
+			        <a th:if='${page.hasNextPage}' th:href='@{${page.url}(p=${page.number},s=${page.size})}' title='Go to next page'>»</a>
+			      </li>
+			      <li th:class="${page.lastPage}? 'active' : ''">
+			        <span th:if='${page.lastPage}'>Last →</span>
+			        <a th:if='${not page.lastPage}' th:href='@{${page.url}(p=${page.totalPages-1},s=${page.size})}'>Last →</a>
+			      </li>
+			    </ul>
+			</div>
 
 	<!-- 	<ul class="pure-paginator"> -->
 <!-- 		<li><a class="pure-button prev" th:href="@{/bazaar/zorg/moviles(p=${page-1}, s=${size})}">&#171;</a></li> -->
