@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import es.telocompro.model.item.Item;
 import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.province.Province;
+import es.telocompro.rest.controller.exception.ItemNotFoundException;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.item.category.CategoryService;
 import es.telocompro.service.province.ProvinceService;
@@ -152,6 +153,22 @@ public class ItemWebController {
     	model.addAttribute("itemsList", items);
     	
         return "elovendo/item/list/item_list";
+    }
+    
+    /**
+	 * VIEW ITEM
+	 */
+    @RequestMapping(value="item/{itemId}", method = RequestMethod.GET)
+    public String itemViewPage(Model model,
+    		@PathVariable("itemId") long itemId) {
+    	
+    	Item item;
+		try { item = itemService.getItemById(itemId); } 
+		catch (ItemNotFoundException e) { return "elovendo/error/error"; }
+		
+    	model.addAttribute("item", item);
+    	
+    	return "elovendo/item/itemView";
     }
 
 }

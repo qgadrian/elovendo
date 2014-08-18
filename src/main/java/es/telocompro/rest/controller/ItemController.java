@@ -3,6 +3,7 @@ package es.telocompro.rest.controller;
 import es.telocompro.model.item.Item;
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.CategoryRepository;
+import es.telocompro.rest.controller.exception.ItemNotFoundException;
 import es.telocompro.rest.controller.exception.WrongItemSubCategoryRequestException;
 import es.telocompro.rest.util.RestItemObject;
 import es.telocompro.service.item.ItemService;
@@ -50,11 +51,12 @@ public class ItemController {
     /**
      * Get an item by its id. Asks for subCategory to avoid "cheating" by increasing id search.
      * @throws WrongItemSubCategoryRequestException 
+     * @throws ItemNotFoundException 
      */
 //    @Secured("ROLE_USER")
     @RequestMapping(value="{subcategory}/{itemid}", method = RequestMethod.GET)
     public RestItemObject getItem( @PathVariable("subcategory") String subcategory,
-    		@PathVariable("itemid") Long itemId ) throws WrongItemSubCategoryRequestException {
+    		@PathVariable("itemid") Long itemId ) throws WrongItemSubCategoryRequestException, ItemNotFoundException {
     	Item item = itemService.getItemById(itemId);
     	
     	if (!item.getSubCategory().getSubCategoryName()

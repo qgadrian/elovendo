@@ -8,6 +8,7 @@ import es.telocompro.model.item.category.subcategory.SubCategoryRepository;
 import es.telocompro.model.province.Province;
 import es.telocompro.model.user.User;
 import es.telocompro.model.user.UserRepository;
+import es.telocompro.rest.controller.exception.ItemNotFoundException;
 import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
 import es.telocompro.rest.controller.exception.SubCategoryNotFoundException;
 import es.telocompro.rest.controller.exception.UserNotFoundException;
@@ -134,8 +135,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item getItemById(Long id) {
-        return itemRepository.findOne(id);
+    public Item getItemById(Long itemId) throws ItemNotFoundException {
+    	Item item = itemRepository.findOne(itemId);
+    	if (item == null)
+    		throw new ItemNotFoundException(itemId);
+        return item;
     }
 
     @Override

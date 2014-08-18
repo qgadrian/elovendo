@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="UTF-8"/>
+
+<!-- ************************* -->
+<!-- ******* Bootstrap ******* -->
+<!-- ************************* -->
+
+<!-- Javascript -->
+<script src="/js/jquery-1.11.0.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<!-- Latest compiled and minified JavaScript -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!-- Styles -->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
+
+<link rel="stylesheet" href="/css/styleList.css" /> <!--  For top-buffer class -->
+<title>Insert title here</title>
+</head>
+<body>
+	
+	<!-- Header -->
+	<div th:replace="elovendo/header"></div>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-md-12" >
+				<div class="thumbnail">
+					<img data-src="holder.js/300x300" alt="..."  
+					th:src="@{'http://83.165.60.132:8080/' + ${item.imgHome}}"/>
+					<div class="caption">
+						<div class="row">
+							<div class="col-xs-12 col-md-12">
+								<h3 th:text="${item.title}">Title</h3>
+								<p th:text="${item.description}">Description</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-12" >
+				<div class="thumbnail">
+					<div class="row top-buffer">
+						<div class="col-xs-4 col-md-4 text-center" >
+							<img data-src="holder.js/300x300" alt="Profile pic" class="img-circle center-block pull-left"
+							th:src="@{'http://83.165.60.132:8080/' + ${item.user.avatar}}" style="height:200px; margin:20px;"/>
+						</div>
+						<div class="col-xs-8 col-md-8 pull-left">
+							<p th:text="${item.user.login}"> usuario </p>
+							<p th:text="${item.user.login}"> usuario </p>
+							<p th:text="${item.user.login}"> usuario </p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

@@ -4,18 +4,35 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
 <title>Elovendo</title>
-<link rel="stylesheet" type="text/css" href="/css/styleweb.css"
-	media="screen" />
+<link rel="stylesheet" type="text/css" href="/css/styleweb.css"/>
 <meta charset="utf-8" />
 <meta name="description" content="Elovendo" />
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine|Inconsolata|Droid+Sans|Helvetica" />
 <!-- <script src="/resources/js/toggle-login.js"></script> -->
+
+<!-- ************************* -->
+<!-- ******* Bootstrap ******* -->
+<!-- ************************* -->
+
+<!-- Javascript -->
+<script src="/js/jquery-1.11.0.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<!-- Latest compiled and minified JavaScript -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<!-- Styles -->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
+
 </head>
 <body>
 	<!-- Header -->
 	<div th:replace="elovendo/header"></div>
 
-	<div id="content">
+<!-- 	<div class="container-fluid"> -->
+		<div class="container">
 
 		<div class='search-box'>
 		<!-- 			<form class="form-wrapper cf" method="GET" action="/bazaar/search" name="search"> -->

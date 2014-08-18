@@ -2,6 +2,7 @@ package es.telocompro.service.item;
 
 import es.telocompro.model.item.Item;
 import es.telocompro.model.province.Province;
+import es.telocompro.rest.controller.exception.ItemNotFoundException;
 import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
 import es.telocompro.rest.controller.exception.SubCategoryNotFoundException;
 import es.telocompro.rest.controller.exception.UserNotFoundException;
@@ -58,8 +59,9 @@ public interface ItemService {
      * Get an item given its id
      * @param id
      * @return Item
+     * @throws ItemNotFoundException 
      */
-    public Item getItemById(Long id);
+    public Item getItemById(Long id) throws ItemNotFoundException;
 
     /**
      * Finds a list of items that match the title
