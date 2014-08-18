@@ -9,6 +9,8 @@ public class Constant {
 	public static final int INITIAL_POINTS = 0;
 	
 	public static final int ITEM_DEFAULT_DURATION = 15;
+	public static final int DEFAULT_RENEW_DAYS = 15;
+	public static final int MAX_RANDOM_ITEMS = 5;
 	
 	/**
 	 * URL PREFIXES

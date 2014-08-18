@@ -1,6 +1,7 @@
 package es.telocompro.model.item;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,21 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     @Query("SELECT i, i.user.login AS username, i.subCategory.subCategoryName AS subCategory,"
     		+ " i.subCategory.category.categoryName FROM Item i WHERE i.user.login = :username")
     Page<Item> findByUserName(@Param("username") String userName, Pageable pageable);
+    
+    @Query("SELECT i FROM Item i WHERE i.featured = 1 ORDER BY RAND()")
+    List<Item> findRandomItems(Pageable pageable);
+    
+    @Query("SELECT i FROM Item i WHERE i.featured = 1 AND i.subCategory.subCategoryName = :subCategoryName "
+    		+ "ORDER BY RAND()")
+    List<Item> findRandomItemsBySubCategory(Pageable pageable,  @Param("subCategoryName") String subCategory);
+    
+    @Query("SELECT i FROM Item i WHERE i.featured = 1 AND i.subCategory.category.categoryName = :categoryName "
+    		+ "ORDER BY RAND()")
+    List<Item> findRandomItemsByCategory(Pageable pageable, @Param("categoryName") String category);
+    
+    @Query("SELECT i FROM Item i WHERE i.featured = 1 AND i.subCategory.subCategoryName = :name "
+    		+ "OR i.subCategory.category.categoryName = :name ORDER BY RAND()")
+    List<Item> findRandomItemsByFilter(Pageable pageable, @Param("name") String filter);
     
     //TODO Find items caducated
 

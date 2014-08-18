@@ -36,11 +36,27 @@ public interface ItemService {
      * @throws IOException 
      */
     public Item addItem(String userName, String subCategoryName, String title, String description, 
-    		String provinceName, double prize, byte[] image1)
+    		String provinceName, double prize, byte[] image1, boolean featured, boolean highlight)
     				throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException, 
     				ProvinceNotFoundException, IOException;
     
-    public Item addItem(Item item, String subCategoryName, String provinceName, byte[] imgBytes) 
+    /**
+     * Adds an item with external values
+     * @param item
+     * @param subCategoryName
+     * @param provinceName
+     * @param imgBytes
+     * @param featured
+     * @param hightlight
+     * @return Item added
+     * @throws InvalidItemNameMinLenghtException
+     * @throws UserNotFoundException
+     * @throws SubCategoryNotFoundException
+     * @throws ProvinceNotFoundException
+     * @throws IOException
+     */
+    public Item addItem(Item item, String subCategoryName, String provinceName, byte[] imgBytes, 
+    		boolean featured, boolean hightlight) 
     		throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException, 
     		ProvinceNotFoundException, IOException;
 
@@ -103,6 +119,14 @@ public interface ItemService {
      */
     public Page<Item> getAllItemsBySubCategory(String subCategoryName, int prizeMin, int prizeMax, 
     		int page, int size);
+    
+    /**
+     * Returns random 'maxItems' items 
+     * @param maxItems Max items to retrieve
+     * @param subCategory SubCategory to find items
+     * @return Randomized items
+     */
+    public List<Item> getRandomItems(int maxItems, String filter);
 
     /**
      * Updates an item
@@ -111,7 +135,8 @@ public interface ItemService {
      * @param prize
      * @return Item updated
      */
-    public Item updateItem(Long itemId, String title, String description, double prize);
+    public Item updateItem(Long itemId, String title, String description, double prize, boolean renew, 
+    		boolean featured, boolean highlight);
 
     /**
      * Deletes an item

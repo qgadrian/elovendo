@@ -59,11 +59,16 @@ public class Item {
     private Province province;
     
     private String imgHome;
+    
+    // Premium features
+    private boolean featured;
+    private boolean highlight;
 
     public Item() { }
 
     public Item(User user, SubCategory subCategory, String title, String description, 
-    		Province province, BigDecimal prize, Calendar startDate, String imgHome) {
+    		Province province, BigDecimal prize, Calendar startDate, String imgHome, 
+    		boolean featured, boolean highlight) {
         this.user = user;
         this.subCategory = subCategory;
         this.title = title;
@@ -84,6 +89,9 @@ public class Item {
         endDate.add(Calendar.DATE, Constant.ITEM_DEFAULT_DURATION);
         
         this.endDate = endDate;
+        
+        this.featured = featured;
+        this.highlight = highlight;
     }
 
     public SubCategory getSubCategory() {
@@ -156,6 +164,30 @@ public class Item {
 
 	public void setProvince(Province province) {
 		this.province = province;
+	}
+
+	public Calendar getEndDate() {
+		return endDate;
+	}
+
+	public boolean isFeatured() {
+		return featured;
+	}
+
+	public boolean isHighlight() {
+		return highlight;
+	}
+
+	public void setEndDate(Calendar endDate) {
+		this.endDate = endDate;
+	}
+
+	public void setFeatured(boolean featured) {
+		this.featured = featured;
+	}
+
+	public void setHighlight(boolean highlight) {
+		this.highlight = highlight;
 	}
 
 }

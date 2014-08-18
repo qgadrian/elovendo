@@ -156,6 +156,14 @@ public class ItemWebController {
     }
     
     /**
+	 * FIND RANDOM
+	 */
+    private List<Item> getRandomItems(int maxItems, String subCategory) {
+    	return itemService.getRandomItems(maxItems, subCategory);
+    }
+    
+    
+    /**
 	 * VIEW ITEM
 	 */
     @RequestMapping(value="item/{itemId}", method = RequestMethod.GET)

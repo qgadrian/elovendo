@@ -152,6 +152,8 @@ public class UserController {
 			@RequestParam("title") String title,
 			@RequestParam("description") String description,
 			@RequestParam("province") String provinceName,
+			@RequestParam(value="featured", required=false, defaultValue="false") boolean featured,
+			@RequestParam(value="highlight", required=false, defaultValue="false") boolean highlight,
 			@RequestParam("prize") double prize,
 			@RequestParam("image") MultipartFile file)
 			throws InvalidItemNameMinLenghtException, ProvinceNotFoundException, UserNotFoundException, 
@@ -166,7 +168,7 @@ public class UserController {
 		}
 		
 		return itemService.addItem(userName, subCategoryName, title,
-				description, provinceName, prize, imgBytes);
+				description, provinceName, prize, imgBytes, featured, highlight);
 	}
 
 	/**
@@ -177,8 +179,11 @@ public class UserController {
 			@PathVariable("itemid") Long itemId,
 			@RequestParam(value="title", required=false) String title,
 			@RequestParam(value="description", required=false) String description,
-			@RequestParam(value="prize", required=false, defaultValue="-1") double prize) {
-		return itemService.updateItem(itemId, title, description, prize);
+			@RequestParam(value="prize", required=false, defaultValue="-1") double prize,
+			@RequestParam(value="renew", required=false, defaultValue="false") boolean renew,
+			@RequestParam(value="featured", required=false, defaultValue="false") boolean featured,
+			@RequestParam(value="highlight", required=false, defaultValue="false") boolean highlight) {
+		return itemService.updateItem(itemId, title, description, prize, renew, featured, highlight);
 	}
 
 	/**

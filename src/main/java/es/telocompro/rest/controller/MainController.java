@@ -28,6 +28,7 @@ import es.telocompro.model.province.Province;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.item.category.CategoryService;
 import es.telocompro.service.province.ProvinceService;
+import es.telocompro.util.Constant;
 
 /**
  * Created by @adrian on 18/06/14.
@@ -115,7 +116,10 @@ public class MainController implements ErrorController {
      */
     
     @RequestMapping(value="/elovendo/index", method = RequestMethod.GET)
-    public String indexPage() {
+    public String indexPage(Model model) {
+    	
+    	model.addAttribute("featuredItems", itemService.getRandomItems(Constant.MAX_RANDOM_ITEMS, null));
+    	
         return "elovendo/index";
     }
     

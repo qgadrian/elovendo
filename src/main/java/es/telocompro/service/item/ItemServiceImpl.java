@@ -16,6 +16,7 @@ import es.telocompro.service.exception.InvalidItemNameMinLenghtException;
 import es.telocompro.service.item.category.CategoryService;
 import es.telocompro.service.province.ProvinceService;
 import es.telocompro.service.user.UserService;
+import es.telocompro.util.Constant;
 import es.telocompro.util.IOUtil;
 
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -59,7 +60,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item addItem(String userName, String subCategoryName, String title, String description, 
-    		String provinceName, double prize, byte[] image1) 
+    		String provinceName, double prize, byte[] image1, boolean featured, boolean highlight) 
     				throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException, 
     				ProvinceNotFoundException, IOException {
     	
@@ -74,7 +75,7 @@ public class ItemServiceImpl implements ItemService {
     	
     	// create item
         Item item = new Item(user, subCategory, title, description, province,
-        		new BigDecimal(prize), Calendar.getInstance(), null);
+        		new BigDecimal(prize), Calendar.getInstance(), null, featured, highlight);
         
         // Produce an unique name for an item
         String imageFileName = itemHash(item);
@@ -105,8 +106,10 @@ public class ItemServiceImpl implements ItemService {
         return item;
     }
     
+
     @Override
-    public Item addItem(Item item, String subCategoryName, String provinceName, byte[] imgBytes) 
+    public Item addItem(Item item, String subCategoryName, String provinceName, byte[] imgBytes, 
+    		boolean featured, boolean highlight) 
     		throws InvalidItemNameMinLenghtException, UserNotFoundException, 
     		SubCategoryNotFoundException, ProvinceNotFoundException, IOException {
     	// FIXME: Check if user is loggued, apply security permissions
@@ -115,7 +118,7 @@ public class ItemServiceImpl implements ItemService {
     	item.setUser(user);
     	
     	return addItem(user.getLogin(), subCategoryName, item.getTitle(), 
-    			item.getDescription(), provinceName, item.getPrize().doubleValue(), imgBytes);
+    			item.getDescription(), provinceName, item.getPrize().doubleValue(), imgBytes, featured, highlight);
     	
     }
     
@@ -199,13 +202,31 @@ public class ItemServiceImpl implements ItemService {
 		return itemRepository.findItemsBySubCategoryName(subCategoryName,
 				bPrizeMin, bPrizeMax, new PageRequest(page, size));
 	}
+	
+	public List<Item> getRandomItems(int maxItems, String filter) {
+		if (filter != null && filter != "")
+			return itemRepository.findRandomItemsByFilter(new PageRequest(0, maxItems), filter);
+		else
+			return itemRepository.findRandomItems(new PageRequest(0, maxItems));
+	}
 
     @Override
-    public Item updateItem(Long itemId, String title, String description, double prize) {
+    public Item updateItem(Long itemId, String title, String description, double prize, boolean renew,
+    		boolean featured, boolean highlight) {
         Item item = itemRepository.findOne(itemId);
         if (title != null) item.setTitle(title);
         if (description != null) item.setDescription(description);
         if (prize != -1) item.setPrize(new BigDecimal(prize));
+        
+        if (renew != false) {
+        	Calendar newEndDate = Calendar.getInstance();
+        	newEndDate.add(Calendar.DATE, Constant.DEFAULT_RENEW_DAYS);
+        	item.setEndDate(newEndDate);
+        }
+        
+        item.setFeatured(featured);
+        item.setHighlight(highlight);
+        
         return itemRepository.save(item);
     }
 

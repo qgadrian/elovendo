@@ -196,13 +196,15 @@ public class UserWebController {
 	}
 
 	/**
-	 * ITEMS REFERREAL
+	 * ITEMS STUFF
 	 */
 	@RequestMapping(value = "items/item", method = RequestMethod.POST)
 	public String processAddItemWeb(@ModelAttribute(value = "item") Item item,
 			@ModelAttribute(value = "provinceName") String provinceName,
 			@ModelAttribute(value = "categoryName") String categoryName,
 			@ModelAttribute(value = "subCategoryName") String subCategoryName,
+			@ModelAttribute(value = "featured") String _featured,
+			@ModelAttribute(value = "highlight") String _highlight,
 			@RequestParam("image1") MultipartFile profilePic)
 			throws InvalidItemNameMinLenghtException,
 			ProvinceNotFoundException, UserNotFoundException,
@@ -222,7 +224,10 @@ public class UserWebController {
 			System.out.println("Error converting to bytes image file");
 		}
 
-		itemService.addItem(item, subCategoryName, provinceName, imgBytes);
+		boolean featured = Boolean.getBoolean(_featured);
+		boolean highlight = Boolean.getBoolean(_highlight);
+		
+		itemService.addItem(item, subCategoryName, provinceName, imgBytes, featured, highlight);
 
 		return "elovendo/item/item_create_successful";
 	}

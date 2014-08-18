@@ -1,6 +1,7 @@
 package es.telocompro.model.user;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 
 import javax.persistence.Column;
@@ -60,7 +61,9 @@ public class User implements UserDetails {
     private String phone;
     private String email;
     
-    private String avatar;
+    private String avatar; // avatar path
+    
+    private Calendar registerDate;
     
     @Column
     private int userValue;
@@ -103,6 +106,7 @@ public class User implements UserDetails {
         this.userValue = Constant.DEFAULT_USER_VALUE;
         this.points = Constant.INITIAL_POINTS;
         this.enabled = true;
+        this.registerDate = Calendar.getInstance();
     }
     
     public void setEnabled(boolean enabled) {
@@ -219,6 +223,10 @@ public class User implements UserDetails {
 
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
+	}
+
+	public Calendar getRegisterDate() {
+		return registerDate;
 	}
 
 	/**

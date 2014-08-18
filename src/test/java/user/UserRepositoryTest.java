@@ -84,7 +84,7 @@ public class UserRepositoryTest {
         		"email", province.getProvinceName(), null);
 
         item = itemService.addItem(user.getLogin(), subCategory.getSubCategoryName(), "title", "d", 
-        		province.getProvinceName(), 2, null);
+        		province.getProvinceName(), 2, null, false, false);
     }
 
     @Test
@@ -171,7 +171,7 @@ public class UserRepositoryTest {
         User user2 = userService.addUser("usuario", "password", "f", "l", "a", "password", "e", province.getProvinceName(), null);
         
         Item item2 = itemService.addItem(user2.getLogin(), subCategory.getSubCategoryName(), 
-        		"title", "description", province.getProvinceName(), 2, null);
+        		"title", "description", province.getProvinceName(), 2, null, false, false);
 
         userService.voteUser(user2.getUserId(), user.getUserId(), item.getItemId(), VOTE_POSITIVE, "vote message");
         userService.voteUser(user.getUserId(), user2.getUserId(), item.getItemId(), VOTE_POSITIVE, "vote message");
@@ -203,11 +203,11 @@ public class UserRepositoryTest {
         User user3 = userService.addUser("u3", "password", "f", "l", "a", "password", "e", province.getProvinceName(), null);
         
         Item item2 = itemService.addItem(user2.getLogin(), subCategory.getSubCategoryName(), 
-        		"title", "description", province.getProvinceName(), 2, null);
+        		"title", "description", province.getProvinceName(), 2, null, false, false);
         Item item3 = itemService.addItem(user.getLogin(), subCategory.getSubCategoryName(), 
-        		"title", "description", province.getProvinceName(), 2, null);
+        		"title", "description", province.getProvinceName(), 2, null, false, false);
         Item item4 = itemService.addItem(user.getLogin(), subCategory.getSubCategoryName(), 
-        		"title", "description", province.getProvinceName(), 2, null);
+        		"title", "description", province.getProvinceName(), 2, null, false, false);
 
         userService.voteUser(user2.getUserId(), user.getUserId(), item.getItemId(), VOTE_POSITIVE, "vote message");
         userService.voteUser(user.getUserId(), user2.getUserId(), item.getItemId(), VOTE_POSITIVE, "vote message");
@@ -245,7 +245,7 @@ public class UserRepositoryTest {
         User user2 = userService.addUser("usuario", "password", "f", "l", "a", "password", "e", province.getProvinceName(), null);
         
         Item item2 = itemService.addItem(user2.getLogin(), subCategory.getSubCategoryName(), 
-        		"title", "description", province.getProvinceName(), 2, null);
+        		"title", "description", province.getProvinceName(), 2, null, false, false);
 
         userService.voteUser(user2.getUserId(), user.getUserId(), item.getItemId(), VOTE_POSITIVE, "vote message");
         userService.voteUser(user.getUserId(), user2.getUserId(), item.getItemId(), VOTE_POSITIVE, "vote message");

@@ -14,9 +14,9 @@ INSERT INTO province VALUES (4, 'Lugo');
 INSERT INTO role VALUES (1, 'ROLE_USER');
 
 -- USER
--- prvince, avatar uservalue, points, roleid, you're welcome
-INSERT INTO userprofile VALUES (1, 'usuario', 'password', 'Charlie', 'Harper', 'charlie address', 'charliephone', 'charlieemail', 1, NULL, 0, 0, 1, true, NULL);
-INSERT INTO userprofile VALUES (2, 'user', 'password', 'User', 'LastName', 'user address', 'userphone', 'userEmail', 2, NULL, 0, 0, 1, true, NULL);
+-- prvince, avatar uservalue, points, registerDate, roleid, you're welcome
+INSERT INTO userprofile VALUES (1, 'usuario', 'password', 'Charlie', 'Harper', 'charlie address', 'charliephone', 'charlieemail', 1, NULL, 0, 0, NOW(), 1, true, NULL);
+INSERT INTO userprofile VALUES (2, 'user', 'password', 'User', 'LastName', 'user address', 'userphone', 'userEmail', 2, NULL, 0, 0, NOW(), 1, true, NULL);
 
 -- CATEGORY
 

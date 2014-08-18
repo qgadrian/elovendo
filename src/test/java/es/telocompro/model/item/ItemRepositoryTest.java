@@ -73,7 +73,7 @@ public class ItemRepositoryTest {
         userRepository.save(user);
 
         item = new Item(user, subCategory, "title", "description", province, new BigDecimal(10), 
-        		Calendar.getInstance(), null);
+        		Calendar.getInstance(), null, false, false);
     }
 
     @Test
@@ -124,10 +124,10 @@ public class ItemRepositoryTest {
     public void testFindAllItemsByUserId() {
         itemRepository.save(item);
         Item item2 = new Item(user, subCategory, "title", "description", province, 
-        		new BigDecimal(10), Calendar.getInstance(), null);
+        		new BigDecimal(10), Calendar.getInstance(), null, false, false);
         itemRepository.save(item2);
         Item item3 = new Item(user, subCategory, "title", "description", 
-        		province, new BigDecimal(10), Calendar.getInstance(), null);
+        		province, new BigDecimal(10), Calendar.getInstance(), null, false, false);
         itemRepository.save(item3);
 
         Assert.assertEquals(3, itemRepository.findByUserName(user.getLogin(), 

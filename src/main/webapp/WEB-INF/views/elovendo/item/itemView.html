@@ -21,7 +21,11 @@
 <link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
 
 <link rel="stylesheet" href="/css/styleList.css" /> <!--  For top-buffer class -->
-<title>Insert title here</title>
+ <!--  For share buttons -->
+<link rel="stylesheet" href="/css/sharingStyle.css" />
+<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"/>
+
+<title>Item</title>
 </head>
 <body>
 	
@@ -32,13 +36,44 @@
 		<div class="row">
 			<div class="col-xs-12 col-md-12" >
 				<div class="thumbnail">
-					<img data-src="holder.js/300x300" alt="..."  
+					<img data-src="holder.js/300x300" alt="Image"  
 					th:src="@{'http://83.165.60.132:8080/' + ${item.imgHome}}"/>
 					<div class="caption">
 						<div class="row">
 							<div class="col-xs-12 col-md-12">
-								<h3 th:text="${item.title}">Title</h3>
+								<h1 th:text="${item.title}">Title</h1>
 								<p th:text="${item.description}">Description</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-md-12">
+								<div class="text-center">
+									<div class="btn-group">
+										<button class="btn btn-default btn-lg disabled">Compartir:</button>
+										<a class="btn btn-default btn-lg" target="_blank"
+											title="Like On Facebook"
+											href="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Felovendo.com/elovendo/index.html">
+											<i class="fa fa-thumbs-o-up fa-lg fb"></i>
+										</a> <a class="btn btn-default btn-lg google-plus-one"
+											target="_blank" title="+1 On Google"
+											href="https://apis.google.com/_/+1/fastbutton?usegapi=1&amp;size=large&amp;hl=en&amp;url=http%3A%2F%2Feveloendo.com/elovendo/index.html">
+											<i class="fa fa-google-plus fa-2x google"></i> <span
+											class="google">1</span>
+										</a> <a class="btn btn-default btn-lg" target="_blank"
+											title="On Facebook"
+											href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Felovendo.com/elovendo/index.html">
+											<i class="fa fa-facebook fa-lg fb"></i>
+										</a> <a class="btn btn-default btn-lg" target="_blank"
+											title="On Twitter"
+											href="http://twitter.com/share?url=http%3A%2F%2Felovendo.com/elovendo/index.html">
+											<i class="fa fa-twitter fa-lg tw"></i>
+										</a> <a class="btn btn-default btn-lg" target="_blank"
+											title="On Google Plus"
+											href="https://plusone.google.com/_/+1/confirm?hl=en&amp;url=http%3A%2F%2Felovendo.com/elovendo/index.html">
+											<i class="fa fa-google-plus fa-lg google"></i>
+										</a>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -47,16 +82,49 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-12 col-md-12" >
-				<div class="thumbnail">
-					<div class="row top-buffer">
-						<div class="col-xs-4 col-md-4 text-center" >
-							<img data-src="holder.js/300x300" alt="Profile pic" class="img-circle center-block pull-left"
-							th:src="@{'http://83.165.60.132:8080/' + ${item.user.avatar}}" style="height:200px; margin:20px;"/>
-						</div>
-						<div class="col-xs-8 col-md-8 pull-left">
-							<p th:text="${item.user.login}"> usuario </p>
-							<p th:text="${item.user.login}"> usuario </p>
-							<p th:text="${item.user.login}"> usuario </p>
+				<div class="panel panel-info">
+					<div class="panel-heading">
+					    <h3 class="panel-title">Vendedor</h3>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-xs-3 col-md-3 text-center" >
+								<img data-src="holder.js/300x300" alt="Profile pic" class="img-circle center-block pull-left"
+								th:src="@{'http://83.165.60.132:8080/' + ${item.user.avatar}}" style="height:200px; margin:20px;"/>
+							</div>
+							<div class="col-xs-5 col-md-5 pull-left top-buffer">
+								<a th:href="@{/elovendo/index}" th:text="${item.user.login}"> usuario </a>
+<!-- 								<p>Miembro desde <span th:text="${item.user.registerDate}"> desde </span></p> -->
+								<p>Miembro desde el 
+									<span th:text="${#calendars.format(item.user.registerDate, 'dd MMMM yyyy')}"> fecha </span>
+								</p>
+								<div class="progress">
+									<div th:if="${item.user.userValue} &gt; 69"
+										class="progress-bar progress-bar-success" 
+										role="progressbar" th:attr="aria-valuenow=${item.user.userValue}"
+										aria-valuemin="0" aria-valuemax="100" 
+										th:style="'width:' + ${item.user.userValue} + '%;'">
+											<span class="sr-only" 
+												th:value="${item.user.userValue} + ' points. Excellent user.'"></span>
+									</div>
+									<div th:if="${item.user.userValue} &gt; 39"
+										class="progress-bar progress-bar-warning" 
+										role="progressbar" th:attr="aria-valuenow=${item.user.userValue}"
+										aria-valuemin="0" aria-valuemax="100" 
+										th:style="'width:' + ${item.user.userValue} + '%;'">
+											<span class="sr-only" 
+												th:value="${item.user.userValue} + ' points. Average user.'"></span>
+									</div>
+									<div th:if="${item.user.userValue} &gt; 0"
+										class="progress-bar progress-bar-danger" 
+										role="progressbar" th:attr="aria-valuenow=${item.user.userValue}"
+										aria-valuemin="0" aria-valuemax="100" 
+										th:style="'width:' + ${item.user.userValue} + '%;'">
+											<span class="sr-only" 
+												th:value="${item.user.userValue} + ' points. Bad user.'"></span>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
