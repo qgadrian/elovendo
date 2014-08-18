@@ -70,7 +70,7 @@
 			  	Province </option>
 			</select>
 			
-			<form method="post" action="/elovendo/index">
+			<form>
 				<select id="categorySelect" class="form-control">
 				  <option th:each="subCategory : ${subCategories}" 
 				  	th:value="${subCategory.subCategoryName}" th:text="${subCategory.subCategoryName}">
@@ -78,7 +78,7 @@
 				</select>
 			</form>
 			
-			<form class="navbar-form navbar-left" th:action="@{'/bazaar/' + ${url}}" method="GET">
+			<form class="navbar-form navbar-left" th:action="@{'/bazaar/' + ${url}}" method="GET" name="prizeForm" onsubmit="submitSearchForm()">
 			  <div class="form-group">
 			    <input type="number" min="0" class="form-control" placeholder="Introduce un valor" 
 			    	th:value="${prizeMin}" name="min"/>

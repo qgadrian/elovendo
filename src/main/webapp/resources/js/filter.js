@@ -7,4 +7,12 @@ $(document).ready( function() {
    $('#categorySelect').change( function() {
       location.href = "/bazaar/sub/" + $(this).val();
    });
+   
 });
+
+function submitSearchForm(){
+	  quizSearchForm = jQuery("#prizeForm");
+	  //disable empty fields so they don't clutter up the url
+	  quizSearchForm.find(':input[value=""]').attr('disabled', true);
+	  quizSearchForm.submit();
+	}
