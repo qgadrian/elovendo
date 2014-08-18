@@ -419,8 +419,10 @@ body {
 /* } */
 
 .featuredSection {
-	max-width: 300px;
-	max-height: 150px;
+	max-width: 400px;
+	max-height: 200px;
+	width:300px;
+    height:150px;
 	margin: 4px 4px auto;
 	cursor: pointer;
 }
