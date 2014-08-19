@@ -66,73 +66,17 @@
 		
 			<!-- Featured -->
 			<div class="col-xs-4 col-md-4">
-				<div class="row">
+				<div class="row" th:each="item : ${featuredItems}">
 					<div class="col-xs-12 col-md-12">
 						<div class="featuredSection">
 							<div class="thumbnail">
-								<a href="/bazaar/category/tecnologia">
-									<img data-src="holder.js/300x300" alt="..." src="/images/categories/technology.jpg"/>
+								<a th:href="@{'/bazaar/item/' + ${item.itemId}}">
+									<img data-src="holder.js/300x300" alt="..." 
+									th:src="@{'http://83.165.60.132:8080/' + ${item.imgHome}}"/>
 								</a>
 								<div class="caption">
-									<h3>PS4</h3>
-									<p>Descripción del anuncio blablbalabblablalabalbalsafsdfsdsdffssdfdsfsdfdsf</p>
-									<p>
-										<a href="#" class="btn btn-default" role="button">Ver anuncio</a>
-										<a href="#" class="btn btn-primary" role="button">Enviar mensaje</a>
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12 col-md-12">
-						<div class="featuredSection">
-							<div class="thumbnail">
-								<a href="/bazaar/category/tecnologia">
-									<img data-src="holder.js/300x300" alt="..." src="/images/categories/technology.jpg"/>
-								</a>
-								<div class="caption">
-									<h3>PS4</h3>
-									<p>Descripción del anuncio blablbalabblablalabalbalsafsdfsdsdffssdfdsfsdfdsf</p>
-									<p>
-										<a href="#" class="btn btn-default" role="button">Ver anuncio</a>
-										<a href="#" class="btn btn-primary" role="button">Enviar mensaje</a>
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12 col-md-12">
-						<div class="featuredSection">
-							<div class="thumbnail">
-								<a href="/bazaar/category/tecnologia">
-									<img data-src="holder.js/300x300" alt="..." src="/images/categories/technology.jpg"/>
-								</a>
-								<div class="caption">
-									<h3>PS4</h3>
-									<p>Descripción del anuncio blablbalabblablalabalbalsafsdfsdsdffssdfdsfsdfdsf</p>
-									<p>
-										<a href="#" class="btn btn-default" role="button">Ver anuncio</a>
-										<a href="#" class="btn btn-primary" role="button">Enviar mensaje</a>
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12 col-md-12">
-						<div class="featuredSection">
-							<div class="thumbnail">
-								<a href="/bazaar/category/tecnologia">
-									<img data-src="holder.js/300x300" alt="..." src="/images/categories/technology.jpg"/>
-								</a>
-								<div class="caption">
-									<h3>PS4</h3>
-									<p>Descripción del anuncio blablbalabblablalabalbalsafsdfsdsdffssdfdsfsdfdsf</p>
+									<h3 th:text="${item.title}">Title</h3>
+									<p th:text="${item.description}">Description</p>
 									<p>
 										<a href="#" class="btn btn-default" role="button">Ver anuncio</a>
 										<a href="#" class="btn btn-primary" role="button">Enviar mensaje</a>

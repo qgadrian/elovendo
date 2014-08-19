@@ -7,80 +7,164 @@
 <title>Añadir anuncio</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-<!-- Login button -->
-<script src="/js/toggle-login.js"></script>
-<link rel="stylesheet" href="/css/style-login-button.css" />
-
 <!-- Form -->
-<link rel="stylesheet"
-	href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css" />
+<!-- <link rel="stylesheet" -->
+<!-- 	href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css" /> -->
+
+<!-- Button style -->
+<link href="/css/buttonStyle.css" media="all" rel="stylesheet" type="text/css" />
+
+<!-- ************************* -->
+<!-- ******* Bootstrap ******* -->
+<!-- ************************* -->
+
+<!-- Javascript -->
+<!-- <script src="/js/jquery-1.11.0.min.js"></script> -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<!-- Latest compiled and minified JavaScript -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!-- Bootstrap extra (bs-callout) -->
+<link href="/css/bootstrap-extra.css" media="all" rel="stylesheet" type="text/css" />
+
+<!-- File input -->
+<link href="/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+<script src="/js/fileinput.min.js" type="text/javascript"></script>
+
+<!-- Bootstrap switch -->
+<!-- <link href="/css/bootstrap-switch.css" rel="stylesheet"/> -->
+<!-- <script src="/js/bootstrap-switch.js"></script> -->
 
 </head>
 
-<body class="homepage">
+<body>
+
+	<script type="text/javascript">
+        jQuery(document).ready(function () {
+        	$("#more-img").fileinput({
+	        	overwriteInitial: false,
+	        	maxFileSize: 3000,
+	        	initialCaption: "The Moon and the Earth"
+        	});
+        });
+    </script>
+	<noscript>&lt;div class="alert alert-danger"&gt;You must
+		enable Javascript on your browser for the site to work optimally and
+		display sections completely.&lt;/div&gt;</noscript>
 
 	<!-- Header -->
 	<div th:replace="elovendo/header"></div>
 
-	<!-- Item form -->
-	<form class="pure-form pure-form-aligned" th:action="@{/site/items/item}" method="post" enctype="multipart/form-data">
-		<fieldset>
-			<div class="pure-control-group">
-				<label for="title">Title</label> <input id="title" type="text"
-					placeholder="Title" th:field="${item.title}"/>
+	<div class="container">
+	
+		<div class="row">
+			<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;">
+				<h1>Crea tu anuncio</h1><hr/>
 			</div>
-
-			<div class="pure-control-group">
-				<label for="description">Description</label> <input id="description"
-					type="text" placeholder="Description" th:field="${item.description}"/>
+		</div>
+	
+		<form class="form-horizontal" role="form" th:action="@{/site/items/item}" method="post" enctype="multipart/form-data" >
+			<div class="form-group">
+				<label for="title" class="col-sm-2 control-label">Title</label> 
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="title"
+					placeholder="Enter title" th:field="${item.title}"/>
+				</div>
 			</div>
-
-			<div class="pure-control-group">
-				<label for="prize">Prize</label> <input id="prize"
-					type="text" placeholder="Prize" th:field="${item.prize}"/>
+			<div class="form-group">
+				<label for="title" class="col-sm-2 control-label">Description</label> 
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="15" th:field="${item.description}"></textarea>
+				</div>
 			</div>
-			
-			<div class="pure-control-group">
-				<label for="foo">Provincia</label>
-				<select th:value="${provinceName}" name="provinceName">
-				  <option th:each="province : ${provinces}" 
-				          th:value="${province.provinceName}" 
-				          th:text="${province.provinceName}">Province</option>
-				</select>
+			<div class="form-group">
+				<label for="title" class="col-sm-2 control-label">Prize</label> 
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="title"
+					placeholder="Enter prize" th:field="${item.prize}"/>
+				</div>
 			</div>
-			
-			<div class="pure-control-group">
-				<label for="foo">Categoría</label>
-				<select th:value="${categoryName}" name="categoryName">
-				  <option th:each="category : ${categories}" 
-				          th:value="${category.categoryName}" 
-				          th:text="${category.categoryName}">Province</option>
-				</select>
+			<div class="form-group">
+				<label for="province" class="col-sm-2 control-label">Provincia</label>
+				<div class="col-sm-10">
+					<select class="form-control" th:value="${provinceName}" name="provinceName">
+					  <option th:each="province : ${provinces}" 
+					          th:value="${province.provinceName}" 
+					          th:text="${province.provinceName}">Province</option>
+					</select>
+				</div>
 			</div>
-			
-			<div class="pure-control-group">
-				<label for="foo">SubCategoría</label>
-				<select th:value="${subCategoryName}" name="subCategoryName">
-				  <option th:each="subCategory : ${subCategories}" 
-				          th:value="${subCategory.subCategoryName}" 
-				          th:text="${subCategory.subCategoryName}">Province</option>
-				</select>
+			<div class="form-group">
+				<label for="category" class="col-sm-2 control-label">Categoría</label>
+				<div class="col-sm-10">
+					<select class="form-control" th:value="${categoryName}" name="categoryName">
+					  <option th:each="category : ${categories}" 
+					          th:value="${category.categoryName}" 
+					          th:text="${category.categoryName}">Category</option>
+					</select>
+				</div>
 			</div>
-			
-			<div class="pure-control-group">
-				<label for="foo">Imagen</label> <input type="file" name="image1" id="imgInp"/>
-				<img id="blah" src="#" alt="your image" />
+			<div class="form-group">
+				<label for="subCategory" class="col-sm-2 control-label">SubCategoría</label>
+				<div class="col-sm-10">
+					<select class="form-control" th:value="${subCategoryName}" name="subCategoryName">
+					  <option th:each="subCategory : ${subCategories}" 
+					          th:value="${subCategory.subCategoryName}" 
+					          th:text="${subCategory.subCategoryName}">Province</option>
+					</select>
+				</div>
 			</div>
-
-			<div class="pure-controls">
-				<label for="cb" class="pure-checkbox"> <input id="cb"
-					type="checkbox" /> I've read the terms and conditions
-				</label>
-
-				<button type="submit" class="pure-button pure-button-primary">Submit</button>
+			<div class="form-group">
+				<label for="principalImage" class="col-sm-2 control-label">Imagen principal</label>
+				<div class="col-sm-10">
+					<input id="input-id" type="file" class="file" data-show-upload="false" name="image1"/>
+				</div>
 			</div>
-		</fieldset>
-	</form>
+			<div class="form-group">
+				<label for="exampleInputFile" class="col-sm-2 control-label">Resto imágenes</label>
+				<div class="col-sm-10">
+					<input id="more-img" type="file" multiple="true" data-show-upload="false" class="file"/>
+				</div>
+			</div>
+<!-- 			<div class="checkbox"> -->
+<!-- 				<label> <input type="checkbox"/> Check me out</label> -->
+<!-- 			</div> -->
+			<div><hr/><h3>Opciones para tu anuncio</h3></div>
+			<div class="bs-callout bs-callout-info">
+				<h4>¿Mostrar anuncio en la <strong>barra de patrocinados</strong>?</h4>
+				<p>Tus anuncios se mostrarán en cualquier página, siendo exclusivos para su categoría. </p>
+				<p>Obtendrás <strong>más visibilidad</strong> en la página y ganarás <strong>más visitas</strong>
+				a tu anuncio.</p>
+				
+				<div class="checkbox" style="margin-left: 20px;">
+					<input type="checkbox"/>
+				</div>
+			</div>
+			<div class="bs-callout bs-callout-success">
+				<h4>¿<strong>Destacar</strong> tu anuncio en la <strong>lista de anuncios</strong>?</h4>
+				<p>Tu anuncio aparecerá remarcado en la lista de anuncios.</p>
+				<p><strong>Destacarás</strong> sobre el resto de anuncios.</p>
+				
+				<div class="checkbox" style="margin-left: 20px;">
+					<input type="checkbox"/>
+				</div>
+			</div>
+			<div class="bs-callout bs-callout-warning">
+				<h4>¿<strong>Renovar automáticamente</strong> tu anuncio?</h4>
+				<p>Los anuncios tienen una duración de <strong>30 días</strong>, así evitamos tener anuncios obsoletos. 
+				Sin embargo, puedes volver a activarlos manualmente.</p>
+				<p>Con esta opción tus anuncios se <strong>renovarán automáticamente</strong> y no tendrás que preocuparte por
+				hacerlo tú mismo.</p>
+				
+				<div class="checkbox" style="margin-left: 20px;">
+					<input type="checkbox"/>
+				</div>
+			</div>
+			<button type="submit" class="btn btn-success btn-lg btn-block">Crear anuncio</button>
+			<hr/>
+		</form>
+	</div>
 
 </body>
 </html>

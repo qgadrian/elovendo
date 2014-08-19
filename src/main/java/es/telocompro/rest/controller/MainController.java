@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.mobile.device.Device;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +27,7 @@ import es.telocompro.model.item.Item;
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.province.Province;
+import es.telocompro.model.user.User;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.item.category.CategoryService;
 import es.telocompro.service.province.ProvinceService;
@@ -119,6 +122,19 @@ public class MainController implements ErrorController {
     public String indexPage(Model model) {
     	
     	model.addAttribute("featuredItems", itemService.getRandomItems(Constant.MAX_RANDOM_ITEMS, null));
+    	
+    	// User
+    	User user = null;
+    	SecurityContext context = SecurityContextHolder.getContext();
+    	if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken)) {
+    		user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	}
+    	model.addAttribute("user", user);
+    	
+    	// SubCategories
+    	@SuppressWarnings("unchecked")
+		List<SubCategory> subCategories = IteratorUtils.toList(categoryService.findAllSubCategories().iterator());
+    	model.addAttribute("subCategories", subCategories);
     	
         return "elovendo/index";
     }

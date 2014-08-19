@@ -42,7 +42,8 @@ public class ItemWebController {
     		@RequestParam(value = "s", required = false, defaultValue="5" ) int size) {
     	
     	Page<Item> p = itemService.getItemByTitle(title, page, size);
-    	PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, title);
+    	// Quick workaround for manage pagination with searches
+    	PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, "search?title=" + title);
     	List<Item> items = p.getContent();
     	
     	model.addAttribute("page", pageWrapper);

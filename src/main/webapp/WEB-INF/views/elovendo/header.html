@@ -5,11 +5,11 @@
 <!-- <title>Elovendo </title> -->
 
 <!-- Javascript -->
-<script src="/js/jquery-1.11.0.min.js"></script>
+<!-- <script src="/js/jquery-1.11.0.min.js"></script> -->
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/> -->
 <!-- Latest compiled and minified JavaScript -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> -->
 
 <!-- Styles -->
 <!-- Latest compiled and minified CSS -->
@@ -63,9 +63,14 @@
 					</div>
 				</form>
 				<ul class="nav navbar-nav navbar-right">
+					<li class="active"><a href="#"> Tienes <span
+							class="badge">99</span> créditos
+					</a></li>
 					<li>
-						<p class="navbar-btn">
-							<a href="/elovendo/add_item.html" class="btn btn-info" 
+						<p th:switch="${user}" class="navbar-btn">
+							<a th:case="null" href="/login" class="btn btn-info"
+							th:text="#{sell.button}">  Sell </a>
+							<a th:case="*" href="/elovendo/add_item.html" class="btn btn-info"
 							th:text="#{sell.button}">  Sell </a>
 						</p>
 					</li>
