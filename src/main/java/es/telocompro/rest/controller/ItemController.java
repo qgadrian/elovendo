@@ -76,8 +76,9 @@ public class ItemController {
      */
     @RequestMapping(value="search", method = RequestMethod.GET)
     public Page<Item> getItemsFindByTitle( @RequestParam("title") String title,
+    		@RequestParam(value = "subcategory", required = false, defaultValue="") String subCategory,
     		@RequestParam("p") int page, @RequestParam( "s" ) int size) {
-        return itemService.getItemByTitle(title, page, size);
+        return itemService.getItemByTitleAndSubCategory(title, subCategory, page, size);
     }
 
 
@@ -201,7 +202,7 @@ public class ItemController {
 		itemJsonObject.put("userValue", item.getUser().getUserValue());
 		itemJsonObject.put("subcategory", item.getSubCategory().getSubCategoryName());
 		itemJsonObject.put("category", item.getSubCategory().getCategory().getCategoryName());
-		itemJsonObject.put("imageHome", "http://192.168.0.5:8080/" + item.getImgHome());
+		itemJsonObject.put("imageHome", "http://192.168.0.5:8080/" + item.getImgHome() + Constant.IMG_SUFFIX_JPG);
 		
 		return itemJsonObject;
     }

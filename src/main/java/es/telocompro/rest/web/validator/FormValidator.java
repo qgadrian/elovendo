@@ -25,14 +25,14 @@ public class FormValidator implements Validator {
 
 		User user = (User) target;
 
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "login", "required.login");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "required.login");
 
 		// input string contains numeric values only
 		if (user != null) {
 			pattern = Pattern.compile(loginPattern);
 			matcher = pattern.matcher(user.getLogin());
 			if (!matcher.matches()) {
-				errors.rejectValue("login", "login.invalid");
+				errors.rejectValue("username", "login.invalid");
 			}
 		}
 

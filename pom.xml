@@ -199,6 +199,20 @@
 			<artifactId>json-simple</artifactId>
 			<version>1.1</version>
 		</dependency>
+		
+		<!-- HTML SANITIZIER -->
+		<dependency>
+	        <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+	        <artifactId>owasp-java-html-sanitizer</artifactId>
+	        <version>r239</version>
+    	</dependency>
+    	
+		<!--  Imgscalr -->
+		<dependency>
+			<groupId>org.imgscalr</groupId>
+			<artifactId>imgscalr-lib</artifactId>
+			<version>4.2</version>
+		</dependency>
 
 
 

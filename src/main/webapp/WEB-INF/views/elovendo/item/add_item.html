@@ -13,14 +13,16 @@
 
 <!-- Button style -->
 <link href="/css/buttonStyle.css" media="all" rel="stylesheet" type="text/css" />
+<!-- Web style -->
+<link href="/css/styleweb.css" media="all" rel="stylesheet" type="text/css" />
 
 <!-- ************************* -->
 <!-- ******* Bootstrap ******* -->
 <!-- ************************* -->
 
 <!-- Javascript -->
-<!-- <script src="/js/jquery-1.11.0.min.js"></script> -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script src="/js/jquery-1.11.1.min.js"></script>
+<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script> -->
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
 <!-- Latest compiled and minified JavaScript -->
@@ -32,6 +34,22 @@
 <link href="/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
 <script src="/js/fileinput.min.js" type="text/javascript"></script>
 
+<!-- Checkbox -->
+<link href="/css/checkbox-x.min.css" media="all" rel="stylesheet" type="text/css" />
+<script src="/js/checkbox-x.min.js" type="text/javascript"></script>
+
+<!-- Switch -->
+<link href="/css/bootstrap-switch.css" rel="stylesheet"/>
+<script src="/js/bootstrap-switch.js"></script>
+
+<!-- Markdown text -->
+<script src="/js/richtext/wysihtml5-0.3.0.min.js"></script> <!-- Library -->
+<script src="/js/richtext/advanced.js"></script> <!-- wysihtml5 parser rules -->
+<script src="/js/richtext/bootstrap-wysihtml5.js"></script> <!-- wysihtml5 parser rules -->
+<link href="/css/bootstrap-wysihtml5.css" media="all" rel="stylesheet" type="text/css" />
+
+<!-- <script src="/js/initAddItemPage.js"></script> Library -->
+
 <!-- Bootstrap switch -->
 <!-- <link href="/css/bootstrap-switch.css" rel="stylesheet"/> -->
 <!-- <script src="/js/bootstrap-switch.js"></script> -->
@@ -40,49 +58,48 @@
 
 <body>
 
-	<script type="text/javascript">
-        jQuery(document).ready(function () {
-        	$("#more-img").fileinput({
-	        	overwriteInitial: false,
-	        	maxFileSize: 3000,
-	        	initialCaption: "The Moon and the Earth"
-        	});
-        });
-    </script>
 	<noscript>&lt;div class="alert alert-danger"&gt;You must
 		enable Javascript on your browser for the site to work optimally and
 		display sections completely.&lt;/div&gt;</noscript>
 
 	<!-- Header -->
+<!-- 	<div th:replace="/elovendo/header :: elovendo-header"></div>-->
+<!-- 	<div th:include="/elovendo/header :: elovendo-header"></div> -->
 	<div th:replace="elovendo/header"></div>
 
-	<div class="container">
-	
-		<div class="row">
-			<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;">
-				<h1>Crea tu anuncio</h1><hr/>
-			</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;">
+			<h1>Crea tu anuncio</h1>
+			<hr class="colorgraph"/>
 		</div>
-	
+	</div>
+
+	<div class="container">
 		<form class="form-horizontal" role="form" th:action="@{/site/items/item}" method="post" enctype="multipart/form-data" >
 			<div class="form-group">
 				<label for="title" class="col-sm-2 control-label">Title</label> 
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="title"
-					placeholder="Enter title" th:field="${item.title}"/>
+					placeholder="Enter title" th:field="${item.title}" required=""/>
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="title" class="col-sm-2 control-label">Description</label> 
-				<div class="col-sm-10">
-					<textarea class="form-control" rows="15" th:field="${item.description}"></textarea>
+				<div class="hero-unit" >
+					<label for="title" class="col-sm-2 control-label" style="margin-top:40px;">Description</label> 
+					<div class="col-sm-10">
+						<!-- FIXME -->
+						<!-- Pasting formatted HTML when creating item makes show formatted everywhere -->
+						<!-- it's important make sure pasting DOES AS TEXT/PLAIN -->
+						<textarea id="textarea" class="form-control textarea" rows="15" th:field="${item.description}" 
+						required="required" placeholder="Descripción..."></textarea>
+					</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="title" class="col-sm-2 control-label">Prize</label> 
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="title"
-					placeholder="Enter prize" th:field="${item.prize}"/>
+					<input type="number" class="form-control" id="prize" min="0"
+					placeholder="Enter prize" th:field="${item.prize}" required="required"/>
 				</div>
 			</div>
 			<div class="form-group">
@@ -118,7 +135,8 @@
 			<div class="form-group">
 				<label for="principalImage" class="col-sm-2 control-label">Imagen principal</label>
 				<div class="col-sm-10">
-					<input id="input-id" type="file" class="file" data-show-upload="false" name="image1"/>
+					<input id="principalImage" type="file" class="file" data-show-upload="false" 
+					name="image1" accept=".jpg, .jpeg"/>
 				</div>
 			</div>
 			<div class="form-group">
@@ -127,27 +145,28 @@
 					<input id="more-img" type="file" multiple="true" data-show-upload="false" class="file"/>
 				</div>
 			</div>
-<!-- 			<div class="checkbox"> -->
-<!-- 				<label> <input type="checkbox"/> Check me out</label> -->
-<!-- 			</div> -->
 			<div><hr/><h3>Opciones para tu anuncio</h3></div>
 			<div class="bs-callout bs-callout-info">
 				<h4>¿Mostrar anuncio en la <strong>barra de patrocinados</strong>?</h4>
 				<p>Tus anuncios se mostrarán en cualquier página, siendo exclusivos para su categoría. </p>
 				<p>Obtendrás <strong>más visibilidad</strong> en la página y ganarás <strong>más visitas</strong>
 				a tu anuncio.</p>
-				
-				<div class="checkbox" style="margin-left: 20px;">
-					<input type="checkbox"/>
+				<p>Tiene un coste de 0 créditos</p>
+				<div class ="pull-right has-success" style="margin-top:-70px;">
+<!-- 					<input type="checkbox" name="featured" id="featuredCheck" data-toggle="checkbox-x"  -->
+<!-- 					value="0" data-three-state="false" data-size="xl"/> -->
+					<input type="checkbox" name="featured" data-on-text="Sí" data-off-text="No"
+					data-on-color="success" data-off-color="warning"/>
 				</div>
 			</div>
 			<div class="bs-callout bs-callout-success">
 				<h4>¿<strong>Destacar</strong> tu anuncio en la <strong>lista de anuncios</strong>?</h4>
 				<p>Tu anuncio aparecerá remarcado en la lista de anuncios.</p>
 				<p><strong>Destacarás</strong> sobre el resto de anuncios.</p>
-				
-				<div class="checkbox" style="margin-left: 20px;">
-					<input type="checkbox"/>
+				<p>Tiene un coste de 0 créditos</p>
+				<div class ="pull-right" style="margin-top:-70px;">
+					<input type="checkbox" name="highlight" data-on-text="Sí" data-off-text="No"
+					data-on-color="success" data-off-color="warning"/>
 				</div>
 			</div>
 			<div class="bs-callout bs-callout-warning">
@@ -156,15 +175,54 @@
 				Sin embargo, puedes volver a activarlos manualmente.</p>
 				<p>Con esta opción tus anuncios se <strong>renovarán automáticamente</strong> y no tendrás que preocuparte por
 				hacerlo tú mismo.</p>
-				
-				<div class="checkbox" style="margin-left: 20px;">
-					<input type="checkbox"/>
+				<p>Tiene un coste de 0 créditos</p>
+				<div class ="pull-right has-success" style="margin-top:-70px;">
+					<input type="checkbox" name="autoRenew" data-on-text="Sí" data-off-text="No"
+					data-on-color="success" data-off-color="warning"/>
 				</div>
 			</div>
 			<button type="submit" class="btn btn-success btn-lg btn-block">Crear anuncio</button>
 			<hr/>
 		</form>
 	</div>
+	
+        <script type="text/javascript">
+            $('.textarea').wysihtml5({
+            	"stylesheets": [], //CSS stylesheets to load
+                "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
+                "emphasis": true, //Italics, bold, etc. Default true
+                "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+                "html": true, //Button which allows you to edit the generated HTML. Default false
+                "link": true, //Button to insert a link. Default true
+                "image": true, //Button to insert an image. Default true,
+                "color": true, //Button to change color of font
+            });
+        </script>
+        
+        <script type="text/javascript">
+	        $("#more-img").fileinput({
+	        	maxFileSize: 3000
+			});
+	        
+	        $("#principalImage").fileinput({
+	        	maxFileSize: 3000
+			});
+        </script>
+
+		 <script type="text/javascript">
+		 $("[name='featured']").bootstrapSwitch({
+			 checked: false
+		 });
+		 
+		 $("[name='highlight']").bootstrapSwitch({
+			 checked: false
+		 });
+		 
+		 $("[name='autoRenew']").bootstrapSwitch({
+			 checked: false
+		 });
+        </script>
+        
 
 </body>
 </html>

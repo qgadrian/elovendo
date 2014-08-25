@@ -40,14 +40,58 @@
     <meta name="author" content="elovendo"/>
     
     <link rel="stylesheet" type="text/css" href="/css/loginStyle.css" media="screen" />
+    
+    <!-- ************************* -->
+<!-- ******* Bootstrap ******* -->
+<!-- ************************* -->
+
+<!-- Javascript -->
+<script src="/js/jquery-1.11.1.min.js"></script>
+<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script> -->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<!-- Latest compiled and minified JavaScript -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
  
 <body>
-    <form name="elovendoLogin" th:action="@{/login}" method="post"  accept-charset="UTF-8" id="slick-login">
-        <input class="placeholder" type="text" name="username"/>
-        <input class="placeholder" type="password" name="password"/>
-        <input type="submit" value="Log In"/>
-    </form>
+<!--     <form name="elovendoLogin" th:action="@{/login}" method="post"  accept-charset="UTF-8" id="slick-login"> -->
+<!--         <input class="placeholder" type="text" name="username"/> -->
+<!--         <input class="placeholder" type="password" name="password"/> -->
+<!--         <input type="submit" value="Log In"/> -->
+<!--     </form> -->
+
+    <div class="container">
+    
+    <div class="row">
+			<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px; height:200px;">
+				<img src="/images/webimg/logo-full-200h.png"/>
+			</div>
+		</div>
+
+      <form class="form-signin" role="form" th:action="@{/login}" method="post"  accept-charset="UTF-8">
+        <h2 class="form-signin-heading">Inicia sesión</h2>
+        <input type="text" class="form-control" placeholder="Usuario" 
+        required="required" autofocus="autofocus" name="username"/>
+        <input type="password" class="form-control" placeholder="Password" 
+        required="required" name="password"/>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"/> Remember me
+          </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+  
+
+
 </body>
      
 </html>

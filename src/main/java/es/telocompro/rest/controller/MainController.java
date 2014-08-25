@@ -50,6 +50,13 @@ public class MainController implements ErrorController {
     
     //TODO: Testing
     static Logger logger = Logger.getLogger(MainController.class.getName());
+    
+    // TODO: delte this shit
+	@RequestMapping(value="/text")
+    public String textPage() {
+		
+		return "/elovendo/text";
+    }
 	
 	/**
 	 * 
@@ -118,10 +125,10 @@ public class MainController implements ErrorController {
      * 
      */
     
-    @RequestMapping(value="/elovendo/index", method = RequestMethod.GET)
+    @RequestMapping(value={"/elovendo/index", "/", "/index"}, method = RequestMethod.GET)
     public String indexPage(Model model) {
     	
-    	model.addAttribute("featuredItems", itemService.getRandomItems(Constant.MAX_RANDOM_ITEMS, null));
+    	model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, null));
     	
     	// User
     	User user = null;
@@ -133,7 +140,8 @@ public class MainController implements ErrorController {
     	
     	// SubCategories
     	@SuppressWarnings("unchecked")
-		List<SubCategory> subCategories = IteratorUtils.toList(categoryService.findAllSubCategories().iterator());
+		List<SubCategory> subCategories = IteratorUtils.toList(
+				categoryService.findAllSubCategories().iterator());
     	model.addAttribute("subCategories", subCategories);
     	
         return "elovendo/index";

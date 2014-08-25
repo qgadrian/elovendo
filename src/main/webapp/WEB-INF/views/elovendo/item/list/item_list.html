@@ -7,6 +7,9 @@
 <meta charset="UTF-8" />
 <title>Insert title here</title>
 
+<!-- Web style -->
+<link rel="stylesheet" type="text/css" href="/css/styleweb.css"/>
+
 <!-- ************************* -->
 <!-- ******* Bootstrap ******* -->
 <!-- ************************* -->
@@ -23,7 +26,7 @@
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
 <link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
 
-<link rel="stylesheet" type="text/css" href="/css/styleweb.css"/> <!-- For featuredSection -->
+<link rel="stylesheet" type="text/css" href="/css/styleweb.css"/> <!-- For featuredSection and top margin-->
 
 <!-- Form -->
 <link rel="stylesheet" href="/css/pagination.css" />
@@ -42,23 +45,32 @@
 		<div class="row">
 			<!-- Filter -->
 			<div class="col-xs-4 col-md-4" >
-				<div class="row top-buffer">
+				<!-- title -->
+				<div class="row">
+						<div class="col-xs-12">
+							<h1><small>Filtrar</small></h1>
+							<hr class="colorgraph"/>
+						</div>
+				</div>
+				<div class="row">
 					<div class="col-xs-12 col-md-12">
 						<div class="form-group">
     						<label for="exampleInputEmail1">Provincia</label>
-							<select class="form-control">
+							<select id="provinceSelect" class="form-control">
+								<option value=""> Selecciona provincia </option> 
 								<option th:each="province : ${provinces}" th:value="${province.provinceName}" 
 								th:text="${province.provinceName}"> Province </option>
 							</select>
 						</div>
 					</div>
 				</div>
-				<div class="row top-buffer">
+				<div class="row">
 					<div class="col-xs-12 col-md-12">
 						<div class="form-group">
 							<label for="exampleInputEmail1">Subcategoría</label>
 							<form>
 								<select id="categorySelect" class="form-control">
+									<option value=""> Selecciona subcategoría </option> 
 									<option th:each="subCategory : ${subCategories}" 
 									th:value="${subCategory.subCategoryName}"  th:text="${subCategory.subCategoryName}"> 
 									SubCategory </option>
@@ -67,7 +79,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="row top-buffer">
+				<div class="row">
 					<div class="col-xs-12 col-md-12">
 						<div class="form-group">
 							<label for="exampleInputEmail1">Precio</label>
@@ -85,92 +97,36 @@
 						</div>
 					</div>
 				</div>
-				<div class="row top-buffer">
-					<div class="col-xs-12 col-md-12">
-						<div class="featuredSection">
-							<div class="thumbnail">
-								<a href="/bazaar/category/tecnologia">
-									<img data-src="holder.js/300x300" alt="..." src="/images/categories/technology.jpg"/>
-								</a>
-								<div class="caption">
-									<h3>PS4</h3>
-									<p>Descripción del anuncio blablbalabblablalabalbalsafsdfsdsdffssdfdsfsdfdsf</p>
-									<p>
-										<a href="#" class="btn btn-default" role="button">Ver anuncio</a>
-										<a href="#" class="btn btn-primary" role="button">Enviar mensaje</a>
-									</p>
-								</div>
-							</div>
-						</div>
+<!-- 				<div class="row top-buffer"> -->
+				<!-- FEATURED -->
+<!-- 				<div class="row"> -->
+<!-- 					<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;"> -->
+<!-- 						<h1 style="font-family: 'Andika', sans-serif; color: #6A016F">PATROCINADOS</h1><hr/> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+				<!-- title -->
+				<div class="row">
+					<div class="col-xs-12">
+						<h1><small>Te puede interesar</small></h1>
+						<hr class="colorgraph"/>
 					</div>
 				</div>
-				<div class="row">
+				
+				<div class="row" th:each="item : ${featuredItems}">
 					<div class="col-xs-12 col-md-12">
 						<div class="featuredSection">
 							<div class="thumbnail">
-								<a href="/bazaar/category/tecnologia">
-									<img data-src="holder.js/300x300" alt="..." src="/images/categories/technology.jpg"/>
+								<a th:href="@{'/bazaar/item/' + ${item.itemId}}">
+									<img data-src="holder.js/300x300" alt="..." 
+									th:src="@{'http://83.165.60.132:8080/' + ${item.imgHome200h}}"/>
 								</a>
 								<div class="caption">
-									<h3>PS4</h3>
-									<p>Descripción del anuncio blablbalabblablalabalbalsafsdfsdsdffssdfdsfsdfdsf</p>
-									<p>
-										<a href="#" class="btn btn-default" role="button">Ver anuncio</a>
-										<a href="#" class="btn btn-primary" role="button">Enviar mensaje</a>
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12 col-md-12">
-						<div class="featuredSection">
-							<div class="thumbnail">
-								<a href="/bazaar/category/tecnologia">
-									<img data-src="holder.js/300x300" alt="..." src="/images/categories/technology.jpg"/>
-								</a>
-								<div class="caption">
-									<h3>PS4</h3>
-									<p>Descripción del anuncio blablbalabblablalabalbalsafsdfsdsdffssdfdsfsdfdsf</p>
-									<p>
-										<a href="#" class="btn btn-default" role="button">Ver anuncio</a>
-										<a href="#" class="btn btn-primary" role="button">Enviar mensaje</a>
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12 col-md-12">
-						<div class="featuredSection">
-							<div class="thumbnail">
-								<a href="/bazaar/category/tecnologia">
-									<img data-src="holder.js/300x300" alt="..." src="/images/categories/technology.jpg"/>
-								</a>
-								<div class="caption">
-									<h3>PS4</h3>
-									<p>Descripción del anuncio blablbalabblablalabalbalsafsdfsdsdffssdfdsfsdfdsf</p>
-									<p>
-										<a href="#" class="btn btn-default" role="button">Ver anuncio</a>
-										<a href="#" class="btn btn-primary" role="button">Enviar mensaje</a>
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12 col-md-12">
-						<div class="featuredSection">
-							<div class="thumbnail">
-								<a href="/bazaar/category/tecnologia">
-									<img data-src="holder.js/300x300" alt="..." src="/images/categories/technology.jpg"/>
-								</a>
-								<div class="caption">
-									<h3>PS4</h3>
-									<p>Descripción del anuncio blablbalabblablalabalbalsafsdfsdsdffssdfdsfsdfdsf</p>
+									<h3 th:text="${item.title}">Title</h3>
+									<p th:if="${#strings.length(item.description)} &gt; 99" 
+										th:utext="${#strings.substring(item.description, 0, 100)}"
+										class="featuredTextDesc">Description</p>
+									<p th:if="${#strings.length(item.description)} &lt; 100" 
+										th:utext="${item.description}" class="featuredTextDesc">Description</p>
 									<p>
 										<a href="#" class="btn btn-default" role="button">Ver anuncio</a>
 										<a href="#" class="btn btn-primary" role="button">Enviar mensaje</a>
@@ -181,14 +137,15 @@
 					</div>
 				</div>
 			</div>
-			<!-- Stuff -->
+			<!-- Stuff list -->
 			<div class="col-xs-8 col-md-8">
 				<div class="row" th:each="item : ${itemsList}">
 					<div class="col-xs-12 col-md-12">
 						<div class="thumbnail">
 								<a th:href="@{'/bazaar/item/' + ${item.itemId}}">
 									<img data-src="holder.js/300x300" alt="Image" 
-									th:src="@{'http://83.165.60.132:8080/' + ${item.imgHome}}"/>
+									th:src="@{'http://83.165.60.132:8080/' + ${item.imgHome200h}}"
+									style="height: 300px;"/>
 								</a>
 								<!--  Caption -->
 								<div class="caption">
@@ -198,7 +155,7 @@
 										</div>
 										<!--  User info -->
 										<div class="col-xs-4 col-md-4">
-											<div class="row">
+											<div class="row web-top-margin">
 												<div class="col-xs-4 col-md-4">
 													<img data-src="holder.js/300x300" alt="Profile pic" class="img-circle center-block"
 													th:src="@{'http://83.165.60.132:8080/' + ${item.user.avatar}}" style="height:60px"/>
@@ -216,8 +173,13 @@
 											</div>
 										</div> <!--  User info -->
 									</div>
-									<p th:text="${item.description}">Description</p>
-									<p>
+									<p th:if="${#strings.length(item.description)} &gt; 99" 
+										th:utext="${#strings.substring(item.description, 0, 100)}"
+										class="largeTextDesc">Description</p>
+									<p th:if="${#strings.length(item.description)} &lt; 100" 
+										th:utext="${item.description}"
+										class="largeTextDesc">Description</p>
+									<p class="web-top-margin">
 										<a href="#" class="btn btn-default" role="button">Ver anuncio</a>
 										<a href="#" class="btn btn-primary" role="button">Enviar mensaje</a>
 <!-- 										<form action="/elovendo/index" method="GET"> -->
@@ -268,83 +230,6 @@
 			</div>
 		</div>
 	</div>
-	
-<!-- 	<div id="content"> -->
-<!-- 		<div id="contentItemList"> -->
-<!-- 			<div id="itemList" th:each="item : ${itemsList}"> -->
-<!-- 				<div class="itemText"> -->
-<!-- 					<p class="itemTitle" th:text="${item.title}">Item title</p> -->
-<!-- 					<p th:text="${item.user.login}" class="itemUser">login</p> -->
-<!-- 				</div> -->
-<!-- 				<img class="picture" -->
-<!-- 					th:src="@{'http://83.165.60.132:8080/' + ${item.imgHome}}" -->
-<!-- 					width="100" height="100" /> -->
-					
-<!-- 				<div class="starButton"> -->
-<!-- 					<form action="/elovendo/index" method="GET"> -->
-<!-- 						<button type="submit" class="btn btn-default btn-m"> -->
-<!-- 	  						<span class="glyphicon glyphicon-star-empty"></span> Favorito -->
-<!-- 						</button> -->
-<!-- 					</form> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-		
-		<!-- Filter menu -->
-<!-- 		<div id="contentFilter"> -->
-						<!-- Province select -->
-<!-- 			<select class="form-control"> -->
-<!-- 			  <option th:each="province : ${provinces}"  -->
-<!-- 			  	th:value="${province.provinceName}" th:text="${province.provinceName}"> -->
-<!-- 			  	Province </option> -->
-<!-- 			</select> -->
-			
-<!-- 			<form> -->
-<!-- 				<select id="categorySelect" class="form-control"> -->
-<!-- 				  <option th:each="subCategory : ${subCategories}"  -->
-<!-- 				  	th:value="${subCategory.subCategoryName}" th:text="${subCategory.subCategoryName}"> -->
-<!-- 				  	SubCategory </option> -->
-<!-- 				</select> -->
-<!-- 			</form> -->
-			
-<!-- 			<form class="navbar-form navbar-left" th:action="@{'/bazaar/' + ${url}}" method="GET" name="prizeForm" onsubmit="submitSearchForm()"> -->
-<!-- 			  <div class="form-group"> -->
-<!-- 			    <input type="number" min="0" class="form-control" placeholder="Introduce un valor"  -->
-<!-- 			    	th:value="${prizeMin}" name="min"/> -->
-<!-- 			    <input type="number" min="0" class="form-control" placeholder="Introduce un valor"  -->
-<!-- 			    	th:value="${prizeMax}" name="max"/> -->
-<!-- 			  </div> -->
-<!-- 			  <button type="submit" class="btn btn-default">Filtrar precio</button> -->
-<!-- 			</form> -->
-<!-- 		</div> -->
-
-	<!-- Pagination Bar -->
-<!-- 			<div id="contentPagination"> -->
-<!-- 			    <ul class="pagination"> -->
-<!-- 			      <li th:class="${page.firstPage}? 'active' : ''"> -->
-<!-- 			        <span th:if='${page.firstPage}'>← First</span> -->
-<!-- 			        <a th:if='${not page.firstPage}' th:href='@{${page.url}(p=0,s=${page.size})}'>← First</a> -->
-<!-- 			      </li> -->
-<!-- 			      <li th:class="${page.hasPreviousPage}? '' : 'active'"> -->
-<!-- 			        <span th:if='${not page.hasPreviousPage}'>«</span> -->
-<!-- 			        <a th:if='${page.hasPreviousPage}' th:href='@{${page.url}(p=${page.number-2},s=${page.size})}' title='Go to previous page'>«</a> -->
-<!-- 			      </li> -->
-<!-- 			      <li th:each="item : ${page.items}" th:class="${item.current}? 'active' : ''"> -->
-<!-- 			        <span th:if='${item.current}' th:text='${item.number}'>1</span> -->
-<!-- 			        <a th:if='${not item.current}' th:href='@{${page.url}(p=${item.number}-1,s=${page.size})}'><span th:text='${item.number}'>1</span></a> -->
-<!-- 			      </li> -->
-<!-- 			      <li th:class="${page.hasNextPage}? '' : 'active'"> -->
-<!-- 			        <span th:if='${not page.hasNextPage}'>»</span> -->
-<!-- 			        <a th:if='${page.hasNextPage}' th:href='@{${page.url}(p=${page.number},s=${page.size})}' title='Go to next page'>»</a> -->
-<!-- 			      </li> -->
-<!-- 			      <li th:class="${page.lastPage}? 'active' : ''"> -->
-<!-- 			        <span th:if='${page.lastPage}'>Last →</span> -->
-<!-- 			        <a th:if='${not page.lastPage}' th:href='@{${page.url}(p=${page.totalPages-1},s=${page.size})}'>Last →</a> -->
-<!-- 			      </li> -->
-<!-- 			    </ul> -->
-<!-- 			</div> -->
-
-<!-- 	</div> -->
 
 </body>
 </html>

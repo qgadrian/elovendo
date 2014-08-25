@@ -14,6 +14,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import org.hibernate.validator.constraints.Length;
 
 import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.province.Province;
@@ -42,8 +45,12 @@ public class Item {
     @JoinColumn(name = "subcategoryid")
     private SubCategory subCategory;
 
+    @Length(min = 5, max = 40)
     private String title;
+    
+    @Length(min = 10, max = 500)
     private String description;
+    
     private BigDecimal prize;
 
     @Column(columnDefinition="DATETIME", name = "startdate")
@@ -59,6 +66,8 @@ public class Item {
     private Province province;
     
     private String imgHome;
+    @Transient
+    private String imgHome200h;
     
     // Premium features
     private boolean featured;
@@ -92,6 +101,10 @@ public class Item {
         
         this.featured = featured;
         this.highlight = highlight;
+    }
+    
+    public String getImgHome200h() {
+    	return this.imgHome.concat("-200h.jpg");
     }
 
     public SubCategory getSubCategory() {
@@ -147,7 +160,7 @@ public class Item {
     }
 
 	public String getImgHome() {
-		return imgHome;
+		return imgHome.concat(".jpg");
 	}
 
 	public void setImgHome(String imgHome) {

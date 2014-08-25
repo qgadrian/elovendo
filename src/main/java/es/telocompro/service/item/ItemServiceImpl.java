@@ -20,6 +20,7 @@ import es.telocompro.util.Constant;
 import es.telocompro.util.IOUtil;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -94,8 +95,17 @@ public class ItemServiceImpl implements ItemService {
 			File imgFile = new File(folderPath.getAbsolutePath()+"/"+imageFileName+".jpg");
 			// Write image in file
 			ImageIO.write(buffImg, "jpg", imgFile);
+			
+			/* IMAGE RESIZED */
+			BufferedImage resizedImage = Scalr.resize(buffImg, 800);
+			// Create file
+			File imgResizedFile = new File(folderPath.getAbsolutePath()+"/"+imageFileName+"-200h.jpg");
+			// Write image in file
+			ImageIO.write(resizedImage, "jpg", imgResizedFile);
+			
 	        
-	        item.setImgHome(IOUtil.calculateFileName(item) +"/"+ imageFileName + ".jpg");
+//	        item.setImgHome(IOUtil.calculateFileName(item) +"/"+ imageFileName + ".jpg");
+			item.setImgHome(IOUtil.calculateFileName(item) +"/"+ imageFileName);
         } catch(NullPointerException e) { } catch (IOException e) {
         	throw new IOException();
         }
@@ -146,8 +156,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Page<Item> getItemByTitle(String title, int page, int size) {
-        return itemRepository.findByTitle(title, new PageRequest(page, size));
+    public Page<Item> getItemByTitleAndSubCategory(String title, String subCategory, int page, int size) {
+        if (subCategory != null && !subCategory.equalsIgnoreCase(""))
+        	return itemRepository.findByTitleAndSubCategory(title, subCategory, new PageRequest(page, size));
+        else
+        	return itemRepository.findByTitle(title, new PageRequest(page, size));
     }
     
     /** For simplicity I will work with integers, but passing to repository BigDecimals **/
@@ -203,11 +216,11 @@ public class ItemServiceImpl implements ItemService {
 				bPrizeMin, bPrizeMax, new PageRequest(page, size));
 	}
 	
-	public List<Item> getRandomItems(int maxItems, String filter) {
+	public List<Item> getRandomFeaturedItems(int maxItems, String filter) {
 		if (filter != null && filter != "")
-			return itemRepository.findRandomItemsByFilter(new PageRequest(0, maxItems), filter);
+			return itemRepository.findRandomFeaturedItemsByFilter(new PageRequest(0, maxItems), filter);
 		else
-			return itemRepository.findRandomItems(new PageRequest(0, maxItems));
+			return itemRepository.findRandomFeaturedItems(new PageRequest(0, maxItems));
 	}
 
     @Override

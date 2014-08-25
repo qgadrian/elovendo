@@ -4,9 +4,16 @@
 //});
 
 $(document).ready( function() {
-   $('#categorySelect').change( function() {
-      location.href = "/bazaar/sub/" + $(this).val();
-   });
+	$('#categorySelect').change( function() {
+		var select = $(this).val();
+		if (select != "") 
+			location.href = "/bazaar/sub/" + $(this).val();
+	});
+	
+	$('#provinceSelect').change( function() {
+		var select = $(this).val();
+		console.log("province selected is " + select);
+	});
    
 });
 

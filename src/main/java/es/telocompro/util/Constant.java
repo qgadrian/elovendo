@@ -18,10 +18,17 @@ public class Constant {
 	public static final String MOBILE_API_URL_PREFIX_V1 = "/api/zorg/";
 	
 	/**
+	 * IMAGES SUFIXES
+	 */
+	
+	public static final String IMG_SUFFIX_200 = "-200h.jpg";
+	public static final String IMG_SUFFIX_JPG = ".jpg";
+	
+	/**
 	 * PATTERNS
 	 */
 	public static final String loginPattern = "^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$";
-	public static final String passwordPattern = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
+	public static final String passwordPattern = "(?=^.{8,200}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
 	
 	/**
 	 * IMAGES

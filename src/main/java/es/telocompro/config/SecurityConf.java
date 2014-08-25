@@ -65,7 +65,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 //            	.logoutUrl("/logout")
 //            	.addLogoutHandler(new SecurityContextLogoutHandler())
             	.logoutSuccessHandler(new UserLogoutSuccessHandler())
-                .logoutSuccessUrl("/bazaar/categories")
+                .logoutSuccessUrl("/index")
             	.deleteCookies("jsessionid", "JSESSIONID")
             	.permitAll()
             	.and()

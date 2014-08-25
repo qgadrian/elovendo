@@ -39,8 +39,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
+import org.owasp.html.HtmlPolicyBuilder;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.FormHttpMessageConverter;
@@ -98,6 +102,8 @@ public class UserWebController {
 	private ProvinceService provinceService;
 	@Autowired
 	private PurchaseService purchaseService;
+	@Autowired
+	private MessageSource messageSource;
 
 	/**
 	 * USER STUFF
@@ -105,7 +111,7 @@ public class UserWebController {
 	
 	/** Add a new user **/
 	
-    @RequestMapping(value="new_user", method = RequestMethod.GET)
+    @RequestMapping(value="register", method = RequestMethod.GET)
     public String addUserPage(Model model) {
     	model.addAttribute("user", new User());
     	model.addAttribute("provinceName", new String());
@@ -116,13 +122,28 @@ public class UserWebController {
     	
         return "elovendo/user/add_user";
     }
+    
+    @RequestMapping(value="quick_register", method = RequestMethod.GET)
+    public String quickAddUserPage(Model model) {
+    	model.addAttribute("user", new User());
+    	model.addAttribute("provinceName", new String());
+    	
+    	@SuppressWarnings("unchecked")
+		List<Province> provinces = IteratorUtils.toList(provinceService.findAllProvinces().iterator());
+    	model.addAttribute("provinces", provinces);
+    	
+        return "elovendo/user/quick_add_user";
+    }
 	
-	@RequestMapping(value = "new_user", method = RequestMethod.POST)
-	public String processAddUserWeb(@ModelAttribute(value = "user") User user, BindingResult result,
+	@RequestMapping(value = "register", method = RequestMethod.POST)
+	public String processAddUserWeb(@Valid @ModelAttribute(value = "user") User user, BindingResult result,
 			@ModelAttribute(value = "provinceName") String provinceName,
-			@ModelAttribute(value = "profilePic") MultipartFile profilePic, ModelMap model) 
+			@ModelAttribute(value = "profilePic") MultipartFile profilePic,
+			@ModelAttribute(value = "confirmPassword") String confirmPassword,
+			ModelMap model, Locale locale) 
 					throws ProvinceNotFoundException, LoginNotAvailableException {
 		//FIXME: Edit input type email
+		//TODO: Get confirmPassword to validate
 		
 //		System.gc();
 //		
@@ -156,10 +177,31 @@ public class UserWebController {
 //		
 //		return "elovendo/user/registered_successful";
 		
-		FormValidator formValidator = new FormValidator();
-		formValidator.validate(user, result);
+//		FormValidator formValidator = new FormValidator();
+//		formValidator.validate(user, result);
+		
+//		result.addError(new FieldError("registrationform", "username", "rejected stuff"));
 
 //		return "elovendo/user/add_user";
+		
+		
+		// Check confirm password matches
+		if (!user.getPassword().equals(confirmPassword)) {
+			logger.error("passwords doesnt match!");
+			result.addError(new FieldError("registrationform", "password", 
+					messageSource.getMessage("Error.password.missmatch", null, locale)));
+		}
+		
+		// check image is jpeg
+		
+		//TODO: image/png, image/gif
+		// FIXME: Convert objefct to FormUser and make there validations
+		if (!profilePic.getContentType().equals("image/jpeg") || 
+				!profilePic.getContentType().equals("image/pjpeg")) {
+			logger.error("not jpg!");
+			result.addError(new FieldError("registrationform", "profilePic",
+				messageSource.getMessage("Error.password.missmatch", null, locale)));
+		};
 		
 		if (result.hasErrors()) {
 //			logger.debug("Form has errors");
@@ -173,15 +215,8 @@ public class UserWebController {
 			return "elovendo/user/add_user";
 		} 
 		else  {
-			logger.debug("Form is ok");
+			logger.error("multipart file is :" + profilePic.getContentType());
 			
-			// TODO: Workaround because multipart/form-data don't send data as UTF-8
-//			String firstName = new String (user.getFirstName().getBytes ("iso-8859-1"), "UTF-8");
-//			user.setFirstName(firstName);
-//			String lastName = new String (user.getLastName().getBytes ("iso-8859-1"), "UTF-8");
-//			user.setLastName(lastName);
-//			String province = new String (provinceName.getBytes ("iso-8859-1"), "UTF-8");
-
 			byte[] profilePicBytes = null;
 			if (!profilePic.isEmpty()) try {
 				profilePicBytes = profilePic.getBytes();
@@ -190,7 +225,7 @@ public class UserWebController {
 			}
 	
 			userService.addUser(user, provinceName, profilePicBytes);
-//	
+
 			return "elovendo/user/registered_successful";
 		}
 	}
@@ -200,11 +235,13 @@ public class UserWebController {
 	 */
 	@RequestMapping(value = "items/item", method = RequestMethod.POST)
 	public String processAddItemWeb(@ModelAttribute(value = "item") Item item,
+			BindingResult result,
 			@ModelAttribute(value = "provinceName") String provinceName,
 			@ModelAttribute(value = "categoryName") String categoryName,
 			@ModelAttribute(value = "subCategoryName") String subCategoryName,
 			@ModelAttribute(value = "featured") String _featured,
 			@ModelAttribute(value = "highlight") String _highlight,
+			@ModelAttribute(value = "autoRenew") String _autoRenew,
 			@RequestParam("image1") MultipartFile profilePic)
 			throws InvalidItemNameMinLenghtException,
 			ProvinceNotFoundException, UserNotFoundException,
@@ -215,6 +252,18 @@ public class UserWebController {
 			System.out.println("User is not authenticated!!!!!");
 		else
 			System.out.println("user ocrrectly authenticated :)");
+		
+		// Sanitize item description HTML string
+		// TODO: more check on tags used
+		PolicyFactory policy = new HtmlPolicyBuilder()
+			.allowElements("b", "u", "i", "p", "br", "h1", "h2", "h3", 
+					"h4", "h5", "h6", "span")
+			.allowAttributes("class").onElements("span")
+			.requireRelNofollowOnLinks()
+			.toFactory();
+		
+		String safeDescription = policy.sanitize(item.getDescription());
+		item.setDescription(safeDescription);
 
 		byte[] imgBytes = null;
 
@@ -224,8 +273,8 @@ public class UserWebController {
 			System.out.println("Error converting to bytes image file");
 		}
 
-		boolean featured = Boolean.getBoolean(_featured);
-		boolean highlight = Boolean.getBoolean(_highlight);
+		boolean featured = _featured.equalsIgnoreCase("on");
+		boolean highlight = _highlight.equalsIgnoreCase("on");
 		
 		itemService.addItem(item, subCategoryName, provinceName, imgBytes, featured, highlight);
 

@@ -23,25 +23,28 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     //		+ " i.subCategory.category.categoryName FROM Item i WHERE i.title LIKE %:title%")
     @Query("SELECT i FROM Item i WHERE i.title LIKE %:title%")
     Page<Item> findByTitle(@Param("title") String title, Pageable pageable);
+    
+    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND i.subCategory.subCategoryName = :subCategoryName")
+    Page<Item> findByTitleAndSubCategory(@Param("title") String title, 
+    		@Param("subCategoryName") String subCategory, Pageable pageable);
 
     @Query("SELECT i, i.user.login AS username, i.subCategory.subCategoryName AS subCategory,"
     		+ " i.subCategory.category.categoryName FROM Item i WHERE i.user.login = :username")
     Page<Item> findByUserName(@Param("username") String userName, Pageable pageable);
     
     @Query("SELECT i FROM Item i WHERE i.featured = 1 ORDER BY RAND()")
-    List<Item> findRandomItems(Pageable pageable);
+    List<Item> findRandomFeaturedItems(Pageable pageable);
     
-    @Query("SELECT i FROM Item i WHERE i.featured = 1 AND i.subCategory.subCategoryName = :subCategoryName "
-    		+ "ORDER BY RAND()")
-    List<Item> findRandomItemsBySubCategory(Pageable pageable,  @Param("subCategoryName") String subCategory);
-    
-    @Query("SELECT i FROM Item i WHERE i.featured = 1 AND i.subCategory.category.categoryName = :categoryName "
-    		+ "ORDER BY RAND()")
-    List<Item> findRandomItemsByCategory(Pageable pageable, @Param("categoryName") String category);
-    
-    @Query("SELECT i FROM Item i WHERE i.featured = 1 AND i.subCategory.subCategoryName = :name "
-    		+ "OR i.subCategory.category.categoryName = :name ORDER BY RAND()")
-    List<Item> findRandomItemsByFilter(Pageable pageable, @Param("name") String filter);
+    /**
+     * Finds an item which has featured option enabled, searching for filter in category or subCategory.
+     * Explicitly set a *number* of maximum random items to retrieve.  
+     * @param pageable
+     * @param filter Category or SubCategory name for query
+     * @return *number* of random items.
+     */
+    @Query("SELECT DISTINCT i FROM Item i WHERE i.featured = 1 AND (i.subCategory.subCategoryName = :name "
+    		+ "OR i.subCategory.category.categoryName = :name) ORDER BY RAND()")
+    List<Item> findRandomFeaturedItemsByFilter(Pageable pageable, @Param("name") String filter);
     
     //TODO Find items caducated
 

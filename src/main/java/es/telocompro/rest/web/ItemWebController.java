@@ -19,6 +19,7 @@ import es.telocompro.rest.controller.exception.ItemNotFoundException;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.item.category.CategoryService;
 import es.telocompro.service.province.ProvinceService;
+import es.telocompro.util.Constant;
 import es.telocompro.util.PageWrapper;
 
 @Controller
@@ -38,12 +39,20 @@ public class ItemWebController {
     @RequestMapping(value="search", method = RequestMethod.GET)
     public String itemListByTitleSearchPage(Model model, 
     		@RequestParam("title") String title,
+    		@RequestParam(value = "subcategory", required = false, defaultValue="") String subCategory,
     		@RequestParam(value = "p", required = false, defaultValue="0") int page, 
     		@RequestParam(value = "s", required = false, defaultValue="5" ) int size) {
     	
-    	Page<Item> p = itemService.getItemByTitle(title, page, size);
+    	model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, subCategory));
+    	
+    	Page<Item> p = itemService.getItemByTitleAndSubCategory(title, subCategory, page, size);
+
     	// Quick workaround for manage pagination with searches
-    	PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, "search?title=" + title);
+    	PageWrapper<Item> pageWrapper;
+    	if (subCategory != "") 
+    		pageWrapper= new PageWrapper<Item>(p, "search?title=" + title + "&subcategory=" + subCategory);
+    	else 
+    		pageWrapper = new PageWrapper<Item>(p, "search?title=" + title);
     	List<Item> items = p.getContent();
     	
     	model.addAttribute("page", pageWrapper);
@@ -71,6 +80,8 @@ public class ItemWebController {
     	
 //    	model.addAttribute("page", page);
 //    	model.addAttribute("size", size);
+		
+		model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, categoryName));
 		
 		String urlLocation = "category/" + categoryName;
 		model.addAttribute("url", urlLocation);
@@ -137,6 +148,8 @@ public class ItemWebController {
 //    	model.addAttribute("page", page);
 //    	model.addAttribute("size", size);
     	
+    	model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, subCategoryName));
+    	
     	Page<Item> p = itemService.getAllItemsBySubCategory(subCategoryName, 0, 0, page, size);
     	PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, subCategoryName);
     	List<Item> items = p.getContent();
@@ -160,7 +173,7 @@ public class ItemWebController {
 	 * FIND RANDOM
 	 */
     private List<Item> getRandomItems(int maxItems, String subCategory) {
-    	return itemService.getRandomItems(maxItems, subCategory);
+    	return itemService.getRandomFeaturedItems(maxItems, subCategory);
     }
     
     

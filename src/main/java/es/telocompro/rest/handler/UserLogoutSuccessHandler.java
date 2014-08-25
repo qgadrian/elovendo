@@ -20,7 +20,7 @@ SimpleUrlLogoutSuccessHandler {
 		System.out.println("logout sucess handler");
 		
 		request.getSession().invalidate();
-		response.sendError(HttpServletResponse.SC_OK);
+		response.setStatus(HttpServletResponse.SC_OK);
 		super.onLogoutSuccess(request, response, authentication);
 //		arg0.logout();
 //		SecurityContextHolder.clearContext();

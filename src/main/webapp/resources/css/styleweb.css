@@ -484,3 +484,96 @@ body {
     width:80%;
     text-decoration: none;
 }
+
+.post-content2 {
+    background: #FFffff;
+    opacity: 0.7;
+/*     margin: 0 auto 1px auto; */
+    margin-top: -100px;
+    margin-bottom: -20px;
+    position: relative;
+    width:100%;
+    height: 50px;
+    text-align: center;
+    font-size: xx-large;
+    size: 50px;
+    color: black;
+    text-decoration: none;
+}
+
+/* .thumbnail, .thumbnail:hover { */
+/* 	border: 0 none; */
+/* 	background: #000; */
+/* 	 border-color:#c888d8; */
+/* 	 text-decoration: none;  */
+/* 	 height: 170px; */
+/* } */
+
+.thumbnail2 {
+	border: 0 none;
+	background: #000;
+	 border-color:#c888d8;
+	 text-decoration: none; 
+/* 	 height: 170px; */
+}
+
+.thumbnail2:hover {
+	border: 0 none;
+	background: #8A458A;
+	 border-color:#c888d8;
+	 text-decoration: none;
+/* 	 height: 170px; */
+}
+
+
+/* img.wp-post-image { */
+
+/*     border-radius: 0; */
+/*     box-shadow: 0; */
+/* } */
+
+/*********************************************************************************/
+/* Web margin                                                                    */
+/*********************************************************************************/
+
+.web-top-margin {
+	margin-top:20px;
+}
+
+.web-bottom-margin {
+	margin-bottom:20px;
+}
+
+/**
+Color graph
+**/
+
+.colorgraph {
+  height: 5px;
+  border-top: 0;
+  background: #c4e17f;
+  border-radius: 5px;
+  background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+  background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+  background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+  background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+}
+
+.featuredTextDesc {
+	width: 300px;
+	height: 50px;
+	word-wrap: break-word;
+}
+
+.largeTextDesc {
+	width: 400px;
+	height: 150px;
+	word-wrap: break-word;
+}
+
+.fullTextDesc {
+	width: 400px;
+	height: 100%;
+	min-height: 500px;
+	word-wrap: break-word;
+}

@@ -90,7 +90,7 @@ CREATE TABLE province (
     	    userid BIGINT NOT NULL,
     	    subcategoryid BIGINT NOT NULL,
     	    title VARCHAR(40) NOT NULL,
-    	    description VARCHAR(250) NOT NULL,
+    	    description TEXT NOT NULL,
     	    provinceId BIGINT NOT NULL,
     	    prize DECIMAL(6,2) NOT NULL,
     	    startdate DATETIME NOT NULL,

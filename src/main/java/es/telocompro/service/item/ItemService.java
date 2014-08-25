@@ -84,7 +84,15 @@ public interface ItemService {
      * @param title
      * @return Item page
      */
-    public Page<Item> getItemByTitle(String title, int page, int size);
+//    public Page<Item> getItemByTitle(String title, int page, int size);
+    
+    /**
+     * Finds a list of items that match the title
+     * @param title
+     * @param subCategory
+     * @return Item page
+     */
+    public Page<Item> getItemByTitleAndSubCategory(String title, String subCategory, int page, int size);
     
     /**
      * Finds all items from a category
@@ -126,7 +134,7 @@ public interface ItemService {
      * @param subCategory SubCategory to find items
      * @return Randomized items
      */
-    public List<Item> getRandomItems(int maxItems, String filter);
+    public List<Item> getRandomFeaturedItems(int maxItems, String filter);
 
     /**
      * Updates an item

@@ -26,6 +26,7 @@ import es.telocompro.service.vote.VoteService;
 import es.telocompro.util.IOUtil;
 import es.telocompro.util.RoleEnum;
 
+import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -89,8 +90,16 @@ public class UserServiceImpl implements UserService {
 			File imgFile = new File(filePath);
 			// Write image in file
 			ImageIO.write(buffImg, "jpg", imgFile);
+			
+			/* IMAGE RESIZED */
+			BufferedImage resizedImage = Scalr.resize(buffImg, 500);
+			// Create file
+			File imgResizedFile = new File(IOUtil.calculateAvatarFilePath()+"/"+user.getUserId()+"-200h.jpg");
+			// Write image in file
+			ImageIO.write(resizedImage, "jpg", imgResizedFile);
+			
 			// Assign the avatar path to the user and save it
-			String urlImagePath = IOUtil.calculateAvatarFilePath() + "/" + user.getUserId()+".jpg";
+			String urlImagePath = IOUtil.calculateAvatarFilePath() + "/" + user.getUserId();
 			user.setAvatar(urlImagePath);
 		} catch(NullPointerException e) { } catch (IOException e) {
 			System.out.println("ERROR: Creating avatar resource for user " + user.getUserId());

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
 <!-- <title>Elovendo </title> -->
 
@@ -15,6 +16,10 @@
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
 <link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="/css/styleWeb.css" media="screen" />
+
+<!-- Header handler -->
+<script src="/js/headerHandler.js"></script>
 
 <!-- <meta charset="utf-8" /> -->
 <!-- <meta name="description" content="Elovendo" /> -->
@@ -31,6 +36,9 @@
 <!-- 				</a> -->
 <!-- 			</div> -->
 <!-- 		</div> -->
+	
+<!-- FAQ -->
+<!-- http://www.thymeleaf.org/doc/usingthymeleaf.html#referencing-fragments-without-thfragment -->
 
 	<!-- Bootstrap nav bar -->
 	<nav class="navbar navbar-default" role="navigation">
@@ -45,7 +53,7 @@
 				</button>
 <!-- 				<a class="navbar-brand" href="#">Brand</a> -->
 				<a href="/elovendo/index">
-					<img class="banner-logo" src="/images/webimg/logonfull-123h.png" style="padding:5px;"/> 
+					<img class="banner-logo" src="/images/webimg/logo-full-50h.png" style="padding:5px;"/> 
 				</a>
 			</div>
 
@@ -62,19 +70,75 @@
 						</div>
 					</div>
 				</form>
-				<ul class="nav navbar-nav navbar-right">
-					<li class="active"><a href="#"> Tienes <span
-							class="badge">99</span> créditos
-					</a></li>
-					<li>
-						<p th:switch="${user}" class="navbar-btn">
-							<a th:case="null" href="/login" class="btn btn-info"
-							th:text="#{sell.button}">  Sell </a>
-							<a th:case="*" href="/elovendo/add_item.html" class="btn btn-info"
-							th:text="#{sell.button}">  Sell </a>
+				<div class="nav navbar-nav navbar-right">
+
+<!-- 					<div class="btn-group nav navbar-nav"> -->
+<!-- 						<button type="button" class="navbar-btn btn btn-info dropdown-toggle" -->
+<!-- 							data-toggle="dropdown" style="margin-right:10px;"> -->
+<!-- 							Iniciar sesión <span class="caret"></span> -->
+<!-- 						</button> -->
+<!-- 						<div class="dropdown-menu"> -->
+<!-- 							<div class="col-sm-12"> -->
+<!-- 								<div class="col-sm-12 text-center"><h3>INICIAR SESIÓN</h3></div> -->
+<!-- 								<div class="col-sm-12"> -->
+<!-- 									<input type="text" placeholder="Nombre de usuario" -->
+<!-- 										onclick="return false;" class="form-control input-md" -->
+<!-- 										id="inputError" /> -->
+<!-- 								</div> -->
+<!-- 								<br /> -->
+<!-- 								<div class="col-sm-12"> -->
+<!-- 									<input type="password" placeholder="Contraseña" -->
+<!-- 										class="form-control input-md" name="password" id="Password1" /> -->
+<!-- 								</div> -->
+<!-- 								<div class="col-sm-12"> -->
+<!-- 									<button type="submit" class="btn btn-success btn-md web-top-margin">Sign -->
+<!-- 										in</button> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+
+					<div class="btn-group nav navbar-nav" th:switch="${#httpServletRequest.remoteUser}" >
+						<p th:case="null" class="navbar-text"> 
+						Bienvenido,
+						<a  href="/login">
+<!-- 							<button type="button" class="navbar-btn btn btn-info" style="margin-right: 20px;"> -->
+<!-- 								Iniciar sesión -->
+<!-- 							</button> -->
+							inicia sesión
+						</a> o <a  href="/site/register"> regístrate</a>  
 						</p>
-					</li>
-				</ul>
+						<div th:case="*" class="navbar-right dropdown">
+							<p class="navbar-text">
+							Bienvenido,  
+								<a class="dropdown-toggle" data-toggle="dropdown" th:text="${#httpServletRequest.remoteUser}">
+								user <span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+          </ul>
+							</p>
+						</div>
+					</div>
+
+					<ul class="nav navbar-nav">
+	<!-- 					<li class="active"><a href="#"> Tienes <span -->
+	<!-- 							class="badge">99</span> créditos -->
+						<li>
+							<p th:switch="${#httpServletRequest.remoteUser}" class="navbar-btn">
+								<a th:case="null" href="/login" class="btn btn-info"
+								th:text="#{sell.button}">  Sell </a>
+								<a th:case="*" href="/elovendo/add_item.html" class="btn btn-info"
+								th:text="#{sell.button}">  Sell </a>
+							</p>
+						</li>
+					</ul>
+				</div>
 			</div>
 			<!-- /.navbar-collapse -->
 		</div>
@@ -82,3 +146,29 @@
 	</nav>
 </body>
 </html>
+
+<!-- <p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link">Mark Otto</a></p> -->
+
+<!-- <div class="btn-group"> -->
+<!-- 	<button type="button" class="btn btn-success dropdown-toggle" -->
+<!-- 		data-toggle="dropdown"> Login <span class="caret"></span> -->
+<!-- 	</button> -->
+<!-- 	<div class="dropdown-menu"> -->
+<!-- 		<div class="col-sm-12"> -->
+<!-- 			<div class="col-sm-12">Login</div> -->
+<!-- 			<div class="col-sm-12"> -->
+<!-- 				<input type="text" placeholder="Uname or Email" onclick="return false;"  -->
+<!-- 				class="form-control input-sm" id="inputError" /> -->
+<!-- 			</div> -->
+<!-- 			<br /> -->
+<!-- 			<div class="col-sm-12"> -->
+<!-- 				<input type="password" placeholder="Password" -->
+<!-- 					class="form-control input-sm" name="password" id="Password1" /> -->
+<!-- 			</div> -->
+<!-- 			<div class="col-sm-12"> -->
+<!-- 				<button type="submit" class="btn btn-success btn-sm">Sign -->
+<!-- 					in</button> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+<!-- </div> -->
