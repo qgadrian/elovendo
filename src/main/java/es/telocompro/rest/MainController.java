@@ -1,4 +1,4 @@
-package es.telocompro.rest.controller;
+package es.telocompro.rest;
 
 import java.security.Principal;
 import java.util.List;
@@ -159,6 +159,11 @@ public class MainController implements ErrorController {
     	
         return "elovendo/left-sidebar";
 //    	return "elovendo/itemListTest";
+    }
+    
+	@RequestMapping(value="/about")
+    public String aboutPage() {
+		return "/elovendo/about";
     }
     
     /** ERRORS */

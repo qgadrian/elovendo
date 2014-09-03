@@ -60,7 +60,7 @@
 
 </head>
 
-<body>
+<body onload="initialize()">
 
 	<noscript>&lt;div class="alert alert-danger"&gt;You must
 		enable Javascript on your browser for the site to work optimally and
@@ -79,6 +79,7 @@
 	</div>
 
 	<div class="container">
+		<div><h3>Información del anuncio</h3><hr class="colorgraph" /></div>
 		<form class="form-horizontal" role="form" th:action="@{/site/items/item}" method="post" enctype="multipart/form-data" >
 			<div class="form-group">
 				<label for="title" class="col-sm-2 control-label">Title</label> 
@@ -108,16 +109,16 @@
 					placeholder="Enter prize" th:field="${item.prize}" required="required"/>
 				</div>
 			</div>
-			<div class="form-group">
-				<label for="province" class="col-sm-2 control-label">Provincia</label>
-				<div class="col-sm-10">
-					<select class="form-control" th:value="${provinceName}" name="provinceName">
-					  <option th:each="province : ${provinces}" 
-					          th:value="${province.provinceName}" 
-					          th:text="${province.provinceName}">Province</option>
-					</select>
-				</div>
-			</div>
+<!-- 			<div class="form-group"> -->
+<!-- 				<label for="province" class="col-sm-2 control-label">Provincia</label> -->
+<!-- 				<div class="col-sm-10"> -->
+<!-- 					<select class="form-control" th:value="${provinceName}" name="provinceName"> -->
+<!-- 					  <option th:each="province : ${provinces}"  -->
+<!-- 					          th:value="${province.provinceName}"  -->
+<!-- 					          th:text="${province.provinceName}">Province</option> -->
+<!-- 					</select> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<div class="form-group">
 				<label for="category" class="col-sm-2 control-label">Categoría</label>
 				<div class="col-sm-10">
@@ -174,25 +175,25 @@
 					name="i3" accept=".jpg, .jpeg"/>
 				</div>
 			</div>
-			<div><h3>Opciones para tu anuncio</h3><hr class="colorgraph" /></div>
 			<div class="bs-callout bs-callout-geo">
-				<h4>¿<strong>Geolocalizar</strong> tu anuncio?</h4>
-				<p style="width: 80%;">Puedes indicar donde se encuentra tu artículo, ya sea una zona o un punto exacto. 
-				Puedes estar tranquilo, ya que simplemente se <strong>mostrará un área aproximada</strong>, 
+				<h4><strong>Geolocaliza</strong> tu anuncio</h4>
+				<p style="width: 80%;">Indica donde se encuentra tu artículo, puedes indicar un punto exacto o un punto
+				cualquiera en una zona determinada. 
+				Puedes estar tranquil@, ya que en tu anuncio se <strong>mostrará un área aproximada</strong>, 
 				en ningún caso se proporcionará ninguna información específica o personal.</p>
-				<p>Los usuarios de la aplicación móvil podrán <strong>acceder con más facilidad</strong> a tu anuncio.</p>
+				<p>De esta manera los usuarios de la web o aplicación móvil podrán <strong>acceder con más facilidad</strong> 
+				a tu anuncio, además de otras muchas ventajas.</p>
 				<p>Esta opción es <strong>gratuita</strong>.</p>
 				<div class ="pull-right has-success" style="margin-top:-70px;">
-					<input type="checkbox" name="geolocation" data-on-text="Sí" data-off-text="No"
-					data-on-color="success" data-off-color="warning"/>
 					<input type="hidden" id="latitude" name="lat" />
 					<input type="hidden" id="longitude" name="lng" />
 				</div>
 			</div>
 			<!-- maps -->
 <!-- 			<div class="row"> -->
-				<div id="map_canvas" style="width:100%; height:500px; display:none"></div>
+				<div id="map_canvas" style="width:100%; height:500px; display: block"></div>
 <!-- 			</div> -->
+			<div><h3>Opciones para tu anuncio</h3><hr class="colorgraph" /></div>
 			<div class="bs-callout bs-callout-info">
 				<h4>¿Mostrar anuncio en la <strong>barra de patrocinados</strong>?</h4>
 				<p>Tus anuncios se mostrarán en cualquier página, siendo exclusivos para su categoría. </p>
@@ -251,7 +252,8 @@
 					</div>
 				</div>
 			</div>
-			<button type="submit" class="btn btn-success btn-lg btn-block">Crear anuncio</button>
+			<button type="submit" class="btn btn-success btn-lg btn-block" id="createButton" 
+				disabled="disabled">Crear anuncio</button>
 			<hr/>
 		</form>
 		
@@ -315,15 +317,15 @@
 			checked: false
 		});
 		 
-		$("[name='geolocation']").on('switchChange.bootstrapSwitch', function(event, state) {
-			console.log(state); // true | false
-			if (state == true) {
-				document.getElementById("map_canvas").style.display = 'block';
-				initialize();
-			} else {
-				document.getElementById("map_canvas").style.display = 'none';
-			}
-		});
+// 		$("[name='geolocation']").on('switchChange.bootstrapSwitch', function(event, state) {
+// 			console.log(state); // true | false
+// 			if (state == true) {
+// 				document.getElementById("map_canvas").style.display = 'block';
+// 				initialize();
+// 			} else {
+// 				document.getElementById("map_canvas").style.display = 'none';
+// 			}
+// 		});
         </script>
         
 <!-- Google maps -->
@@ -359,7 +361,7 @@
 				addMarker(event.latLng);
 				document.getElementById("latitude").value = event.latLng.lat();
 				document.getElementById("longitude").value = event.latLng.lng();
-				console.log("coordinates: " + event.latLng);
+				document.getElementById('createButton').disabled = false;
 			});
 			
 			// Add a marker to the map and push to the array.

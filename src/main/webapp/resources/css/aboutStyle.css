@@ -1,0 +1,156 @@
+body {
+font-family: "Lato";
+font-weight: 300;
+font-size: 16px;
+color: #555;
+-webkit-font-smoothing: antialiased;
+-webkit-overflow-scrolling: touch;
+}
+
+h1, h2, h3, h4, h5, h6 {
+font-family: "Raleway";
+font-weight: 300;
+color: #333;
+}
+
+#headerwrap {
+background: url(/images/about/header_bg.jpg) no-repeat center top;
+margin-top: -50px;
+padding-top: 120px;
+text-align: center;
+background-attachment: relative;
+background-position: center center;
+min-height: 650px;
+width: 100%;
+-webkit-background-size: 100%;
+-moz-background-size: 100%;
+-o-background-size: 100%;
+background-size: 100%;
+-webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover;
+}
+
+#headerwrap h1 {
+color: #ffffff;
+margin-top: 90px;
+padding-bottom: 30px;
+letter-spacing: 8px;
+font-size: 100px;
+font-weight: bold;
+text-shadow: 2px 2px 2px #000;
+}
+
+#headerwrap p {
+color: #ffffff;
+font-size: 40px;
+font-weight: 400;
+text-align: center;
+line-height: 40px;
+letter-spacing: 3px;
+margin-left: 15px;
+text-shadow: 1px 1px 1px #000;
+}
+
+#greywrap {
+background: #f5f5f5;
+margin-top: 0px;
+padding-top: 40px;
+border-bottom: 1px solid #ddd;
+text-align: center;
+}
+
+#greywrap .glyphicon {
+font-size: 60px;
+line-height: 30px;
+margin-bottom: 10px;
+}
+
+#greywrap p {
+margin-left: 30px;
+margin-right: 30px;
+letter-spacing: 1px;
+padding-top: 15px;
+padding-bottom: 15px;
+}
+p {
+line-height: 28px;
+margin-bottom: 25px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+font-family: "Raleway";
+font-weight: 300;
+color: #333;
+}
+
+.row {
+margin-right: 0px;
+margin-left: -15px;
+}
+
+.white h1 {
+padding-top: 35px;
+}
+.centered {
+text-align: center;
+}
+
+.divider1 {
+background-image: url('/images/about/divider1.jpg');
+}
+
+.divider2 {
+background-image: url('/images/about/divider2.jpg');
+}
+
+.textdivider h1 {
+padding-top: 70px;
+color: white;
+font-size: 40px;
+}
+
+.textdivider p {
+color: white;
+font-size: 25px;
+}
+
+.section-divider {
+z-index: 999;
+width: 100%;
+display: table;
+max-height: 450px;
+border-bottom: 2px solid #E6EAED;
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+-ms-box-sizing: border-box;
+box-sizing: border-box;
+padding-top: 30px;
+padding-bottom: 70px;
+margin-top: 45px;
+background-position: center center;
+-webkit-background-size: 100%;
+-moz-background-size: 100%;
+-o-background-size: 100%;
+background-size: 100%;
+-webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover;
+background-attachment: relative;
+text-align: center;
+}
+
+#footerwrap {
+background: #2b2b2b;
+margin-top: 0px;
+padding-top: 40px;
+padding-bottom: 20px;
+border-bottom: 1px solid #ddd;
+text-align: center;
+}
+
+#footerwrap h4 {
+color: white;
+}

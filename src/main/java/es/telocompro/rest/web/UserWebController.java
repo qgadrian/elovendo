@@ -80,7 +80,7 @@ import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.province.Province;
 import es.telocompro.model.user.User;
-import es.telocompro.rest.controller.MainController;
+import es.telocompro.rest.MainController;
 import es.telocompro.rest.controller.exception.InsufficientPointsException;
 import es.telocompro.rest.controller.exception.LoginNotAvailableException;
 import es.telocompro.rest.controller.exception.ProvinceNotFoundException;

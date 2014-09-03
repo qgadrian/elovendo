@@ -611,7 +611,7 @@ Color graph
 	word-wrap: break-word;
 }
 
-/* Nav tab margin */
+/* Profile Style */
 
 .profileStyle .nav-tabs {
 	margin-bottom: 30px;
@@ -640,6 +640,34 @@ display: inline;
 .profileStyle .img-responsive {
     margin: 0 auto;
 }
+
+.social-icon {
+	list-style: none;
+	padding: 0;
+}
+
+.social {
+	padding-left: 32px;
+	height: 24px;
+	line-height: 24px;
+	display: inline-block;
+	color: #383941;
+	position: relative;
+}
+
+a {
+	color: #428bca;
+	text-decoration: none;
+}
+a {
+	background: transparent;
+}
+
+.info-block {
+	position: relative;
+	margin-bottom: 30px;
+}
+
 /*********************************************************************************/
 /* Profile pic                                                                   */
 /*********************************************************************************/
