@@ -78,7 +78,8 @@ public class ItemController {
     public Page<Item> getItemsFindByTitle( @RequestParam("title") String title,
     		@RequestParam(value = "subcategory", required = false, defaultValue="") String subCategory,
     		@RequestParam("p") int page, @RequestParam( "s" ) int size) {
-        return itemService.getItemByTitleAndSubCategory(title, subCategory, page, size);
+//        return itemService.getItemByTitleAndSubCategory(title, subCategory, page, size);
+    	return null;
     }
 
 
@@ -178,7 +179,7 @@ public class ItemController {
     				itemJsonObject.put("category", item.getSubCategory().getCategory().getCategoryName()); break;
     			case "imageHome": 
 //    				itemJsonObject.put("imageHome", "http://192.168.0.5:8080/" + item.getImgHome()); break;
-    				itemJsonObject.put("imageHome", "http://83.165.60.132:8080/" + item.getImgHome()); break;
+    				itemJsonObject.put("imageHome", "http://83.165.60.132:8080/" + item.getMainImage200h()); break;
 			}
 		}
     	
@@ -202,7 +203,7 @@ public class ItemController {
 		itemJsonObject.put("userValue", item.getUser().getUserValue());
 		itemJsonObject.put("subcategory", item.getSubCategory().getSubCategoryName());
 		itemJsonObject.put("category", item.getSubCategory().getCategory().getCategoryName());
-		itemJsonObject.put("imageHome", "http://192.168.0.5:8080/" + item.getImgHome() + Constant.IMG_SUFFIX_JPG);
+		itemJsonObject.put("imageHome", "http://192.168.0.5:8080/" + item.getMainImage200h() + Constant.IMG_SUFFIX_JPG);
 		
 		return itemJsonObject;
     }

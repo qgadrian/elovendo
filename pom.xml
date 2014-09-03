@@ -214,6 +214,17 @@
 			<version>4.2</version>
 		</dependency>
 
+		<!-- Spacial data -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.hibernate</groupId> -->
+<!-- 			<artifactId>hibernate-spatial</artifactId> -->
+<!-- 			<version>4.3</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!--             <groupId>org.hibernate</groupId> -->
+<!--             <artifactId>hibernate-entitymanager</artifactId> -->
+<!--             <version> 4.3.5.Final</version> -->
+<!--         </dependency> -->
 
 
 		<!-- TAPESTRY -->
@@ -548,6 +559,16 @@
 		<!-- <enabled>true</enabled> -->
 		<!-- </snapshots> -->
 		<!-- </repository> -->
+		
+		<!-- Hibernate spacial -->
+<!-- 		<repository> -->
+<!--             <id>OSGEO GeoTools repo</id> -->
+<!--             <url>http://download.osgeo.org/webdav/geotools</url> -->
+<!--         </repository> -->
+<!--         <repository> -->
+<!--             <id>Hibernate Spatial repo</id> -->
+<!--             <url>http://www.hibernatespatial.org/repository</url> -->
+<!--         </repository> -->
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>

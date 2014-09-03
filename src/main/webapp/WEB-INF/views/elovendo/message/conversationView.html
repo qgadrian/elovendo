@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	
+<head>
+<meta charset="UTF-8"/>
+<title>Conversación</title>
+
+<!-- ************************* -->
+<!-- ******* Bootstrap ******* -->
+<!-- ************************* -->
+
+<!-- Javascript -->
+<script src="/js/jquery-1.11.0.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<!-- Latest compiled and minified JavaScript -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="/css/messageStyle.css"/>
+
+</head>
+<body onload="scroll()">
+
+	<!-- Header -->
+	<div th:replace="elovendo/header"></div>
+
+	<div class="container">
+		<div class="row">
+			<div class="message-wrap col-lg-12">
+				<div class="msg-wrap" id="messages">
+					<div class="msg" id="msg-body">
+						<div class="row" th:each="message : ${conversation}">
+							<!-- 	<a class="pull-left" href="#"> <img class="media-object" -->
+							<!-- 	data-src="holder.js/64x64" alt="64x64" -->
+							<!-- 	style="width: 32px; height: 32px;" -->
+							<!-- 	th:src="@{'http://83.165.60.132:8080/' + ${message.sender.avatar200h}}" /> -->
+							<!-- 	</a> -->
+							<div class="media-body">
+								<h5 class="media-heading"
+									th:text="${message.sender.login} + ' dice:'"></h5>
+								<p class="col-lg-10 bg-info" th:text="${message.messageText}"></p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="send-wrap ">
+					<textarea class="form-control send-message" rows="3" id="message"
+						placeholder="..."></textarea>
+				</div>
+				<div class="btn-panel">
+					<a href="" id="sendMsg"
+						class="col-lg-4 btn btn-primary text-right pull-right"
+						role="button"><i class="fa fa-plus"></i>Enviar mensaje</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var c = /*[[${messageThreadId}]]*/ '';
+		var h = /*[[${session.userName}]]*/ '';
+		var s = "/elovendo/messages/send";
+		var m2 = '';
+		$("#sendMsg").click(function(event) {
+			m2 = $('#message').val();
+			event.preventDefault();
+			
+			$.ajax({
+	            type : 'POST',
+	            url : s,
+	            data : ({
+	                m : c,
+	                messageText: m2
+	            })
+	        });
+		    
+			app(h, m2);
+		    document.getElementById('message').value = '';
+		});
+		/*]]>*/
+	</script>
+	
+	<script type="text/javascript">
+		var lt = 5000;
+		
+		function app(u, m) {
+			console.log('m is ' + m);
+			var d = document.createElement('div');
+			d.className = 'row';
+			
+			var uu = document.createElement('h5');
+			uu.className = 'media-heading';
+			uu.innerHTML = u + " says:";
+			
+			var mm = document.createElement('small');
+			mm.className= 'col-lg-10';
+			mm.innerHTML = m;
+			
+			d.appendChild(uu);
+			d.appendChild(mm);
+			
+			$("#msg-body").append(d);
+			scroll();
+		}
+	
+		function scroll() {
+// 			var d = document.getElementById("messages");
+// 			d.scrollTop = d.scrollHeight;
+
+// 			var mydiv = $('#messages');
+// 			mydiv.scrollTop(mydiv.prop('scrollHeight'));
+
+// 			$('#messages').scrollTop(1000000);
+			
+			$("#messages").scrollTop($("#messages")[0].scrollHeight);
+		}
+		
+		window.setInterval(function() {
+// 			$.ajax({
+// 				url : 'http://www.elovendo.com:8080/elovendo/messages/conversation/1/update',
+// 				type : "GET",
+// 				dataType : "jsonp",
+// 				async : false,
+// 				success : function(msg) {
+// 					console.log(msg);
+// 				},
+// 				error : function() {
+// 					console.log("where error happens");
+// 				}
+// 			});
+// 			$.getJSON("http://83.165.60.132:8080/elovendo/messages/conversation/1/update", function(json) {
+	
+			$.getJSON("http://www.elovendo.com:8080/elovendo/messages/conversation/1/update", function(json) {
+				console.log(json);
+
+// 				var text = json.content[0].message;
+				jQuery.each(json.content, function() {
+// 					jQuery.each(this, function(i, val) {
+// 						console.log(i + " has value " + val);
+// 					})
+					var div = document.createElement('div');
+					div.className = 'row';
+					
+					var u = document.createElement('h5');
+					u.className = 'media-heading';
+					u.innerHTML = this.userName + " says:";
+					
+					var m = document.createElement('small');
+					m.className= 'col-lg-10';
+					m.innerHTML = this.message;
+					
+					div.appendChild(u);
+					div.appendChild(m);
+					
+					$("#msg-body").append(div);
+					scroll();
+				});
+
+				
+				
+// 				console.log("text is " + text);
+				
+			});
+		
+		}, lt);
+		
+	
+// Tip:
+	
+// 		{
+// 			  "content" : [ {
+// 			    "message" : "hjk",
+// 			    "userName" : "pepito",
+// 			    "pic" : "imgs/avatars/2-200h.jpg",
+// 			    "date" : 1409575239000
+// 			  }, {
+// 			    "message" : "hjk",
+// 			    "userName" : "pepito",
+// 			    "pic" : "imgs/avatars/2-200h.jpg",
+// 			    "date" : 1409575240000
+// 			  } ]
+// 			}
+
+	</script>
+
+</body>
+</html>

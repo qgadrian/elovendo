@@ -27,8 +27,9 @@ public class Constant {
 	/**
 	 * PATTERNS
 	 */
-	public static final String loginPattern = "^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$";
-	public static final String passwordPattern = "(?=^.{8,200}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
+	public static final String LOGIN_PATTERN = "^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$";
+	public static final String PASSWORD_PATTERN = "(?=^.{8,200}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
+	public static final String YOUTUBE_URL_PATTERN = "^((http|https)\\:\\/\\/)?(www\\.)?(youtube\\.com|youtu\\.?be)\\/.+$";
 	
 	/**
 	 * IMAGES
@@ -53,4 +54,11 @@ public class Constant {
 	public static final boolean VOTE_INACTIVE = false;
 	public static final boolean VOTE_ACTIVE = true;
 	
+	/**
+	 * PRIZES
+	 */
+	
+	public final static int OP_FEATURE_PRIZE = 3;
+	public final static int OP_HIGLIGHT_PRIZE = 2;
+	public final static int OP_AUTORENEW_PRIZE = 3;
 }

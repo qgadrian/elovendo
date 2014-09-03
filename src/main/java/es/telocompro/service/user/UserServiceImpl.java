@@ -31,12 +31,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by @adrian on 17/06/14. All rights reserved.
  */
 
 @Service("userService")
+@Transactional(readOnly = false)
 public class UserServiceImpl implements UserService {
 
 	@Autowired
@@ -67,7 +69,7 @@ public class UserServiceImpl implements UserService {
 		Province province = provinceService.findProvinceByName(provinceName);
 		if (province == null) throw new ProvinceNotFoundException(provinceName);
 		
-		if (findUserByLogin(login) != null ) throw new LoginNotAvailableException(login);
+		if (userRepository.findByLogin(login) != null ) throw new LoginNotAvailableException(login);
 		
 		// At this point, all new users always will be ROLE_USER
 		Role role = roleRepository.findByRoleName(RoleEnum.ROLE_USER);
@@ -145,11 +147,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findUserByLogin(String login) {
-		return userRepository.findByLogin(login);
+	public User findUserByLogin(String login) throws UserNotFoundException {
+		User user = userRepository.findByLogin(login);
+		if (user == null) throw new UserNotFoundException(login);
+		return user;
 	}
 
 	@Override
+	@Transactional
 	public User updateUser(long userId, String password, String firstName, String lastName,
 			String address, String phone, String email, String provinceName, 
             byte[] avatar) throws ProvinceNotFoundException, UserNotFoundException {

@@ -87,8 +87,10 @@ public class MainController implements ErrorController {
 		if (device.isNormal()) {
 			String referrer = (String) session.getAttribute("referrer");
 			// logger.debug("Referrer is " + referrer);
-			if (referrer != null)
+			if (referrer != null) {
+				session.removeAttribute("referrer");
 				return "redirect:" + referrer;
+			}
 			else
 				return "redirect:elovendo/index";
 		} 
@@ -126,7 +128,7 @@ public class MainController implements ErrorController {
      */
     
     @RequestMapping(value={"/elovendo/index", "/", "/index"}, method = RequestMethod.GET)
-    public String indexPage(Model model) {
+    public String indexPage(Model model, HttpSession session) {
     	
     	model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, null));
     	
@@ -135,6 +137,8 @@ public class MainController implements ErrorController {
     	SecurityContext context = SecurityContextHolder.getContext();
     	if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken)) {
     		user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    		session.setAttribute("userProfilePicMin", user.getAvatar200h());
+    		session.setAttribute("userName", user.getLogin());
     	}
     	model.addAttribute("user", user);
     	
@@ -145,25 +149,6 @@ public class MainController implements ErrorController {
     	model.addAttribute("subCategories", subCategories);
     	
         return "elovendo/index";
-    }
-    
-    @SuppressWarnings("unchecked")
-    @RequestMapping(value="/elovendo/add_item", method = RequestMethod.GET)
-    public String addItemPage(Model model) {
-    	model.addAttribute("item", new Item());
-    	model.addAttribute("provinceName", new String());
-    	model.addAttribute("categoryName", new Category());
-    	model.addAttribute("subCategoryName", new SubCategory());
-    	
-		List<Province> provinces = IteratorUtils.toList(provinceService.findAllProvinces().iterator());
-    	model.addAttribute("provinces", provinces);
-    	
-    	List<Category> categories = IteratorUtils.toList(categoryService.findAllCategories().iterator());
-    	model.addAttribute("categories", categories);
-    	List<SubCategory> subCategories = IteratorUtils.toList(categoryService.findAllSubCategories().iterator());
-    	model.addAttribute("subCategories", subCategories);
-    	
-        return "elovendo/item/add_item";
     }
     
     @RequestMapping(value="/elovendo/itemtest", method = RequestMethod.GET)

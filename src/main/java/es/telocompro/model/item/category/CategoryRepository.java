@@ -1,6 +1,9 @@
 package es.telocompro.model.item.category;
 
+import java.util.List;
+
 import es.telocompro.model.item.category.subcategory.SubCategory;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -26,5 +29,9 @@ public interface CategoryRepository extends PagingAndSortingRepository<Category,
 
     @Query("SELECT s FROM SubCategory s WHERE subcategoryname = :subCategoryName")
     SubCategory findSubCategoryByName(@Param("subCategoryName") String subCategoryName);
+    
+    @Query("SELECT s FROM SubCategory s WHERE s.category.categoryName IN (SELECT u.category.categoryName "
+    		+ "FROM SubCategory u WHERE u.subCategoryName = :subCategoryName)")
+    List<SubCategory> findAllSubCategoriesFromSubCategoryName(@Param("subCategoryName") String subCategoryName);
 
 }

@@ -4,6 +4,9 @@
 
 -- Eliminamos tablas.
 	/*DROP TABLE IF EXISTS image CASCADE*/;
+	DROP TABLE IF EXISTS messageState CASCADE;
+	DROP TABLE IF EXISTS message CASCADE;
+	DROP TABLE IF EXISTS messageThread CASCADE;
 	DROP TABLE IF EXISTS vote CASCADE;
 	DROP TABLE IF EXISTS purchase CASCADE;
     DROP TABLE IF EXISTS item CASCADE;
@@ -95,9 +98,18 @@ CREATE TABLE province (
     	    prize DECIMAL(6,2) NOT NULL,
     	    startdate DATETIME NOT NULL,
     	    endDate DATETIME NOT NULL,
-    	    imgHome VARCHAR(255),
+    	    mainImage VARCHAR(255),
+    	    image1 VARCHAR(255),
+    	    image2 VARCHAR(255),
+    	    image3 VARCHAR(255),
+    	    youtubeVideo VARCHAR(255),
     	    featured BOOLEAN NOT NULL,
     	    highlight BOOLEAN NOT NULL,
+    	    latitude TEXT NOT NULL,
+    	    longitude TEXT NOT NULL,
+    	    cosRadLat FLOAT NOT NULL,
+    	    sinRadLat FLOAT NOT NULL,
+    	    radLng FLOAT NOT NULL,
     	    CONSTRAINT pk_item PRIMARY KEY (itemid),
     	    CONSTRAINT fk_item_provinceId FOREIGN KEY (provinceId) REFERENCES province(provinceId) ON UPDATE CASCADE ON DELETE CASCADE,
     	    CONSTRAINT fk_item_userid FOREIGN KEY (userid) REFERENCES userprofile(userid) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -182,6 +194,36 @@ CREATE TABLE pendingVote(
     
     
 -- MESSAGING
+
+	CREATE TABLE messageThread(
+		messageThreadId BIGINT NOT NULL AUTO_INCREMENT,
+		participant1 BIGINT NOT NULL,
+		participant2 BIGINT NOT NULL,
+		CONSTRAINT pk_messThreadId PRIMARY KEY(messageThreadId),
+		CONSTRAINT fk_user_user1 FOREIGN KEY (participant1) REFERENCES userprofile(userid),
+		CONSTRAINT fk_user_user2 FOREIGN KEY (participant2) REFERENCES userprofile(userid)
+	);
+	
+	CREATE TABLE message (
+		messageId BIGINT NOT NULL AUTO_INCREMENT,
+		messageThreadId BIGINT NOT NULL,
+		senderId BIGINT NOT NULL,
+		text VARCHAR(255) NOT NULL,
+		messageDate DATETIME NOT NULL,
+		ipAddress BIGINT NOT NULL,
+		CONSTRAINT pk_messageId PRIMARY KEY(messageId),
+		CONSTRAINT fk_user_senderId FOREIGN KEY (senderId) REFERENCES userprofile(userid)
+	);
+	
+	CREATE TABLE messageState(
+		messageId BIGINT NOT NULL,
+		userId BIGINT NOT NULL,
+		messageThreadId BIGINT NOT NULL,
+		readState BOOLEAN NOT NULL,
+		CONSTRAINT fk_message_messageId FOREIGN KEY (messageId) REFERENCES message(messageId),
+		CONSTRAINT fk_user_userId FOREIGN KEY (userId) REFERENCES userprofile(userid),
+		CONSTRAINT fk_messageThread_messageThreadId FOREIGN KEY (messageThreadId) REFERENCES messageThread(messageThreadId)
+	);
     
     /*CREATE TABLE conversation(
     	conversationid BIGINT NOT NULL AUTOINCREMENT,

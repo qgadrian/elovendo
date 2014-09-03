@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	xmlns:form="http://www.springframework.org/tags/form">
+<head>
+<title>Registrarse</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+<script src="/js/imagePreview.js"></script>
+
+<!-- Login button -->
+<script src="/js/toggle-login.js"></script>
+<link rel="stylesheet" href="/css/style-login-button.css" />
+
+<!-- Form -->
+<link rel="stylesheet"
+	href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css" />
+
+</head>
+
+<body class="homepage">
+
+	<!-- Item form -->
+	<form class="pure-form pure-form-aligned" id="registrationform" th:action="@{/site/new_user}" 
+	method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+		<fieldset>
+
+<!-- Username with 2-20 chars -->
+			<div class="pure-control-group">
+				<label for="login" th:text="#{label.user}">Login</label> <input id="login" name="login" type="text"
+					placeholder="Username" th:field="${user.login}" pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$" 
+					th:title="#{login.invalid}" required="required"/>
+<!-- 					<p th:if="${#fields.hasErrors('user.login')}" th:errors="ffggfgfgdf">Incorrect stuff</p> -->
+<!-- 					pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$" th:title="#{login.invalid}"  -->
+			</div>
+
+<!-- Password (UpperCase, LowerCase, Number/SpecialChar and min 8 Chars) -->
+			<div class="pure-control-group">
+				<label for="password" th:text="#{label.password}">Password</label>
+					<input id="password" name="password"
+					type="password" placeholder="Password" th:field="${user.password}"
+					pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
+					th:title="#{password.invalid}" required="required" />
+<!-- 					pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" -->
+			</div>
+
+			<div class="pure-control-group">
+				<label for="email" th:text="#{label.email}">Email Address</label> <input id="email" name="email"
+					type="email" placeholder="Email Address" th:field="${user.email}"/>
+			</div>
+
+			<div class="pure-control-group">
+				<label for="foo" th:text="#{label.firstName}">First name</label> <input id="firstName" name="firstName"
+					type="text" placeholder="Enter something here..." th:field="${user.firstName}"/>
+			</div>
+			
+			<div class="pure-control-group">
+				<label for="foo" th:text="#{label.lastName}">Last name</label> <input id="lastName" name="lastName"
+					type="text" placeholder="Enter something here..." th:field="${user.lastName}"/>
+			</div>
+			
+			<div class="pure-control-group">
+				<label for="foo" th:text="#{label.phone}">Phone</label> <input id="phone" name="phone"
+					type="text" placeholder="Enter something here..." th:field="${user.phone}"/>
+			</div>
+
+			<div class="pure-control-group">
+				<label for="foo" th:text="#{label.province}">Province</label>
+				<select th:value="${provinceName}" name="provinceName">
+				  <option th:each="province : ${provinces}" 
+				          th:value="${province.provinceName}" 
+				          th:text="${province.provinceName}">Province</option>
+				</select>
+			</div>
+			
+			<div class="pure-control-group">
+				<label for="foo" th:text="#{label.profilePic}">Profile pic</label> 
+				<input type="file" name="profilePic" id="imgInp"/>
+				<img id="blah" src="#" alt="your image" />
+			</div>
+
+			<div class="pure-controls">
+<!-- 				<label for="cb" class="pure-checkbox"> <input id="cb" name="checkbox" -->
+<!-- 					type="checkbox" /> I've read the terms and conditions -->
+<!-- 				</label> -->
+
+				<button type="submit" class="pure-button pure-button-primary" th:text="#{button.register}">Submit</button>
+			</div>
+		</fieldset>
+	</form>
+
+</body>
+</html>

@@ -146,6 +146,7 @@ public class UserController {
 	 * @throws UserNotFoundException 
 	 * @throws IOException 
 	 */
+	// TODO: featured, highlight... etc...
 	@RequestMapping(value = "items/{username}/item", method = RequestMethod.POST)
 	public Item addItem(@PathVariable("username") String userName,
 			@RequestParam("subcategory") String subCategoryName,
@@ -154,6 +155,8 @@ public class UserController {
 			@RequestParam("province") String provinceName,
 			@RequestParam(value="featured", required=false, defaultValue="false") boolean featured,
 			@RequestParam(value="highlight", required=false, defaultValue="false") boolean highlight,
+			@RequestParam(value="latitude", required=false, defaultValue="0") String latitude,
+			@RequestParam(value="longitude", required=false, defaultValue="0") String longitude,
 			@RequestParam("prize") double prize,
 			@RequestParam("image") MultipartFile file)
 			throws InvalidItemNameMinLenghtException, ProvinceNotFoundException, UserNotFoundException, 
@@ -167,8 +170,11 @@ public class UserController {
 			System.out.println("Error converting to bytes image file");
 		}
 		
+//		Point location = null; //TODO
+//				new Point(Double.valueOf(latitude), Double.valueOf(longitude));
+		
 		return itemService.addItem(userName, subCategoryName, title,
-				description, provinceName, prize, imgBytes, featured, highlight);
+				description, provinceName, prize, imgBytes, null, null, null, "youtubeVideo", featured, highlight, latitude, longitude);
 	}
 
 	/**

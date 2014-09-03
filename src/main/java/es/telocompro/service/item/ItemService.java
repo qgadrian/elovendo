@@ -26,19 +26,26 @@ public interface ItemService {
     /**
      * Adds an item
      * @param userName
+     * @param subCategoryName
      * @param title
      * @param description
+     * @param provinceName
      * @param prize
-     * @return Item created
-     * @throws UserNotFoundException 
-     * @throws SubCategoryNotFoundException 
+     * @param mainImage
+     * @param featured
+     * @param highlight
+     * @param location Coordinates (lat, long)
+     * @return
+     * @throws InvalidItemNameMinLenghtException
+     * @throws UserNotFoundException
+     * @throws SubCategoryNotFoundException
      * @throws ProvinceNotFoundException
-     * @throws IOException 
      */
     public Item addItem(String userName, String subCategoryName, String title, String description, 
-    		String provinceName, double prize, byte[] image1, boolean featured, boolean highlight)
+    		String provinceName, double prize, byte[] mainImage, byte[] image1, byte[] image2,
+    		byte[] image3, String youtubeVideo, boolean featured, boolean highlight, String latitude, String longitude)
     				throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException, 
-    				ProvinceNotFoundException, IOException;
+    				ProvinceNotFoundException;
     
     /**
      * Adds an item with external values
@@ -53,12 +60,11 @@ public interface ItemService {
      * @throws UserNotFoundException
      * @throws SubCategoryNotFoundException
      * @throws ProvinceNotFoundException
-     * @throws IOException
      */
-    public Item addItem(Item item, String subCategoryName, String provinceName, byte[] imgBytes, 
-    		boolean featured, boolean hightlight) 
-    		throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException, 
-    		ProvinceNotFoundException, IOException;
+    public Item addItem(Item item, String subCategoryName, String provinceName, byte[] mainImage,
+    		byte[] image1, byte[] image2, byte[] image3, boolean featured, boolean highlight) 
+    		throws InvalidItemNameMinLenghtException, UserNotFoundException, 
+    		SubCategoryNotFoundException, ProvinceNotFoundException;
 
     /**
      * Get all items
@@ -86,13 +92,13 @@ public interface ItemService {
      */
 //    public Page<Item> getItemByTitle(String title, int page, int size);
     
-    /**
-     * Finds a list of items that match the title
-     * @param title
-     * @param subCategory
-     * @return Item page
-     */
-    public Page<Item> getItemByTitleAndSubCategory(String title, String subCategory, int page, int size);
+//    /**
+//     * Finds a list of items that match the title
+//     * @param title
+//     * @param subCategory
+//     * @return Item page
+//     */
+//    public Page<Item> getItemByTitleAndSubCategory(String title, String subCategory, int page, int size);
     
     /**
      * Finds all items from a category
@@ -125,8 +131,42 @@ public interface ItemService {
      * @param size Page size
      * @return Item page
      */
+    @Deprecated
     public Page<Item> getAllItemsBySubCategory(String subCategoryName, int prizeMin, int prizeMax, 
     		int page, int size);
+    
+    /**
+     * Get all items using parameters
+     * @param title
+     * @param subCategory
+     * @param province
+     * @param dis Distance to item
+     * @param location {LATITUDE, LONGITUDE}
+     * @param prizeMin
+     * @param prizeMax
+     * @param page
+     * @param size
+     * @return
+     */
+    @Deprecated
+    public Page<Item> getItemByParams(String title, String subCategory, String province,
+    		int prizeMin, int prizeMax, int page, int size);
+    
+    /**
+     * Get all items using parameters
+     * @param title
+     * @param subCategory
+     * @param province
+     * @param dis Distance to item
+     * @param location {LATITUDE, LONGITUDE}
+     * @param prizeMin
+     * @param prizeMax
+     * @param page
+     * @param size
+     * @return
+     */
+    public Page<Item> getItemByParams2(String title, String subCategory, double dis, float[] location,
+    		int prizeMin, int prizeMax, int page, int size);
     
     /**
      * Returns random 'maxItems' items 

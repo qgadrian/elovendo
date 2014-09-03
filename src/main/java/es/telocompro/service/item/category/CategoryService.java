@@ -1,5 +1,7 @@
 package es.telocompro.service.item.category;
 
+import java.util.List;
+
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.subcategory.SubCategory;
 
@@ -21,6 +23,8 @@ public interface CategoryService {
      * @return Categories
      */
     public Iterable<SubCategory> getAllSubCatByCategoryIdOrderBySubCatId(String categoryName);
+    
+    public List<SubCategory> findAllSubCategoriesFromSubCategoryName(String subCategoryName);
     
     /**
      * Returns subCategory searching by its name

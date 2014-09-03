@@ -1,75 +1,75 @@
-#bot {
-	width: 100%;
-	height: 30px;
-	background-color: black;
-	position: fixed;
-	bottom: 0px;
-}
+/* #bot { */
+/* 	width: 100%; */
+/* 	height: 30px; */
+/* 	background-color: black; */
+/* 	position: fixed; */
+/* 	bottom: 0px; */
+/* } */
 
-#headpage {
-	width: 100%;
-	height: 40px;
-	background-color: #ecf0f1;
-}
+/* #headpage { */
+/* 	width: 100%; */
+/* 	height: 40px; */
+/* 	background-color: #ecf0f1; */
+/* } */
 
-.logopagediv {
-	padding-left: 30px;
-	padding-right: 30px;
-}
+/* .logopagediv { */
+/* 	padding-left: 30px; */
+/* 	padding-right: 30px; */
+/* } */
 
-.logopage {
-	width: 10%;
-	height: 10%;
-	float: left;
-}
+/* .logopage { */
+/* 	width: 10%; */
+/* 	height: 10%; */
+/* 	float: left; */
+/* } */
 
-.listpagemenu {
-	margin-left: 15px;
-}
+/* .listpagemenu { */
+/* 	margin-left: 15px; */
+/* } */
 
-.menupage {
-	padding-top: 5px;
-	height: 40px;
-	margin-left: 33%;
-}
+/* .menupage { */
+/* 	padding-top: 5px; */
+/* 	height: 40px; */
+/* 	margin-left: 33%; */
+/* } */
 
-.listpagemenu, .listpagemenu a, .listpagemenu a:visited {
-	display: inline;
-	list-style: none;
-	color: black;
-	text-decoration: none;
-	font-size: 120%;
-}
+/* .listpagemenu, .listpagemenu a, .listpagemenu a:visited { */
+/* 	display: inline; */
+/* 	list-style: none; */
+/* 	color: black; */
+/* 	text-decoration: none; */
+/* 	font-size: 120%; */
+/* } */
 
-.listpagemenu a:hover {
-	display: inline;
-	list-style: none;
-	color: #FF2301;
-	text-decoration: none;
-	font-size: 120%;
-}
+/* .listpagemenu a:hover { */
+/* 	display: inline; */
+/* 	list-style: none; */
+/* 	color: #FF2301; */
+/* 	text-decoration: none; */
+/* 	font-size: 120%; */
+/* } */
 
-#prehead h1 {
-	color: white;
-	font-size: 20px;
-	padding-left: 30px;
-	padding-top: 35px;
-}
+/* #prehead h1 { */
+/* 	color: white; */
+/* 	font-size: 20px; */
+/* 	padding-left: 30px; */
+/* 	padding-top: 35px; */
+/* } */
 
-#seeker {
-	width: 604px;
-	height: auto;
-	margin-left: auto;
-	margin-right: auto;
-	white
-}
+/* #seeker { */
+/* 	width: 604px; */
+/* 	height: auto; */
+/* 	margin-left: auto; */
+/* 	margin-right: auto; */
+/* 	white */
+/* } */
 
-.imgprn {
-	width: 384px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-bottom: 30px;
-}
+/* .imgprn { */
+/* 	width: 384px; */
+/* 	margin-left: auto; */
+/* 	margin-right: auto; */
+/* 	margin-bottom: 30px; */
+/* } */
 
 /*********************************************************************************/
 /* Basic                                                                         */
@@ -533,6 +533,33 @@ body {
 /* } */
 
 /*********************************************************************************/
+/* Thumbnail                                                                     */
+/*********************************************************************************/
+
+.thumbnail.right-caption > img {
+    float: left;
+    margin-right: 9px;
+}
+
+.thumbnail.right-caption {
+    float: left;
+}
+
+.thumbnail.right-caption > .caption {
+    padding: 4px;
+}
+
+.featuredThumbnail {
+	background-color: #a05ea0 !important;
+	border-color:#322236 !important;
+}
+
+.featuredThumbnail:hover {
+	background: #bf92bf !important;
+	border-color:#c888d8 !important;
+}
+
+/*********************************************************************************/
 /* Web margin                                                                    */
 /*********************************************************************************/
 
@@ -560,20 +587,102 @@ Color graph
 }
 
 .featuredTextDesc {
-	width: 300px;
+	width: 100%;
 	height: 50px;
 	word-wrap: break-word;
 }
 
+.mediumTextDesc {
+	width: 100%;
+	height: 40px;
+	word-wrap: break-word;
+}
+
 .largeTextDesc {
-	width: 400px;
+	width: 100%;
 	height: 150px;
 	word-wrap: break-word;
 }
 
 .fullTextDesc {
-	width: 400px;
+	width: 100%;
 	height: 100%;
 	min-height: 500px;
 	word-wrap: break-word;
+}
+
+/* Nav tab margin */
+
+.profileStyle .nav-tabs {
+	margin-bottom: 30px;
+}
+
+.profileStyle .badge {
+	background-color: #2db6f1;
+}
+
+.profileStyle .list-group-item .glyphicon {
+/* color: #bcbcbc; */
+padding-right: 10px;
+display: inline;
+}
+
+.profileStyle .profilePic {
+	border-radius: 50%;
+	padding: 2px;
+	border: 1px solid #ddd;
+	background: #fff;
+	width: 200px;
+	height: 200px;
+	margin: 0px auto;
+}
+
+.profileStyle .img-responsive {
+    margin: 0 auto;
+}
+/*********************************************************************************/
+/* Profile pic                                                                   */
+/*********************************************************************************/
+
+.userPic img {
+	border-radius: 50%;
+	padding: 5px;
+	border: 1px solid #ddd;
+	background: #fff;
+	width: 150px;
+	height: 150px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	margin-right: 20px;
+}
+
+.userPicMin {
+	margin-right: 10px;
+}
+
+.userPicMin img {
+	border-radius: 50%;
+	padding: 1px;
+	border: 1px solid #ddd;
+	background: #fff;
+	width: 60px;
+	height: 60px;
+	margin-top: 0px;
+	margin-bottom: 20px;
+	margin-right: 10px;
+}
+/*********************************************************************************/
+
+.list-group {
+margin: 10px 0 0;
+}
+
+.list-group {
+padding-left: 0;
+margin-bottom: 20px;
+}
+
+.theme-style .list-group-item .glyphicon {
+padding-right: 10px;
+display: inline;
 }

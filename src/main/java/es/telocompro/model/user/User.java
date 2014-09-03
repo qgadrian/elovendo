@@ -45,12 +45,12 @@ public class User implements UserDetails {
 
 	@NotNull
 //	@Length(min = 2, max = 20)
-	@Pattern(regexp=Constant.loginPattern)
+	@Pattern(regexp=Constant.LOGIN_PATTERN)
     private String login;
 
     @Column(name = "password")
 //    @Length(min = 8, max = 255)
-    @Pattern(regexp=Constant.passwordPattern)
+    @Pattern(regexp=Constant.PASSWORD_PATTERN)
     private String password;
 
     @Column(name = "firstname")
@@ -62,6 +62,8 @@ public class User implements UserDetails {
     private String email;
     
     private String avatar; // avatar path
+    @Transient
+    private String avatar200h;
     
     private Calendar registerDate;
     
@@ -221,7 +223,6 @@ public class User implements UserDetails {
 		return avatar.concat(".jpg");
 	}
     
-    @Transient
     public String getAvatar200h() {
 		return avatar.concat("-200h.jpg");
 	}
@@ -287,7 +288,7 @@ public class User implements UserDetails {
 		if (!(obj instanceof User)) return false;
 		
 		User user = (User) obj;
-		return user.getLogin() == this.login;
+		return user.getLogin().equals(this.login) && user.getUserId().equals(this.userId);
 	}
 	
 }

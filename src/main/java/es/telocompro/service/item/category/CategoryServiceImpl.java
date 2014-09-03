@@ -1,5 +1,7 @@
 package es.telocompro.service.item.category;
 
+import java.util.List;
+
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.CategoryRepository;
 import es.telocompro.model.item.category.subcategory.SubCategory;
@@ -44,5 +46,10 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public Iterable<SubCategory> findAllSubCategories() {
 		return subCategoryRepository.findAll();
+	}
+	
+	@Override
+	public List<SubCategory> findAllSubCategoriesFromSubCategoryName(String subCategoryName) {
+		return categoryRepository.findAllSubCategoriesFromSubCategoryName(subCategoryName);
 	}
 }

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="UTF-8"/>
+
+<!-- ************************* -->
+<!-- ******* Bootstrap ******* -->
+<!-- ************************* -->
+
+<!-- Javascript -->
+<script src="/js/jquery-1.11.0.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<!-- Latest compiled and minified JavaScript -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!-- Styles -->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
+
+<link rel="stylesheet" href="/css/styleList.css" /> <!--  For top-buffer class -->
+<link rel="stylesheet" href="/css/styleweb.css" />
+<link rel="stylesheet" href="/css/bootstrap-extra.css" />
+ <!--  For share buttons -->
+<link rel="stylesheet" href="/css/sharingStyle.css" />
+<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"/>
+
+<!-- Tabs x -->
+<link href="/css/bootstrap-tabs-x.css" media="all" rel="stylesheet" type="text/css" />
+<script src="/js/bootstrap-tabs-x.js" type="text/javascript"></script>
+
+<!-- Lightbox -->
+<!-- <link href="/css/bootstrap-lightbox.css" media="all" rel="stylesheet" type="text/css" /> -->
+<!-- <script src="/js/bootstrap-lightbox.js" type="text/javascript"></script> -->
+
+<title>Item</title>
+</head>
+<body style="background-color:#FBFAF9;">
+	
+	<!-- Header -->
+	<div th:replace="elovendo/header"></div>
+
+	<div class="container">	
+		<div class='tabs-x tabs-above'>
+	    	<ul id="myTab-1" class="nav nav-tabs" role="tablist">
+	        	<li class="active"><a href="#itemContent" role="tab" data-toggle="tab">
+	        	<i class="glyphicon glyphicon-list-alt"></i> Anuncio</a></li>
+	        	<li>
+	        	<a href="#geolocationContent" role="tab-kv" data-toggle="tab">	        	
+	        	<i class="glyphicon glyphicon-map-marker"></i> Localización</a></li>
+	        	<li><a href="#userContent" role="tab-kv" data-toggle="tab">
+	        	<i class="glyphicon glyphicon-user"></i> Vendedor</a></li>
+	        </ul>
+        </div>
+        <!-- Item -->
+        <div id="tabContent" class="tab-content">
+        	<div class="tab-pane fade in active" id="itemContent">
+        		<div class="container">
+					<div class="row">
+						<div class="col-xs-12 col-md-12" >
+							<div class="thumbnail">
+<!-- 								<a data-toggle="lightbox" href="#itemMainImage"> -->
+								<img data-src="holder.js/300x300" alt="Image" 
+									th:src="@{'http://83.165.60.132:8080/' + ${item.imgHome}}" style="margin-top:20px;"/>
+								<hr class="colorgraph" />
+								<div class="text-center">
+									<h3 th:if="${item.user.phone} != null" style="display: inline; ">
+										<span class="label label-success">
+										<i class="glyphicon glyphicon-phone"></i> Whatssap</span>
+									</h3>
+									<h3 th:if="${item.user.userValue} &gt; 70" style="display: inline;" 
+										onmouseover="mouseHover()"><span class="label label-rep">
+										<i class="glyphicon glyphicon-thumbs-up"></i> Reputado
+										</span>
+									</h3>
+								</div>
+								<div class="caption">
+									<div class="row">
+										<div class="col-xs-12 col-md-12">
+											<h1 th:text="${item.title}" style="text-indent: 20px;">Title</h1><hr/>
+											<p class="fullTextDesc" th:utext="${item.description}" 
+											style="text-indent: 20px; min-height: 500px; width: 100%; word-wrap: break-word;">
+											Description</p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-xs-12 text-center">
+											<div class="btn-group" style="margin-right: 10px;">
+											<a th:href="@{'/bazaar/item/' + ${item.itemId}}" class="btn btn-default btn-lg"
+												role="button">Ver anuncio</a>
+											<button class="btn btn-primary btn-lg" role="button"
+											data-toggle="modal" data-target="#myModal">Enviar mensaje</button>
+											</div>
+										</div>
+									</div>
+									<hr class="colorgraph" />
+									<div class="row">
+										<div class="col-xs-12 col-md-12">
+											<div class="text-center">
+												<div class="btn-group">
+													<button class="btn btn-default btn-lg disabled">Compartir:</button>
+													<a class="btn btn-default btn-lg" target="_blank"
+														title="Like On Facebook"
+														href="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Felovendo.com/elovendo/index.html">
+														<i class="fa fa-thumbs-o-up fa-lg fb"></i>
+													</a> <a class="btn btn-default btn-lg google-plus-one"
+														target="_blank" title="+1 On Google"
+														href="https://apis.google.com/_/+1/fastbutton?usegapi=1&amp;size=large&amp;hl=en&amp;url=http%3A%2F%2Feveloendo.com/elovendo/index.html">
+														<i class="fa fa-google-plus fa-2x google"></i> <span
+														class="google">1</span>
+													</a> <a class="btn btn-default btn-lg" target="_blank"
+														title="On Facebook"
+														href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Felovendo.com/elovendo/index.html">
+														<i class="fa fa-facebook fa-lg fb"></i>
+													</a> <a class="btn btn-default btn-lg" target="_blank"
+														title="On Twitter"
+														href="http://twitter.com/share?url=http%3A%2F%2Felovendo.com/elovendo/index.html">
+														<i class="fa fa-twitter fa-lg tw"></i>
+													</a> <a class="btn btn-default btn-lg" target="_blank"
+														title="On Google Plus"
+														href="https://plusone.google.com/_/+1/confirm?hl=en&amp;url=http%3A%2F%2Felovendo.com/elovendo/index.html">
+														<i class="fa fa-google-plus fa-lg google"></i>
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- geoloation -->
+			<div class="tab-pane fade" id="geolocationContent">
+				<div class="container">
+					<div class="row">
+						<div class="col-xs-12 col-md-12" >
+<!-- 							<img src="http://maps.googleapis.com/maps/api/staticmap?center=-15.800513,-47.91378&amp;zoom=14&amp;size=600x300 -->
+<!-- 							&amp;scale=2"/> -->
+							<img th:src="@{'http://maps.googleapis.com/maps/api/staticmap?center=' + ${item.latitude}
+							+ ',' + ${item.longitude} + '&amp;zoom=14&amp;size=600x300&amp;scale=2'}"/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- user -->
+			<div class="tab-pane fade" id="userContent">
+				<div class="container">
+					<div class="row">
+						<div class="col-xs-12 col-md-12" >
+							<div class="panel panel-info">
+								<div class="panel-heading">
+								    <h1 class="panel-title"><strong>Vendedor</strong></h1>
+								</div>
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-xs-3 col-md-3 text-center userPic" >
+											<img data-src="holder.js/300x300" alt="Profile pic" 
+											th:src="@{'http://83.165.60.132:8080/' + ${item.user.avatar}}"/>
+										</div>
+										<div class="col-xs-5 col-md-5 pull-left top-buffer">
+											<h3>
+												<a th:href="@{/elovendo/index}" th:text="${item.user.login}"> usuario </a>
+											</h3>
+											<!-- <p>Miembro desde <span th:text="${item.user.registerDate}"> desde </span></p> -->
+											<p>Miembro desde el 
+												<span th:text="${#calendars.format(item.user.registerDate, 'dd MMMM yyyy')}"> fecha </span>
+											</p>
+											<h3>Reputación</h3>
+											<div class="progress">
+												<div th:if="${item.user.userValue} &gt; 69"
+													class="progress-bar progress-bar-success" 
+													role="progressbar" th:attr="aria-valuenow=${item.user.userValue}"
+													aria-valuemin="0" aria-valuemax="100" 
+													th:style="'width:' + ${item.user.userValue} + '%;'">
+														<span class="sr-only" 
+															th:value="${item.user.userValue} + ' points. Excellent user.'"></span>
+												</div>
+												<div th:if="${item.user.userValue} &gt; 39"
+													class="progress-bar progress-bar-warning" 
+													role="progressbar" th:attr="aria-valuenow=${item.user.userValue}"
+													aria-valuemin="0" aria-valuemax="100" 
+													th:style="'width:' + ${item.user.userValue} + '%;'">
+														<span class="sr-only" 
+															th:value="${item.user.userValue} + ' points. Average user.'"></span>
+												</div>
+												<div th:if="${item.user.userValue} &gt; 0"
+													class="progress-bar progress-bar-danger" 
+													role="progressbar" th:attr="aria-valuenow=${item.user.userValue}"
+													aria-valuemin="0" aria-valuemax="100" 
+													th:style="'width:' + ${item.user.userValue} + '%;'">
+														<span class="sr-only" 
+															th:value="${item.user.userValue} + ' points. Bad user.'"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+        	</div>
+        </div>
+	</div>
+	
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Enviar mensaje</h4>
+      </div>
+      <div class="modal-body">
+      	<form role="form">
+		  <div class="form-group">
+		    <label for="exampleInputEmail1">Tu nombre</label>
+		    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email"/>
+		  </div>
+		  <div class="form-group">
+		    <label for="exampleInputPassword1">Mensaje</label>
+		    	<textarea id="textarea" class="form-control textarea" rows="5" 
+						required="required" placeholder="Tu mensaje..." maxlength="1000"></textarea>
+		  </div>
+		  <div class="checkbox">
+		    <label>
+		      <input type="checkbox"/> Acepto las condiciones de uso
+		    </label>
+		  </div>
+		  <button type="submit" class="btn btn-default">Submit</button>
+		</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary">Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

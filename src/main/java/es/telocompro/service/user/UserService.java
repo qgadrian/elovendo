@@ -63,8 +63,9 @@ public interface UserService extends UserDetailsService {
      * Finds a user by its login
      * @param login
      * @return
+     * @throws UserNotFoundException 
      */
-    public User findUserByLogin(String login);
+    public User findUserByLogin(String login) throws UserNotFoundException;
 
     /**
      * Updates an user

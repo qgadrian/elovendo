@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	
+<head>
+<meta charset="UTF-8"/>
+<title>Gestor de mensajes</title>
+
+<!-- ************************* -->
+<!-- ******* Bootstrap ******* -->
+<!-- ************************* -->
+
+<!-- Javascript -->
+<script src="/js/jquery-1.11.0.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<!-- Latest compiled and minified JavaScript -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+	<!-- Header -->
+	<div th:replace="elovendo/header"></div>
+	
+	<div class="container">
+		<div class="row" th:each="messageThread : ${conversations}">
+			<a th:href="@{'/elovendo/messages/conversation/' + ${messageThread.messageThreadId}}"
+			th:text="${messageThread.participant1.login} +' y '+ ${messageThread.participant2.login}">
+			</a>
+		</div>
+	</div>
+
+</body>
+</html>

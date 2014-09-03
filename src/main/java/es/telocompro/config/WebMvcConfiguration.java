@@ -93,7 +93,8 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
     public MultipartResolver multipartResolver() {
     	CommonsMultipartResolver resolver = new CommonsMultipartResolver();
     	// Size in bytes
-    	resolver.setMaxUploadSize(1752300);
+//    	resolver.setMaxUploadSize(1752300);
+    	resolver.setMaxUploadSize(3000);
     	resolver.setDefaultEncoding("utf-8");
     	return resolver;
     }

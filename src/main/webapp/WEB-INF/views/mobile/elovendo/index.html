@@ -91,7 +91,7 @@
 				<!-- title -->
 				<div class="row">
 					<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;">
-						<h1 style="font-family: 'Andika', sans-serif; color: #6A016F">PATROCINADOS</h1><hr/>
+						<h1 style="font-family: 'Andika', sans-serif; color: #6A016F">PATROCINADOS</h1><hr class="colorgraph"/>
 					</div>
 				</div>
 				<div class="row" th:each="item : ${featuredItems}">
@@ -100,14 +100,16 @@
 							<div class="thumbnail">
 								<a th:href="@{'/bazaar/item/' + ${item.itemId}}">
 									<img data-src="holder.js/300x300" alt="..." 
-									th:src="@{'http://83.165.60.132:8080/' + ${item.imgHome}}"/>
+									th:src="@{'http://83.165.60.132:8080/' + ${item.imgHome200h}}"/>
 								</a>
 								<div class="caption">
 									<h3 th:text="${item.title}">Title</h3>
 									<p th:if="${#strings.length(item.description)} &gt; 99" 
-										th:utext="${#strings.substring(item.description, 0, 100)}">Description</p>
+										th:utext="${#strings.substring(item.description, 0, 100)}"
+										class="featuredTextDesc">Description</p>
 									<p th:if="${#strings.length(item.description)} &lt; 100" 
-										th:utext="${item.description}">Description</p>
+										th:utext="${item.description}"
+										class="featuredTextDesc">Description</p>
 									<p>
 										<a href="#" class="btn btn-default" role="button">Ver anuncio</a>
 										<a href="#" class="btn btn-primary" role="button">Enviar mensaje</a>
@@ -124,7 +126,7 @@
 				<!-- title -->
 				<div class="row">
 					<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;">
-						<h1 style="font-family: 'Andika', sans-serif; color: #6A016F">CATEGORÍAS</h1><hr/>
+						<h1 style="font-family: 'Andika', sans-serif; color: #6A016F">CATEGORÍAS</h1><hr class="colorgraph"/>
 					</div>
 				</div>
 				<div class="row">
@@ -227,26 +229,10 @@
 			</div>
 		</div>
 		<!-- FIN -->
-
-<!-- 		<div id="featured"> -->
-<!-- 			<p class ="featuredTitle"> Patrocinados </p> -->
-<!-- 			<div id="featuredSection"> -->
-<!-- 				<a href="#"> <img class="featuredImage" -->
-<!-- 					src="/images/categories/technology.jpg" />  -->
-<!-- 					<span class="featuredTitle">PS4 Nueva</span> -->
-<!-- 				</a> -->
-<!-- 			</div> -->
-<!-- 			<div id="featuredSection"> -->
-<!-- 				<a href="#"> <img class="featuredImage" -->
-<!-- 					src="/images/categories/technology.jpg" />  -->
-<!-- 					<span class="featuredTitle">PS4 Nueva</span> -->
-<!-- 				</a> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
+		
+		<!-- Footer -->
+		<div th:include="elovendo/footer"></div>
 
 	</div>
-	
-<!-- 	<div id="prebot"></div> -->
-<!-- 	<div id="bot"></div> -->
 </body>
 </html>

@@ -15,8 +15,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.province.Province;
@@ -48,7 +51,7 @@ public class Item {
     @Length(min = 5, max = 40)
     private String title;
     
-    @Length(min = 10, max = 500)
+    @Length(max = 1000)
     private String description;
     
     private BigDecimal prize;
@@ -65,49 +68,97 @@ public class Item {
     @JoinColumn(name = "provinceId")
     private Province province;
     
-    private String imgHome;
+    private String mainImage;
     @Transient
-    private String imgHome200h;
+    private String mainImage200h;
+    
+    private String image1;
+    private String image2;
+    private String image3;
+    
+    @Pattern(regexp=Constant.YOUTUBE_URL_PATTERN)
+    private String youtubeVideo;
     
     // Premium features
     private boolean featured;
     private boolean highlight;
+    
+    // Geolocation
+//    @NotNull
+    private String latitude;
+//    @NotNull
+    private String longitude;
+    private float cosRadLat;
+    private float radLng;
+    private float sinRadLat;
 
     public Item() { }
 
     public Item(User user, SubCategory subCategory, String title, String description, 
-    		Province province, BigDecimal prize, Calendar startDate, String imgHome, 
-    		boolean featured, boolean highlight) {
+    		Province province, BigDecimal prize, String mainImage,
+    		String image1, String image2, String image3, String youtubeVideo, boolean featured, 
+    		boolean highlight, String latitude, String longitude) {
+    	
         this.user = user;
         this.subCategory = subCategory;
         this.title = title;
         this.description = description;
         this.prize = prize;
-        this.startDate = startDate;
-        this.imgHome = imgHome;
+        this.startDate = Calendar.getInstance();
+        this.mainImage = mainImage;
+        this.image1 = image1;
+        this.image2 = image2;
+        this.image3 = image3;
+        this.youtubeVideo = youtubeVideo;
         this.province = province;
         
         Calendar endDate = Calendar.getInstance();
-        endDate.set(startDate.get(Calendar.YEAR), 
-        		startDate.get(Calendar.MONTH), 
-        		startDate.get(Calendar.DATE),
-        		startDate.get(Calendar.HOUR_OF_DAY), 
-        		startDate.get(Calendar.MINUTE),
-        		startDate.get(Calendar.SECOND));
-        
         endDate.add(Calendar.DATE, Constant.ITEM_DEFAULT_DURATION);
         
         this.endDate = endDate;
         
         this.featured = featured;
         this.highlight = highlight;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        
+        double latRad = Math.toRadians(Double.parseDouble(latitude));
+        this.cosRadLat = (float) Math.cos(latRad);
+        this.sinRadLat = (float) Math.sin(latRad);
+		this.radLng = (float) Math.toRadians(Double.parseDouble(longitude));
     }
     
-    public String getImgHome200h() {
-    	return this.imgHome.concat("-200h.jpg");
+    @Transient
+    public String getPlainDescription() {
+    	String plainText = this.description.replaceAll("(<br\\ ?/>)+", "&");
+    	return plainText.replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", "");
+    }
+    
+    @Transient
+    public boolean isNew() {
+    	DateTime s = new DateTime(this.startDate.getTimeInMillis());
+    	DateTime e = new DateTime(Calendar.getInstance().getTimeInMillis());
+    	Days days = Days.daysBetween(s, e);
+    	return days.getDays()< 5;
+    }
+    
+    public String getMainImage200h() {
+    	return this.mainImage.concat("-200h.jpg");
     }
 
-    public SubCategory getSubCategory() {
+	public void setImage1(String image1) {
+		this.image1 = image1;
+	}
+
+	public void setImage2(String image2) {
+		this.image2 = image2;
+	}
+
+	public void setImage3(String image3) {
+		this.image3 = image3;
+	}
+
+	public SubCategory getSubCategory() {
         return subCategory;
     }
 
@@ -159,12 +210,12 @@ public class Item {
         this.startDate = startDate;
     }
 
-	public String getImgHome() {
-		return imgHome.concat(".jpg");
+	public String getMainImage() {
+		return mainImage.concat(".jpg");
 	}
 
-	public void setImgHome(String imgHome) {
-		this.imgHome = imgHome;
+	public void setMainImage(String mainImage) {
+		this.mainImage = mainImage;
 	}
 
 	public void setItemId(Long itemId) {
@@ -201,6 +252,58 @@ public class Item {
 
 	public void setHighlight(boolean highlight) {
 		this.highlight = highlight;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+		double latRad = Math.toRadians(Double.parseDouble(latitude));
+        this.cosRadLat = (float) Math.cos(latRad);
+        this.sinRadLat = (float) Math.sin(latRad);
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+		this.radLng = (float) Math.toRadians(Double.parseDouble(longitude));
+	}
+
+	public String getImage1() {
+		return image1;
+	}
+
+	public String getImage2() {
+		return image2;
+	}
+
+	public String getImage3() {
+		return image3;
+	}
+
+	public String getYoutubeVideo() {
+		return youtubeVideo;
+	}
+
+	public void setYoutubeVideo(String youtubeVideo) {
+		this.youtubeVideo = youtubeVideo;
+	}
+
+	public float getCosRadLat() {
+		return cosRadLat;
+	}
+
+	public float getRadLng() {
+		return radLng;
+	}
+
+	public float getSinRadLat() {
+		return sinRadLat;
 	}
 
 }

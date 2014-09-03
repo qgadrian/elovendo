@@ -37,15 +37,28 @@ public class ItemWebController {
 	 * FIND BY TITLE
 	 */
     @RequestMapping(value="search", method = RequestMethod.GET)
-    public String itemListByTitleSearchPage(Model model, 
+    public String itemListByTitleSearchPage(Model model,
+    		@RequestParam(value="subcategory", required=false, defaultValue="") String subCategory,
     		@RequestParam("title") String title,
-    		@RequestParam(value = "subcategory", required = false, defaultValue="") String subCategory,
+    		@RequestParam(value = "province", required = false, defaultValue="") String province,
+    		@RequestParam(value = "min", required = false, defaultValue="0" ) int prizeMin,
+    		@RequestParam(value = "max", required = false, defaultValue="0" ) int prizeMax,
     		@RequestParam(value = "p", required = false, defaultValue="0") int page, 
     		@RequestParam(value = "s", required = false, defaultValue="5" ) int size) {
     	
+    	// Populate selectors
+    	@SuppressWarnings("unchecked")
+		List<Province> provinces = IteratorUtils.toList(provinceService.findAllProvinces().iterator());
+    	model.addAttribute("provinces", provinces);
+    	@SuppressWarnings("unchecked")
+		List<SubCategory> subCategories = IteratorUtils.toList(categoryService
+				.findAllSubCategoriesFromSubCategoryName(subCategory).iterator());
+    	model.addAttribute("subCategories", subCategories);
+    	
     	model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, subCategory));
     	
-    	Page<Item> p = itemService.getItemByTitleAndSubCategory(title, subCategory, page, size);
+//    	Page<Item> p = itemService.getItemByTitleAndSubCategory(title, subCategory, page, size);
+    	Page<Item> p = itemService.getItemByParams(title, subCategory, province, prizeMin, prizeMax, page, size);
 
     	// Quick workaround for manage pagination with searches
     	PageWrapper<Item> pageWrapper;
@@ -69,10 +82,15 @@ public class ItemWebController {
 	@RequestMapping(value="category/{categoryName}", method = RequestMethod.GET)
     public String itemListByCategoryPage(Model model, 
     		@PathVariable("categoryName") String categoryName,
-    		@RequestParam(value = "p", required = false, defaultValue="0") int page, 
-    		@RequestParam(value = "s", required = false, defaultValue="5" ) int size,
+    		@RequestParam(value = "title", required = false, defaultValue="") String title,
+    		@RequestParam(value = "province", required = false, defaultValue="") String province,
+    		@RequestParam(value = "dis", required = false, defaultValue="0") String distance,
+    		@RequestParam(value = "lat", required = false, defaultValue="0") String latitude,
+    		@RequestParam(value = "lng", required = false, defaultValue="0") String longitude,
     		@RequestParam(value = "min", required = false, defaultValue="0" ) int prizeMin,
-    		@RequestParam(value = "max", required = false, defaultValue="0" ) int prizeMax) {
+    		@RequestParam(value = "max", required = false, defaultValue="0" ) int prizeMax,
+    		@RequestParam(value = "p", required = false, defaultValue="0") int page, 
+    		@RequestParam(value = "s", required = false, defaultValue="5" ) int size) {
     	
 //    	String pageString = request.getParameter("page");
 //    	if ("previous".equals(pageString)) System.out.println("previous equaled");
@@ -91,14 +109,19 @@ public class ItemWebController {
 		if (prizeMax != 0)
 			model.addAttribute("prizeMax", prizeMax);
     	
-    	Page<Item> p = itemService.getAllItemsByCategory(categoryName, prizeMin, prizeMax, page, size);
+//    	Page<Item> p = itemService.getAllItemsByCategory(categoryName, prizeMin, prizeMax, page, size);
+//		Page<Item> p = itemService.getItemByParams(title, categoryName, province, prizeMin, prizeMax, page, size);
+		double dis = Double.parseDouble(distance);
+    	float lat = Float.valueOf(latitude);
+    	float lng = Float.valueOf(longitude);
+    	float[] latLng = {lat , lng};
+		Page<Item> p = itemService.getItemByParams2(title, categoryName, dis, latLng, prizeMin, prizeMax, page, size);
     	PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, categoryName);
     	List<Item> items = p.getContent();
     	
     	@SuppressWarnings("unchecked")
 		List<Province> provinces = IteratorUtils.toList(provinceService.findAllProvinces().iterator());
     	model.addAttribute("provinces", provinces);
-    	
     	@SuppressWarnings("unchecked")
 		List<SubCategory> subCategories = IteratorUtils.toList(categoryService
 				.getAllSubCatByCategoryIdOrderBySubCatId(categoryName).iterator());
@@ -138,6 +161,13 @@ public class ItemWebController {
     @RequestMapping(value="sub/{subcategoryname}", method = RequestMethod.GET)
     public String itemListPage(Model model, 
     		@PathVariable("subcategoryname") String subCategoryName,
+    		@RequestParam(value = "title", required = false, defaultValue="") String title,
+    		@RequestParam(value = "province", required = false, defaultValue="") String province,
+    		@RequestParam(value = "dis", required = false, defaultValue="0") String distance,
+    		@RequestParam(value = "lat", required = false, defaultValue="0") String latitude,
+    		@RequestParam(value = "lng", required = false, defaultValue="0") String longitude,
+    		@RequestParam(value = "min", required = false, defaultValue="0" ) int prizeMin,
+    		@RequestParam(value = "max", required = false, defaultValue="0" ) int prizeMax,
     		@RequestParam(value = "p", required = false, defaultValue="0") int page, 
     		@RequestParam(value = "s", required = false, defaultValue="5" ) int size) {
     	
@@ -148,15 +178,27 @@ public class ItemWebController {
 //    	model.addAttribute("page", page);
 //    	model.addAttribute("size", size);
     	
-    	model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, subCategoryName));
+    	model.addAttribute("featuredItems", 
+    			itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, subCategoryName));
     	
-    	Page<Item> p = itemService.getAllItemsBySubCategory(subCategoryName, 0, 0, page, size);
+//    	Page<Item> p = itemService.getAllItemsBySubCategory(subCategoryName, 0, 0, page, size);
+//    	Page<Item> p = itemService.getAllItemsBySubCategory(subCategoryName, province, prizeMin, prizeMax, page, size);
+    	int dis = Integer.valueOf(distance);
+    	float lat = Float.valueOf(latitude);
+    	float lng = Float.valueOf(longitude);
+    	float[] latLng = {lat , lng};
+    	Page<Item> p = 
+    			itemService.getItemByParams2(title, subCategoryName, dis, latLng, prizeMin, prizeMax, page, size);
     	PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, subCategoryName);
     	List<Item> items = p.getContent();
     	
     	@SuppressWarnings("unchecked")
 		List<Province> provinces = IteratorUtils.toList(provinceService.findAllProvinces().iterator());
     	model.addAttribute("provinces", provinces);
+    	@SuppressWarnings("unchecked")
+		List<SubCategory> subCategories = IteratorUtils.toList(categoryService
+				.findAllSubCategoriesFromSubCategoryName(subCategoryName).iterator());
+    	model.addAttribute("subCategories", subCategories);
     	
 //    	@SuppressWarnings("unchecked")
 //		List<SubCategory> subCategories = IteratorUtils.toList(categoryService

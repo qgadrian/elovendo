@@ -12,11 +12,14 @@
 <!-- Latest compiled and minified JavaScript -->
 <!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> -->
 
+<!-- Fav icon -->
+<link rel="shortcut icon" type="image/x-icon" href="/images/webimg/favicon.ico" />
+
 <!-- Styles -->
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
 <link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
-<link rel="stylesheet" type="text/css" href="/css/styleWeb.css" media="screen" />
+<!-- <link rel="stylesheet" type="text/css" href="/css/styleweb.css" media="screen" /> -->
 
 <!-- Header handler -->
 <script src="/js/headerHandler.js"></script>
@@ -61,7 +64,7 @@
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<form class="navbar-form navbar-left" role="search" method="GET" action="/bazaar/search" name="search">
 					<div class="input-group">
-						<input type="text" class="form-control" placeholder="¿Qué quieres buscar?" required=""
+						<input type="text" class="form-control" placeholder="¿Qué quieres buscar?" required="required"
 							id="srch-term" name="title"/>
 						<div class="input-group-btn">
 							<button class="btn btn-default" type="submit">
@@ -99,41 +102,48 @@
 <!-- 					</div> -->
 
 					<div class="btn-group nav navbar-nav" th:switch="${#httpServletRequest.remoteUser}" >
-						<a th:case="null" href="/login">
-							<button type="button" class="navbar-btn btn btn-info">
-								Iniciar sesión
-							</button>
-						</a>
+						<p th:case="null" class="navbar-text"> 
+						Bienvenido,
+						<a  href="/login">
+<!-- 							<button type="button" class="navbar-btn btn btn-info" style="margin-right: 20px;"> -->
+<!-- 								Iniciar sesión -->
+<!-- 							</button> -->
+							inicia sesión
+						</a> o <a  href="/site/register"> regístrate</a>  
+						</p>
 						<div th:case="*" class="navbar-right dropdown">
-							<p class="navbar-text">
-							Bienvenido,  
-								<a class="dropdown-toggle" data-toggle="dropdown" th:text="${#httpServletRequest.remoteUser}">
-								user <span class="caret"></span></a>
-								<ul class="dropdown-menu" role="menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-            <li class="divider"></li>
-            <li><a href="#">One more separated link</a></li>
-          </ul>
-							</p>
+<!-- <span class="navbar-text" th:text="#{header.welcome}+', '+${#httpServletRequest.remoteUser}">Welcome</span> -->
+							<ul class="nav navbar-nav">
+								<li>
+									<p th:switch="${#httpServletRequest.remoteUser}" class="navbar-btn">
+										<a th:case="null" href="/login" class="btn btn-info"
+										th:text="#{sell.button}">  Sell </a>
+										<a th:case="*" href="/site/items/item" class="btn btn-info"
+										th:text="#{sell.button}">  Sell </a>
+									</p>
+								</li>
+							</ul>
+						
+							<ul class="nav navbar-nav">
+								<li class="dropdown">
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+											<img th:src="@{'http://83.165.60.132:8080/' + ${session.userProfilePicMin}}"/>
+										<span th:text="${session.userName}"></span> <span class="caret"></span></a>
+									<ul class="dropdown-menu" role="menu">
+										<li><a href="#">Perfil</a></li>
+										<li><a href="#">Votos</a></li>
+										<li><a href="/site/pricing/points">Créditos</a></li>
+										<li class="divider"></li>
+										<li><a href="#"><span class="badge pull-right"
+										th:text="${T(es.telocompro.service.message.MessageServiceImpl).getUnreadMessages(session.userName)}">0</span>
+										Mensajes</a></li>
+										<li class="divider"></li>
+										<li><a href="/logout">Cerrar sesión</a></li>
+									</ul>
+								</li>
+							</ul>
 						</div>
 					</div>
-
-					<ul class="nav navbar-nav">
-	<!-- 					<li class="active"><a href="#"> Tienes <span -->
-	<!-- 							class="badge">99</span> créditos -->
-						<li>
-							<p th:switch="${#httpServletRequest.remoteUser}" class="navbar-btn">
-								<a th:case="null" href="/login" class="btn btn-info"
-								th:text="#{sell.button}">  Sell </a>
-								<a th:case="*" href="/elovendo/add_item.html" class="btn btn-info"
-								th:text="#{sell.button}">  Sell </a>
-							</p>
-						</li>
-					</ul>
 				</div>
 			</div>
 			<!-- /.navbar-collapse -->

@@ -29,6 +29,10 @@ color: #C09853;
 color: #3A87AD;
 }
 
+.bs-callout-geo h4 {
+color: #564157;
+}
+
 .bs-callout-danger {
 background-color: #fcf2f2;
 border-color: #d9534f;
@@ -40,6 +44,11 @@ border-color: #f0ad4e;
 .bs-callout-info {
 background-color: #f0f7fd;
 border-color: #5bc0de;
+}
+
+.bs-callout-geo {
+background-color: #d8c2d8;
+border-color: #a97baa;
 }
 
 .bs-callout-success {
@@ -90,4 +99,12 @@ color: #3A87AD;
 .bs-callout-success h5,
 .bs-callout-success h6 {
 color: #3C763D;
+}
+
+/********************************************************/
+/* Label												*/
+/********************************************************/
+
+.label-rep {
+  background-color: #AE87AF;
 }
