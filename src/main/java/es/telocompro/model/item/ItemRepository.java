@@ -168,10 +168,14 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     
     @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
     		+ "OR i.subCategory.category.categoryName = :subCategoryName) "
-    		+ "AND i.province.provinceName = :province AND endDate > NOW() ORDER BY startdate")
+    		+ "AND endDate > NOW() ORDER BY startdate")
     Page<Item> findByParams(@Param("title") String title, 
-    		@Param("subCategoryName") String subCategory, @Param("province") String province, Pageable pageable);
+    		@Param("subCategoryName") String subCategory, Pageable pageable);
     
+//    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND endDate > NOW() AND "
+//    		+ "(i.subCategory.subCategoryName = :cat OR i.subCategory.category.categoryName = :cat) AND "
+//    		+ "(6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :d "
+//    		+ "ORDER BY startdate")
     @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
     		+ "OR i.subCategory.category.categoryName = :subCategoryName) "
     		+ "AND endDate > NOW() "
@@ -181,10 +185,10 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     		@Param("lat") double latitude, @Param("lng") double longitude,
     		@Param("d") double distance, Pageable pageable);
     
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND i.province.provinceName = :province "
-    		+ "AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findByParamsWithProvince(@Param("title") String title, 
-    		@Param("province") String province, Pageable pageable);
+//    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND i.province.provinceName = :province "
+//    		+ "AND endDate > NOW() ORDER BY startdate")
+//    Page<Item> findByParamsWithProvince(@Param("title") String title, 
+//    		@Param("province") String province, Pageable pageable);
 
     /**/
     @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND endDate > NOW() "
@@ -202,11 +206,10 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     		Pageable pageable);
     
     @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
-    		+ "OR i.subCategory.category.categoryName = :subCategoryName) "
-    		+ "AND i.province.provinceName = :province AND prize >= :prizeMin AND endDate > NOW() ORDER BY startdate")
+    		+ "OR i.subCategory.category.categoryName = :subCategoryName) AND prize >= :prizeMin "
+    		+ "AND endDate > NOW() ORDER BY startdate")
     Page<Item> findByParamsMin(@Param("title") String title, 
-    		@Param("subCategoryName") String subCategory, @Param("province") String province,
-    		@Param("prizeMin") BigDecimal prizeMin, Pageable pageable);
+    		@Param("subCategoryName") String subCategory, @Param("prizeMin") BigDecimal prizeMin, Pageable pageable);
     
     @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
     		+ "OR i.subCategory.category.categoryName = :subCategoryName) AND prize >= :prizeMin AND endDate > NOW() "
@@ -217,10 +220,10 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     		@Param("lng") double longitude, @Param("d") double distance,
     		@Param("prizeMin") BigDecimal prizeMin, Pageable pageable);
     
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND i.province.provinceName = :province "
-    		+ "AND prize >= :prizeMin AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findByParamsWithProvinceMin(@Param("title") String title, @Param("province") String province,
-    		@Param("prizeMin") BigDecimal prizeMin, Pageable pageable);
+//    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND prize >= :prizeMin AND "
+//    		+ "endDate > NOW() ORDER BY startdate")
+//    Page<Item> findByParamsWithProvinceMin(@Param("title") String title, 
+//    		@Param("prizeMin") BigDecimal prizeMin, Pageable pageable);
     
     @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND prize >= :prizeMin AND endDate > NOW() "
     		+ "AND (6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :d "
@@ -237,15 +240,13 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     
     @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
     		+ "OR i.subCategory.category.categoryName = :subCategoryName) "
-    		+ "AND i.province.provinceName = :province AND prize <= :prize AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findByParamsMax(@Param("title") String title, 
-    		@Param("subCategoryName") String subCategory, @Param("province") String province,
+    		+ "AND prize <= :prize AND endDate > NOW() ORDER BY startdate")
+    Page<Item> findByParamsMax(@Param("title") String title, @Param("subCategoryName") String subCategory, 
     		@Param("prize") BigDecimal prize, Pageable pageable);
     
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% "
-    		+ "AND i.province.provinceName = :province AND prize <= :prize AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findByParamsWithProvinceMax(@Param("title") String title, @Param("province") String province,
-    		@Param("prize") BigDecimal prize, Pageable pageable);
+//    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND prize <= :prize AND endDate > NOW() ORDER BY startdate")
+//    Page<Item> findByParamsWithProvinceMax(@Param("title") String title, 
+//    		@Param("prize") BigDecimal prize, Pageable pageable);
     
     @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
     		+ "OR i.subCategory.category.categoryName = :subCategoryName) "
@@ -255,10 +256,8 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     
     @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
     		+ "OR i.subCategory.category.categoryName = :subCategoryName) "
-    		+ "AND i.province.provinceName = :province AND prize >= :prizeMin AND prize <= :prizeMax "
-    		+ "AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findByParamsMinMax(@Param("title") String title, 
-    		@Param("subCategoryName") String subCategory, @Param("province") String province,
+    		+ "AND prize >= :prizeMin AND prize <= :prizeMax AND endDate > NOW() ORDER BY startdate")
+    Page<Item> findByParamsMinMax(@Param("title") String title, @Param("subCategoryName") String subCategory,
     		@Param("prizeMin") BigDecimal prizeMin, @Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
     
     @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
@@ -271,11 +270,11 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     		@Param("lng") double longitude, @Param("d") double distance,
     		@Param("prizeMin") BigDecimal prizeMin, @Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
     
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% "
-    		+ "AND i.province.provinceName = :province AND prize >= :prizeMin AND prize <= :prizeMax "
-    		+ "AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findByParamsWithProvinceMinMax(@Param("title") String title, @Param("province") String province,
-    		@Param("prizeMin") BigDecimal prizeMin, @Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
+//    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% "
+//    		+ "AND i.province.provinceName = :province AND prize >= :prizeMin AND prize <= :prizeMax "
+//    		+ "AND endDate > NOW() ORDER BY startdate")
+//    Page<Item> findByParamsWithProvinceMinMax(@Param("title") String title, @Param("province") String province,
+//    		@Param("prizeMin") BigDecimal prizeMin, @Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
     
     @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% "
     		+ "AND prize >= :prizeMin AND prize <= :prizeMax AND endDate > NOW() "

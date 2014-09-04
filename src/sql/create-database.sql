@@ -3,10 +3,10 @@
 ---------------------------------------------------
 
 -- PROVINCE
-INSERT INTO province VALUES (1, 'A Coruña');
-INSERT INTO province VALUES (2, 'Barcelona');
-INSERT INTO province VALUES (3, 'Madrid');
-INSERT INTO province VALUES (4, 'Lugo');
+--INSERT INTO province VALUES (1, 'A Coruña');
+--INSERT INTO province VALUES (2, 'Barcelona');
+--INSERT INTO province VALUES (3, 'Madrid');
+--INSERT INTO province VALUES (4, 'Lugo');
 
 
 -- ROLES
@@ -14,9 +14,9 @@ INSERT INTO province VALUES (4, 'Lugo');
 INSERT INTO role VALUES (1, 'ROLE_USER');
 
 -- USER
--- prvince, avatar uservalue, points, registerDate, roleid, you're welcome
-INSERT INTO userprofile VALUES (1, 'frostering', 'passwordA1', 'Charlie', 'Harper', 'charlie address', 'charliephone', 'charlie@email.es', 1, 'imgs/avatars/2', 0, 0, NOW(), 1, true, NULL);
-INSERT INTO userprofile VALUES (2, 'pepito', 'passwordA1', 'Pepe', 'Gotera', 'charlie address', 'charliephone', 'charlie@email.es', 1, 'imgs/avatars/2', 0, 0, NOW(), 1, true, NULL);
+-- avatar uservalue, points, registerDate, roleid, you're welcome
+INSERT INTO userprofile VALUES (1, 'frostering', 'passwordA1', 'Charlie', 'Harper', 'charlie address', 'charliephone', 'charlie@email.es', 'imgs/avatars/2', 0, 0, NOW(), 1, true, NULL);
+INSERT INTO userprofile VALUES (2, 'pepito', 'passwordA1', 'Pepe', 'Gotera', 'charlie address', 'charliephone', 'charlie@email.es', 'imgs/avatars/2', 0, 0, NOW(), 1, true, NULL);
 
 -- CATEGORY
 

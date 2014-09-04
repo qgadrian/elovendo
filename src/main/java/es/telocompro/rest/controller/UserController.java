@@ -1,45 +1,28 @@
 package es.telocompro.rest.controller;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import es.telocompro.model.item.Item;
-import es.telocompro.model.item.ItemRepository;
-import es.telocompro.model.province.Province;
 import es.telocompro.model.user.User;
-import es.telocompro.model.user.UserRepository;
 import es.telocompro.rest.controller.exception.LoginNotAvailableException;
 import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
 import es.telocompro.rest.controller.exception.SubCategoryNotFoundException;
 import es.telocompro.rest.controller.exception.UserNotFoundException;
 import es.telocompro.service.exception.InvalidItemNameMinLenghtException;
 import es.telocompro.service.item.ItemService;
-import es.telocompro.service.province.ProvinceService;
 import es.telocompro.service.user.UserService;
 import es.telocompro.util.Constant;
-import es.telocompro.util.IOUtil;
-
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.engine.jdbc.LobCreator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.http.HttpStatus;
-import org.springframework.orm.hibernate3.SpringSessionContext;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.sql.Blob;
-import java.util.ArrayList;
-import java.util.List;
-
-import javassist.ClassPath;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by @adrian on 14/06/14. All rights reserved.
@@ -125,7 +108,7 @@ public class UserController {
 		}
 		
 		return userService.updateUser(userId, password, firstname, lastname,
-				address, phone, email, provinceName, avatarBytes);
+				address, phone, email, avatarBytes);
 	}
 	
 	@RequestMapping(value = "delete/{userId}", method = RequestMethod.DELETE)
@@ -149,10 +132,9 @@ public class UserController {
 	// TODO: featured, highlight... etc...
 	@RequestMapping(value = "items/{username}/item", method = RequestMethod.POST)
 	public Item addItem(@PathVariable("username") String userName,
-			@RequestParam("subcategory") String subCategoryName,
+			@RequestParam("subcategory") double subCategoryId,
 			@RequestParam("title") String title,
 			@RequestParam("description") String description,
-			@RequestParam("province") String provinceName,
 			@RequestParam(value="featured", required=false, defaultValue="false") boolean featured,
 			@RequestParam(value="highlight", required=false, defaultValue="false") boolean highlight,
 			@RequestParam(value="latitude", required=false, defaultValue="0") String latitude,
@@ -173,8 +155,8 @@ public class UserController {
 //		Point location = null; //TODO
 //				new Point(Double.valueOf(latitude), Double.valueOf(longitude));
 		
-		return itemService.addItem(userName, subCategoryName, title,
-				description, provinceName, prize, imgBytes, null, null, null, "youtubeVideo", featured, highlight, latitude, longitude);
+		return itemService.addItem(userName, (long) subCategoryId, title, description, prize, 
+				imgBytes, null, null, null, "youtubeVideo", featured, highlight, latitude, longitude);
 	}
 
 	/**

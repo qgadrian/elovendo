@@ -19,12 +19,12 @@
 ---
 
 -- PROVINCE
-CREATE TABLE province (
-	provinceId BIGINT NOT NULL AUTO_INCREMENT,
-	provinceName VARCHAR(20),
-	CONSTRAINT pk_provinceId PRIMARY KEY (provinceId),
-	CONSTRAINT province_u_provinceName UNIQUE(provinceName)
-);
+--CREATE TABLE province (
+	--provinceId BIGINT NOT NULL AUTO_INCREMENT,
+	--provinceName VARCHAR(20),
+	--CONSTRAINT pk_provinceId PRIMARY KEY (provinceId),
+	--CONSTRAINT province_u_provinceName UNIQUE(provinceName)
+--);
 
 -- ROLE
 
@@ -46,7 +46,6 @@ CREATE TABLE province (
 		  address VARCHAR(100),
 		  phone VARCHAR(20),
 		  email VARCHAR(255) NOT NULL,
-		  provinceId BIGINT NOT NULL,
 		  avatar VARCHAR(255),
 		  userValue INT NOT NULL DEFAULT 0,
 		  points INT NOT NULL DEFAULT 0,
@@ -56,8 +55,6 @@ CREATE TABLE province (
 		  sign_in_provider VARCHAR(20),
 		  CONSTRAINT pk_userid PRIMARY KEY (userid),
 		  CONSTRAINT u_login UNIQUE(login),
-		  CONSTRAINT fk_user_provinceId FOREIGN KEY (provinceId) REFERENCES province(provinceId) 
-		  ON UPDATE CASCADE ON DELETE CASCADE,
 		  CONSTRAINT fk_user_roleid FOREIGN KEY (roleid) REFERENCES role(roleid) ON UPDATE CASCADE ON DELETE CASCADE,
 		  CONSTRAINT check_votespositive CHECK (votespositive > 0),
 		  CONSTRAINT check_votesnegative CHECK (votesnegative > 0),
@@ -94,7 +91,6 @@ CREATE TABLE province (
     	    subcategoryid BIGINT NOT NULL,
     	    title VARCHAR(40) NOT NULL,
     	    description TEXT NOT NULL,
-    	    provinceId BIGINT NOT NULL,
     	    prize DECIMAL(6,2) NOT NULL,
     	    startdate DATETIME NOT NULL,
     	    endDate DATETIME NOT NULL,
@@ -105,13 +101,12 @@ CREATE TABLE province (
     	    youtubeVideo VARCHAR(255),
     	    featured BOOLEAN NOT NULL,
     	    highlight BOOLEAN NOT NULL,
-    	    latitude TEXT NOT NULL,
-    	    longitude TEXT NOT NULL,
-    	    cosRadLat FLOAT NOT NULL,
-    	    sinRadLat FLOAT NOT NULL,
-    	    radLng FLOAT NOT NULL,
+    	    latitude DOUBLE NOT NULL,
+    	    longitude DOUBLE NOT NULL,
+    	    cosRadLat DOUBLE NOT NULL,
+    	    sinRadLat DOUBLE NOT NULL,
+    	    radLng TEXT NOT NULL,
     	    CONSTRAINT pk_item PRIMARY KEY (itemid),
-    	    CONSTRAINT fk_item_provinceId FOREIGN KEY (provinceId) REFERENCES province(provinceId) ON UPDATE CASCADE ON DELETE CASCADE,
     	    CONSTRAINT fk_item_userid FOREIGN KEY (userid) REFERENCES userprofile(userid) ON UPDATE CASCADE ON DELETE CASCADE,
     	    CONSTRAINT fk_item_subcategoryid FOREIGN KEY (subcategoryid) REFERENCES subcategory(subcategoryid) ON UPDATE CASCADE ON DELETE CASCADE
     	);

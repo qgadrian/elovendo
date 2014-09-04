@@ -52,6 +52,15 @@
 <script src="/js/richtext/bootstrap-wysihtml5.js"></script> <!-- wysihtml5 parser rules -->
 <link href="/css/bootstrap-wysihtml5.css" media="all" rel="stylesheet" type="text/css" />
 
+<!-- dependent dropdown -->
+<link href="/css/dependent-dropdown.min.css" media="all" rel="stylesheet" type="text/css" />
+<script src="/js/dependent-dropdown.min.js" type="text/javascript"></script>
+
+<!--  geo -->
+<script src="/js/geo.js"></script>
+<!-- Google autocomplete  -->
+<!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;libraries=places"></script> -->
+
 <!-- <script src="/js/initAddItemPage.js"></script> Library -->
 
 <!-- Bootstrap switch -->
@@ -60,7 +69,7 @@
 
 </head>
 
-<body onload="initialize()">
+<body onload="initialize(); initAutoComplete();">
 
 	<noscript>&lt;div class="alert alert-danger"&gt;You must
 		enable Javascript on your browser for the site to work optimally and
@@ -122,20 +131,26 @@
 			<div class="form-group">
 				<label for="category" class="col-sm-2 control-label">Categoría</label>
 				<div class="col-sm-10">
-					<select class="form-control" th:value="${categoryName}" name="categoryName">
+					<select id="category" class="form-control" th:value="${categoryName}" name="categoryName">
 					  <option th:each="category : ${categories}" 
-					          th:value="${category.categoryName}" 
+					          th:value="${category.categoryId}" 
 					          th:text="${category.categoryName}">Category</option>
 					</select>
 				</div>
+<!-- 					<select id="category" class="depdrop" depends="['category']" url="www.elovendo.com/bazaar/getsubs"> -->
+					
+<!-- 					</select> -->
 			</div>
 			<div class="form-group">
 				<label for="subCategory" class="col-sm-2 control-label">SubCategoría</label>
 				<div class="col-sm-10">
-					<select class="form-control" th:value="${subCategoryName}" name="subCategoryName">
-					  <option th:each="subCategory : ${subCategories}" 
-					          th:value="${subCategory.subCategoryName}" 
-					          th:text="${subCategory.subCategoryName}">Province</option>
+<!-- 					<select class="form-control" th:value="${subCategoryName}" name="subCategoryName"> -->
+<!-- 					  <option th:each="subCategory : ${subCategories}"  -->
+<!-- 					          th:value="${subCategory.subCategoryName}"  -->
+<!-- 					          th:text="${subCategory.subCategoryName}">Province</option> -->
+<!-- 					</select> -->
+					<select id="subCategory" class="form-control" name="subCategoryName">
+						
 					</select>
 				</div>
 			</div>
@@ -175,18 +190,30 @@
 					name="i3" accept=".jpg, .jpeg"/>
 				</div>
 			</div>
+			<div><h3>Localización</h3><hr class="colorgraph" /></div>
 			<div class="bs-callout bs-callout-geo">
 				<h4><strong>Geolocaliza</strong> tu anuncio</h4>
-				<p style="width: 80%;">Indica donde se encuentra tu artículo, puedes indicar un punto exacto o un punto
-				cualquiera en una zona determinada. 
-				Puedes estar tranquil@, ya que en tu anuncio se <strong>mostrará un área aproximada</strong>, 
-				en ningún caso se proporcionará ninguna información específica o personal.</p>
+				<p style="width: 80%;">Indica donde se encuentra tu artículo, puedes hacer un click en un punto exacto,
+				 marcar una zona determinada, o escribir en el campo de texto donde estará ubicado.
+				 tu anuncio.</p>
+				<p>Puedes estar tranquil@, ya que en tu anuncio siempre se <strong>mostrará en un área aproximada</strong>, 
+				 nunca se proporcionará ninguna información específica o personal.</p>
 				<p>De esta manera los usuarios de la web o aplicación móvil podrán <strong>acceder con más facilidad</strong> 
 				a tu anuncio, además de otras muchas ventajas.</p>
-				<p>Esta opción es <strong>gratuita</strong>.</p>
-				<div class ="pull-right has-success" style="margin-top:-70px;">
+				<div>
 					<input type="hidden" id="latitude" name="lat" />
 					<input type="hidden" id="longitude" name="lng" />
+				</div>
+			</div>
+			<!-- geo -->
+			<div class="row">
+				<div class="col-xs-12 col-md-12">
+					<div class="form-group">
+						<label for="exampleInputEmail1">Mi anuncio estará en...</label> <input
+							class="form-control" id="autocomplete" placeholder="Puedes hacer click en el mapa o escribirlo aquí..."
+							type="text"> <input type="hidden" id="lat" name="lat"
+							value="0" /> <input type="hidden" id="lng" name="lng" value="0" />
+					</div>
 				</div>
 			</div>
 			<!-- maps -->
@@ -326,73 +353,91 @@
 // 				document.getElementById("map_canvas").style.display = 'none';
 // 			}
 // 		});
+
+		var p = "http://www.elovendo.com/bazaar/";
+		var suf = "getsubs/";
+		$('#category').change( function() {
+			var s = $(this).val();
+			console.log('selected is ' + s);
+			// clean dom
+			var mn = document.getElementById('subCategory');
+			while (mn.firstChild) mn.removeChild(mn.firstChild);
+			$.getJSON(p+suf+s, function(json) {
+				jQuery.each(json.output, function() {
+					var o = document.createElement('option');
+					o.value = this.id;
+					o.innerHTML = this.name;
+					$("#subCategory").append(o);
+				})
+			})
+		});
         </script>
         
 <!-- Google maps -->
 
 	<script type="text/javascript"
-		src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCQ-Utb1oduNieaf74WcrBdnwmVpPiJUFo&amp;sensor=TRUE">
+		src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCQ-Utb1oduNieaf74WcrBdnwmVpPiJUFo&amp;sensor=TRUE&libraries=places">
 		
 	</script>
 	<script type="text/javascript">
 // 		var map = new google.maps.LatLng(la, lo);
 // 		getLocation();
-		var loc;
-		var marker;
-		var map;
-		var la = -34.397;
-		var lo = 150.644;
+// 		var loc;
+// 		var marker;
+// 		var map;
+// 		var la = -34.397;
+// 		var lo = 150.644;
 		
-		function initialize() {
-			getLocation();
-			var mapOptions = {
-				center : new google.maps.LatLng(la, lo),
-				zoom : 1,
-				maxZoom: 18,
-				streetViewControl: false,
-				mapTypeId : google.maps.MapTypeId.ROADMAP
-			};
-			map = new google.maps.Map(
-				document.getElementById("map_canvas"), mapOptions);
+// 		function initialize() {
+// 			getLocation();
+// 			var mapOptions = {
+// 				center : new google.maps.LatLng(la, lo),
+// 				zoom : 1,
+// 				maxZoom: 18,
+// 				streetViewControl: false,
+// 				mapTypeId : google.maps.MapTypeId.ROADMAP
+// 			};
+// 			map = new google.maps.Map(
+// 				document.getElementById("map_canvas"), mapOptions);
 
-			// This event listener will call addMarker() when the map is clicked.
-			google.maps.event.addListener(map, 'click', function(event) {
-				marker.setMap(null);
-				addMarker(event.latLng);
-				document.getElementById("latitude").value = event.latLng.lat();
-				document.getElementById("longitude").value = event.latLng.lng();
-				document.getElementById('createButton').disabled = false;
-			});
-			
-			// Add a marker to the map and push to the array.
-			  function addMarker(location) {
-			    marker = new google.maps.Marker({
-			      position: location,
-			      map: map
-			    });
-// 			    markers.push(marker);
-			  }
-			
-			// To add the marker to the map, use the 'map' property
-// 			var marker = new google.maps.Marker({
-// 				position: coorLang,
-// 				map: map,
-// 				title:"Localización"
+// 			// This event listener will call addMarker() when the map is clicked.
+// 			google.maps.event.addListener(map, 'click', function(event) {
+// 				marker.setMap(null);
+// 				addMarker(event.latLng);
+// 				document.getElementById("latitude").value = event.latLng.lat();
+// 				document.getElementById("longitude").value = event.latLng.lng();
+// 				document.getElementById('createButton').disabled = false;
 // 			});
-			var marker = new google.maps.Marker();
-		}
+			
+// 			// Add a marker to the map and push to the array.
+// 			  function addMarker(location) {
+// 			    marker = new google.maps.Marker({
+// 			      position: location,
+// 			      map: map
+// 			    });
+// // 			    markers.push(marker);
+// 			  }
+			
+// 			// To add the marker to the map, use the 'map' property
+// // 			var marker = new google.maps.Marker({
+// // 				position: coorLang,
+// // 				map: map,
+// // 				title:"Localización"
+// // 			});
+// 			var marker = new google.maps.Marker();
+// 		}
 		
-		function getLocation() {
-			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(getPosition);
-			}
-		}
+// 		function getLocation() {
+// 			if (navigator.geolocation) {
+// 				navigator.geolocation.getCurrentPosition(getPosition);
+// 			}
+// 		}
 		
-		function getPosition(position) {
-			loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-			map.setCenter(loc);
-			map.setZoom(13);
-		}
+// 		function getPosition(position) {
+// 			loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+// 			map.setCenter(loc);
+// 			map.setZoom(13);
+// 		}
 	</script>
 
 </body>

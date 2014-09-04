@@ -1,7 +1,6 @@
 package es.telocompro.service.item;
 
 import es.telocompro.model.item.Item;
-import es.telocompro.model.province.Province;
 import es.telocompro.rest.controller.exception.ItemNotFoundException;
 import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
 import es.telocompro.rest.controller.exception.SubCategoryNotFoundException;
@@ -41,8 +40,8 @@ public interface ItemService {
      * @throws SubCategoryNotFoundException
      * @throws ProvinceNotFoundException
      */
-    public Item addItem(String userName, String subCategoryName, String title, String description, 
-    		String provinceName, double prize, byte[] mainImage, byte[] image1, byte[] image2,
+    public Item addItem(String userName, long subCategoryId, String title, String description, 
+    		double prize, byte[] mainImage, byte[] image1, byte[] image2,
     		byte[] image3, String youtubeVideo, boolean featured, boolean highlight, String latitude, String longitude)
     				throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException, 
     				ProvinceNotFoundException;
@@ -61,7 +60,7 @@ public interface ItemService {
      * @throws SubCategoryNotFoundException
      * @throws ProvinceNotFoundException
      */
-    public Item addItem(Item item, String subCategoryName, String provinceName, byte[] mainImage,
+    public Item addItem(Item item, long subCategoryName, byte[] mainImage,
     		byte[] image1, byte[] image2, byte[] image3, boolean featured, boolean highlight) 
     		throws InvalidItemNameMinLenghtException, UserNotFoundException, 
     		SubCategoryNotFoundException, ProvinceNotFoundException;
@@ -112,45 +111,45 @@ public interface ItemService {
     public Page<Item> getAllItemsByCategory(String categoryName, int prizeMin, int prizeMax, 
     		int page, int size);
 
-    /**
-     * Finds all items from a subCategory
-     * @param subCategoryName
-     * @deprecated Use getAllItemsBySubCategory(String subCategoryName, int prizeMin, 
-     * int prizeMax, int page, int size) instead
-     * @return
-     */
-    @Deprecated
-    public Page<Item> getAllItemsBySubCategory(String subCategoryName, int page, int size);
-    
-    /**
-     * Finds all items from a subCategory
-     * @param subCategoryName SubCategory name
-     * @param prizeMin Minimum prize
-     * @param prizeMax Maximum prize
-     * @param page Page number
-     * @param size Page size
-     * @return Item page
-     */
-    @Deprecated
-    public Page<Item> getAllItemsBySubCategory(String subCategoryName, int prizeMin, int prizeMax, 
-    		int page, int size);
-    
-    /**
-     * Get all items using parameters
-     * @param title
-     * @param subCategory
-     * @param province
-     * @param dis Distance to item
-     * @param location {LATITUDE, LONGITUDE}
-     * @param prizeMin
-     * @param prizeMax
-     * @param page
-     * @param size
-     * @return
-     */
-    @Deprecated
-    public Page<Item> getItemByParams(String title, String subCategory, String province,
-    		int prizeMin, int prizeMax, int page, int size);
+//    /**
+//     * Finds all items from a subCategory
+//     * @param subCategoryName
+//     * @deprecated Use getAllItemsBySubCategory(String subCategoryName, int prizeMin, 
+//     * int prizeMax, int page, int size) instead
+//     * @return
+//     */
+//    @Deprecated
+//    public Page<Item> getAllItemsBySubCategory(String subCategoryName, int page, int size);
+//    
+//    /**
+//     * Finds all items from a subCategory
+//     * @param subCategoryName SubCategory name
+//     * @param prizeMin Minimum prize
+//     * @param prizeMax Maximum prize
+//     * @param page Page number
+//     * @param size Page size
+//     * @return Item page
+//     */
+//    @Deprecated
+//    public Page<Item> getAllItemsBySubCategory(String subCategoryName, int prizeMin, int prizeMax, 
+//    		int page, int size);
+//    
+//    /**
+//     * Get all items using parameters
+//     * @param title
+//     * @param subCategory
+//     * @param province
+//     * @param dis Distance to item
+//     * @param location {LATITUDE, LONGITUDE}
+//     * @param prizeMin
+//     * @param prizeMax
+//     * @param page
+//     * @param size
+//     * @return
+//     */
+//    @Deprecated
+//    public Page<Item> getItemByParams(String title, String subCategory, String province,
+//    		int prizeMin, int prizeMax, int page, int size);
     
     /**
      * Get all items using parameters

@@ -116,7 +116,8 @@ public class ItemController {
     	String[] filterParams = filter.split(",");
     	
     	//TODO: Maybe could be better a query with the params in filter?
-    	Page<Item> p = itemService.getAllItemsBySubCategory(subCategoryName, prizeMin, prizeMax, page, size);
+//    	Page<Item> p = itemService.getAllItemsBySubCategory(subCategoryName, prizeMin, prizeMax, page, size);
+    	Page<Item> p = null;
     	List<Item> list = p.getContent();
 
     	// Obtain the desired page and format a JSON with data
@@ -161,8 +162,8 @@ public class ItemController {
     				itemJsonObject.put("title", item.getTitle()); break;
     			case "description": 
     				itemJsonObject.put("description", item.getDescription()); break;
-    			case "province": 
-    				itemJsonObject.put("province", item.getProvince().getProvinceName()); break;
+//    			case "province": 
+//    				itemJsonObject.put("province", item.getProvince().getProvinceName()); break;
     			case "prize": 
     				itemJsonObject.put("prize", item.getPrize()); break;
     			case "userName": 
@@ -195,7 +196,7 @@ public class ItemController {
     	itemJsonObject.put("itemid", item.getItemId());
 		itemJsonObject.put("title", item.getTitle());
 		itemJsonObject.put("description", item.getDescription());
-		itemJsonObject.put("province", item.getProvince().getProvinceName());
+//		itemJsonObject.put("province", item.getProvince().getProvinceName());
 		itemJsonObject.put("prize", item.getPrize());
 		itemJsonObject.put("userName", item.getUser().getLogin());
 		itemJsonObject.put("profilePic", 

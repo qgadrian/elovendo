@@ -32,6 +32,11 @@ public class CategoryServiceImpl implements CategoryService {
     public Iterable<SubCategory> getAllSubCatByCategoryIdOrderBySubCatId(String categoryName) {
         return categoryRepository.findAllSubCategoryByCategoryName(categoryName);
     }
+    
+    @Override
+    public Iterable<SubCategory> getAllSubCatByCategoryId(long categoryId) {
+    	return subCategoryRepository.findAllSubCategoriesByCategoryId(categoryId);
+    }
 
 	@Override
 	public SubCategory getSubCategoryByName(String subCategoryName) {
@@ -51,5 +56,10 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public List<SubCategory> findAllSubCategoriesFromSubCategoryName(String subCategoryName) {
 		return categoryRepository.findAllSubCategoriesFromSubCategoryName(subCategoryName);
+	}
+
+	@Override
+	public SubCategory findSubCategoryBySubCategoryId(long subCategoryId) {
+		return subCategoryRepository.findOne(subCategoryId);
 	}
 }

@@ -6,11 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,15 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.collections.IteratorUtils;
-import org.apache.commons.lang.CharEncoding;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -39,23 +30,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
-import org.crsh.console.jline.internal.Log;
 import org.elasticsearch.common.Strings;
 import org.owasp.html.HtmlPolicyBuilder;
 import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.FormHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -63,36 +44,25 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.telocompro.model.item.Item;
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.subcategory.SubCategory;
-import es.telocompro.model.province.Province;
 import es.telocompro.model.user.User;
-import es.telocompro.rest.MainController;
 import es.telocompro.rest.controller.exception.InsufficientPointsException;
 import es.telocompro.rest.controller.exception.LoginNotAvailableException;
 import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
 import es.telocompro.rest.controller.exception.PurchaseDuplicateException;
-import es.telocompro.rest.controller.exception.PurchaseNotFoundException;
 import es.telocompro.rest.controller.exception.SubCategoryNotFoundException;
 import es.telocompro.rest.controller.exception.UserNotFoundException;
-import es.telocompro.rest.web.validator.FormValidator;
 import es.telocompro.service.exception.InvalidItemNameMinLenghtException;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.item.category.CategoryService;
-import es.telocompro.service.province.ProvinceService;
 import es.telocompro.service.purchase.PurchaseService;
 import es.telocompro.service.user.UserService;
 import es.telocompro.util.Constant;
@@ -108,8 +78,6 @@ public class UserWebController {
 	private UserService userService;
 	@Autowired
 	private ItemService itemService;
-	@Autowired
-	private ProvinceService provinceService;
 	@Autowired
 	private PurchaseService purchaseService;
 	@Autowired
@@ -142,11 +110,6 @@ public class UserWebController {
 		model.addAttribute("user", new User());
 		model.addAttribute("provinceName", new String());
 
-		@SuppressWarnings("unchecked")
-		List<Province> provinces = IteratorUtils.toList(provinceService
-				.findAllProvinces().iterator());
-		model.addAttribute("provinces", provinces);
-
 		return "elovendo/user/add_user";
 	}
 
@@ -154,11 +117,6 @@ public class UserWebController {
 	public String quickAddUserPage(Model model) {
 		model.addAttribute("user", new User());
 		model.addAttribute("provinceName", new String());
-
-		@SuppressWarnings("unchecked")
-		List<Province> provinces = IteratorUtils.toList(provinceService
-				.findAllProvinces().iterator());
-		model.addAttribute("provinces", provinces);
 
 		return "elovendo/user/quick_add_user";
 	}
@@ -236,11 +194,6 @@ public class UserWebController {
 			// logger.debug("Form has errors");
 			System.out.println("form has errores");
 
-			@SuppressWarnings("unchecked")
-			List<Province> provinces = IteratorUtils.toList(provinceService
-					.findAllProvinces().iterator());
-			model.addAttribute("provinces", provinces);
-
 			// result.addError(new FieldError("registrationform", "login",
 			// "rejected stuff"));
 			return "elovendo/user/add_user";
@@ -282,10 +235,6 @@ public class UserWebController {
 		
 		model.addAttribute("user", user);
 
-		List<Province> provinces = IteratorUtils.toList(provinceService
-				.findAllProvinces().iterator());
-		model.addAttribute("provinces", provinces);
-
 		List<Category> categories = IteratorUtils.toList(categoryService
 				.findAllCategories().iterator());
 		model.addAttribute("categories", categories);
@@ -302,9 +251,8 @@ public class UserWebController {
 			BindingResult result,
 			@RequestParam(value = "lat", required=true) String lat,
 			@RequestParam(value = "lng", required=true) String lng,
-			@ModelAttribute(value = "provinceName") String provinceName,
 			@ModelAttribute(value = "categoryName") String categoryName,
-			@ModelAttribute(value = "subCategoryName") String subCategoryName,
+			@ModelAttribute(value = "subCategoryName") long subCategoryId,
 			@ModelAttribute(value = "featured") String _featured,
 			@ModelAttribute(value = "highlight") String _highlight,
 			@ModelAttribute(value = "autoRenew") String _autoRenew,
@@ -332,10 +280,6 @@ public class UserWebController {
 				logger.warn("because: " + e.getDefaultMessage());
 			};
 
-			@SuppressWarnings("unchecked")
-			List<Province> provinces = IteratorUtils.toList(provinceService
-					.findAllProvinces().iterator());
-			model.addAttribute("provinces", provinces);
 			@SuppressWarnings("unchecked")
 			List<Category> categories = IteratorUtils.toList(categoryService
 					.findAllCategories().iterator());
@@ -370,8 +314,8 @@ public class UserWebController {
 				item.setYoutubeVideo(wellYoutubeVideo);
 			}
 			
-			item.setLatitude(lat);
-			item.setLongitude(lng);
+			item.setLatitude(Double.parseDouble(lat));
+			item.setLongitude(Double.parseDouble(lng));
 
 			byte[] mainImageBytes = null;
 			byte[] image1Bytes = null;
@@ -410,7 +354,7 @@ public class UserWebController {
 				userService.updateUser(user);
 			}
 
-			itemService.addItem(item, subCategoryName, provinceName, mainImageBytes, image1Bytes, image2Bytes, 
+			itemService.addItem(item, subCategoryId, mainImageBytes, image1Bytes, image2Bytes, 
 					image3Bytes, featured, highlight);
 
 			return "elovendo/item/item_create_successful";

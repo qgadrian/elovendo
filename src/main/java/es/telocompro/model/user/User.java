@@ -23,7 +23,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import es.telocompro.model.province.Province;
 import es.telocompro.model.user.role.Role;
 import es.telocompro.util.Constant;
 import es.telocompro.util.SocialMediaService;
@@ -76,9 +75,9 @@ public class User implements UserDetails {
     @JoinColumn(name = "roleid")
     private Role role;
     
-    @ManyToOne(optional = false, fetch=FetchType.LAZY)
-    @JoinColumn(name = "provinceId")
-    private Province province;
+//    @ManyToOne(optional = false, fetch=FetchType.LAZY)
+//    @JoinColumn(name = "provinceId")
+//    private Province province;
     
     private boolean enabled;
 
@@ -93,7 +92,7 @@ public class User implements UserDetails {
     public User() { }
 
     public User(String login, String password, String firstName, String lastName, String address, String phone,
-                String email, Province province, String avatar, Role role, SocialMediaService signInProvider) {
+                String email, String avatar, Role role, SocialMediaService signInProvider) {
         this.login = login;
         this.password = password;
         this.firstName = firstName;
@@ -101,7 +100,7 @@ public class User implements UserDetails {
         this.address = address;
         this.phone = phone;
         this.email = email;
-        this.province = province;
+//        this.province = province;
         this.avatar = avatar;
         this.role = role;
         this.signInProvider = signInProvider;
@@ -203,13 +202,13 @@ public class User implements UserDetails {
         this.signInProvider = signInProvider;
     }
     
-	public Province getProvince() {
-		return province;
-	}
-
-	public void setProvince(Province province) {
-		this.province = province;
-	}
+//	public Province getProvince() {
+//		return province;
+//	}
+//
+//	public void setProvince(Province province) {
+//		this.province = province;
+//	}
 
     public int getUserValue() {
 		return userValue;

@@ -7,8 +7,14 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.imgscalr.Scalr;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import es.telocompro.model.item.Item;
-import es.telocompro.model.province.Province;
 import es.telocompro.model.user.User;
 import es.telocompro.model.user.UserRepository;
 import es.telocompro.model.user.role.Role;
@@ -21,17 +27,9 @@ import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
 import es.telocompro.rest.controller.exception.UserNotFoundException;
 import es.telocompro.rest.controller.exception.VoteDuplicateException;
 import es.telocompro.service.item.ItemService;
-import es.telocompro.service.province.ProvinceService;
 import es.telocompro.service.vote.VoteService;
 import es.telocompro.util.IOUtil;
 import es.telocompro.util.RoleEnum;
-
-import org.imgscalr.Scalr;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by @adrian on 17/06/14. All rights reserved.
@@ -45,8 +43,6 @@ public class UserServiceImpl implements UserService {
 	UserRepository userRepository;
 	@Autowired
 	RoleRepository roleRepository;
-	@Autowired
-	ProvinceService provinceService;
 	@Autowired
 	VoteService voteService;
 	@Autowired
@@ -64,10 +60,7 @@ public class UserServiceImpl implements UserService {
 	public User addUser(String login, String password, String firstName,
 			String lastName, String address, String phone, String email, 
 			String provinceName, byte[] avatar) 
-					throws LoginNotAvailableException, ProvinceNotFoundException {
-		
-		Province province = provinceService.findProvinceByName(provinceName);
-		if (province == null) throw new ProvinceNotFoundException(provinceName);
+					throws LoginNotAvailableException {
 		
 		if (userRepository.findByLogin(login) != null ) throw new LoginNotAvailableException(login);
 		
@@ -76,7 +69,7 @@ public class UserServiceImpl implements UserService {
 		
 		// Create user (notice the null for avatar path)
 		User user = new User(login, password, firstName, lastName, address,
-				phone, email, province, null, role, null);
+				phone, email, null, role, null);
 
 		/** SAVE AVATAR IMAGE IN THE RESOURCE FOLDER **/
 		if (avatar != null) try {
@@ -113,8 +106,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public User addUser(User user, String provinceName, byte[] profilePicBytes) throws LoginNotAvailableException,
-			ProvinceNotFoundException {
+	public User addUser(User user, String provinceName, byte[] profilePicBytes) throws LoginNotAvailableException {
 		
 //		String login = user.getLogin();
 //		
@@ -156,8 +148,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public User updateUser(long userId, String password, String firstName, String lastName,
-			String address, String phone, String email, String provinceName, 
-            byte[] avatar) throws ProvinceNotFoundException, UserNotFoundException {
+			String address, String phone, String email, byte[] avatar) throws  UserNotFoundException {
 		
 		User user = userRepository.findOne(userId);
 		
@@ -175,10 +166,7 @@ public class UserServiceImpl implements UserService {
 			user.setPhone(phone);
 		if (email != null)
 			user.setEmail(email);
-		if (provinceName != null) {
-			Province province = provinceService.findProvinceByName(provinceName);
-			user.setProvince(province);
-		}
+		
 		// TODO: Maybe check if something changed, and if not, do not call database write
 		return userRepository.save(user);
 	}

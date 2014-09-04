@@ -1,47 +1,38 @@
 package es.telocompro.service.item;
 
-import es.telocompro.model.item.Item;
-import es.telocompro.model.item.ItemRepository;
-import es.telocompro.model.item.category.CategoryRepository;
-import es.telocompro.model.item.category.subcategory.SubCategory;
-import es.telocompro.model.item.category.subcategory.SubCategoryRepository;
-import es.telocompro.model.province.Province;
-import es.telocompro.model.user.User;
-import es.telocompro.model.user.UserRepository;
-import es.telocompro.rest.controller.exception.ItemNotFoundException;
-import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
-import es.telocompro.rest.controller.exception.SubCategoryNotFoundException;
-import es.telocompro.rest.controller.exception.UserNotFoundException;
-import es.telocompro.rest.web.UserWebController;
-import es.telocompro.service.exception.InvalidItemNameMinLenghtException;
-import es.telocompro.service.item.category.CategoryService;
-import es.telocompro.service.province.ProvinceService;
-import es.telocompro.service.user.UserService;
-import es.telocompro.util.Constant;
-import es.telocompro.util.IOUtil;
-
-import org.apache.log4j.Logger;
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.imgscalr.Scalr;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
+import static es.telocompro.util.Constant.MIN_ITEM_TITLE_LENGHT;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Blob;
 import java.util.Calendar;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import static es.telocompro.util.Constant.*;
+import org.apache.log4j.Logger;
+import org.imgscalr.Scalr;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import es.telocompro.model.item.Item;
+import es.telocompro.model.item.ItemRepository;
+import es.telocompro.model.item.category.subcategory.SubCategory;
+import es.telocompro.model.user.User;
+import es.telocompro.rest.controller.exception.ItemNotFoundException;
+import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
+import es.telocompro.rest.controller.exception.SubCategoryNotFoundException;
+import es.telocompro.rest.controller.exception.UserNotFoundException;
+import es.telocompro.service.exception.InvalidItemNameMinLenghtException;
+import es.telocompro.service.item.category.CategoryService;
+import es.telocompro.service.user.UserService;
+import es.telocompro.util.Constant;
+import es.telocompro.util.IOUtil;
 
 /**
  * Created by @adrian on 17/06/14.
@@ -60,27 +51,30 @@ public class ItemServiceImpl implements ItemService {
     UserService userService;
     @Autowired
     CategoryService categoryService;
-    @Autowired
-    ProvinceService provinceService;
 
     @Override
-    public Item addItem(String userName, String subCategoryName, String title, String description, 
-    		String provinceName, double prize, byte[] mainImage, byte[] image1, byte[] image2,
-    		byte[] image3, String youtubeVideo, boolean featured, boolean highlight, String latitude, String longitude)
+    public Item addItem(String userName, long subCategoryId, String title, String description, 
+    		double prize, byte[] mainImage, byte[] image1, byte[] image2,
+    		byte[] image3, String youtubeVideo, boolean featured, boolean highlight, 
+    		String _latitude, String _longitude)
     				throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException, 
     				ProvinceNotFoundException {
     	
     	User user = userService.findUserByLogin(userName);
-    	SubCategory subCategory = categoryService.getSubCategoryByName(subCategoryName);
-        Province province = provinceService.findProvinceByName(provinceName);
+//    	SubCategory subCategory = categoryService.getSubCategoryByName(subCategoryId);
+    	SubCategory subCategory = categoryService.findSubCategoryBySubCategoryId(subCategoryId);
+//        Province province = provinceService.findProvinceByName(provinceName);
     	
     	if (title.length() < MIN_ITEM_TITLE_LENGHT) throw new InvalidItemNameMinLenghtException(title);
     	if (user == null) throw new UserNotFoundException(userName);
-    	if (subCategory == null) throw new SubCategoryNotFoundException(subCategoryName);
-    	if (province == null) throw new ProvinceNotFoundException(provinceName);
+    	if (subCategory == null) throw new SubCategoryNotFoundException(subCategoryId);
+//    	if (province == null) throw new ProvinceNotFoundEx01ception(provinceName);
+    	
+    	double latitude = Double.parseDouble(_latitude);
+    	double longitude = Double.parseDouble(_longitude);
     	
     	// create item
-        Item item = new Item(user, subCategory, title, description, province,
+        Item item = new Item(user, subCategory, title, description,
         		new BigDecimal(prize), null, null, null, null, youtubeVideo,
         		featured, highlight, latitude, longitude);
         
@@ -137,7 +131,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item addItem(Item item, String subCategoryName, String provinceName, byte[] mainImage,
+    public Item addItem(Item item, long subCategoryId, byte[] mainImage,
     		byte[] image1, byte[] image2, byte[] image3, boolean featured, boolean highlight) 
     		throws InvalidItemNameMinLenghtException, UserNotFoundException, 
     		SubCategoryNotFoundException, ProvinceNotFoundException {
@@ -147,18 +141,19 @@ public class ItemServiceImpl implements ItemService {
     	
     	item.setUser(user);
     	
-    	SubCategory subCategory = categoryService.getSubCategoryByName(subCategoryName);
-        Province province = provinceService.findProvinceByName(provinceName);
+//    	SubCategory subCategory = categoryService.getSubCategoryByName(subCategoryName);
+    	SubCategory subCategory = categoryService.findSubCategoryBySubCategoryId(subCategoryId);
+//        Province province = provinceService.findProvinceByName(provinceName);
         
         // Validation
     	if (item.getTitle().length() < MIN_ITEM_TITLE_LENGHT) 
     		throw new InvalidItemNameMinLenghtException(item.getTitle());
     	if (user == null) throw new UserNotFoundException(item.getUser().getLogin());
-    	if (subCategory == null) throw new SubCategoryNotFoundException(subCategoryName);
-    	if (province == null) throw new ProvinceNotFoundException(provinceName);
+    	if (subCategory == null) throw new SubCategoryNotFoundException(subCategoryId);
+//    	if (province == null) throw new ProvinceNotFoundException(provinceName);
         
         item.setSubCategory(subCategory);
-        item.setProvince(province);
+//        item.setProvince(province);
         item.setFeatured(featured);
         item.setHighlight(highlight);
         
@@ -234,141 +229,142 @@ public class ItemServiceImpl implements ItemService {
 				bPrizeMin, bPrizeMax, new PageRequest(page, size));
 	}
 
-    @Override
-    @Deprecated
-    public Page<Item> getAllItemsBySubCategory(String subCategoryName, int page, int size) {
-        return itemRepository.findBySubCategoryName(subCategoryName, 
-        		new PageRequest(page, size));
-    }
-    
-    /** For simplicity I will work with integers, but passing to repository BigDecimals **/
-    @Deprecated
-	@Override
-	public Page<Item> getAllItemsBySubCategory(String subCategoryName,
-			int prizeMin, int prizeMax, int page, int size) {
-		BigDecimal bPrizeMin = new BigDecimal(prizeMin);
-		BigDecimal bPrizeMax = new BigDecimal(prizeMax);
-
-		// Don't know if a negative number can break this, so I'm preventing
-		if (prizeMin < 0)
-			bPrizeMin = new BigDecimal(0);
-		// Max prize its not present
-		if (prizeMax == 0)
-			return itemRepository.findBySubCategoryNameMin(subCategoryName,
-					bPrizeMin, new PageRequest(page, size));
-		// Take care of minimum number grater than maximum number, ignoring the request
-		if (prizeMin > prizeMax)
-			return itemRepository.findBySubCategoryName(subCategoryName,
-					new PageRequest(page, size));
-		// Otherwise, use min and max prize for query
-		return itemRepository.findBySubCategoryNameMinMax(subCategoryName,
-				bPrizeMin, bPrizeMax, new PageRequest(page, size));
-	}
+//    @Override
+//    @Deprecated
+//    public Page<Item> getAllItemsBySubCategory(String subCategoryName, int page, int size) {
+//        return itemRepository.findBySubCategoryName(subCategoryName, 
+//        		new PageRequest(page, size));
+//    }
+//    
+//    /** For simplicity I will work with integers, but passing to repository BigDecimals **/
+//    @Deprecated
+//	@Override
+//	public Page<Item> getAllItemsBySubCategory(String subCategoryName,
+//			int prizeMin, int prizeMax, int page, int size) {
+//		BigDecimal bPrizeMin = new BigDecimal(prizeMin);
+//		BigDecimal bPrizeMax = new BigDecimal(prizeMax);
+//
+//		// Don't know if a negative number can break this, so I'm preventing
+//		if (prizeMin < 0)
+//			bPrizeMin = new BigDecimal(0);
+//		// Max prize its not present
+//		if (prizeMax == 0)
+//			return itemRepository.findBySubCategoryNameMin(subCategoryName,
+//					bPrizeMin, new PageRequest(page, size));
+//		// Take care of minimum number grater than maximum number, ignoring the request
+//		if (prizeMin > prizeMax)
+//			return itemRepository.findBySubCategoryName(subCategoryName,
+//					new PageRequest(page, size));
+//		// Otherwise, use min and max prize for query
+//		return itemRepository.findBySubCategoryNameMinMax(subCategoryName,
+//				bPrizeMin, bPrizeMax, new PageRequest(page, size));
+//	}
 	
-	@Override
-    public Page<Item> getItemByParams(String title, String subCategory, String province,
-    		int prizeMin, int prizeMax, int page, int size) {
-
-		// Page Request
-        PageRequest pageRequest = new PageRequest(page, size);
-        
-        BigDecimal bPrizeMin = prizeMin > 0 ? new BigDecimal(prizeMin) : null;
-		BigDecimal bPrizeMax = new BigDecimal(prizeMax);
-		
-		if (prizeMin > prizeMax || (prizeMin == 0 && prizeMax == 0))
-			if (province.equals(""))
-				return itemRepository.findByParamsWithSubCat(title, subCategory, pageRequest);
-			else 
-				if (subCategory.equals(""))
-					return itemRepository.findByParamsWithProvince(title, province, pageRequest);
-				else 
-					return itemRepository.findByParams(title, subCategory, province, pageRequest);
-		else // using minimum prize
-			if (prizeMax == 0)
-				if (province.equals(""))
-					return itemRepository.findByParamsWithSubCatMin(title, subCategory, bPrizeMin, pageRequest);
-				else 
-					if (subCategory.equals(""))
-						return itemRepository.findByParamsWithProvinceMin(title, province, bPrizeMin, pageRequest);
-					else 
-						return itemRepository.findByParamsMin(title, subCategory, province, bPrizeMin, pageRequest);
-//				return itemRepository.findByParamsMin(title, subCategory, province, bPrizeMin, pageRequest);
-			else
-				if (province.equals(""))
-					return itemRepository.findByParamsWithSubCatMinMax(title, subCategory, bPrizeMin, bPrizeMax, pageRequest);
-				else 
-					if (subCategory.equals(""))
-						return itemRepository.findByParamsWithProvinceMinMax(title, province, bPrizeMin, bPrizeMax, pageRequest);
-					else 
-						return itemRepository.findByParamsMinMax(title, subCategory, province, bPrizeMin, bPrizeMax, pageRequest);
-//				return itemRepository
-//						.findByParamsMinMax(title, subCategory, province, bPrizeMin, bPrizeMax, pageRequest);
-     			
-//     			if (prizeMax == 0)
-//     				return itemRepository.findBySubCategoryNameMin(subCategory, bPrizeMin, pageRequest);
-//     			// Take care of minimum number grater than maximum number, ignoring the request
-//     			// or if there is no prize min assigned
-//     			if (prizeMin > prizeMax || bPrizeMin == null)
-//     				if (prizeMax == 0) // Max prize its not present, do not use prize filter
-//	     				if (!subCategory.equals(""))
-//	     					if (!title.equals(""))
-//	     						if (!province.equals(""))
-//	     							return itemRepository.findByTitleAndSubCategoryAndProvince(
-//	     									title, subCategory, province, new PageRequest(page, size));
-//	     						else return itemRepository.findByTitleAndSubCategory(title, subCategory, pageRequest);
-//	     					else 
-//	     						if (!province.equals(""))
-//         							return itemRepository.findBySubCategoryAndProvince(
-//         									subCategory, province, pageRequest);
-//         						else return itemRepository.findBySubCategoryName(subCategory, pageRequest);
-//	     				else return itemRepository.findAll(pageRequest);
-//     				else // use max prize
-//     					if (!subCategory.equals(""))
-//         					if (!title.equals(""))
-//         						if (!province.equals(""))
-//         							return itemRepository.findByTitleAndSubCategoryAndProvinceMax(
-//         									title, subCategory, province, bPrizeMax, pageRequest);
-//         						else return itemRepository.findByTitleAndSubCategoryMax(
-//         								title, subCategory, bPrizeMax, pageRequest);
-//         					else
-//         						if (!province.equals(""))
-//         							return itemRepository.findBySubCategoryAndProvinceMax(
-//         									subCategory, province, bPrizeMax, pageRequest);
-//         						else return itemRepository.findBySubCategoryNameMax(subCategory, bPrizeMax, pageRequest);
-//     					else return itemRepository.findAllItemsMax(bPrizeMax, pageRequest);
-//     			// Minimum prize is present
-//     			else
-//     				if (prizeMax == 0) // Max prize its not present, use minimum only
-//     					if (!subCategory.equals(""))
-//         					if (!title.equals(""))
-//         						if (!province.equals(""))
-//         							return itemRepository.findByTitleAndSubCategoryAndProvinceMin(
-//         									title, subCategory, province, bPrizeMin, pageRequest);
-//         						else return itemRepository.findByTitleAndSubCategoryMin(
-//         								title, subCategory, bPrizeMin, pageRequest);
-//         					else
-//         						if (!province.equals(""))
-//         							return itemRepository.findBySubCategoryAndProvinceMin(
-//         									subCategory, province, bPrizeMin, pageRequest);
-//         						else return itemRepository.findBySubCategoryNameMin(subCategory, bPrizeMin, pageRequest);
-//     					else return itemRepository.findAllItemsMin(bPrizeMin, pageRequest);
-//	 				else // use min and max prize 
-//	 					if (!subCategory.equals(""))
-//         					if (!title.equals(""))
-//         						if (!province.equals("")) 
-//         							return itemRepository.findByTitleAndSubCategoryAndProvinceMinMax(
-//     									title, subCategory, province, bPrizeMin, bPrizeMax, pageRequest);
-//         						else return itemRepository.findByTitleAndSubCategoryMinMax(
-//         								title, subCategory, bPrizeMin, bPrizeMax, pageRequest);
-//         					else 
-//         						if (!province.equals(""))
-//         							return itemRepository.findBySubCategoryAndProvinceMinMax(
-//         									subCategory, province, bPrizeMin, bPrizeMax, pageRequest);
-//         						else 
-//         							return itemRepository.findBySubCategoryNameMinMax(
-//         									subCategory, bPrizeMin, bPrizeMax, pageRequest);
-//	 					else return itemRepository.findAllItemsMinMax(bPrizeMin, bPrizeMax, pageRequest);
-    }
+//	@Override
+//	@Deprecated
+//    public Page<Item> getItemByParams(String title, String subCategory, String province,
+//    		int prizeMin, int prizeMax, int page, int size) {
+//
+//		// Page Request
+//        PageRequest pageRequest = new PageRequest(page, size);
+//        
+//        BigDecimal bPrizeMin = prizeMin > 0 ? new BigDecimal(prizeMin) : null;
+//		BigDecimal bPrizeMax = new BigDecimal(prizeMax);
+//		
+//		if (prizeMin > prizeMax || (prizeMin == 0 && prizeMax == 0))
+//			if (province.equals(""))
+//				return itemRepository.findByParamsWithSubCat(title, subCategory, pageRequest);
+//			else 
+//				if (subCategory.equals(""))
+//					return itemRepository.findByParamsWithProvince(title, province, pageRequest);
+//				else 
+//					return itemRepository.findByParams(title, subCategory, province, pageRequest);
+//		else // using minimum prize
+//			if (prizeMax == 0)
+//				if (province.equals(""))
+//					return itemRepository.findByParamsWithSubCatMin(title, subCategory, bPrizeMin, pageRequest);
+//				else 
+//					if (subCategory.equals(""))
+//						return itemRepository.findByParamsWithProvinceMin(title, province, bPrizeMin, pageRequest);
+//					else 
+//						return itemRepository.findByParamsMin(title, subCategory, province, bPrizeMin, pageRequest);
+////				return itemRepository.findByParamsMin(title, subCategory, province, bPrizeMin, pageRequest);
+//			else
+//				if (province.equals(""))
+//					return itemRepository.findByParamsWithSubCatMinMax(title, subCategory, bPrizeMin, bPrizeMax, pageRequest);
+//				else 
+//					if (subCategory.equals(""))
+//						return itemRepository.findByParamsWithProvinceMinMax(title, province, bPrizeMin, bPrizeMax, pageRequest);
+//					else 
+//						return itemRepository.findByParamsMinMax(title, subCategory, province, bPrizeMin, bPrizeMax, pageRequest);
+////				return itemRepository
+////						.findByParamsMinMax(title, subCategory, province, bPrizeMin, bPrizeMax, pageRequest);
+//     			
+////     			if (prizeMax == 0)
+////     				return itemRepository.findBySubCategoryNameMin(subCategory, bPrizeMin, pageRequest);
+////     			// Take care of minimum number grater than maximum number, ignoring the request
+////     			// or if there is no prize min assigned
+////     			if (prizeMin > prizeMax || bPrizeMin == null)
+////     				if (prizeMax == 0) // Max prize its not present, do not use prize filter
+////	     				if (!subCategory.equals(""))
+////	     					if (!title.equals(""))
+////	     						if (!province.equals(""))
+////	     							return itemRepository.findByTitleAndSubCategoryAndProvince(
+////	     									title, subCategory, province, new PageRequest(page, size));
+////	     						else return itemRepository.findByTitleAndSubCategory(title, subCategory, pageRequest);
+////	     					else 
+////	     						if (!province.equals(""))
+////         							return itemRepository.findBySubCategoryAndProvince(
+////         									subCategory, province, pageRequest);
+////         						else return itemRepository.findBySubCategoryName(subCategory, pageRequest);
+////	     				else return itemRepository.findAll(pageRequest);
+////     				else // use max prize
+////     					if (!subCategory.equals(""))
+////         					if (!title.equals(""))
+////         						if (!province.equals(""))
+////         							return itemRepository.findByTitleAndSubCategoryAndProvinceMax(
+////         									title, subCategory, province, bPrizeMax, pageRequest);
+////         						else return itemRepository.findByTitleAndSubCategoryMax(
+////         								title, subCategory, bPrizeMax, pageRequest);
+////         					else
+////         						if (!province.equals(""))
+////         							return itemRepository.findBySubCategoryAndProvinceMax(
+////         									subCategory, province, bPrizeMax, pageRequest);
+////         						else return itemRepository.findBySubCategoryNameMax(subCategory, bPrizeMax, pageRequest);
+////     					else return itemRepository.findAllItemsMax(bPrizeMax, pageRequest);
+////     			// Minimum prize is present
+////     			else
+////     				if (prizeMax == 0) // Max prize its not present, use minimum only
+////     					if (!subCategory.equals(""))
+////         					if (!title.equals(""))
+////         						if (!province.equals(""))
+////         							return itemRepository.findByTitleAndSubCategoryAndProvinceMin(
+////         									title, subCategory, province, bPrizeMin, pageRequest);
+////         						else return itemRepository.findByTitleAndSubCategoryMin(
+////         								title, subCategory, bPrizeMin, pageRequest);
+////         					else
+////         						if (!province.equals(""))
+////         							return itemRepository.findBySubCategoryAndProvinceMin(
+////         									subCategory, province, bPrizeMin, pageRequest);
+////         						else return itemRepository.findBySubCategoryNameMin(subCategory, bPrizeMin, pageRequest);
+////     					else return itemRepository.findAllItemsMin(bPrizeMin, pageRequest);
+////	 				else // use min and max prize 
+////	 					if (!subCategory.equals(""))
+////         					if (!title.equals(""))
+////         						if (!province.equals("")) 
+////         							return itemRepository.findByTitleAndSubCategoryAndProvinceMinMax(
+////     									title, subCategory, province, bPrizeMin, bPrizeMax, pageRequest);
+////         						else return itemRepository.findByTitleAndSubCategoryMinMax(
+////         								title, subCategory, bPrizeMin, bPrizeMax, pageRequest);
+////         					else 
+////         						if (!province.equals(""))
+////         							return itemRepository.findBySubCategoryAndProvinceMinMax(
+////         									subCategory, province, bPrizeMin, bPrizeMax, pageRequest);
+////         						else 
+////         							return itemRepository.findBySubCategoryNameMinMax(
+////         									subCategory, bPrizeMin, bPrizeMax, pageRequest);
+////	 					else return itemRepository.findAllItemsMinMax(bPrizeMin, bPrizeMax, pageRequest);
+//    }
 	
 	@Override
     public Page<Item> getItemByParams2(String title, String subCategory, double dis, float[] location,
@@ -385,32 +381,51 @@ public class ItemServiceImpl implements ItemService {
 		
 		logger.error("dis : " + dis + " ; lat: " + lat + " ; lng: " + lng);
 		
-		if (prizeMin > prizeMax || (prizeMin == 0 && prizeMax ==0))
-			if (dis == 0)
-				return itemRepository.findByParamsWithSubCat(title, subCategory, pageRequest);
-			else 
-				if (subCategory.equals(""))
+		if (prizeMin > prizeMax || (prizeMin == 0 && prizeMax ==0)) {
+//			if (dis == 0) {
+//				return itemRepository.findByParamsWithSubCat(title, subCategory, pageRequest);
+//			}
+//			else {
+				if (dis == 0) dis = Constant.DEFAULT_RADIUS_SEARCH;
+				if (subCategory.equals("")) {
+					logger.error("using this with dis " + dis);
 					return itemRepository.findByParamsWithDistance(title, lat, lng, dis, pageRequest);
-				else 
+				}
+				else {
+					logger.error("using subcat with dis " + dis);
 					return itemRepository.findByParams(title, subCategory, lat, lng, dis, pageRequest);
-		else // using minimum prize
-			if (prizeMax == 0)
-				if (dis == 0)
+				}
+//			}
+		}
+		else { // using minimum prize
+			if (prizeMax == 0) {
+				if (dis == 0) {
 					return itemRepository.findByParamsWithSubCatMin(title, subCategory, bPrizeMin, pageRequest);
-				else 
-					if (subCategory.equals(""))
+				}
+				else { 
+					if (subCategory.equals("")) {
 						return itemRepository.findByParamsWithDistanceMin(title, lat, lng, dis, bPrizeMin, pageRequest);
-					else 
+					}
+					else { 
 						return itemRepository.findByParamsMin(title, subCategory, lat, lng, dis, bPrizeMin, pageRequest);
-			else
-				if (dis == 0)
+					}
+				}
+			}
+			else {
+				if (dis == 0) {
 					return itemRepository.findByParamsWithSubCatMinMax(title, subCategory, bPrizeMin, bPrizeMax, pageRequest);
-				else 
-					if (subCategory.equals(""))
+				}
+				else { 
+					if (subCategory.equals("")) {
 						return itemRepository.findByParamsWithDistanceMinMax(title, lat, lng, dis, bPrizeMin, bPrizeMax, pageRequest);
-					else 
+					}
+					else { 
 						return itemRepository.findByParamsMinMax(title, subCategory, lat, lng, dis, bPrizeMin, bPrizeMax, pageRequest);
-    }
+					}
+				}
+			}
+		}
+	}
 	
 	public List<Item> getRandomFeaturedItems(int maxItems, String filter) {
 		if (filter != null && filter != "")

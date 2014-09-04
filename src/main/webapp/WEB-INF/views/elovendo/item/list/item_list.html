@@ -35,14 +35,16 @@
 <!-- Styles -->
 <link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
 
-
-
 <script src="/js/filter.js"></script>
 <script src="/js/bootstrap-slider.js"></script>
+<script src="/js/geo.js"></script>
+
+<!-- Google autocomplete  -->
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;libraries=places"></script>
 
 </head>
 <!-- <body class="homepage"> -->
-<body style="background-color:#FBFAF9;" onload="getLocation()">
+<body style="background-color:#FBFAF9;" onload="getLocation(); initAutoComplete()">
 
 	<!-- Header -->
 	<div th:replace="elovendo/header"></div>
@@ -58,18 +60,19 @@
 							<hr class="colorgraph"/>
 						</div>
 				</div>
-<!-- 				<div class="row"> -->
-<!-- 					<div class="col-xs-12 col-md-12"> -->
-<!-- 						<div class="form-group"> -->
-<!--     						<label for="exampleInputEmail1">Provincia</label> -->
-<!-- 							<select id="provinceSelect" class="form-control"> -->
-<!-- 								<option value=""> Selecciona provincia </option>  -->
-<!-- 								<option th:each="province : ${provinces}" th:value="${province.provinceName}"  -->
-<!-- 								th:text="${province.provinceName}"> Province </option> -->
-<!-- 							</select> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
+				<div class="row">
+					<div class="col-xs-12 col-md-12">
+						<div class="form-group">
+							<label for="exampleInputEmail1">Buscar en...</label>
+							<form class="form-inline" name="locationForm" th:action="@{'/bazaar/' + ${url}}">
+									<input class="form-control" id="autocomplete" placeholder="..." type="text">
+									<input type="hidden" id="lat" name="lat" value="0"/>
+									<input type="hidden" id="lng" name="lng" value="0"/>
+								<button type="submit" class="btn btn-default">Buscar</button>
+							</form>
+						</div>
+					</div>
+				</div>
 				<div class="row">
 					<div class="col-xs-12 col-md-12">
 						<div class="form-group">
@@ -149,7 +152,7 @@
 							<div class="thumbnail">
 								<a th:href="@{'/bazaar/item/' + ${item.itemId}}">
 									<img data-src="holder.js/300x300" alt="..." 
-									th:src="@{'http://83.165.60.132:8080/' + ${item.mainImage200h}}"/>
+									th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}"/>
 								</a>
 								<div class="caption">
 									<h3 th:text="${item.title}">Title</h3>
@@ -177,11 +180,10 @@
 						<div th:class="${item.highlight}? 'thumbnail featuredThumbnail' : 'thumbnail'">
 							<div class="row">
 								<div class="col-xs-6 col-md-4 col-lg-4">
-									<div class="thumbnail pull-left" style="min-height: 210px; max-height: 210px; width: 210px">
+									<div class="thumbnail pull-left itemList" style="min-height: 210px; max-height: 210px; width: 210px">
 										<a th:href="@{'/bazaar/item/' + ${item.itemId}}">
 											<img data-src="holder.js/300x300" alt="Image" 
-											th:src="@{'http://83.165.60.132:8080/' + ${item.mainImage200h}}"
-											style="max-height: 200px; width: 200px; text-align:center; vertical-align: middle;"/>
+											th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}"/>
 										</a>
 									</div>
 								</div>
@@ -200,7 +202,7 @@
 									<div class="row" style="margin-top: 10px;">
 										<div class="col-xs-4 col-md-4 col-lg-4 userPicMin" style="width: 80px; margin-right: 10px;">
 											<img data-src="holder.js/50x50" alt="Profile pic"
-												th:src="@{'http://83.165.60.132:8080/' + ${item.user.avatar}}"/>
+												th:src="@{'http://www.elovendo.com/' + ${item.user.avatar}}"/>
 										</div>
 										<div class="col-xs-12 col-md-8 col-lg-8">
 											<div class="row">
@@ -424,7 +426,27 @@
 		     document.getElementById('receiver').value = user;
 		});
 		
-		$("#priceSlider").slider({});
+// 		var placeSearch, autocomplete;
+// 		function initAutoComplete() {
+// 		  // Create the autocomplete object, restricting the search
+// 		  // to geographical location types.
+// 		  autocomplete = new google.maps.places.Autocomplete(
+// 		      /** @type {HTMLInputElement} */(document.getElementById('autocomplete')),
+// 		      { types: ['geocode'] });
+// 		  // When the user selects an address from the dropdown,
+// 		  // populate the address fields in the form.
+// 		  google.maps.event.addListener(autocomplete, 'place_changed', function() {
+// 		    geoAddress();
+// 		  });
+// 		}
+		
+// 		function geoAddress() {
+// 			var place = autocomplete.getPlace();
+// // 			console.log("result: " + place.geometry.location.lat());
+// // 			console.log("result: " + place.geometry.location.lng());
+// 			document.getElementById('lat').value = place.geometry.location.lat();
+// 			document.getElementById('lng').value = place.geometry.location.lng();
+// 		}
 	</script>
 
 </body>

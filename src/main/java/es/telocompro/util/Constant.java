@@ -12,6 +12,9 @@ public class Constant {
 	public static final int DEFAULT_RENEW_DAYS = 15;
 	public static final int MAX_RANDOM_ITEMS = 5;
 	
+	/** DEFAULT RADIUS SEARCH (in KM) */
+	public static final double DEFAULT_RADIUS_SEARCH = 5;
+	
 	/**
 	 * URL PREFIXES
 	 */

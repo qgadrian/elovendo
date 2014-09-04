@@ -24,13 +24,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import es.telocompro.model.item.Item;
-import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.subcategory.SubCategory;
-import es.telocompro.model.province.Province;
 import es.telocompro.model.user.User;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.item.category.CategoryService;
-import es.telocompro.service.province.ProvinceService;
 import es.telocompro.util.Constant;
 
 /**
@@ -43,8 +40,7 @@ public class MainController implements ErrorController {
 	
     @Autowired
     private ItemService itemService;
-    @Autowired
-    private ProvinceService provinceService;
+
     @Autowired
     private CategoryService categoryService;
     
@@ -149,16 +145,6 @@ public class MainController implements ErrorController {
     	model.addAttribute("subCategories", subCategories);
     	
         return "elovendo/index";
-    }
-    
-    @RequestMapping(value="/elovendo/itemtest", method = RequestMethod.GET)
-    public String pageAbout(Model model) {
-    	
-    	List<Item> items = itemService.getAllItemsBySubCategory("Móviles", 0, 0, 0, 5).getContent();
-    	model.addAttribute("items", items);
-    	
-        return "elovendo/left-sidebar";
-//    	return "elovendo/itemListTest";
     }
     
 	@RequestMapping(value="/about")

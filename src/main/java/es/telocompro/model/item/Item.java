@@ -22,7 +22,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import es.telocompro.model.item.category.subcategory.SubCategory;
-import es.telocompro.model.province.Province;
 import es.telocompro.model.user.User;
 import es.telocompro.util.Constant;
 
@@ -64,9 +63,9 @@ public class Item {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar endDate;
     
-    @ManyToOne(optional = false, fetch=FetchType.LAZY)
-    @JoinColumn(name = "provinceId")
-    private Province province;
+//    @ManyToOne(optional = false, fetch=FetchType.LAZY)
+//    @JoinColumn(name = "provinceId")
+//    private Province province;
     
     private String mainImage;
     @Transient
@@ -85,19 +84,19 @@ public class Item {
     
     // Geolocation
 //    @NotNull
-    private String latitude;
+    private double latitude;
 //    @NotNull
-    private String longitude;
-    private float cosRadLat;
-    private float radLng;
-    private float sinRadLat;
+    private double longitude;
+    private double cosRadLat;
+    private double radLng;
+    private double sinRadLat;
 
     public Item() { }
 
     public Item(User user, SubCategory subCategory, String title, String description, 
-    		Province province, BigDecimal prize, String mainImage,
+    		BigDecimal prize, String mainImage,
     		String image1, String image2, String image3, String youtubeVideo, boolean featured, 
-    		boolean highlight, String latitude, String longitude) {
+    		boolean highlight, double latitude, double longitude) {
     	
         this.user = user;
         this.subCategory = subCategory;
@@ -110,7 +109,7 @@ public class Item {
         this.image2 = image2;
         this.image3 = image3;
         this.youtubeVideo = youtubeVideo;
-        this.province = province;
+//        this.province = province;
         
         Calendar endDate = Calendar.getInstance();
         endDate.add(Calendar.DATE, Constant.ITEM_DEFAULT_DURATION);
@@ -122,10 +121,10 @@ public class Item {
         this.latitude = latitude;
         this.longitude = longitude;
         
-        double latRad = Math.toRadians(Double.parseDouble(latitude));
+        double latRad = Math.toRadians(latitude);
         this.cosRadLat = (float) Math.cos(latRad);
         this.sinRadLat = (float) Math.sin(latRad);
-		this.radLng = (float) Math.toRadians(Double.parseDouble(longitude));
+		this.radLng = (float) Math.toRadians(longitude);
     }
     
     @Transient
@@ -222,13 +221,13 @@ public class Item {
 		this.itemId = itemId;
 	}
 
-	public Province getProvince() {
-		return province;
-	}
-
-	public void setProvince(Province province) {
-		this.province = province;
-	}
+//	public Province getProvince() {
+//		return province;
+//	}
+//
+//	public void setProvince(Province province) {
+//		this.province = province;
+//	}
 
 	public Calendar getEndDate() {
 		return endDate;
@@ -254,24 +253,24 @@ public class Item {
 		this.highlight = highlight;
 	}
 
-	public String getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(String latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
-		double latRad = Math.toRadians(Double.parseDouble(latitude));
-        this.cosRadLat = (float) Math.cos(latRad);
-        this.sinRadLat = (float) Math.sin(latRad);
+		double latRad = Math.toRadians(latitude);
+        this.cosRadLat = Math.cos(latRad);
+        this.sinRadLat = Math.sin(latRad);
 	}
 
-	public String getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(String longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
-		this.radLng = (float) Math.toRadians(Double.parseDouble(longitude));
+		this.radLng = Math.toRadians(longitude);
 	}
 
 	public String getImage1() {
@@ -294,15 +293,15 @@ public class Item {
 		this.youtubeVideo = youtubeVideo;
 	}
 
-	public float getCosRadLat() {
+	public double getCosRadLat() {
 		return cosRadLat;
 	}
 
-	public float getRadLng() {
+	public double getRadLng() {
 		return radLng;
 	}
 
-	public float getSinRadLat() {
+	public double getSinRadLat() {
 		return sinRadLat;
 	}
 

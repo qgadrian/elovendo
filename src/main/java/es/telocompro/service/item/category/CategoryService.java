@@ -18,13 +18,22 @@ public interface CategoryService {
     public Iterable<Category> findAllCategoriesOrderByCategoryId();
 
     /**
-     * Return all subcategories from a given category
+     * Return all subCategories from a given category
      * @param categoryName
      * @return Categories
      */
     public Iterable<SubCategory> getAllSubCatByCategoryIdOrderBySubCatId(String categoryName);
     
+    /**
+     * Return all subCategories from a given category
+     * @param categoryName
+     * @return Categories
+     */
+    public Iterable<SubCategory> getAllSubCatByCategoryId(long categoryId);
+    
     public List<SubCategory> findAllSubCategoriesFromSubCategoryName(String subCategoryName);
+    
+    public SubCategory findSubCategoryBySubCategoryId(long subCategoryId);
     
     /**
      * Returns subCategory searching by its name

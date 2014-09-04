@@ -1,6 +1,8 @@
 package es.telocompro.model.item.category.subcategory;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,4 +11,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("subCategoryRepository")
 public interface SubCategoryRepository extends PagingAndSortingRepository<SubCategory, Long>  {
+	
+	@Query("SELECT s FROM SubCategory s WHERE s.category.categoryId = :categoryId")
+	Iterable<SubCategory> findAllSubCategoriesByCategoryId(@Param("categoryId") long categoryId);
 }

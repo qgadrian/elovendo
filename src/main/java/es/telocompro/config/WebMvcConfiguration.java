@@ -30,7 +30,8 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 
     // Maps resources path to webapp/resources
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+    	registry.addResourceHandler("/robots.txt").addResourceLocations("/resources/robots.txt");
+//        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
         registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
         registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
         registry.addResourceHandler("/images/**").addResourceLocations("/resources/images/");
