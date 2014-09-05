@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import es.telocompro.model.item.Item;
+import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.rest.controller.exception.ItemNotFoundException;
 import es.telocompro.service.item.ItemService;
@@ -83,6 +84,27 @@ public class ItemWebController {
 		return output;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="getsubs/s/{categoryName}", method=RequestMethod.GET)
+	public @ResponseBody JSONObject getSubCategoriesFromCategoryName(@PathVariable String categoryName) {
+		
+		Iterable<SubCategory> subCategories = 
+				categoryService.getAllSubCategoriesFromCategoryName(categoryName);
+		JSONObject output = new JSONObject();
+		JSONArray outputArray = new JSONArray();
+		
+		for (SubCategory sub : subCategories) {
+			JSONObject element = new JSONObject();
+			element.put("id", sub.getId());
+			element.put("name", sub.getSubCategoryName());
+			outputArray.add(element);
+		}
+		
+		output.put("output", outputArray);
+		
+		return output;
+	}
+	
 	/**
 	 * FIND BY TITLE
 	 */
@@ -90,7 +112,9 @@ public class ItemWebController {
     public String itemListByTitleSearchPage(Model model,
     		@RequestParam(value="subcategory", required=false, defaultValue="") String subCategory,
     		@RequestParam("title") String title,
-    		@RequestParam(value = "place", required = false, defaultValue="") String place,
+    		@RequestParam(value = "dis", required = false, defaultValue="0") String distance,
+    		@RequestParam(value = "lat", required = false, defaultValue="0") String latitude,
+    		@RequestParam(value = "lng", required = false, defaultValue="0") String longitude,
     		@RequestParam(value = "min", required = false, defaultValue="0" ) int prizeMin,
     		@RequestParam(value = "max", required = false, defaultValue="0" ) int prizeMax,
     		@RequestParam(value = "p", required = false, defaultValue="0") int page, 
@@ -111,7 +135,11 @@ public class ItemWebController {
 //    	Page<Item> p = itemService.getItemByParams(title, subCategory, place, prizeMin, prizeMax, page, size);
     	
     	// FIXME: Broken search
-    	Page<Item> p = itemService.getItemByParams2(title, subCategory, 0, null, prizeMin, prizeMax, page, size);
+    	double dis = Double.parseDouble(distance);
+    	float lat = Float.valueOf(latitude);
+    	float lng = Float.valueOf(longitude);
+    	float[] latLng = {lat , lng};
+    	Page<Item> p = itemService.getItemByParams2(title, subCategory, dis, latLng, prizeMin, prizeMax, page, size);
 
     	// Quick workaround for manage pagination with searches
     	PageWrapper<Item> pageWrapper;
@@ -136,7 +164,7 @@ public class ItemWebController {
     public String itemListByCategoryPage(Model model, 
     		@PathVariable("categoryName") String categoryName,
     		@RequestParam(value = "title", required = false, defaultValue="") String title,
-    		@RequestParam(value = "dis", required = false, defaultValue="0") String distance,
+    		@RequestParam(value = "dis", required = false, defaultValue="0") double dis,
     		@RequestParam(value = "lat", required = false, defaultValue="0") String latitude,
     		@RequestParam(value = "lng", required = false, defaultValue="0") String longitude,
     		@RequestParam(value = "min", required = false, defaultValue="0" ) int prizeMin,
@@ -144,65 +172,31 @@ public class ItemWebController {
     		@RequestParam(value = "p", required = false, defaultValue="0") int page, 
     		@RequestParam(value = "s", required = false, defaultValue="5" ) int size) {
 		
-//		double searchLat, searchLng;
-//    	
-//		// Search for a specific location
-//		if (!place.equals("")) {
-//			String googleUrl = "https://maps.googleapis.com/maps/api/place/textsearch/json?";
-//			String googleAPI = "AIzaSyBselexTzagOc9K-E3UkdHQzHElRfDNo5w";
-//			String paramAPI = "key=".concat(googleAPI);
-//			String paramSensor = "sensor=false";
-//			String paramQuery = "query=".concat(place);
-//			String formedURL = googleUrl+paramAPI+"&"+paramSensor+"&"+paramQuery;
-//			URL url;
-//			try {
-//				url = new URL(formedURL);
-//				HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
-//				// dump all the content
-//				//	print_content(con);
-//				if (con != null) {
-//					try {
-//						BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-//						StringBuilder builder = new StringBuilder();
-//						String input = "";
-//						
-//						while ((input = br.readLine()) != null) 
-//							builder.append(input);
-//						
-//						JSONObject jsonResponse = (JSONObject) JSONValue.parse(builder.toString());
-//						
-//						System.out.println(jsonResponse.toJSONString());
-//						
-//						JSONArray results = (JSONArray) jsonResponse.get("results");
-//						JSONObject resultsObject = (JSONObject) results.get(0);
-//						JSONObject geometry = (JSONObject) resultsObject.get("geometry");
-//						JSONObject location = (JSONObject) geometry.get("location");
-//						searchLat = (double) location.get("lat");
-//						searchLng = (double) location.get("lng");
-//						
-//						System.out.println("lat " + searchLat + " - lng " + searchLng);
-//					} catch (IOException e) { e.printStackTrace(); }
-//				}
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-		
-		model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, categoryName));
+		model.addAttribute("featuredItems", 
+				itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, categoryName));
 		
 		String urlLocation = "category/" + categoryName;
 		model.addAttribute("url", urlLocation);
+		
+		@SuppressWarnings("unchecked")
+		List<Category> categories = IteratorUtils.toList(
+				categoryService.findAllCategories().iterator());
+		model.addAttribute("categories", categories);
+//		@SuppressWarnings("unchecked")
+//		List<SubCategory> subCategories = IteratorUtils.toList(
+//				categoryService.getAllSubCategoriesFromCategoryName(categoryName).iterator());
+//		model.addAttribute("subCategories", subCategories);
 		
 		if (prizeMin != 0)
 			model.addAttribute("prizeMin", prizeMin);
 		if (prizeMax != 0)
 			model.addAttribute("prizeMax", prizeMax);
-    	
+
 //    	Page<Item> p = itemService.getAllItemsByCategory(categoryName, prizeMin, prizeMax, page, size);
 //		Page<Item> p = itemService.getItemByParams(title, categoryName, province, prizeMin, prizeMax, page, size);
-		double dis = Double.parseDouble(distance);
-    	float lat = Float.valueOf(latitude);
-    	float lng = Float.valueOf(longitude);
+
+		float lat = Float.valueOf(latitude);
+		float lng = Float.valueOf(longitude);
     	float[] latLng = {lat , lng};
 		Page<Item> p = itemService.getItemByParams2(title, categoryName, dis, latLng, prizeMin, prizeMax, page, size);
     	PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, categoryName);
@@ -274,9 +268,13 @@ public class ItemWebController {
     	List<Item> items = p.getContent();
     	
     	@SuppressWarnings("unchecked")
-		List<SubCategory> subCategories = IteratorUtils.toList(categoryService
-				.findAllSubCategoriesFromSubCategoryName(subCategoryName).iterator());
-    	model.addAttribute("subCategories", subCategories);
+		List<Category> categories = IteratorUtils.toList(
+				categoryService.findAllCategories().iterator());
+		model.addAttribute("categories", categories);
+//    	@SuppressWarnings("unchecked")
+//		List<SubCategory> subCategories = IteratorUtils.toList(categoryService
+//				.findAllSubCategoriesFromSubCategoryName(subCategoryName).iterator());
+//    	model.addAttribute("subCategories", subCategories);
     	
 //    	@SuppressWarnings("unchecked")
 //		List<SubCategory> subCategories = IteratorUtils.toList(categoryService

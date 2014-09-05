@@ -79,7 +79,7 @@ public class UserController {
 		}
 		
 		return userService.addUser(login, password, firstname, lastname,
-				address, phone, email, provinceName, avatarBytes);
+				address, phone, email, avatarBytes);
 	}
 	
 	/** Add a new user 

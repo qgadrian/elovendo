@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <html  xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8"/>
-
-<!-- Web style -->
-<link href="/css/styleweb.css" media="all" rel="stylesheet" type="text/css" />
 
 <!-- ************************* -->
 <!-- ******* Bootstrap ******* -->
@@ -22,6 +18,9 @@
 <!-- Bootstrap extra (bs-callout) -->
 <link href="/css/bootstrap-extra.css" media="all" rel="stylesheet" type="text/css" />
 
+<!-- Web style -->
+<link href="/css/styleweb.css" media="all" rel="stylesheet" type="text/css" />
+
 <!-- Tabs x -->
 <link href="/css/bootstrap-tabs-x.css" media="all" rel="stylesheet" type="text/css" />
 <script src="/js/bootstrap-tabs-x.js" type="text/javascript"></script>
@@ -29,7 +28,7 @@
 <title>User profile</title>
 
 </head>
-<body>
+<body style="background-color:#FBFAF9;">
 
 	<div th:replace="elovendo/header"></div>
 	
@@ -41,10 +40,12 @@
 				<li><a href="#itemsContent" role="tab-kv" data-toggle="tab">
 				<i class="glyphicon glyphicon-th-list"></i> Mis anuncios</a></li>
 				<li><a href="#favoriteContent" role="tab-kv" data-toggle="tab">
+				<i class="glyphicon glyphicon-stats"></i> Mis votos</a></li>
+				<li><a href="#favoriteContent" role="tab-kv" data-toggle="tab">
 				<i class="glyphicon glyphicon-heart"></i> Mis favoritos</a></li>
 			</ul>
 		</div>
-		
+
 		<!--  user -->
 		<div id="tabContent" class="tab-content">
         	<div class="tab-pane fade in active" id="profileContent">
@@ -56,11 +57,12 @@
 							<div class="thumbnail" >
 								<img alt="profile pic" class="profilePic" th:src="@{'http://www.elovendo.com/' + ${user.avatar}}" />
 								<div class="list-group">
-									<a href="www.elovendo.com" class="list-group-item"><span class="glyphicon glyphicon-briefcase"></span><span class="badge">10</span>Anuncios</a>
+									<a href="www.elovendo.com" class="list-group-item"><span class="glyphicon glyphicon-briefcase"></span>
+									<span class="badge" th:text="${totalItems}">0</span>Anuncios</a>
 									<a href="www.elovendo.com" class="list-group-item"><span class="glyphicon glyphicon-stats"></span><span class="badge">11</span>Votos</a>
 									<a href="/site/pricing/points" class="list-group-item"><span class="glyphicon glyphicon-shopping-cart"></span><span class="badge" th:text="${user.points}">0</span>Puntos</a>
 									<a class="list-group-item"><span class="glyphicon glyphicon-thumbs-up"></span><span class="badge" th:text="${user.userValue}">0</span>Reputación</a>
-									<a href="www.elovendo.com" class="list-group-item"><span class="glyphicon glyphicon-cog"></span>Editar</a>
+									<a href="/site/user/edit" class="list-group-item"><span class="glyphicon glyphicon-cog"></span>Editar</a>
 								</div>
 							</div><!-- /Thumbnails -->		
 						</div>
@@ -133,7 +135,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<!--  user annouces -->
 		<div class="tab-pane fade" id="itemsContent">
 			<div class="container">

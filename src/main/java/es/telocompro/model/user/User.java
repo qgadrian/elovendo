@@ -287,7 +287,7 @@ public class User implements UserDetails {
 		if (!(obj instanceof User)) return false;
 		
 		User user = (User) obj;
-		return user.getLogin().equals(this.login) && user.getUserId().equals(this.userId);
+		return user.getLogin().equals(this.login);
 	}
 	
 }

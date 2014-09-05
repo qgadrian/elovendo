@@ -1,6 +1,7 @@
 package es.telocompro.model.item;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 
 import javax.persistence.Column;
@@ -68,8 +69,9 @@ public class Item {
 //    private Province province;
     
     private String mainImage;
+    
     @Transient
-    private String mainImage200h;
+    private String distance;
     
     private String image1;
     private String image2;
@@ -90,6 +92,10 @@ public class Item {
     private double cosRadLat;
     private double radLng;
     private double sinRadLat;
+    
+    // FIXME
+//    @Version
+//    private long version = 0;
 
     public Item() { }
 
@@ -127,7 +133,48 @@ public class Item {
 		this.radLng = (float) Math.toRadians(longitude);
     }
     
-    @Transient
+    public Item(Item item, double distance) {
+    	this.itemId = item.getItemId();
+		this.user = item.getUser();
+		this.subCategory = item.getSubCategory();
+		this.title = item.getTitle();
+		this.description = item.getDescription();
+		this.prize = item.getPrize();
+		
+		this.startDate = Calendar.getInstance();
+		Calendar endDate = Calendar.getInstance();
+		endDate.add(Calendar.DATE, Constant.ITEM_DEFAULT_DURATION);
+		this.endDate = endDate;
+		
+		this.mainImage = item.getMainImageName();
+		
+//		this.distance = distance;
+		this.distance = new DecimalFormat("##.##").format(distance);
+		
+		this.image1 = item.getImage1();
+		this.image2 = item.getImage2();
+		this.image3 = item.getImage3();
+		this.youtubeVideo = item.getYoutubeVideo();
+		this.featured = item.isFeatured();
+		this.highlight = item.isHighlight();
+		this.latitude = item.getLatitude();
+		this.longitude = item.getLongitude();
+		
+
+		this.cosRadLat = item.getCosRadLat();
+		this.sinRadLat = item.getSinRadLat();
+		this.radLng = item.getRadLng();
+	}
+
+	public String getDistance() {
+		return distance;
+	}
+
+//	public void setDistance(double distance) {
+//		this.distance = distance;
+//	}
+
+	@Transient
     public String getPlainDescription() {
     	String plainText = this.description.replaceAll("(<br\\ ?/>)+", "&");
     	return plainText.replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", "");
@@ -141,6 +188,7 @@ public class Item {
     	return days.getDays()< 5;
     }
     
+    @Transient
     public String getMainImage200h() {
     	return this.mainImage.concat("-200h.jpg");
     }
@@ -213,6 +261,11 @@ public class Item {
 		return mainImage.concat(".jpg");
 	}
 
+	@Transient
+	public String getMainImageName() {
+		return mainImage;
+	}
+	
 	public void setMainImage(String mainImage) {
 		this.mainImage = mainImage;
 	}

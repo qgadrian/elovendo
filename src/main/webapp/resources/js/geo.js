@@ -18,7 +18,8 @@ var placeSearch, autocomplete;
 // 			console.log("result: " + place.geometry.location.lng());
 			document.getElementById('lat').value = place.geometry.location.lat();
 			document.getElementById('lng').value = place.geometry.location.lng();
-			addMarker(place.geometry.location.lat(), place.geometry.location.lng());
+			if (map != null)
+				addMarker(place.geometry.location.lat(), place.geometry.location.lng());
 		}
 		
 		// Add a marker to the map and push to the array.
@@ -59,8 +60,8 @@ var placeSearch, autocomplete;
 			google.maps.event.addListener(map, 'click', function(event) {
 				marker.setMap(null); // clear marker in map
 				addMarker(event.latLng);
-				document.getElementById("latitude").value = event.latLng.lat();
-				document.getElementById("longitude").value = event.latLng.lng();
+				document.getElementById("lat").value = event.latLng.lat();
+				document.getElementById("lng").value = event.latLng.lng();
 				document.getElementById('createButton').disabled = false;
 			});
 			
@@ -92,4 +93,26 @@ var placeSearch, autocomplete;
 			loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 			map.setCenter(loc);
 			map.setZoom(13);
+		}
+		
+		function initLocation() {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(getInitPosition);
+			}
+		}
+		
+		function getInitPosition(position) {
+			var lat = document.getElementById("lat").value = position.coords.latitude;
+			var lng = document.getElementById("lng").value = position.coords.longitude;
+			
+			// initialize geosearch in index
+			var arr = [], l = document.links;
+			for(var i=0; i<l.length; i++) {
+			  console.log(l[i].href);
+			  var ela = l[i].href;
+			  if (ela.indexOf("bazaar/category") > -1) {
+				  l[i].href = ela + "?lat=" + lat + "&lng=" + lng;
+	 			}
+			}
+			
 		}

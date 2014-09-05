@@ -34,17 +34,17 @@ header#top {
 
 /* Override bootstrap button style */
 .btn-info { 
-	background-color: #842C87;
+	background-color: #563D7C;
 	border-color: #7c2d82;
 }
 
 .btn-info:hover { 
-	background-color: #6c0072;
+	background-color: #665086;
 	border-color: #7c2d82; 
 }
 
 .btn-info:active, .btn-info:focus { 
-	background-color: #6c0072;
+	background-color: #31135d;
 	border-color: #7c2d82; 
 }
 
@@ -78,13 +78,15 @@ header#top {
 
 .navbar-default {
 	background-color: #ffffff;
+	width: auto;
+	height: auto;
 /* 	border-color: #8e44ad; */
 	border-radius:0px; 
 	-webkit-border-radius:0px; 
 	-moz-border-radius:0px;
-	box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.33);
-	-moz-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.33);
-	-webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.33);
+	box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.33);
+	-moz-box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.33);
+	-webkit-box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.33);
 }
 /* .navbar-default .navbar-brand { */
 /* 	color: #000000; */

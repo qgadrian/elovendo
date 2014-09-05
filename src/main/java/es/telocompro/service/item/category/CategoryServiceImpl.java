@@ -62,4 +62,10 @@ public class CategoryServiceImpl implements CategoryService {
 	public SubCategory findSubCategoryBySubCategoryId(long subCategoryId) {
 		return subCategoryRepository.findOne(subCategoryId);
 	}
+
+	@Override
+	public Iterable<SubCategory> getAllSubCategoriesFromCategoryName(
+			String categoryName) {
+		return subCategoryRepository.findAllSubCategoriesByCategoryName(categoryName);
+	}
 }

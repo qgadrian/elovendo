@@ -200,10 +200,10 @@
 				 nunca se proporcionará ninguna información específica o personal.</p>
 				<p>De esta manera los usuarios de la web o aplicación móvil podrán <strong>acceder con más facilidad</strong> 
 				a tu anuncio, además de otras muchas ventajas.</p>
-				<div>
-					<input type="hidden" id="latitude" name="lat" />
-					<input type="hidden" id="longitude" name="lng" />
-				</div>
+<!-- 				<div> -->
+<!-- 					<input type="hidden" id="latitude" name="lat" /> -->
+<!-- 					<input type="hidden" id="longitude" name="lng" /> -->
+<!-- 				</div> -->
 			</div>
 			<!-- geo -->
 			<div class="row">
@@ -308,16 +308,15 @@
 			});
 	        
 	        $("#more-img-2").fileinput({
-	        	showCaption: false,
+	        	showCaption: true,
 	        	showRemove: true,
 	        	showUpload: false,
 	        	maxFileSize: 3000
 			});
 	        
 	        $("#more-img-3").fileinput({
-	        	browseClass: "btn btn-primary btn-block",
-	        	showCaption: false,
-	        	showRemove: false,
+	        	showCaption: true,
+	        	showRemove: true,
 	        	showUpload: false,
 	        	maxFileSize: 3000
 			});

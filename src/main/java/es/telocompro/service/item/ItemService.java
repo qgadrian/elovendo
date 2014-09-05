@@ -1,6 +1,7 @@
 package es.telocompro.service.item;
 
 import es.telocompro.model.item.Item;
+import es.telocompro.model.user.User;
 import es.telocompro.rest.controller.exception.ItemNotFoundException;
 import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
 import es.telocompro.rest.controller.exception.SubCategoryNotFoundException;
@@ -190,4 +191,6 @@ public interface ItemService {
      * @param itemId
      */
     public void deleteItem(Long itemId);
+    
+    public int getNumberUserItems(User user);
 }

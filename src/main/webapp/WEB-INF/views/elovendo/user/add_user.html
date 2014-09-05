@@ -147,17 +147,6 @@
 						</div>
 					</div>
 				</div>
-				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-2">
-						<label for="province" class="col-sm-2 control-label" th:text="#{label.province}">Province</label>
-						<div class="col-sm-8">
-							<select class="form-control" th:value="${provinceName}" name="provinceName">
-								<option th:each="province : ${provinces}" th:value="${province.provinceName}" 
-									th:text="${province.provinceName}">Province</option>
-							</select>
-						</div>
-					</div>
-				</div>
 <!-- 				<div class="col-sm-8 col-sm-offset-2" th:if="${#fields.hasErrors('profilePic')}"> -->
 <!-- 					<div class="alert alert-danger" role="alert"> -->
 <!-- 							<span class="alert-link" role="alert" th:errors="${profilePic}">Error</span> -->

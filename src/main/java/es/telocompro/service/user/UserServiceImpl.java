@@ -23,7 +23,6 @@ import es.telocompro.model.vote.Vote;
 import es.telocompro.rest.controller.exception.InvalidVoteUsersException;
 import es.telocompro.rest.controller.exception.ItemNotFoundException;
 import es.telocompro.rest.controller.exception.LoginNotAvailableException;
-import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
 import es.telocompro.rest.controller.exception.UserNotFoundException;
 import es.telocompro.rest.controller.exception.VoteDuplicateException;
 import es.telocompro.service.item.ItemService;
@@ -57,10 +56,8 @@ public class UserServiceImpl implements UserService {
 	// an user and pass it
 	// BE CAREFULL WITH USER DISABLED BY DEFAULT
 	@Override
-	public User addUser(String login, String password, String firstName,
-			String lastName, String address, String phone, String email, 
-			String provinceName, byte[] avatar) 
-					throws LoginNotAvailableException {
+	public User addUser(String login, String password, String firstName, String lastName, 
+			String address, String phone, String email, byte[] avatar) throws LoginNotAvailableException {
 		
 		if (userRepository.findByLogin(login) != null ) throw new LoginNotAvailableException(login);
 		
@@ -71,42 +68,44 @@ public class UserServiceImpl implements UserService {
 		User user = new User(login, password, firstName, lastName, address,
 				phone, email, null, role, null);
 
-		/** SAVE AVATAR IMAGE IN THE RESOURCE FOLDER **/
-		if (avatar != null) try {
-			// Save user for get an userId
-			user = userRepository.save(user);
-			// Create folder (if not created) for /img/avatars/{userId}.jpg
-			File folderPath = new File(IOUtil.calculateAvatarFilePath());
-			folderPath.mkdirs();
-			// Get buffered image
-			BufferedImage buffImg = ImageIO.read(new ByteArrayInputStream(avatar));
-			// Create file
-			String filePath = folderPath.getAbsolutePath()+"/"+user.getUserId()+".jpg";
-			File imgFile = new File(filePath);
-			// Write image in file
-			ImageIO.write(buffImg, "jpg", imgFile);
-			
-			/* IMAGE RESIZED */
-			BufferedImage resizedImage = Scalr.resize(buffImg, 500);
-			// Create file
-			File imgResizedFile = new File(IOUtil.calculateAvatarFilePath()+"/"+user.getUserId()+"-200h.jpg");
-			// Write image in file
-			ImageIO.write(resizedImage, "jpg", imgResizedFile);
-			
-			// Assign the avatar path to the user and save it
-			String urlImagePath = IOUtil.calculateAvatarFilePath() + "/" + user.getUserId();
-			user.setAvatar(urlImagePath);
-		} catch(NullPointerException e) { } catch (IOException e) {
-			System.out.println("ERROR: Creating avatar resource for user " + user.getUserId());
-			e.printStackTrace();
-		}
+		user = userRepository.save(user);
+		user.setAvatar(saveProfilePic(user, avatar));
+//		/** SAVE AVATAR IMAGE IN THE RESOURCE FOLDER **/
+//		if (avatar != null) try {
+//			// Save user for get an userId
+//			user = userRepository.save(user);
+//			// Create folder (if not created) for /img/avatars/{userId}.jpg
+//			File folderPath = new File(IOUtil.calculateAvatarFilePath());
+//			folderPath.mkdirs();
+//			// Get buffered image
+//			BufferedImage buffImg = ImageIO.read(new ByteArrayInputStream(avatar));
+//			// Create file
+//			String filePath = folderPath.getAbsolutePath()+"/"+user.getUserId()+".jpg";
+//			File imgFile = new File(filePath);
+//			// Write image in file
+//			ImageIO.write(buffImg, "jpg", imgFile);
+//			
+//			/* IMAGE RESIZED */
+//			BufferedImage resizedImage = Scalr.resize(buffImg, 500);
+//			// Create file
+//			File imgResizedFile = new File(IOUtil.calculateAvatarFilePath()+"/"+user.getUserId()+"-200h.jpg");
+//			// Write image in file
+//			ImageIO.write(resizedImage, "jpg", imgResizedFile);
+//			
+//			// Assign the avatar path to the user and save it
+//			String urlImagePath = IOUtil.calculateAvatarFilePath() + "/" + user.getUserId();
+//			user.setAvatar(urlImagePath);
+//		} catch(NullPointerException e) { } catch (IOException e) {
+//			System.out.println("ERROR: Creating avatar resource for user " + user.getUserId());
+//			e.printStackTrace();
+//		}
 		
 		// return the updated user with the avatar path asigned
 		return userRepository.save(user);
 	}
 	
 	@Override
-	public User addUser(User user, String provinceName, byte[] profilePicBytes) throws LoginNotAvailableException {
+	public User addUser(User user, byte[] profilePicBytes) throws LoginNotAvailableException {
 		
 //		String login = user.getLogin();
 //		
@@ -129,8 +128,7 @@ public class UserServiceImpl implements UserService {
 //		return userRepository.save(user);
 		
 		return addUser(user.getLogin(), user.getPassword(), user.getFirstName(),
-				user.getLastName(), user.getAddress(), user.getPhone(), user.getEmail(), 
-				provinceName, profilePicBytes);
+				user.getLastName(), user.getAddress(), user.getPhone(), user.getEmail(), profilePicBytes);
 	}
 
 	@Override
@@ -173,6 +171,12 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public User updateUser(User user) {
+		return userRepository.save(user);
+	}
+	
+	@Override
+	public User updateUser(User user, byte[] profilePic) {
+		if (profilePic != null) user.setAvatar(saveProfilePic(user, profilePic));
 		return userRepository.save(user);
 	}
 
@@ -223,6 +227,37 @@ public class UserServiceImpl implements UserService {
 		
 		return voteService.addVote(userIdVote, userIdReceive, itemId, voteType, reability, voteMessage);
 		
+	}
+	
+	private String saveProfilePic(User user, byte[] profilePic) {
+		if (profilePic != null) try {
+			// Create folder (if not created) for /img/avatars/{userId}.jpg
+			File folderPath = new File(IOUtil.calculateAvatarFilePath());
+			folderPath.mkdirs();
+			// Get buffered image
+			BufferedImage buffImg = ImageIO.read(new ByteArrayInputStream(profilePic));
+			// Create file
+			String filePath = folderPath.getAbsolutePath()+"/"+user.getUserId()+".jpg";
+			File imgFile = new File(filePath);
+			// Write image in file
+			ImageIO.write(buffImg, "jpg", imgFile);
+			
+			/* IMAGE RESIZED */
+			BufferedImage resizedImage = Scalr.resize(buffImg, 500);
+			// Create file
+			File imgResizedFile = new File(IOUtil.calculateAvatarFilePath()+"/"+user.getUserId()+"-200h.jpg");
+			// Write image in file
+			ImageIO.write(resizedImage, "jpg", imgResizedFile);
+			
+			// Assign the avatar path to the user and save it
+			String urlImagePath = IOUtil.calculateAvatarFilePath() + "/" + user.getUserId();
+			return urlImagePath;
+			
+		} catch(NullPointerException e) { } catch (IOException e) {
+			System.out.println("ERROR: Creating avatar resource for user " + user.getUserId());
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

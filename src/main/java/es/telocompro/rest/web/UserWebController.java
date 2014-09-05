@@ -100,6 +100,8 @@ public class UserWebController {
 					.getAuthentication().getPrincipal();
 		model.addAttribute("user", user);
 		
+		model.addAttribute("totalItems", itemService.getNumberUserItems(user));
+		
 		return "elovendo/user/profile";
 	}
 
@@ -125,11 +127,9 @@ public class UserWebController {
 	public String processAddUserWeb(
 			@Valid @ModelAttribute(value = "user") User user,
 			BindingResult result,
-			@ModelAttribute(value = "provinceName") String provinceName,
 			@ModelAttribute(value = "profilePic") MultipartFile profilePic,
 			@ModelAttribute(value = "confirmPassword") String confirmPassword,
-			ModelMap model, Locale locale) throws ProvinceNotFoundException,
-			LoginNotAvailableException {
+			ModelMap model, Locale locale) throws LoginNotAvailableException {
 		// FIXME: Edit input type email
 		// TODO: Get confirmPassword to validate
 
@@ -188,7 +188,7 @@ public class UserWebController {
 					messageSource.getMessage("Error.password.missmatch", null,
 							locale)));
 		}
-		;
+		
 
 		if (result.hasErrors()) {
 			// logger.debug("Form has errors");
@@ -206,10 +206,132 @@ public class UserWebController {
 					System.out.println("Error converting to bytes image file");
 				}
 
-			userService.addUser(user, provinceName, profilePicBytes);
+			userService.addUser(user, profilePicBytes);
 
 			return "elovendo/user/registered_successful";
 		}
+	}
+	
+	@RequestMapping(value = "user/edit", method = RequestMethod.GET)
+	public String editUserPage(Model model) {
+		User user = null;
+		SecurityContext context = SecurityContextHolder.getContext();
+		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+			user = (User) SecurityContextHolder.getContext()
+					.getAuthentication().getPrincipal();
+
+		model.addAttribute("user", user);
+
+		return "elovendo/user/profileEdit";
+	}
+	
+//	@RequestMapping(value = "user/edit", method = RequestMethod.POST)
+//	public String editUserPage(@Valid @ModelAttribute(value = "user") User _user,
+//			BindingResult result,
+//			@ModelAttribute(value = "profilePic") MultipartFile profilePic,
+//			@ModelAttribute(value = "confirmPassword") String confirmPassword,
+//			Model model, Locale locale) throws LoginNotAvailableException {
+//		
+//			User user = null;
+//			SecurityContext context = SecurityContextHolder.getContext();
+//			if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+//				user = (User) SecurityContextHolder.getContext()
+//						.getAuthentication().getPrincipal();
+//			
+//			if (_user.getPassword() != null) user.setPassword(_user.getPassword());
+//			if (_user.getFirstName() != null) user.setFirstName(_user.getFirstName());
+//			if (_user.getLastName() != null) user.setLastName(_user.getLastName());
+//
+//			// Check confirm password matches
+//			if (!user.getPassword().equals(confirmPassword)) {
+//				result.addError(new FieldError("registrationform", "password",
+//						messageSource.getMessage("Error.password.missmatch", null, locale)));
+//			}
+//
+//			// check image is jpeg
+//			// TODO: image/png, image/gif
+//			if (!profilePic.getContentType().equals("image/jpeg")
+//					&& !profilePic.getContentType().equals("image/pjpeg")) {
+//				result.addError(new FieldError("registrationform", "profilePic",
+//						messageSource.getMessage("Error.password.missmatch", null, locale)));
+//			}
+//
+//			if (result.hasErrors()) {
+//				logger.error("Form has errors");
+//				return "elovendo/user/profileEdit";
+//			} else {
+//				byte[] profilePicBytes = null;
+//				if (!profilePic.isEmpty())
+//					try {
+//						profilePicBytes = profilePic.getBytes();
+//					} catch (IOException e) {
+//						System.out.println("Error converting to bytes image file");
+//					}
+//
+//				userService.updateUser(user, profilePicBytes);
+//
+//				return "elovendo/user/registered_successful";
+//			}
+//	}
+	
+	@RequestMapping(value = "user/edit", method = RequestMethod.POST)
+	public String editUserPage(
+			@RequestParam(required=false, defaultValue="")  String password,
+			@RequestParam(required=false, defaultValue="") String confirmPassword,
+			@RequestParam(required=false, defaultValue="") String email,
+			@RequestParam(required=false, defaultValue="") String firstName,
+			@RequestParam(required=false, defaultValue="") String lastName,
+			@RequestParam(required=false, defaultValue="") String phone,
+			@ModelAttribute(value = "profilePic") MultipartFile profilePic,
+			Model model, Locale locale) throws LoginNotAvailableException {
+
+			// Check confirm password matches
+//			if (!password.equals("") && !password.equals(confirmPassword)) {
+//				result.addError(new FieldError("registrationform", "password",
+//						messageSource.getMessage("Error.password.missmatch", null, locale)));
+//			}
+//
+//			// check image is jpeg
+//			// TODO: image/png, image/gif
+//			if (!profilePic.getContentType().equals("image/jpeg")
+//					&& !profilePic.getContentType().equals("image/pjpeg")) {
+//				result.addError(new FieldError("registrationform", "profilePic",
+//						messageSource.getMessage("Error.password.missmatch", null, locale)));
+//			}
+//
+//			// TODO: Make validations
+//			
+//			if (result.hasErrors()) {
+//				logger.error("Form has errors");
+//				return "elovendo/user/profileEdit";
+//			} else {
+		logger.error("received: " + password + ";" + email + firstName + lastName + phone );
+				byte[] profilePicBytes = null;
+				if (!profilePic.isEmpty())
+					try {
+						profilePicBytes = profilePic.getBytes();
+					} catch (IOException e) {
+						System.out.println("Error converting to bytes image file");
+					}
+
+				User user = null;
+				SecurityContext context = SecurityContextHolder.getContext();
+				if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+					user = (User) SecurityContextHolder.getContext()
+							.getAuthentication().getPrincipal();
+				
+				logger.error("user password: " + user.getPassword());
+				logger.error("received password null? " + password.equals(""));
+				
+				if (!password.equals("")) user.setPassword(password);
+				if (!firstName.equals("")) user.setFirstName(firstName);
+				if (!lastName.equals("")) user.setLastName(lastName);
+				if (!email.equals("")) user.setPassword(email);
+				
+				userService.updateUser(user, profilePicBytes);
+
+				return "elovendo/user/registered_successful";
+//			}
 	}
 
 	/**

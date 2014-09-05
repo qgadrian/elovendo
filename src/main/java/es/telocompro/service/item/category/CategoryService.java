@@ -44,4 +44,6 @@ public interface CategoryService {
     
     public Iterable<Category> findAllCategories();
     public Iterable<SubCategory> findAllSubCategories();
+    
+    public Iterable<SubCategory> getAllSubCategoriesFromCategoryName(String categoryName);
 }

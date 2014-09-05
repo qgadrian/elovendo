@@ -458,4 +458,9 @@ public class ItemServiceImpl implements ItemService {
     public void deleteItem(Long itemId) {
         itemRepository.delete(itemId);
     }
+
+	@Override
+	public int getNumberUserItems(User user) {
+		return itemRepository.findNumberUserItems(user.getUserId());
+	}
 }

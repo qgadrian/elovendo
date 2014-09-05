@@ -38,8 +38,7 @@ public interface UserService extends UserDetailsService {
      * @throws IOException 
      */
     public User addUser(String login, String password, String firstName, String lastName, String address,
-                        String phone, String email, String provinceName, byte[] avatar) 
-                        		throws LoginNotAvailableException;
+                        String phone, String email, byte[] avatar) throws LoginNotAvailableException;
     
     /**
      * Adds an user
@@ -49,7 +48,7 @@ public interface UserService extends UserDetailsService {
      * @throws LoginNotAvailableException
      * @throws ProvinceNotFoundException
      */
-    public User addUser(User user, String provinceName, byte[] profilePicBytes) 
+    public User addUser(User user, byte[] profilePicBytes) 
     		throws LoginNotAvailableException;
 
     /**
@@ -88,7 +87,8 @@ public interface UserService extends UserDetailsService {
      * @return
      */
     public User updateUser(User user);
-
+    
+    public User updateUser(User user, byte[] profilePic);
     /**
      * Deletes an user
      * @param userId
