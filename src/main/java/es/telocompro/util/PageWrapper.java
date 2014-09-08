@@ -3,10 +3,11 @@ package es.telocompro.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import static es.telocompro.util.Constant.ITEMS_PER_PAGE;
+
 import org.springframework.data.domain.Page;
 
 public class PageWrapper<T> {
-    public static final int MAX_PAGE_ITEM_DISPLAY = 5;
     private Page<T> page;
     private List<PageItem> items;
     private int currentNumber;
@@ -28,19 +29,19 @@ public class PageWrapper<T> {
         currentNumber = page.getNumber() + 1; //start from 1 to match page.page
 
         int start, size;
-        if (page.getTotalPages() <= MAX_PAGE_ITEM_DISPLAY){
+        if (page.getTotalPages() <= ITEMS_PER_PAGE){
             start = 1;
             size = page.getTotalPages();
         } else {
-            if (currentNumber <= MAX_PAGE_ITEM_DISPLAY - MAX_PAGE_ITEM_DISPLAY/2){
+            if (currentNumber <= ITEMS_PER_PAGE - ITEMS_PER_PAGE/2){
                 start = 1;
-                size = MAX_PAGE_ITEM_DISPLAY;
-            } else if (currentNumber >= page.getTotalPages() - MAX_PAGE_ITEM_DISPLAY/2){
-                start = page.getTotalPages() - MAX_PAGE_ITEM_DISPLAY + 1;
-                size = MAX_PAGE_ITEM_DISPLAY;
+                size = ITEMS_PER_PAGE;
+            } else if (currentNumber >= page.getTotalPages() - ITEMS_PER_PAGE/2){
+                start = page.getTotalPages() - ITEMS_PER_PAGE + 1;
+                size = ITEMS_PER_PAGE;
             } else {
-                start = currentNumber - MAX_PAGE_ITEM_DISPLAY/2;
-                size = MAX_PAGE_ITEM_DISPLAY;
+                start = currentNumber - ITEMS_PER_PAGE/2;
+                size = ITEMS_PER_PAGE;
             }
         }
 

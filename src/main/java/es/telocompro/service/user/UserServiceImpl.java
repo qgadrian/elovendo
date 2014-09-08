@@ -20,6 +20,7 @@ import es.telocompro.model.user.UserRepository;
 import es.telocompro.model.user.role.Role;
 import es.telocompro.model.user.role.RoleRepository;
 import es.telocompro.model.vote.Vote;
+import es.telocompro.model.vote.VoteRepository;
 import es.telocompro.rest.controller.exception.InvalidVoteUsersException;
 import es.telocompro.rest.controller.exception.ItemNotFoundException;
 import es.telocompro.rest.controller.exception.LoginNotAvailableException;
@@ -225,6 +226,9 @@ public class UserServiceImpl implements UserService {
 		else if (userVote.getUserValue() >= 10) reability = 0.1f;
 		else reability = 0f;
 		
+		// TODO: Antique users will have a plus
+		// TODO: If users talk by messaging will have a plus
+		
 		return voteService.addVote(userIdVote, userIdReceive, itemId, voteType, reability, voteMessage);
 		
 	}
@@ -260,4 +264,20 @@ public class UserServiceImpl implements UserService {
 		return null;
 	}
 
+	@Override
+	public int getVotesPositive(User user) {
+		return voteService.getVotesPositive(user.getUserId());
+	}
+
+	@Override
+	public int getVotesNegative(User user) {
+		return voteService.getVotesNegative(user.getUserId());
+	}
+
+
+	@Override
+	public int getVotesQueued(User user) {
+		return voteService.getVotesQueued(user.getUserId());
+	}
+	
 }

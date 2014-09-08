@@ -79,15 +79,15 @@ public class VoteServiceImpl implements VoteService {
 			
 			// Increase value for the user who receives the vote
 			vote = new Vote(userVote, userReceive, item, voteType, VOTE_ACTIVE, voteValue, voteMessage);
-			updateUserWithVote(userReceive, voteValue);
-			
-			// Increase value for the user who get voted earlier
-			updateUserWithVote(userVote, firstVote.getVoteValue());
+			updateUserWithVote(userReceive, voteValue);		
 			
 			// Active the first vote and update it if it is inactive
 			if (!firstVote.getVoteValid()) {
 				firstVote.setVoteValid(VOTE_ACTIVE);
 				voteRepository.save(firstVote);
+				
+				// Increase value for the user who get voted earlier
+				updateUserWithVote(userVote, firstVote.getVoteValue()); // this was outside, but don't sure where should be...
 			}
 		}
 		
@@ -119,5 +119,19 @@ public class VoteServiceImpl implements VoteService {
 //			throw new InvalidVoteUsersException(user2.getUserId(), user1.getUserId(), vote.getVoteId());
 		
 	}
+
+	@Override
+	public int getVotesPositive(Long userId) {
+		return voteRepository.findVotesPositive(userId);
+	}
+
+	@Override
+	public int getVotesNegative(Long userId) {
+		return voteRepository.findVotesNegative(userId);
+	}
 	
+	@Override
+	public int getVotesQueued(Long userId) {
+		return voteRepository.findVotesQueued(userId);
+	}
 }

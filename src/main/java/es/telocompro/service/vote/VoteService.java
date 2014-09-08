@@ -42,5 +42,10 @@ public interface VoteService {
 	 */
 	public Vote addVote(Long userIdVote, Long userIdReceive, Long itemId, int voteType, 
 			float reability, String voteMessage) throws UserNotFoundException, ItemNotFoundException, InvalidVoteUsersException;
-
+	
+	public int getVotesPositive(Long userId);
+	
+	public int getVotesNegative(Long userId);
+	
+	public int getVotesQueued(Long userId);
 }

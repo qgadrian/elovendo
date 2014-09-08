@@ -45,6 +45,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -100,9 +101,40 @@ public class UserWebController {
 					.getAuthentication().getPrincipal();
 		model.addAttribute("user", user);
 		
+		model.addAttribute("itemList", itemService.getAllItemsByUser(user));
+		
 		model.addAttribute("totalItems", itemService.getNumberUserItems(user));
 		
+		int votesPositive = userService.getVotesPositive(user);
+		int votesNegative = userService.getVotesNegative(user);
+		int totalVotes = votesPositive + votesNegative;
+		model.addAttribute("votesPositive", votesPositive);
+		model.addAttribute("votesNegative", votesNegative);
+		model.addAttribute("votesQueued", userService.getVotesQueued(user));
+		model.addAttribute("totalVotes", totalVotes);
+		
 		return "elovendo/user/profile";
+	}
+	
+	/** View profile 
+	 * @throws UserNotFoundException */
+	@RequestMapping(value = "public/{userName}", method = RequestMethod.GET)
+	public String getProfile(@PathVariable(value="userName") String userName,
+			Model model) throws UserNotFoundException {
+		
+		User user = userService.findUserByLogin(userName);
+		model.addAttribute("user", user);
+		
+		model.addAttribute("totalItems", itemService.getNumberUserItems(user));
+		
+		int votesPositive = userService.getVotesPositive(user);
+		int votesNegative = userService.getVotesNegative(user);
+		int totalVotes = votesPositive + votesNegative;
+		model.addAttribute("votesPositive", votesPositive);
+		model.addAttribute("votesNegative", votesNegative);
+		model.addAttribute("totalVotes", totalVotes);
+		
+		return "elovendo/user/publicProfile";
 	}
 
 	/** Add a new user **/
@@ -482,12 +514,19 @@ public class UserWebController {
 			return "elovendo/item/item_create_successful";
 		}
 	}
+	
+	/** DELETE ITEM */
+
+	@RequestMapping(value = "/delete/item", method = RequestMethod.POST)
+	public void deleteItem(@RequestParam(value = "id", required = true, defaultValue = "0") long itemId) {
+		itemService.deleteItem(itemId);
+	}
 
 	/** SET ITEM FAVORITE */
 
 	@RequestMapping(value = "item/fav", method = RequestMethod.POST)
-	public void setItemFavorite(
-			@RequestParam(value = "f", required = true, defaultValue = "") String itemId) {
+	public void toggleItemFavorite(
+			@RequestParam(value = "id", required = true, defaultValue = "") String itemId) {
 		// TODO implement items favourite
 	}
 

@@ -189,6 +189,21 @@ public class ItemServiceImpl implements ItemService {
     public Page<Item> getAllItemsByUserName(String userName, int page, int size) {
         return itemRepository.findByUserName(userName, new PageRequest(page, size));
     }
+    
+    @Override
+    public List<Item> getAllItemsByUserName(String userName) {
+        return itemRepository.findByUserName(userName);
+    }
+    
+    @Override
+    public List<Item> getAllItemsByUser(User user) {
+        return getAllItemsByUserId(user.getUserId());
+    }
+    
+    @Override
+    public List<Item> getAllItemsByUserId(Long userId) {
+        return itemRepository.findByUserId(userId);
+    }
 
     @Override
     public Item getItemById(Long itemId) throws ItemNotFoundException {
@@ -228,207 +243,31 @@ public class ItemServiceImpl implements ItemService {
 		return itemRepository.findItemsByCategoryNameMinMax(categoryName,
 				bPrizeMin, bPrizeMax, new PageRequest(page, size));
 	}
-
-//    @Override
-//    @Deprecated
-//    public Page<Item> getAllItemsBySubCategory(String subCategoryName, int page, int size) {
-//        return itemRepository.findBySubCategoryName(subCategoryName, 
-//        		new PageRequest(page, size));
-//    }
-//    
-//    /** For simplicity I will work with integers, but passing to repository BigDecimals **/
-//    @Deprecated
-//	@Override
-//	public Page<Item> getAllItemsBySubCategory(String subCategoryName,
-//			int prizeMin, int prizeMax, int page, int size) {
-//		BigDecimal bPrizeMin = new BigDecimal(prizeMin);
-//		BigDecimal bPrizeMax = new BigDecimal(prizeMax);
-//
-//		// Don't know if a negative number can break this, so I'm preventing
-//		if (prizeMin < 0)
-//			bPrizeMin = new BigDecimal(0);
-//		// Max prize its not present
-//		if (prizeMax == 0)
-//			return itemRepository.findBySubCategoryNameMin(subCategoryName,
-//					bPrizeMin, new PageRequest(page, size));
-//		// Take care of minimum number grater than maximum number, ignoring the request
-//		if (prizeMin > prizeMax)
-//			return itemRepository.findBySubCategoryName(subCategoryName,
-//					new PageRequest(page, size));
-//		// Otherwise, use min and max prize for query
-//		return itemRepository.findBySubCategoryNameMinMax(subCategoryName,
-//				bPrizeMin, bPrizeMax, new PageRequest(page, size));
-//	}
-	
-//	@Override
-//	@Deprecated
-//    public Page<Item> getItemByParams(String title, String subCategory, String province,
-//    		int prizeMin, int prizeMax, int page, int size) {
-//
-//		// Page Request
-//        PageRequest pageRequest = new PageRequest(page, size);
-//        
-//        BigDecimal bPrizeMin = prizeMin > 0 ? new BigDecimal(prizeMin) : null;
-//		BigDecimal bPrizeMax = new BigDecimal(prizeMax);
-//		
-//		if (prizeMin > prizeMax || (prizeMin == 0 && prizeMax == 0))
-//			if (province.equals(""))
-//				return itemRepository.findByParamsWithSubCat(title, subCategory, pageRequest);
-//			else 
-//				if (subCategory.equals(""))
-//					return itemRepository.findByParamsWithProvince(title, province, pageRequest);
-//				else 
-//					return itemRepository.findByParams(title, subCategory, province, pageRequest);
-//		else // using minimum prize
-//			if (prizeMax == 0)
-//				if (province.equals(""))
-//					return itemRepository.findByParamsWithSubCatMin(title, subCategory, bPrizeMin, pageRequest);
-//				else 
-//					if (subCategory.equals(""))
-//						return itemRepository.findByParamsWithProvinceMin(title, province, bPrizeMin, pageRequest);
-//					else 
-//						return itemRepository.findByParamsMin(title, subCategory, province, bPrizeMin, pageRequest);
-////				return itemRepository.findByParamsMin(title, subCategory, province, bPrizeMin, pageRequest);
-//			else
-//				if (province.equals(""))
-//					return itemRepository.findByParamsWithSubCatMinMax(title, subCategory, bPrizeMin, bPrizeMax, pageRequest);
-//				else 
-//					if (subCategory.equals(""))
-//						return itemRepository.findByParamsWithProvinceMinMax(title, province, bPrizeMin, bPrizeMax, pageRequest);
-//					else 
-//						return itemRepository.findByParamsMinMax(title, subCategory, province, bPrizeMin, bPrizeMax, pageRequest);
-////				return itemRepository
-////						.findByParamsMinMax(title, subCategory, province, bPrizeMin, bPrizeMax, pageRequest);
-//     			
-////     			if (prizeMax == 0)
-////     				return itemRepository.findBySubCategoryNameMin(subCategory, bPrizeMin, pageRequest);
-////     			// Take care of minimum number grater than maximum number, ignoring the request
-////     			// or if there is no prize min assigned
-////     			if (prizeMin > prizeMax || bPrizeMin == null)
-////     				if (prizeMax == 0) // Max prize its not present, do not use prize filter
-////	     				if (!subCategory.equals(""))
-////	     					if (!title.equals(""))
-////	     						if (!province.equals(""))
-////	     							return itemRepository.findByTitleAndSubCategoryAndProvince(
-////	     									title, subCategory, province, new PageRequest(page, size));
-////	     						else return itemRepository.findByTitleAndSubCategory(title, subCategory, pageRequest);
-////	     					else 
-////	     						if (!province.equals(""))
-////         							return itemRepository.findBySubCategoryAndProvince(
-////         									subCategory, province, pageRequest);
-////         						else return itemRepository.findBySubCategoryName(subCategory, pageRequest);
-////	     				else return itemRepository.findAll(pageRequest);
-////     				else // use max prize
-////     					if (!subCategory.equals(""))
-////         					if (!title.equals(""))
-////         						if (!province.equals(""))
-////         							return itemRepository.findByTitleAndSubCategoryAndProvinceMax(
-////         									title, subCategory, province, bPrizeMax, pageRequest);
-////         						else return itemRepository.findByTitleAndSubCategoryMax(
-////         								title, subCategory, bPrizeMax, pageRequest);
-////         					else
-////         						if (!province.equals(""))
-////         							return itemRepository.findBySubCategoryAndProvinceMax(
-////         									subCategory, province, bPrizeMax, pageRequest);
-////         						else return itemRepository.findBySubCategoryNameMax(subCategory, bPrizeMax, pageRequest);
-////     					else return itemRepository.findAllItemsMax(bPrizeMax, pageRequest);
-////     			// Minimum prize is present
-////     			else
-////     				if (prizeMax == 0) // Max prize its not present, use minimum only
-////     					if (!subCategory.equals(""))
-////         					if (!title.equals(""))
-////         						if (!province.equals(""))
-////         							return itemRepository.findByTitleAndSubCategoryAndProvinceMin(
-////         									title, subCategory, province, bPrizeMin, pageRequest);
-////         						else return itemRepository.findByTitleAndSubCategoryMin(
-////         								title, subCategory, bPrizeMin, pageRequest);
-////         					else
-////         						if (!province.equals(""))
-////         							return itemRepository.findBySubCategoryAndProvinceMin(
-////         									subCategory, province, bPrizeMin, pageRequest);
-////         						else return itemRepository.findBySubCategoryNameMin(subCategory, bPrizeMin, pageRequest);
-////     					else return itemRepository.findAllItemsMin(bPrizeMin, pageRequest);
-////	 				else // use min and max prize 
-////	 					if (!subCategory.equals(""))
-////         					if (!title.equals(""))
-////         						if (!province.equals("")) 
-////         							return itemRepository.findByTitleAndSubCategoryAndProvinceMinMax(
-////     									title, subCategory, province, bPrizeMin, bPrizeMax, pageRequest);
-////         						else return itemRepository.findByTitleAndSubCategoryMinMax(
-////         								title, subCategory, bPrizeMin, bPrizeMax, pageRequest);
-////         					else 
-////         						if (!province.equals(""))
-////         							return itemRepository.findBySubCategoryAndProvinceMinMax(
-////         									subCategory, province, bPrizeMin, bPrizeMax, pageRequest);
-////         						else 
-////         							return itemRepository.findBySubCategoryNameMinMax(
-////         									subCategory, bPrizeMin, bPrizeMax, pageRequest);
-////	 					else return itemRepository.findAllItemsMinMax(bPrizeMin, bPrizeMax, pageRequest);
-//    }
 	
 	@Override
-    public Page<Item> getItemByParams2(String title, String subCategory, double dis, float[] location,
+    public Page<Item> getItemsByParams(String title, String subCategory, double dis, double lat, double lng,
     		int prizeMin, int prizeMax, int page, int size) {
-		
-		double lat = (double) location[0];
-		double lng = (double) location[1];
 
 		// Page Request
-        PageRequest pageRequest = new PageRequest(page, size);
-        
-        BigDecimal bPrizeMin = prizeMin > 0 ? new BigDecimal(prizeMin) : null;
-		BigDecimal bPrizeMax = new BigDecimal(prizeMax);
+		PageRequest pageRequest = new PageRequest(page, size);
+
+		BigDecimal bPrizeMin = prizeMin > 0 ? new BigDecimal(prizeMin) : new BigDecimal(0);
+		BigDecimal bPrizeMax = prizeMin > prizeMax ? new BigDecimal(0) : new BigDecimal(prizeMax);
 		
-		logger.error("dis : " + dis + " ; lat: " + lat + " ; lng: " + lng);
+		if (dis <= 0) dis = Constant.DEFAULT_RADIUS_SEARCH;
 		
-		if (prizeMin > prizeMax || (prizeMin == 0 && prizeMax ==0)) {
-//			if (dis == 0) {
-//				return itemRepository.findByParamsWithSubCat(title, subCategory, pageRequest);
-//			}
-//			else {
-				if (dis == 0) dis = Constant.DEFAULT_RADIUS_SEARCH;
-				if (subCategory.equals("")) {
-					logger.error("using this with dis " + dis);
-					return itemRepository.findByParamsWithDistance(title, lat, lng, dis, pageRequest);
-				}
-				else {
-					logger.error("using subcat with dis " + dis);
-					return itemRepository.findByParams(title, subCategory, lat, lng, dis, pageRequest);
-				}
-//			}
-		}
-		else { // using minimum prize
-			if (prizeMax == 0) {
-				if (dis == 0) {
-					return itemRepository.findByParamsWithSubCatMin(title, subCategory, bPrizeMin, pageRequest);
-				}
-				else { 
-					if (subCategory.equals("")) {
-						return itemRepository.findByParamsWithDistanceMin(title, lat, lng, dis, bPrizeMin, pageRequest);
-					}
-					else { 
-						return itemRepository.findByParamsMin(title, subCategory, lat, lng, dis, bPrizeMin, pageRequest);
-					}
-				}
-			}
-			else {
-				if (dis == 0) {
-					return itemRepository.findByParamsWithSubCatMinMax(title, subCategory, bPrizeMin, bPrizeMax, pageRequest);
-				}
-				else { 
-					if (subCategory.equals("")) {
-						return itemRepository.findByParamsWithDistanceMinMax(title, lat, lng, dis, bPrizeMin, bPrizeMax, pageRequest);
-					}
-					else { 
-						return itemRepository.findByParamsMinMax(title, subCategory, lat, lng, dis, bPrizeMin, bPrizeMax, pageRequest);
-					}
-				}
-			}
-		}
+		if (subCategory.equalsIgnoreCase(Constant.ALL_PATH)) subCategory = "";
+		
+		logger.error("dis : " + dis + " ; lat: " + lat + " ; lng: " + lng + " cat: " + subCategory
+				+ " min " + bPrizeMin + " max " + bPrizeMax);
+		
+		return itemRepository.findByParams(title, subCategory, lat, lng, dis, 
+				bPrizeMin.doubleValue(), bPrizeMax.doubleValue(), pageRequest);
+		
 	}
 	
 	public List<Item> getRandomFeaturedItems(int maxItems, String filter) {
-		if (filter != null && filter != "")
+		if (filter != null && !filter.equals(""))
 			return itemRepository.findRandomFeaturedItemsByFilter(new PageRequest(0, maxItems), filter);
 		else
 			return itemRepository.findRandomFeaturedItems(new PageRequest(0, maxItems));
@@ -462,5 +301,10 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public int getNumberUserItems(User user) {
 		return itemRepository.findNumberUserItems(user.getUserId());
+	}
+	
+	@Override
+	public int getNumberUserItems(Long userId) {
+		return itemRepository.findNumberUserItems(userId);
 	}
 }

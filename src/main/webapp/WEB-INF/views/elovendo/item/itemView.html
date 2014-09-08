@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8"/>
 
@@ -12,9 +11,9 @@
 <!-- Javascript -->
 <script src="/js/jquery-1.11.0.min.js"></script>
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="/css/bootstrap.min.css"/>
 <!-- Latest compiled and minified JavaScript -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 <!-- Styles -->
 <link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
 
@@ -90,11 +89,16 @@
 									</div>
 									<div class="row">
 										<div class="col-xs-12 text-center">
-											<div class="btn-group" style="margin-right: 10px;">
-											<a th:href="@{'/bazaar/item/' + ${item.itemId}}" class="btn btn-default btn-lg"
-												role="button">Ver anuncio</a>
-											<button class="btn btn-primary btn-lg" role="button"
-											data-toggle="modal" data-target="#myModal">Enviar mensaje</button>
+											<div class="btn-group">
+												<button class="btn btn-primary btn-lg" role="button"
+													data-toggle="modal" data-target="#myModal">
+													<i class="glyphicon glyphicon-send"></i> Enviar mensaje
+												</button>
+												<button class="btn btn-danger btn-lg" role="button"
+													data-toggle="modal" data-target="#myModal">
+													<i class="glyphicon glyphicon-exclamation-sign"></i>
+													Denunciar
+												</button>
 											</div>
 										</div>
 									</div>
@@ -166,52 +170,106 @@
 			<div class="tab-pane fade" id="userContent">
 				<div class="container">
 					<div class="row">
-						<div class="col-xs-12 col-md-12" >
-							<div class="panel panel-info">
-								<div class="panel-heading">
-								    <h1 class="panel-title"><strong>Vendedor</strong></h1>
-								</div>
-								<div class="panel-body">
-									<div class="row">
-										<div class="col-xs-3 col-md-3 text-center userPic" >
-											<img data-src="holder.js/300x300" alt="Profile pic" 
-											th:src="@{'http://www.elovendo.com/' + ${item.user.avatar}}"/>
-										</div>
-										<div class="col-xs-5 col-md-5 pull-left top-buffer">
-											<h3>
-												<a th:href="@{/elovendo/index}" th:text="${item.user.login}"> usuario </a>
-											</h3>
-											<!-- <p>Miembro desde <span th:text="${item.user.registerDate}"> desde </span></p> -->
-											<p>Miembro desde el 
-												<span th:text="${#calendars.format(item.user.registerDate, 'dd MMMM yyyy')}"> fecha </span>
-											</p>
-											<h3>Reputación</h3>
+						<div class="col-md-offset-2 col-md-8 col-lg-offset-2 col-lg-8">
+							<div class="well profileStyle itemUserProfile">
+								<div class="col-sm-12">
+									<div class="col-xs-12 col-sm-8">
+										<h2 th:text="${item.user.login}">user</h2>
+										<hr class="hrStyle" />
+										<p>
+											<strong>Usuario desde: </strong> <span
+												th:text="${#calendars.format(item.startDate, 'dd MMMM yyyy')}">ever</span>
+										</p>
+										<p>
+											<strong>Bio: </strong> Read, out with friends, listen
+											to music, draw and learn new things.
+										</p>
+										<p class="reputation">
+											<h2>Reputación</h2>
+											<hr class="hrStyle" />
 											<div class="progress">
 												<div th:if="${item.user.userValue} &gt; 69"
-													class="progress-bar progress-bar-success" 
-													role="progressbar" th:attr="aria-valuenow=${item.user.userValue}"
-													aria-valuemin="0" aria-valuemax="100" 
+													class="progress-bar progress-bar-success" role="progressbar"
+													th:attr="aria-valuenow=${item.user.userValue}"
+													aria-valuemin="0" aria-valuemax="100"
 													th:style="'width:' + ${item.user.userValue} + '%;'">
-														<span class="sr-only" 
-															th:value="${item.user.userValue} + ' points. Excellent user.'"></span>
+													<span class="sr-only"
+														th:value="${item.user.userValue} + ' points. Excellent user.'"></span>
 												</div>
 												<div th:if="${item.user.userValue} &gt; 39"
-													class="progress-bar progress-bar-warning" 
-													role="progressbar" th:attr="aria-valuenow=${item.user.userValue}"
-													aria-valuemin="0" aria-valuemax="100" 
+													class="progress-bar progress-bar-warning" role="progressbar"
+													th:attr="aria-valuenow=${item.user.userValue}"
+													aria-valuemin="0" aria-valuemax="100"
 													th:style="'width:' + ${item.user.userValue} + '%;'">
-														<span class="sr-only" 
-															th:value="${item.user.userValue} + ' points. Average user.'"></span>
+													<span class="sr-only"
+														th:value="${item.user.userValue} + ' points. Average user.'"></span>
 												</div>
 												<div th:if="${item.user.userValue} &gt; 0"
-													class="progress-bar progress-bar-danger" 
-													role="progressbar" th:attr="aria-valuenow=${item.user.userValue}"
-													aria-valuemin="0" aria-valuemax="100" 
+													class="progress-bar progress-bar-danger" role="progressbar"
+													th:attr="aria-valuenow=${item.user.userValue}"
+													aria-valuemin="0" aria-valuemax="100"
 													th:style="'width:' + ${item.user.userValue} + '%;'">
-														<span class="sr-only" 
-															th:value="${item.user.userValue} + ' points. Bad user.'"></span>
+													<span class="sr-only"
+														th:value="${item.user.userValue} + ' points. Bad user.'"></span>
 												</div>
 											</div>
+										</p>
+									</div>
+									<div class="col-xs-12 col-sm-4 text-center">
+										<figure>
+											<img
+												th:src="@{'http://www.elovendo.com/' + ${item.user.avatar}}"
+												alt="" class="profilePic">
+										</figure>
+									</div>
+								</div>
+								<div class="col-xs-12 divider text-center">
+									<div class="col-xs-12 col-sm-4 emphasis">
+										<h2>
+											<strong th:text="${votesPositive}">0</strong>
+										</h2>
+										<p>
+											<small>Votos positivos</small>
+										</p>
+										<a href="#voteModal" data-toggle="modal" data-target="#voteModal" class="btn btn-success btn-block">
+											<span class="fa fa-plus-circle"></span> Votar
+										</a>
+									</div>
+									<div class="col-xs-12 col-sm-4 emphasis">
+										<h2>
+											<strong th:text="${votesNegative}">0</strong>
+										</h2>
+										<p>
+											<small>Votos negativos</small>
+										</p>
+										<a class="btn btn-info btn-block" role="button" th:href="@{'/site/public/' + ${item.user.login}}">
+											<span class="fa fa-user"></span> Ver perfil
+										</a>
+									</div>
+									<div class="col-xs-12 col-sm-4 emphasis">
+										<h2>
+											<strong th:text="${totalItems}">0</strong>
+										</h2>
+										<p>
+											<small>Anuncios publicados</small>
+										</p>
+										<div class="dropup"
+											style="width: 100% !important;">
+											<button type="button" class="btn btn-primary dropdown-toggle dropup" data-toggle="dropdown">
+												<span class="fa fa-gear"></span> Opciones <span class="caret"></span>
+											</button>
+<!-- 											<button type="button" class="btn btn-primary dropdown-toggle" -->
+<!-- 												data-toggle="dropdown"> -->
+<!-- 												<span class="caret"></span> <span class="sr-only">Toggle -->
+<!-- 													Dropdown</span> -->
+<!-- 											</button> -->
+											<ul class="dropdown-menu text-left" role="menu">
+												<li><a href="#"><span
+														class="fa fa-envelope pull-right"></span> Enviar email </a></li>
+												<li class="divider"></li>
+												<li><a href="#"><span
+														class="fa fa-warning pull-right"></span>Denunciar usuario</a></li>
+											</ul>
 										</div>
 									</div>
 								</div>
@@ -219,8 +277,7 @@
 						</div>
 					</div>
 				</div>
-        	</div>
-        </div>
+			</div>
 	</div>
 	
 <!-- Modal -->
@@ -253,6 +310,36 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-primary">Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Vote modal -->
+<div class="modal fade" id="voteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Votar usuario</h4>
+      </div>
+      <div class="modal-body">
+      	<form role="form">
+		  <div class="form-group">
+		    <label for="exampleInputEmail1">Escribe tu comentario...</label>
+		    <input type="text" class="form-control" id="voteComment" placeholder="Tu comentario..."
+		    maxlength="50"/>
+		  </div>
+		  <input type="hidden" value="" name="voteType" id="voteType">
+		  <div class="text-center">
+			  <button type="submit" class="btn btn-success iVote">
+			  	<h4 style="display: inline;"><i class="glyphicon glyphicon-ok"></i></h4><h3 style="display: inline;"> Votar positivo</h3>
+			  </button>
+			  <button type="submit" class="btn btn-danger iVote">
+			  	<h4 style="display: inline;"><i class="glyphicon glyphicon-remove"></i></h4><h3 style="display: inline;"> Votar negativo</h3>
+			  </button>
+		  </div>
+		</form>
       </div>
     </div>
   </div>

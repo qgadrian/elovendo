@@ -53,8 +53,7 @@
 				method="post" enctype="multipart/form-data" accept-charset="UTF-8" >
 				<img alt="profile pic"  th:src="@{'http://www.elovendo.com/' + ${user.avatar}}" />
 				<h1 th:text="${user.login}">Editar perfil</h1>
-				<hr class="colorgraph" />
-				<hr/>
+				<hr class="hrStyle"/>
 				<!-- Username 2-20 characters -->
 				<div class="col-sm-8 col-sm-offset-2" th:if="${#fields.hasErrors('user.login')}">
 					<div class="alert alert-danger" role="alert">

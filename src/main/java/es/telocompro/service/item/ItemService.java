@@ -76,6 +76,20 @@ public interface ItemService {
      * Get all user items
      */
     public Page<Item> getAllItemsByUserName(String userName, int page, int size);
+    
+    /**
+     * Get all user items
+     */
+    public List<Item> getAllItemsByUserName(String userName);
+    
+    /**
+     * Returns all items, INCLUDED ended ones
+     * @param user
+     * @return
+     */
+    public List<Item> getAllItemsByUser(User user);
+    
+    public List<Item> getAllItemsByUserId(Long userId);
 
     /**
      * Get an item given its id
@@ -112,66 +126,14 @@ public interface ItemService {
     public Page<Item> getAllItemsByCategory(String categoryName, int prizeMin, int prizeMax, 
     		int page, int size);
 
-//    /**
-//     * Finds all items from a subCategory
-//     * @param subCategoryName
-//     * @deprecated Use getAllItemsBySubCategory(String subCategoryName, int prizeMin, 
-//     * int prizeMax, int page, int size) instead
-//     * @return
-//     */
-//    @Deprecated
-//    public Page<Item> getAllItemsBySubCategory(String subCategoryName, int page, int size);
-//    
-//    /**
-//     * Finds all items from a subCategory
-//     * @param subCategoryName SubCategory name
-//     * @param prizeMin Minimum prize
-//     * @param prizeMax Maximum prize
-//     * @param page Page number
-//     * @param size Page size
-//     * @return Item page
-//     */
-//    @Deprecated
-//    public Page<Item> getAllItemsBySubCategory(String subCategoryName, int prizeMin, int prizeMax, 
-//    		int page, int size);
-//    
-//    /**
-//     * Get all items using parameters
-//     * @param title
-//     * @param subCategory
-//     * @param province
-//     * @param dis Distance to item
-//     * @param location {LATITUDE, LONGITUDE}
-//     * @param prizeMin
-//     * @param prizeMax
-//     * @param page
-//     * @param size
-//     * @return
-//     */
-//    @Deprecated
-//    public Page<Item> getItemByParams(String title, String subCategory, String province,
-//    		int prizeMin, int prizeMax, int page, int size);
     
-    /**
-     * Get all items using parameters
-     * @param title
-     * @param subCategory
-     * @param province
-     * @param dis Distance to item
-     * @param location {LATITUDE, LONGITUDE}
-     * @param prizeMin
-     * @param prizeMax
-     * @param page
-     * @param size
-     * @return
-     */
-    public Page<Item> getItemByParams2(String title, String subCategory, double dis, float[] location,
+    public Page<Item> getItemsByParams(String title, String subCategory, double dis, double lat, double lng,
     		int prizeMin, int prizeMax, int page, int size);
     
     /**
      * Returns random 'maxItems' items 
      * @param maxItems Max items to retrieve
-     * @param subCategory SubCategory to find items
+     * @param subCategory @nullable SubCategory to find items.
      * @return Randomized items
      */
     public List<Item> getRandomFeaturedItems(int maxItems, String filter);
@@ -193,4 +155,5 @@ public interface ItemService {
     public void deleteItem(Long itemId);
     
     public int getNumberUserItems(User user);
+    public int getNumberUserItems(Long userId);
 }

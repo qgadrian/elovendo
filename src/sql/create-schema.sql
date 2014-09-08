@@ -101,6 +101,7 @@
     	    youtubeVideo VARCHAR(255),
     	    featured BOOLEAN NOT NULL,
     	    highlight BOOLEAN NOT NULL,
+    	    autoRenew BOOLEAN NOT NULL,
     	    latitude DOUBLE NOT NULL,
     	    longitude DOUBLE NOT NULL,
     	    cosRadLat DOUBLE NOT NULL,

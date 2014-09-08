@@ -168,30 +168,6 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
-		<!-- SLF4J (required by Hibernate and Tapestry) -->
-		<!-- <dependency> -->
-		<!-- <groupId>org.slf4j</groupId> -->
-		<!-- <artifactId>slf4j-simple</artifactId> -->
-		<!-- <version>${slf4j.version}</version> -->
-		<!-- <scope>runtime</scope> -->
-		<!-- </dependency> -->
-		<!-- slf4j -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.slf4j</groupId> -->
-<!-- 			<artifactId>slf4j-api</artifactId> -->
-<!-- 			<type>jar</type> -->
-<!-- 			<scope>compile</scope> -->
-<!-- 		</dependency> -->
-		<!-- Log4j -->
-<!-- 		<dependency> -->
-<!-- 		<groupId>log4j</groupId> -->
-<!-- 		<artifactId>log4j</artifactId> -->
-<!-- 		<scope>runtime</scope> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework.boot</groupId> -->
-<!-- 			<artifactId>spring-boot-starter-log4j</artifactId> -->
-<!-- 		</dependency> -->
 
 		<!-- JSON -->
 		<dependency>
@@ -213,18 +189,6 @@
 			<artifactId>imgscalr-lib</artifactId>
 			<version>4.2</version>
 		</dependency>
-
-		<!-- Spacial data -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.hibernate</groupId> -->
-<!-- 			<artifactId>hibernate-spatial</artifactId> -->
-<!-- 			<version>4.3</version> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!--             <groupId>org.hibernate</groupId> -->
-<!--             <artifactId>hibernate-entitymanager</artifactId> -->
-<!--             <version> 4.3.5.Final</version> -->
-<!--         </dependency> -->
 
 
 		<!-- TAPESTRY -->

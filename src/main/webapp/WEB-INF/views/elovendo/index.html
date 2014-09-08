@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Elovendo</title>
 
@@ -20,7 +19,7 @@
 <!-- Javascript -->
 <script src="/js/jquery-1.11.0.min.js"></script>
 <!-- Latest compiled and minified JavaScript -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 
 <!-- Styles -->
 <!-- Latest compiled and minified CSS -->
@@ -87,32 +86,35 @@
 				<div class="row">
 					<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;">
 						<h2 style="font-family: 'Raleway', 'Andika', sans-serif; color: #563D7C">PATROCINADOS</h2>
-						<hr class="colorgraph"/>
+						<hr class="hrStyle2"/>
 					</div>
 				</div>
 				<div class="row" th:each="item : ${featuredItems}">
 					<div class="col-xs-12 col-md-12">
-						<div class="featuredSection">
+						<a th:href="@{'/bazaar/item/' + ${item.itemId}}" class="featuredSection">
 							<div class="thumbnail">
-								<a th:href="@{'/bazaar/item/' + ${item.itemId}}">
+<!-- 								<a th:href="@{'/bazaar/item/' + ${item.itemId}}"> -->
 									<img data-src="holder.js/300x300" alt="..." 
 									th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}"/>
-								</a>
+<!-- 								</a> -->
+<hr />
 								<div class="caption">
-									<h3 th:text="${item.title}">Title</h3>
+									<h4 th:text="${item.title}">Title</h4>
 									<p th:if="${#strings.length(item.plainDescription)} &gt; 99" 
 										th:utext="${#strings.substring(item.plainDescription, 0, 100)}"
 										class="featuredTextDesc">Description</p>
 									<p th:if="${#strings.length(item.plainDescription)} &lt; 100" 
 										th:utext="${item.plainDescription}"
 										class="featuredTextDesc">Description</p>
-									<p>
-										<a href="#" class="btn btn-default" role="button">Ver anuncio</a>
-										<a href="#" class="btn btn-primary" role="button">Enviar mensaje</a>
-									</p>
 								</div>
 							</div>
-						</div>
+						</a>
+						<button class="btn btn-primary indexMsg" role="button"
+							th:attr="data-user=${item.user.login}" data-toggle="modal"
+							data-target="#myModal">
+							<i class="glyphicon glyphicon-send" style="margin-right: 4px;"></i>
+							Mensaje
+						</button>
 					</div>
 				</div>
 			</div>
@@ -127,7 +129,7 @@
 				<div class="row">
 					<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;">
 						<h2 style="font-family: 'Raleway', 'Andika', sans-serif; color: #563D7C">CATEGORÍAS</h2>
-						<hr class="colorgraph"/>
+						<hr class="hrStyle2"/>
 					</div>
 				</div>
 				<div class="row">

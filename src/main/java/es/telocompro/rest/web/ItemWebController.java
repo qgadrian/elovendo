@@ -22,8 +22,12 @@ import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.rest.controller.exception.ItemNotFoundException;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.item.category.CategoryService;
+import es.telocompro.service.user.UserService;
+import es.telocompro.service.vote.VoteService;
 import es.telocompro.util.Constant;
 import es.telocompro.util.PageWrapper;
+
+import static es.telocompro.util.Constant.S_ITEMS_PER_PAGE;
 
 @Controller
 @RequestMapping(value = "/bazaar/")
@@ -33,6 +37,10 @@ public class ItemWebController {
 	
 	@Autowired
 	private ItemService itemService;
+	@Autowired
+	private VoteService voteService;
+	@Autowired
+	private UserService userService;
 	@Autowired
 	private CategoryService categoryService;
 	
@@ -93,8 +101,15 @@ public class ItemWebController {
 		JSONObject output = new JSONObject();
 		JSONArray outputArray = new JSONArray();
 		
+		// Main "all" select option
+		JSONObject element = new JSONObject();
+		element.put("id", 0);
+		// TODO: i18n
+		element.put("name", "Todas las subcategorías");
+		outputArray.add(element);
+		
 		for (SubCategory sub : subCategories) {
-			JSONObject element = new JSONObject();
+			element = new JSONObject();
 			element.put("id", sub.getId());
 			element.put("name", sub.getSubCategoryName());
 			outputArray.add(element);
@@ -112,41 +127,28 @@ public class ItemWebController {
     public String itemListByTitleSearchPage(Model model,
     		@RequestParam(value="subcategory", required=false, defaultValue="") String subCategory,
     		@RequestParam("title") String title,
-    		@RequestParam(value = "dis", required = false, defaultValue="0") String distance,
-    		@RequestParam(value = "lat", required = false, defaultValue="0") String latitude,
-    		@RequestParam(value = "lng", required = false, defaultValue="0") String longitude,
+    		@RequestParam(value = "dis", required = false, defaultValue="0") double dis,
+    		@RequestParam(value = "lat", required = false, defaultValue="0") double lat,
+    		@RequestParam(value = "lng", required = false, defaultValue="0") double lng,
     		@RequestParam(value = "min", required = false, defaultValue="0" ) int prizeMin,
     		@RequestParam(value = "max", required = false, defaultValue="0" ) int prizeMax,
     		@RequestParam(value = "p", required = false, defaultValue="0") int page, 
-    		@RequestParam(value = "s", required = false, defaultValue="5" ) int size) {
-    	
-//    	// Populate selectors
-//    	@SuppressWarnings("unchecked")
-//		List<Province> provinces = IteratorUtils.toList(provinceService.findAllProvinces().iterator());
-//    	model.addAttribute("provinces", provinces);
-//    	@SuppressWarnings("unchecked")
-//		List<SubCategory> subCategories = IteratorUtils.toList(categoryService
-//				.findAllSubCategoriesFromSubCategoryName(subCategory).iterator());
-//    	model.addAttribute("subCategories", subCategories);
+    		@RequestParam(value = "s", required = false, defaultValue=S_ITEMS_PER_PAGE ) int size) {
     	
     	model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, subCategory));
     	
-//    	Page<Item> p = itemService.getItemByTitleAndSubCategory(title, subCategory, page, size);
-//    	Page<Item> p = itemService.getItemByParams(title, subCategory, place, prizeMin, prizeMax, page, size);
+    	@SuppressWarnings("unchecked")
+		List<Category> categories = IteratorUtils.toList(
+				categoryService.findAllCategories().iterator());
+		model.addAttribute("categories", categories);
     	
     	// FIXME: Broken search
-    	double dis = Double.parseDouble(distance);
-    	float lat = Float.valueOf(latitude);
-    	float lng = Float.valueOf(longitude);
-    	float[] latLng = {lat , lng};
-    	Page<Item> p = itemService.getItemByParams2(title, subCategory, dis, latLng, prizeMin, prizeMax, page, size);
+    	Page<Item> p = itemService.getItemsByParams(title, subCategory, dis, lat, lng, prizeMin, prizeMax, page, size);
 
     	// Quick workaround for manage pagination with searches
-    	PageWrapper<Item> pageWrapper;
-    	if (subCategory != "") 
-    		pageWrapper= new PageWrapper<Item>(p, "search?title=" + title + "&subcategory=" + subCategory);
-    	else 
-    		pageWrapper = new PageWrapper<Item>(p, "search?title=" + title);
+    	PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, 
+    			fixPaginationUrl(subCategory, title, dis, lat, lng, prizeMin, prizeMax));
+    	
     	List<Item> items = p.getContent();
     	
     	model.addAttribute("page", pageWrapper);
@@ -165,12 +167,12 @@ public class ItemWebController {
     		@PathVariable("categoryName") String categoryName,
     		@RequestParam(value = "title", required = false, defaultValue="") String title,
     		@RequestParam(value = "dis", required = false, defaultValue="0") double dis,
-    		@RequestParam(value = "lat", required = false, defaultValue="0") String latitude,
-    		@RequestParam(value = "lng", required = false, defaultValue="0") String longitude,
+    		@RequestParam(value = "lat", required = false, defaultValue="0") double lat,
+    		@RequestParam(value = "lng", required = false, defaultValue="0") double lng,
     		@RequestParam(value = "min", required = false, defaultValue="0" ) int prizeMin,
     		@RequestParam(value = "max", required = false, defaultValue="0" ) int prizeMax,
     		@RequestParam(value = "p", required = false, defaultValue="0") int page, 
-    		@RequestParam(value = "s", required = false, defaultValue="5" ) int size) {
+    		@RequestParam(value = "s", required = false, defaultValue=S_ITEMS_PER_PAGE ) int size) {
 		
 		model.addAttribute("featuredItems", 
 				itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, categoryName));
@@ -182,104 +184,91 @@ public class ItemWebController {
 		List<Category> categories = IteratorUtils.toList(
 				categoryService.findAllCategories().iterator());
 		model.addAttribute("categories", categories);
-//		@SuppressWarnings("unchecked")
-//		List<SubCategory> subCategories = IteratorUtils.toList(
-//				categoryService.getAllSubCategoriesFromCategoryName(categoryName).iterator());
-//		model.addAttribute("subCategories", subCategories);
 		
 		if (prizeMin != 0)
 			model.addAttribute("prizeMin", prizeMin);
 		if (prizeMax != 0)
 			model.addAttribute("prizeMax", prizeMax);
 
-//    	Page<Item> p = itemService.getAllItemsByCategory(categoryName, prizeMin, prizeMax, page, size);
-//		Page<Item> p = itemService.getItemByParams(title, categoryName, province, prizeMin, prizeMax, page, size);
+		Page<Item> p = 
+				itemService.getItemsByParams(title, categoryName, dis, lat, lng, prizeMin, prizeMax, page, size);
+		
+		String fixedUrl = fixPaginationUrl(categoryName, title, dis, lat, lng, prizeMin, prizeMax);
+		
+		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixedUrl);
+		List<Item> items = p.getContent();
 
-		float lat = Float.valueOf(latitude);
-		float lng = Float.valueOf(longitude);
-    	float[] latLng = {lat , lng};
-		Page<Item> p = itemService.getItemByParams2(title, categoryName, dis, latLng, prizeMin, prizeMax, page, size);
-    	PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, categoryName);
-    	List<Item> items = p.getContent();
-    	
-    	model.addAttribute("page", pageWrapper);
-    	model.addAttribute("itemsList", items);
-    	
-        return "elovendo/item/list/item_list";
-    }
-	
+		model.addAttribute("page", pageWrapper);
+		model.addAttribute("itemsList", items);
+
+		return "elovendo/item/list/item_list";
+	}
+
 	/**
 	 * FIND BY SUBCATEGORY
 	 */
-    
-//    @RequestMapping(value="{subcategoryname}", params = {"p","s"}, method = RequestMethod.GET)
-//    public String itemListPage(Model model, 
-//    		@PathVariable("subcategoryname") String subCategoryName,
-//    		@RequestParam("p") int page, @RequestParam( "s" ) int size) {
-//    	
-////    	String pageString = request.getParameter("page");
-////    	if ("previous".equals(pageString)) System.out.println("previous equaled");
-////    	else System.out.println("previous not equaled at all cause is " + pageString);
-//    	
-//    	model.addAttribute("page", page);
-//    	model.addAttribute("size", size);
-//    	
-//    	Page<Item> p = itemService.getAllItemsBySubCategory(subCategoryName, 0, 0, page, size);
-//    	List<Item> items = p.getContent();
-//    	
-//    	model.addAttribute("pagePag", p);
-//    	model.addAttribute("items", items);
-//    	
-//        return "elovendo/item/list/item_list";
-//    }
 	
-    @RequestMapping(value="sub/{subcategoryname}", method = RequestMethod.GET)
-    public String itemListPage(Model model, 
-    		@PathVariable("subcategoryname") String subCategoryName,
+	@RequestMapping(value = "sub/{subcategoryname}", method = RequestMethod.GET)
+	public String itemListPage(
+			Model model,
+			@PathVariable("subcategoryname") String subCategoryName,
+			@RequestParam(value = "title", required = false, defaultValue = "") String title,
+			@RequestParam(value = "dis", required = false, defaultValue = "0") double dis,
+			@RequestParam(value = "lat", required = false, defaultValue = "0") double lat,
+			@RequestParam(value = "lng", required = false, defaultValue = "0") double lng,
+			@RequestParam(value = "min", required = false, defaultValue = "0") int prizeMin,
+			@RequestParam(value = "max", required = false, defaultValue = "0") int prizeMax,
+			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
+			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) {
+
+		model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(
+				Constant.MAX_RANDOM_ITEMS, subCategoryName));
+
+		Page<Item> p = itemService.getItemsByParams(title, subCategoryName,
+				dis, lat, lng, prizeMin, prizeMax, page, size);
+		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p,
+				fixPaginationUrl(subCategoryName, title, dis, lat, lng, prizeMin, prizeMax));
+		List<Item> items = p.getContent();
+
+		@SuppressWarnings("unchecked")
+		List<Category> categories = IteratorUtils.toList(categoryService
+				.findAllCategories().iterator());
+		model.addAttribute("categories", categories);
+
+		model.addAttribute("page", pageWrapper);
+		model.addAttribute("itemsList", items);
+
+		return "elovendo/item/list/item_list";
+	}
+    
+    @RequestMapping(value=Constant.ALL_PATH, method = RequestMethod.GET)
+    public String allItemListPage(Model model,
     		@RequestParam(value = "title", required = false, defaultValue="") String title,
-    		@RequestParam(value = "province", required = false, defaultValue="") String province,
-    		@RequestParam(value = "dis", required = false, defaultValue="0") String distance,
-    		@RequestParam(value = "lat", required = false, defaultValue="0") String latitude,
-    		@RequestParam(value = "lng", required = false, defaultValue="0") String longitude,
+    		@RequestParam(value = "dis", required = false, defaultValue="0") double dis,
+    		@RequestParam(value = "lat", required = false, defaultValue="0") double lat,
+    		@RequestParam(value = "lng", required = false, defaultValue="0") double lng,
     		@RequestParam(value = "min", required = false, defaultValue="0" ) int prizeMin,
     		@RequestParam(value = "max", required = false, defaultValue="0" ) int prizeMax,
     		@RequestParam(value = "p", required = false, defaultValue="0") int page, 
-    		@RequestParam(value = "s", required = false, defaultValue="5" ) int size) {
+    		@RequestParam(value = "s", required = false, defaultValue=S_ITEMS_PER_PAGE ) int size) {
     	
-//    	String pageString = request.getParameter("page");
-//    	if ("previous".equals(pageString)) System.out.println("previous equaled");
-//    	else System.out.println("previous not equaled at all cause is " + pageString);
-    	
-//    	model.addAttribute("page", page);
-//    	model.addAttribute("size", size);
     	
     	model.addAttribute("featuredItems", 
-    			itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, subCategoryName));
+    			itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, null));
     	
-//    	Page<Item> p = itemService.getAllItemsBySubCategory(subCategoryName, 0, 0, page, size);
-//    	Page<Item> p = itemService.getAllItemsBySubCategory(subCategoryName, province, prizeMin, prizeMax, page, size);
-    	int dis = Integer.valueOf(distance);
-    	float lat = Float.valueOf(latitude);
-    	float lng = Float.valueOf(longitude);
-    	float[] latLng = {lat , lng};
     	Page<Item> p = 
-    			itemService.getItemByParams2(title, subCategoryName, dis, latLng, prizeMin, prizeMax, page, size);
-    	PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, subCategoryName);
+    			itemService.getItemsByParams(title, null, dis, lat, lng, prizeMin, prizeMax, page, size);
+    		
+    	PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, 
+    			fixPaginationUrl(Constant.ALL_PATH, title, dis, lat, lng, prizeMin, prizeMax));
+    	
     	List<Item> items = p.getContent();
     	
     	@SuppressWarnings("unchecked")
 		List<Category> categories = IteratorUtils.toList(
 				categoryService.findAllCategories().iterator());
 		model.addAttribute("categories", categories);
-//    	@SuppressWarnings("unchecked")
-//		List<SubCategory> subCategories = IteratorUtils.toList(categoryService
-//				.findAllSubCategoriesFromSubCategoryName(subCategoryName).iterator());
-//    	model.addAttribute("subCategories", subCategories);
-    	
-//    	@SuppressWarnings("unchecked")
-//		List<SubCategory> subCategories = IteratorUtils.toList(categoryService
-//				.getAllSubCatByCategoryIdOrderBySubCatName(subCategoryName).iterator());
-//    	model.addAttribute("subCategories", subCategories);
+
     	
     	model.addAttribute("page", pageWrapper);
     	model.addAttribute("itemsList", items);
@@ -307,8 +296,26 @@ public class ItemWebController {
 		catch (ItemNotFoundException e) { return "elovendo/error/error"; }
 		
     	model.addAttribute("item", item);
+    	model.addAttribute("votesPositive", voteService.getVotesPositive(item.getUser().getUserId()));
+    	model.addAttribute("votesNegative", voteService.getVotesNegative(item.getUser().getUserId()));
+    	model.addAttribute("totalItems", itemService.getNumberUserItems(item.getUser().getUserId()));
     	
     	return "elovendo/item/itemView";
     }
+    
+    /** STUFF **/
+    
+	private String fixPaginationUrl(String categoryName, String title,
+			double dis, double lat, double lng, int prizeMin, int prizeMax) {
+		
+		String tmp = categoryName+"?lat="+lat+"&lng="+lng;
+		
+		if (!title.equals("")) tmp = tmp.concat("&title="+title);
+		if(dis > 0) tmp = tmp.concat("&dis="+dis);
+		if(prizeMin > 0) tmp = tmp.concat("&min="+prizeMin);
+		if(prizeMax > 0) tmp = tmp.concat("&max="+prizeMax);
+		
+		return tmp;
+	}
 
 }

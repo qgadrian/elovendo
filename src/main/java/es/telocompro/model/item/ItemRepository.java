@@ -10,10 +10,25 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import es.telocompro.model.user.User;
+
 /**
  * Created by @adrian on 17/06/14.
  * All rights reserved.
  */
+
+// AUTO UPDATE QUERY:
+/** UPDATE item SET startDate = NOW(), endDate = (NOW() + INTERVAL 30 DAY) WHERE autoRenew = 1; **/
+// SET SCHEDULER ON
+/** SET GLOBAL event_scheduler = ON; **/
+// SEE Scheduler events
+/** SELECT * FROM INFORMATION_SCHEMA.EVENTS WHERE EVENT_NAME = "reset"; ---- PROCESSES: SHOW PROCESSLIST\G **/ 
+// EVENT MYSQL
+/** CREATE EVENT autoRenew ON SCHEDULE EVERY 15 MINUTE DO UPDATE item SET startDate = NOW(), endDate = DATE_ADD(NOW(), INTERVAL 30 DAY) WHERE endDate < NOW() AND autoRenew = TRUE; **/
+// See scheduler
+/** SELECT * FROM INFORMATION_SCHEMA.EVENTS WHERE EVENT_NAME = "reset"; **/
+// DROP scheduler
+/** DROP EVENT reset_test; **/
 
 @Repository("itemRepository")
 public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
@@ -21,17 +36,23 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
 	/* USER */
 
     @Query("SELECT i, i.user.login AS username, i.subCategory.subCategoryName AS subCategory,"
-    		+ " i.subCategory.category.categoryName FROM Item i WHERE i.user.login = :username")
+    		+ " i.subCategory.category.categoryName FROM Item i WHERE i.user.login = :username AND endDate > NOW()")
     Page<Item> findByUserName(@Param("username") String userName, Pageable pageable);
     
-    @Query("SELECT COUNT(i) FROM Item i WHERE i.user.userId = :userId")
+    @Query("SELECT COUNT(i) FROM Item i WHERE i.user.userId = :userId AND endDate > NOW()")
     int findNumberUserItems(@Param("userId") Long userId);
+    
+    @Query("SELECT i FROM Item i WHERE i.user.login = :userName AND endDate > NOW()")
+	List<Item> findByUserName(@Param("userName") String userName);
+
+    @Query("SELECT i FROM Item i WHERE i.user.userId = :userId")
+	List<Item> findByUserId(@Param("userId") Long userId);
     
     /*************************************************************************************************************/
     
     /* RANDOM */
     
-    @Query("SELECT i FROM Item i WHERE i.featured = 1 ORDER BY RAND()")
+    @Query("SELECT i FROM Item i WHERE featured = 1 AND endDate > NOW() ORDER BY RAND()")
     List<Item> findRandomFeaturedItems(Pageable pageable);
     
     /**
@@ -168,116 +189,27 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     /*************************************************************************************************************/
     
     /* PARAMS */
-    
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
-    		+ "OR i.subCategory.category.categoryName = :subCategoryName) "
-    		+ "AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findByParams(@Param("title") String title, 
-    		@Param("subCategoryName") String subCategory, Pageable pageable);
-    
-    /***/
-    // Current using: 0.00030116
-    // Commented using: 0.00040794
-    //SELECT i.itemid, i.title, n.dis FROM item i JOIN 
-    //(SELECT (6371*acos(cos(radians(41.38506317138672))*cosRadLat*cos(radians(longitude)-
-    //radians(2.17340350151062))+sin(radians(41.38506317138672))*sin(radians(latitude)))) AS dis FROM item) 
-    //AS n WHERE endDate > NOW() AND n.dis < 500 ;
-    @Query("SELECT new Item(i, (6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) AS dis)"
-    		+ " FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
-    		+ "OR i.subCategory.category.categoryName = :subCategoryName) AND endDate > NOW() "
-    		+ "AND (6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :d "
-    		+ "ORDER BY startdate")
-    Page<Item> findByParams(@Param("title") String title, @Param("subCategoryName") String subCategory, 
-    		@Param("lat") double latitude, @Param("lng") double longitude,
-    		@Param("d") double distance, Pageable pageable);
+//    
+//    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
+//    		+ "OR i.subCategory.category.categoryName = :subCategoryName) "
+//    		+ "AND endDate > NOW() ORDER BY startdate")
+//    Page<Item> findByParams(@Param("title") String title, 
+//    		@Param("subCategoryName") String subCategory, Pageable pageable);
 
-    /**/
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND endDate > NOW() "
-    		+ "AND (6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :d "
-    		+ "ORDER BY startdate")
-    Page<Item> findByParamsWithDistance(@Param("title") String title, 
-    		@Param("lat") double latitude, @Param("lng") double longitude,
-    		@Param("d") double distance, Pageable pageable);
-    /**/
-    
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
-    		+ "OR i.subCategory.category.categoryName = :subCategoryName) "
-    		+ "AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findByParamsWithSubCat(@Param("title") String title, @Param("subCategoryName") String subCategory, 
-    		Pageable pageable);
-    
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
-    		+ "OR i.subCategory.category.categoryName = :subCategoryName) AND prize >= :prizeMin "
-    		+ "AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findByParamsMin(@Param("title") String title, 
-    		@Param("subCategoryName") String subCategory, @Param("prizeMin") BigDecimal prizeMin, Pageable pageable);
-    
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
-    		+ "OR i.subCategory.category.categoryName = :subCategoryName) AND prize >= :prizeMin AND endDate > NOW() "
-    		+ "AND (6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :d "
-    		+ "ORDER BY startdate")
-    Page<Item> findByParamsMin(@Param("title") String title, 
-    		@Param("subCategoryName") String subCategory, @Param("lat") double latitude, 
-    		@Param("lng") double longitude, @Param("d") double distance,
-    		@Param("prizeMin") BigDecimal prizeMin, Pageable pageable);
-    
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND prize >= :prizeMin AND endDate > NOW() "
-    		+ "AND (6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :d "
-    		+ "ORDER BY startdate")
-    Page<Item> findByParamsWithDistanceMin(@Param("title") String title, @Param("lat") double latitude, 
-    		@Param("lng") double longitude, @Param("d") double distance,
-    		@Param("prizeMin") BigDecimal prizeMin, Pageable pageable);
-    
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
-    		+ "OR i.subCategory.category.categoryName = :subCategoryName) "
-    		+ "AND prize >= :prizeMin AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findByParamsWithSubCatMin(@Param("title") String title, @Param("subCategoryName") String subCategory,
-    		@Param("prizeMin") BigDecimal prizeMin, Pageable pageable);
-    
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
-    		+ "OR i.subCategory.category.categoryName = :subCategoryName) "
-    		+ "AND prize <= :prize AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findByParamsMax(@Param("title") String title, @Param("subCategoryName") String subCategory, 
-    		@Param("prize") BigDecimal prize, Pageable pageable);
-    
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
-    		+ "OR i.subCategory.category.categoryName = :subCategoryName) "
-    		+ "AND prize <= :prize AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findByParamsWithSubCatMax(@Param("title") String title, @Param("subCategoryName") String subCategory, 
-    		@Param("prize") BigDecimal prize, Pageable pageable);
-    
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
-    		+ "OR i.subCategory.category.categoryName = :subCategoryName) "
-    		+ "AND prize >= :prizeMin AND prize <= :prizeMax AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findByParamsMinMax(@Param("title") String title, @Param("subCategoryName") String subCategory,
-    		@Param("prizeMin") BigDecimal prizeMin, @Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
-    
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
-    		+ "OR i.subCategory.category.categoryName = :subCategoryName) "
-    		+ "AND prize >= :prizeMin AND prize <= :prizeMax AND endDate > NOW() "
-    		+ "AND (6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :d "
-    		+ "ORDER BY startdate")
-    Page<Item> findByParamsMinMax(@Param("title") String title, 
-    		@Param("subCategoryName") String subCategory, @Param("lat") double latitude, 
-    		@Param("lng") double longitude, @Param("d") double distance,
-    		@Param("prizeMin") BigDecimal prizeMin, @Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
-    
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% "
-    		+ "AND prize >= :prizeMin AND prize <= :prizeMax AND endDate > NOW() "
-    		+ "AND (6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :d "
-    		+ "ORDER BY startdate")
-    Page<Item> findByParamsWithDistanceMinMax(@Param("title") String title, @Param("lat") double latitude, 
-    		@Param("lng") double longitude, @Param("d") double distance,
-    		@Param("prizeMin") BigDecimal prizeMin, @Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
-    
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND (i.subCategory.subCategoryName = :subCategoryName "
-    		+ "OR i.subCategory.category.categoryName = :subCategoryName) "
-    		+ "AND prize >= :prizeMin AND prize <= :prizeMax "
-    		+ "AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findByParamsWithSubCatMinMax(@Param("title") String title, @Param("subCategoryName") String subCategory,
-    		@Param("prizeMin") BigDecimal prizeMin, @Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
     
     /*************************************************************************************************************/
     
+    /** SECOND SHOT **/
+    
+    @Query("SELECT new Item(i, (6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat))) "
+    		+ "FROM Item i WHERE endDate > NOW() AND title LIKE %:title% "
+    		+ "AND (:pMin <= 0.0 OR prize > :pMin) AND (:pMax <= 0.0 OR prize < :pMax) AND "
+    		+ "(:cat = '' OR i.subCategory.subCategoryName = :cat OR i.subCategory.category.categoryName = :cat) "
+    		+ "AND (:dis >= 5000.0 OR "
+    		+ "(6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :dis)")
+    Page<Item> findByParams(@Param("title") String title, 
+    		@Param("cat") String cat, @Param("lat") double latitude, 
+    		@Param("lng") double longitude, @Param("dis") double distance,
+    		@Param("pMin") double prizemin, @Param("pMax") double prizemax, Pageable pageable);
 
 }

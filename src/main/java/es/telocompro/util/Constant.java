@@ -8,12 +8,22 @@ public class Constant {
 	
 	public static final int INITIAL_POINTS = 0;
 	
-	public static final int ITEM_DEFAULT_DURATION = 15;
-	public static final int DEFAULT_RENEW_DAYS = 15;
-	public static final int MAX_RANDOM_ITEMS = 5;
+	public static final int ITEM_DEFAULT_DURATION = 30;
+	public static final int DEFAULT_RENEW_DAYS = 30;
+	public static final int MAX_RANDOM_ITEMS = 12;
+	
+	/** Items per page **/
+	public static final int ITEMS_PER_PAGE = 15;
+	public static final String S_ITEMS_PER_PAGE = "15";
 	
 	/** DEFAULT RADIUS SEARCH (in KM) */
 	public static final double DEFAULT_RADIUS_SEARCH = 5;
+	
+	/**
+	 * URL PATHS
+	 */
+	
+	public static final String ALL_PATH = "all";
 	
 	/**
 	 * URL PREFIXES

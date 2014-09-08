@@ -83,6 +83,7 @@ public class Item {
     // Premium features
     private boolean featured;
     private boolean highlight;
+    private boolean autoRenew;
     
     // Geolocation
 //    @NotNull
@@ -304,6 +305,14 @@ public class Item {
 
 	public void setHighlight(boolean highlight) {
 		this.highlight = highlight;
+	}
+
+	public boolean isAutoRenew() {
+		return autoRenew;
+	}
+
+	public void setAutoRenew(boolean autoRenew) {
+		this.autoRenew = autoRenew;
 	}
 
 	public double getLatitude() {

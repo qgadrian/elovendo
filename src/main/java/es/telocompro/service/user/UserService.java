@@ -108,6 +108,14 @@ public interface UserService extends UserDetailsService {
      * @throws VoteDuplicateException 
      * @throws InvalidVoteUsersException 
      */
-    public Vote voteUser(Long userIdVote, Long userIdReceive, Long itemId, int voteType, String voteMessage) 
-    		throws UserNotFoundException, ItemNotFoundException, VoteDuplicateException, InvalidVoteUsersException;
+	public Vote voteUser(Long userIdVote, Long userIdReceive, Long itemId,
+			int voteType, String voteMessage) throws UserNotFoundException,
+			ItemNotFoundException, VoteDuplicateException,
+			InvalidVoteUsersException;
+
+	public int getVotesPositive(User user);
+
+	public int getVotesNegative(User user);
+
+	public int getVotesQueued(User user);
 }
