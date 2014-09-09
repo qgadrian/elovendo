@@ -116,15 +116,22 @@ function getUrlParams() {
 }
 
 function die() {
-	var itemId = document.getElementById('id');
+	var itemId = document.getElementById('itemId').value;
 	var s = "/site/delete/item";
 	$.ajax({
         type : 'POST',
         url : s,
         data : ({
             id: itemId
-        })
+        }),
+        success: dieRmv
     });
+}
+
+function dieRmv(val) {
+	console.log("died " + val); 
+	$('#did'+val).remove();
+	$('#removeModal').modal('hide');
 }
 
 function submitSearchForm() {

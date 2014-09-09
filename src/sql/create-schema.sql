@@ -112,19 +112,6 @@
     	    CONSTRAINT fk_item_subcategoryid FOREIGN KEY (subcategoryid) REFERENCES subcategory(subcategoryid) ON UPDATE CASCADE ON DELETE CASCADE
     	);
 
-    -- IMAGES
-    -- TODO: Delte this stuff
-	/*CREATE TABLE image (
-		itemid BIGINT NOT NULL,
-		imghome BLOB,
-		img2 BLOB,
-		img3 BLOB,
-		img4 BLOB,
-		img5 BLOB,
-		img6 BLOB,
-		CONSTRAINT pk_image_itemid PRIMARY KEY (itemid)
-	);*/
-
 -- VOTE
 
     CREATE TABLE vote (
@@ -220,24 +207,11 @@ CREATE TABLE pendingVote(
 		CONSTRAINT fk_user_userId FOREIGN KEY (userId) REFERENCES userprofile(userid),
 		CONSTRAINT fk_messageThread_messageThreadId FOREIGN KEY (messageThreadId) REFERENCES messageThread(messageThreadId)
 	);
-    
-    /*CREATE TABLE conversation(
-    	conversationid BIGINT NOT NULL AUTOINCREMENT,
-    	userid1 BIGINT NOT NULL,
-    	userid2 BIGINT NOT NULL,
-    	CONSTRAINT pk_conversationid PRIMARY KEY (conversationid),
-		CONSTRAINT fk_conversation_userid1 FOREIGN KEY (userid1) REFERENCES userprofile(userid) ON UPDATE CASCADE ON DELETE CASCADE,
-		CONSTRAINT fk_conversation_userid2 FOREIGN KEY (userid2) REFERENCES userprofile(userid) ON UPDATE CASCADE ON DELETE CASCADE,
-    );
-    
-    CREATE TABLE conversationreply(
-    	conversationreplyid BIGINT NOT NULL AUTOINCREMENT,
-    	reply BLOB NOT NULL,
-    	userid BIGINT NOT NULL,
-    	ip VARCHAR(30) NOT NULL,
-    	msgdate DATETIME NOT NULL,
-    	conversationid BIGINT NOT NULL,
-    	CONSTRAINT pk_conversationid PRIMARY KEY (conversationid),
-		CONSTRAINT fk_convreply_userid FOREIGN KEY (userid) REFERENCES userprofile(userid) ON UPDATE CASCADE ON DELETE CASCADE,
-		CONSTRAINT fk_convreply_convid FOREIGN KEY (conversationid) REFERENCES conversation(conversationid) ON UPDATE CASCADE ON DELETE CASCADE,
-    );*/
+	
+	CREATE TABLE favorite(
+		userId BIGINT NOT NULL,
+		itemId BIGINT NOT NULL,
+		favDate DATETIME NOT NULL,
+		CONSTRAINT fk_favorite_userId FOREIGN KEY (userId) REFERENCES userprofile(userid),
+		CONSTRAINT fk_favorite_itemId FOREIGN KEY (itemId) REFERENCES item(itemid)
+	);

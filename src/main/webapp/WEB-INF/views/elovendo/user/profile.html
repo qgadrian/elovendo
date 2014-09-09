@@ -36,7 +36,7 @@
 	
 	<div class="container profileStyle">
 		<div class='tabs-x tabs-above'>
-			<ul id="myTab-1" class="nav nav-tabs" role="tablist">
+			<ul id="profileTab" class="nav nav-tabs" role="tablist">
 				<li class="active"><a href="#profileContent" role="tab" data-toggle="tab">
 				<i class="glyphicon glyphicon-user"></i> Perfil</a></li>
 				<li><a href="#itemsContent" role="tab-kv" data-toggle="tab">
@@ -59,7 +59,8 @@
 							<div class="thumbnail" >
 								<img alt="profile pic" class="profilePic" th:src="@{'http://www.elovendo.com/' + ${user.avatar}}" />
 								<div class="list-group">
-									<a href="www.elovendo.com" class="list-group-item"><span class="glyphicon glyphicon-briefcase"></span>
+									<a class="list-group-item" href="#itemsContent" role="tab-kv" data-toggle="tab">
+									<span class="glyphicon glyphicon-briefcase"></span>
 									<span class="badge" th:text="${totalItems}">0</span>Anuncios</a>
 									<a href="www.elovendo.com" class="list-group-item"><span class="glyphicon glyphicon-stats"></span><span class="badge" th:text="${totalVotes}"></span>Votos</a>
 									<a href="/site/pricing/points" class="list-group-item"><span class="glyphicon glyphicon-shopping-cart"></span><span class="badge" th:text="${user.points}">0</span>Puntos</a>
@@ -140,11 +141,10 @@
 			<!--  user annouces -->
 			<div class="tab-pane fade" id="itemsContent">
 				<div class="container">
-					<div class="row" th:each="item : ${itemList}">
+					<div class="row" th:each="item : ${itemList}" th:id="'did' + ${item.itemId}">
 						<div class="col-xs-offset-2 col-xs-8 itemList">
 							<a th:href="@{'/bazaar/item/' + ${item.itemId}}">
-								<div
-									th:class="${item.highlight}? 'thumbnail featuredThumbnail' : 'thumbnail'">
+<!-- 								<div th:class="${item.highlight}? 'thumbnail featuredThumbnail' : 'thumbnail'"> -->
 									<div class="row">
 										<div class="col-xs-5 col-md-4 col-lg-4">
 											<div class="thumbnail pull-left itemList"
@@ -159,7 +159,7 @@
 												<button class="btn btn-danger btn-m"
 													style="padding: 6px 12px 5px 10px; min-width: 100px;"
 													th:value="${item.itemId}" data-toggle="modal" 
-													th:attr="data-itemId=${item.itemId}"
+													th:attr="data-item=${item.itemId}"
 													data-target="#removeModal">
 													<i class="glyphicon glyphicon-trash"></i> Eliminar
 												</button>
@@ -195,7 +195,7 @@
 											</div>
 										</div>
 									</div>
-								</div>
+<!-- 								</div> -->
 							</a>
 						</div>
 					</div>
@@ -219,7 +219,7 @@
 <!-- Delete modal -->
 <div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+    <div class="modal-content" style="min-height: 500px;">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <h4 class="modal-title" id="myModalLabel">¿Borrar anuncio?</h4>
@@ -227,7 +227,7 @@
       <div class="modal-body">
 			<input type="hidden" name="id" id="itemId" value=""/>
 		  <div class="text-center">
-			  <button class="btn btn-success iVote">
+			  <button class="btn btn-success iVote" data-dismiss="modal" >
 			  	<h4 style="display: inline;"><i class="glyphicon glyphicon-ok"></i></h4><h3 style="display: inline;"> No</h3>
 			  </button>
 			  <button class="btn btn-danger iVote" onclick="die()">
@@ -243,8 +243,10 @@
 <script type="text/javascript">
 	
 $('a[data-toggle=modal], button[data-toggle=modal]').click(function () {
-    var itemId = $(this).data('itemId');
+    var itemId = $(this).data('item');
+    console.log("i: " + itemId);
     document.getElementById('itemId').value = itemId;
+    console.log("y : " + document.getElementById('itemId').value);
 });
 
 </script>

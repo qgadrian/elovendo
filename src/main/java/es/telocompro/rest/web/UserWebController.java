@@ -49,6 +49,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.telocompro.model.item.Item;
@@ -56,6 +57,7 @@ import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.user.User;
 import es.telocompro.rest.controller.exception.InsufficientPointsException;
+import es.telocompro.rest.controller.exception.ItemNotFoundException;
 import es.telocompro.rest.controller.exception.LoginNotAvailableException;
 import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
 import es.telocompro.rest.controller.exception.PurchaseDuplicateException;
@@ -64,6 +66,7 @@ import es.telocompro.rest.controller.exception.UserNotFoundException;
 import es.telocompro.service.exception.InvalidItemNameMinLenghtException;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.item.category.CategoryService;
+import es.telocompro.service.item.favorite.FavoriteService;
 import es.telocompro.service.purchase.PurchaseService;
 import es.telocompro.service.user.UserService;
 import es.telocompro.util.Constant;
@@ -83,6 +86,8 @@ public class UserWebController {
 	private PurchaseService purchaseService;
 	@Autowired
 	private CategoryService categoryService;
+	@Autowired
+	private FavoriteService favoriteService;
 	@Autowired
 	private MessageSource messageSource;
 
@@ -517,17 +522,27 @@ public class UserWebController {
 	
 	/** DELETE ITEM */
 
-	@RequestMapping(value = "/delete/item", method = RequestMethod.POST)
-	public void deleteItem(@RequestParam(value = "id", required = true, defaultValue = "0") long itemId) {
+	@RequestMapping(value = "delete/item", method = RequestMethod.POST)
+	public @ResponseBody int deleteItem(@RequestParam(value = "id", required = true, defaultValue = "0") long itemId) {
 		itemService.deleteItem(itemId);
+		return (int) itemId;
 	}
 
-	/** SET ITEM FAVORITE */
+	/** SET ITEM FAVORITE 
+	 * @throws ItemNotFoundException */
 
 	@RequestMapping(value = "item/fav", method = RequestMethod.POST)
-	public void toggleItemFavorite(
-			@RequestParam(value = "id", required = true, defaultValue = "") String itemId) {
-		// TODO implement items favourite
+	public @ResponseBody boolean toggleItemFavorite(
+			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException {
+		User user = null;
+		SecurityContext context = SecurityContextHolder.getContext();
+		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+			user = (User) SecurityContextHolder.getContext()
+					.getAuthentication().getPrincipal();
+		
+		if (user == null) return false;
+		
+		return favoriteService.toggleFavorite(user, itemId);
 	}
 
 	/**

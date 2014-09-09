@@ -199,7 +199,7 @@
 					</div>
 				</div>
 			</div>
-			<!-- Stuff list -->
+			<!-- STUFF LIST -->
 			<div class="col-xs-8 col-md-8 col-lg-8">
 				<div class="row" th:each="item : ${itemsList}">
 					<div class="col-xs-12 col-md-12 col-lg-12 itemList">
@@ -220,7 +220,7 @@
 <!-- 									<i class="glyphicon glyphicon-heart-empty"></i></button> -->
 									<div class="btn-group pull-right" data-toggle="buttons">
   										<label class="btn btn-danger btn-m" style="padding: 6px 12px 5px 10px;">
-  											<input onchange="favClick(this)" type="checkbox" th:value="${item.itemId}"/>
+  											<input onclick="favClick(this)" type="hidden" th:value="${item.itemId}" th:id="'f' + ${item.itemId}"/>
   											<i th:id="'i'+${item.itemId}" class="glyphicon glyphicon-heart-empty"></i>
   										</label>
   									</div>
@@ -466,11 +466,19 @@
 		
 		function favClick(toggle) {
 			console.log("clicked fav at " + toggle.value);
-			if (toggle.checked)
-				document.getElementById('i'+toggle.value).className = "glyphicon glyphicon-heart";
-			else
-				document.getElementById('i'+toggle.value).className = "glyphicon glyphicon-heart-empty";
-			
+			var f = toggle.value;
+			var e = "/site/item/fav";
+			jQuery.post( e,
+					{id: f}).done(function(data) {
+						if (data) {
+							document.getElementById('i'+f).className = "glyphicon glyphicon-heart";
+// 							$('#f'+f).prop('checked', true);
+						}
+						else {
+							document.getElementById('i'+f).className = "glyphicon glyphicon-heart-empty";
+// 							$('#f'+f).prop('checked', false);
+						}
+					});
 		}
 		
 		$('a[data-toggle=modal], button[data-toggle=modal]').click(function () {
