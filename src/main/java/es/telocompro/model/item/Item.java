@@ -48,7 +48,7 @@ public class Item {
     @JoinColumn(name = "subcategoryid")
     private SubCategory subCategory;
 
-    @Length(min = 5, max = 40)
+    @Length(min = 5, max = 60)
     private String title;
     
     @Length(max = 1000)

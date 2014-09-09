@@ -3,10 +3,12 @@ package es.telocompro.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
@@ -157,5 +159,11 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 //		characterEncodingFilter.setForceEncoding(false);
 //		return characterEncodingFilter;
 //	}
+    
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        registry.addViewController("/login").setViewName("elovendo/login");
+//        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+//    }
 
 }

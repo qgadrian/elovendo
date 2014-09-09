@@ -91,6 +91,10 @@ body {
 	color: #000;
 }
 
+.itemList h3 {
+	margin-top: 0px;
+}
+
 .itemList a:hover {
 	color: #516d7c;
 }
@@ -114,14 +118,23 @@ body {
 }
 
 .itemList .featuredThumbnail {
-	background-color: #bea0c7!important;
+	background-color: #6d4579!important;
 	border-color:#b18bba!important;
 	 border-style: solid;
-    border-width: 3px;
+    border-width: 2px;
+    color: #FFF;
+}
+
+.itemList .featuredThumbnail .itemDesc {
+    color: #FFF;
+}
+
+.itemList .featuredThumbnail h3 {
+    color: #FFF;
 }
 
 .itemList .featuredThumbnail:hover {
-	background: #d3b4d3!important;
+	background: #a984a9!important;
 	border-color:#b18bba !important;
 }
 
@@ -138,6 +151,10 @@ body {
 .itemList .img-responsive {
 	 margin: 0 auto;
 	 max-height: 170px;
+}
+
+.itemList .userInfo {
+	margin-top: 5px;
 }
 
 
@@ -337,10 +354,11 @@ Color graph
 .iVote {
 	position: relative;
 	display: inline-block;
-	height: 80px;
+/* 	height: 60px; */
 	min-width: 30%;
 	margin: 40px;
 	width: auto;
+	border-radius: 3px;
 }
 
 /*********************************************************************************/
@@ -465,7 +483,8 @@ display: inline;
 /** item 2.0 **/
 /*******************************************/
 
-.square, .btn, .label {
+/* .btn, */
+.square, .label {
     border-radius: 0px!important;
 }
 
@@ -689,3 +708,56 @@ display: inline;
 /*     .user-image { */
 /*         max-height: 400px; */
 /*     } */
+
+/*********************************************************************************/
+/* Item view thumb                                                               */
+/*********************************************************************************/
+
+.itemViewThumb .thumbnail a > img {
+	max-height: 330px;
+	width: auto;
+}
+
+/*********************************************************************************/
+/* Featured effect                                                               */
+/*********************************************************************************/
+@-webkit-keyframes pop {
+  50% {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+@keyframes pop {
+  50% {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+.pop {
+  display: inline-block;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+}
+.pop:hover, .pop:focus, .pop:active {
+  -webkit-animation-name: pop;
+  animation-name: pop;
+  -webkit-animation-duration: 0.3s;
+  animation-duration: 0.3s;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
+}

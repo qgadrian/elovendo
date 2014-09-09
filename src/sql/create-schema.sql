@@ -89,7 +89,7 @@
     	    itemid BIGINT NOT NULL AUTO_INCREMENT,
     	    userid BIGINT NOT NULL,
     	    subcategoryid BIGINT NOT NULL,
-    	    title VARCHAR(40) NOT NULL,
+    	    title VARCHAR(90) NOT NULL,
     	    description TEXT NOT NULL,
     	    prize DECIMAL(6,2) NOT NULL,
     	    startdate DATETIME NOT NULL,

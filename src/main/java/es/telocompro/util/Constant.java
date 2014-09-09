@@ -42,7 +42,7 @@ public class Constant {
 	 */
 	public static final String LOGIN_PATTERN = "^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$";
 	public static final String PASSWORD_PATTERN = "(?=^.{8,200}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
-	public static final String YOUTUBE_URL_PATTERN = "^((http|https)\\:\\/\\/)?(www\\.)?(youtube\\.com|youtu\\.?be)\\/.+$";
+	public static final String YOUTUBE_URL_PATTERN = "^$|((http|https)\\:\\/\\/)?(www\\.)?(youtube\\.com|youtu\\.?be)\\/.+$";
 	
 	/**
 	 * IMAGES

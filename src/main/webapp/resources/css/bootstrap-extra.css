@@ -102,6 +102,20 @@ color: #3C763D;
 }
 
 /********************************************************/
+/* Button												*/
+/********************************************************/
+
+.btn-wd-green {
+	background-color: #77a3bb;
+	color: #FFF;
+}
+
+.btn-wd-green:hover {
+	background-color: #6b91a5;
+	color: #FFF!important;
+}
+
+/********************************************************/
 /* Label												*/
 /********************************************************/
 
@@ -115,4 +129,33 @@ color: #3C763D;
 
 .label-or {
   background-color: #eaac37;
+}
+
+/********************************************************/
+/* Dropdown												*/
+/********************************************************/
+.btn-group-success .dropdown-menu {
+  background-color: #51b351 !important;
+}
+
+.btn-group-success .dropdown-menu li > a:hover,
+.btn-group-success .dropdown-menu li > a:focus {
+  background-color: #5cb85c !important;
+}
+
+.btn-group-danger .dropdown-menu {
+  background-color: #d64742 !important;
+}
+
+.btn-group-danger .dropdown-menu li > a:hover,
+.btn-group-danger .dropdown-menu li > a:focus {
+  background-color: #d9534f !important;
+}
+
+.btn-group-success .dropdown-menu a{
+    color:#fff;
+}
+
+.btn-group-danger .dropdown-menu a{
+    color:#fff;
 }

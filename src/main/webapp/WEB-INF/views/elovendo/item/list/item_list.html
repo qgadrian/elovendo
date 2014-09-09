@@ -56,7 +56,7 @@
 				<!-- title -->
 				<div class="row">
 						<div class="col-xs-12">
-							<h1><small>Filtrar</small></h1>
+							<h1 style="margin-top: 0px;"><small>Filtrar</small></h1>
 							<hr class="hrStyle"/>
 						</div>
 				</div>
@@ -204,104 +204,104 @@
 				<div class="row" th:each="item : ${itemsList}">
 					<div class="col-xs-12 col-md-12 col-lg-12 itemList">
 <!-- 						<div class="thumbnail featuredThumbnail"> -->
-<a th:href="@{'/bazaar/item/' + ${item.itemId}}">
-						<div th:class="${item.highlight}? 'thumbnail featuredThumbnail' : 'thumbnail'">
-							<div class="row">
-								<div class="col-xs-5 col-md-4 col-lg-4">
-									<div class="thumbnail pull-left itemList" style="min-height: 180px; max-height: 180px; width: 220px; max-width: 100%;">
-											<img data-src="holder.js/300x300" alt="Image" class="img-responsive center-block"
-											th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}"/>
-									</div>
-								</div>
-								<div class="col-xs-7 col-md-8 col-lg-8">
-									<!-- favorite -->
-<!-- 									<button onclick="favClick(this)" type="submit" class="btn btn-danger btn-m pull-right" -->
-<!-- 									th:value="${item.itemId}" data-toggle="button"> -->
-<!-- 									<i class="glyphicon glyphicon-heart-empty"></i></button> -->
-									<div class="btn-group pull-right" data-toggle="buttons">
-  										<label class="btn btn-danger btn-m" style="padding: 6px 12px 5px 10px;">
-  											<input onclick="favClick(this)" type="hidden" th:value="${item.itemId}" th:id="'f' + ${item.itemId}"/>
-  											<i th:id="'i'+${item.itemId}" class="glyphicon glyphicon-heart-empty"></i>
-  										</label>
-  									</div>
-									<!--  User info -->
-									<div class="row" style="margin-top: 10px;">
-										<div class="col-xs-4 col-md-4 col-lg-4 userPicMin" style="width: 80px; margin-right: 10px;">
-											<img data-src="holder.js/50x50" alt="Profile pic"
-												th:src="@{'http://www.elovendo.com/' + ${item.user.avatar}}"/>
+						<a th:href="@{'/bazaar/item/' + ${item.itemId}}">
+							<div th:class="${item.highlight}? 'thumbnail featuredThumbnail pop' : 'thumbnail'">
+								<div class="row">
+									<div class="col-xs-5 col-md-4 col-lg-4">
+										<div class="thumbnail pull-left itemList" style="min-height: 180px; max-height: 180px; width: 220px; max-width: 100%;">
+												<img data-src="holder.js/300x300" alt="Image" class="img-responsive center-block"
+												th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}"/>
 										</div>
-										<div class="col-xs-12 col-md-8 col-lg-8">
+									</div>
+									<div class="col-xs-7 col-md-8 col-lg-8">
+										<!-- favorite -->
+	<!-- 									<button onclick="favClick(this)" type="submit" class="btn btn-danger btn-m pull-right" -->
+	<!-- 									th:value="${item.itemId}" data-toggle="button"> -->
+	<!-- 									<i class="glyphicon glyphicon-heart-empty"></i></button> -->
+										<div class="btn-group pull-right" data-toggle="buttons">
+	  										<label class="btn btn-danger btn-m" style="padding: 6px 12px 5px 10px;">
+	  											<input onclick="favClick(this)" type="hidden" th:value="${item.itemId}" th:id="'f' + ${item.itemId}"/>
+	  											<i th:id="'i'+${item.itemId}" class="glyphicon glyphicon-heart-empty"></i>
+	  										</label>
+	  									</div>
+										<!--  User info -->
+										<div class="row userInfo">
+											<div class="col-xs-4 col-md-4 col-lg-4 userPicMin" style="width: 80px; margin-right: 10px;">
+												<img data-src="holder.js/50x50" alt="Profile pic"
+													th:src="@{'http://www.elovendo.com/' + ${item.user.avatar}}"/>
+											</div>
+											<div class="col-xs-12 col-md-8 col-lg-8">
+												<div class="row">
+	<!-- 												<div class="col-xs-12 col-md-12"> -->
+														<p class="pull-left">Lo vende <span th:text="${item.user.login}">user</span>
+														en <span th:text="${item.subCategory.subCategoryName}"></span></p>
+	<!-- 												</div> -->
+	<!-- 												<div class="col-xs-12 col-md-12"> -->
+														<p class="pull-left">
+															<span
+																th:text="${#calendars.format(item.startDate, 'dd MMMM yyyy')}">
+																fecha</span> a las <span
+																th:text="${#calendars.format(item.startDate, 'HH:mm')}">
+																hora</span>
+														</p>
+	<!-- 												</div> -->
+												</div>
+											</div>
+										</div>
+										<!--  Caption -->
+										<div class="caption">
 											<div class="row">
-<!-- 												<div class="col-xs-12 col-md-12"> -->
-													<p class="pull-left">Lo vende <span th:text="${item.user.login}">user</span>
-													en <span th:text="${item.subCategory.subCategoryName}"></span></p>
-<!-- 												</div> -->
-<!-- 												<div class="col-xs-12 col-md-12"> -->
-													<p class="pull-left">
-														<span
-															th:text="${#calendars.format(item.startDate, 'dd MMMM yyyy')}">
-															fecha</span> a las <span
-															th:text="${#calendars.format(item.startDate, 'HH:mm')}">
-															hora</span>
-													</p>
-<!-- 												</div> -->
+												<div class="col-xs-12 col-md-12 col-lg-12">
+													<h3 th:text="${item.title}">Title</h3>
+												</div>
 											</div>
-										</div>
-									</div>
-									<!--  Caption -->
-									<div class="caption">
-										<div class="row">
-											<div class="col-xs-12 col-md-12 col-lg-12">
-												<h3 th:text="${item.title}">Title</h3>
-											</div>
-										</div>
-										<!--  Item info -->
-										<div class="row">
-											<div class="col-xs-12 col-md-12 col-lg-12 itemDesc">	
-												<p th:if="${#strings.length(item.plainDescription)} &gt; 99" 
-													th:utext="${#strings.substring(item.plainDescription, 0, 100)} + '(...)'">
-													Description</p>
-												<p th:if="${#strings.length(item.plainDescription)} &lt; 100" 
-													th:utext="${item.plainDescription}">Description</p>
-													<!-- class="mediumTextDesc"  -->
+											<!--  Item info -->
+											<div class="row">
+												<div class="col-xs-12 col-md-12 col-lg-12 itemDesc">	
+													<p th:if="${#strings.length(item.plainDescription)} &gt; 99" 
+														th:utext="${#strings.substring(item.plainDescription, 0, 100)} + '(...)'">
+														Description</p>
+													<p th:if="${#strings.length(item.plainDescription)} &lt; 100" 
+														th:utext="${item.plainDescription}">Description</p>
+														<!-- class="mediumTextDesc"  -->
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-10 col-md-12 col-lg-12" style="margin-bottom: 10px;">
-									<h2 style="display: inline; margin-left: 10px;">
-										<span class="label label-or" 
-										th:text="${#numbers.formatDecimal(item.prize, 0, 'COMMA', 0, 'POINT')} + ' €'"></span>
-									</h2>
-									<h4 th:if="${item.new}" style="display: inline; ">
-										<span class="label label-danger">
-										<i class="glyphicon glyphicon-fire"></i> Nuevo</span>
-									</h4>
-									<h4 th:if="${item.user.phone} != null" style="display: inline; ">
-										<span class="label label-success">
-										<i class="glyphicon glyphicon-phone"></i> Whatssap</span>
-									</h4>
-									<h4 th:if="${item.user.userValue} &gt; 70" style="display: inline;" 
-									onmouseover="mouseHover()"><span class="label label-rep">
-										<i class="glyphicon glyphicon-thumbs-up"></i> Reputado</span>
-									</h4>
-									<h4 style="display: inline;" >
-									<span class="label label-dis">
-										<i class="glyphicon glyphicon-globe"></i>
-										<span th:text="${'A ' + item.distance + ' KM'}"></span>
-									</span>
-									</h4>
-									<div class="btn-group pull-right" style="margin-right: 10px;">
-<!-- 										<a th:href="@{'/bazaar/item/' + ${item.itemId}}" class="btn btn-default" -->
-<!-- 											role="button">Ver anuncio</a> -->
-										
-
+								<div class="row">
+									<div class="col-xs-10 col-md-12 col-lg-12" style="margin-bottom: 10px;">
+										<h2 style="display: inline; margin-left: 10px;">
+											<span class="label label-or" 
+											th:text="${#numbers.formatDecimal(item.prize, 0, 'COMMA', 0, 'POINT')} + ' €'"></span>
+										</h2>
+										<h4 th:if="${item.new}" style="display: inline; ">
+											<span class="label label-danger">
+											<i class="glyphicon glyphicon-fire"></i> Nuevo</span>
+										</h4>
+										<h4 th:if="${item.user.phone} != null" style="display: inline; ">
+											<span class="label label-success">
+											<i class="glyphicon glyphicon-phone"></i> Whatssap</span>
+										</h4>
+										<h4 th:if="${item.user.userValue} &gt; 70" style="display: inline;" 
+										onmouseover="mouseHover()"><span class="label label-rep">
+											<i class="glyphicon glyphicon-thumbs-up"></i> Reputado</span>
+										</h4>
+										<h4 style="display: inline;" >
+										<span class="label label-dis">
+											<i class="glyphicon glyphicon-globe"></i>
+											<span th:text="${'A ' + item.distance + ' KM'}"></span>
+										</span>
+										</h4>
+										<div class="btn-group pull-right" style="margin-right: 10px;">
+	<!-- 										<a th:href="@{'/bazaar/item/' + ${item.itemId}}" class="btn btn-default" -->
+	<!-- 											role="button">Ver anuncio</a> -->
+											
+	
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
 						</a>
 						<button class="btn btn-primary itemElement" role="button"
 							th:attr="data-user=${item.user.login}" data-toggle="modal"
