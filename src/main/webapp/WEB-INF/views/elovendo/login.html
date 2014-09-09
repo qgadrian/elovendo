@@ -62,12 +62,19 @@
 <!--         <input type="submit" value="Log In"/> -->
 <!--     </form> -->
 
+	<!-- Header -->
+	<div th:replace="elovendo/header"></div>
+
     <div class="container">
     
     <div class="row">
 			<div class="col-xs-12 col-md-12 text-center" style="margin-top:20px; height:200px;">
 				<a href="/index" ><img src="/images/webimg/logo-full-200h.png" /> </a>
 			</div>
+		</div>
+		
+		<div th:if="${error}" class="alert alert-danger text-center" role="alert" style="margin:40px auto 0px auto; max-width: 330px;">
+				<p><strong>User name or password incorrect</strong></p>
 		</div>
 
       <form class="form-signin" role="form" th:action="@{/login}" method="post"  accept-charset="UTF-8">

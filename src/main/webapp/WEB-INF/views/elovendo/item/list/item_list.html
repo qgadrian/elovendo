@@ -464,23 +464,6 @@
 			document.getElementById('lng').value = position.coords.longitude;
 		}
 		
-		function favClick(toggle) {
-			console.log("clicked fav at " + toggle.value);
-			var f = toggle.value;
-			var e = "/site/item/fav";
-			jQuery.post( e,
-					{id: f}).done(function(data) {
-						if (data) {
-							document.getElementById('i'+f).className = "glyphicon glyphicon-heart";
-// 							$('#f'+f).prop('checked', true);
-						}
-						else {
-							document.getElementById('i'+f).className = "glyphicon glyphicon-heart-empty";
-// 							$('#f'+f).prop('checked', false);
-						}
-					});
-		}
-		
 		$('a[data-toggle=modal], button[data-toggle=modal]').click(function () {
 		     var user = $(this).data('user');
 		     document.getElementById('receiver').value = user;

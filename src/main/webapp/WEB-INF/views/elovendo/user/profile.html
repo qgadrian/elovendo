@@ -155,22 +155,6 @@
 											</div>
 										</div>
 										<div class="col-xs-7 col-md-8 col-lg-8">
-											<div class="btn-group pull-right" data-toggle="buttons">
-												<button class="btn btn-danger btn-m"
-													style="padding: 6px 12px 5px 10px; min-width: 100px;"
-													th:value="${item.itemId}" data-toggle="modal" 
-													th:attr="data-item=${item.itemId}"
-													data-target="#removeModal">
-													<i class="glyphicon glyphicon-trash"></i> Eliminar
-												</button>
-												<button class="btn btn-info btn-m"
-													style="padding: 6px 12px 5px 10px; min-width: 100px;"
-													th:value="${item.itemId}" data-toggle="modal"
-													data-target="#removeModal">
-													<i th:id="'i'+${item.itemId}"
-														class="glyphicon glyphicon-cog"></i> Editar
-												</button>
-											</div>
 											<!--  User info -->
 											<div class="row" style="margin-top: 10px;">
 												<div class="col-xs-12 col-md-8 col-lg-8">
@@ -193,10 +177,35 @@
 													</div>
 												</div>
 											</div>
+											<!-- Buttons -->
+											<div class="btn-group pull-right" data-toggle="buttons" style="position: absolute;">
+												<button class="btn btn-danger btn-m"
+													style="padding: 6px 12px 5px 10px; min-width: 100px;"
+													th:value="${item.itemId}" data-toggle="modal" 
+													th:attr="data-item=${item.itemId}"
+													data-target="#removeModal">
+													<i class="glyphicon glyphicon-trash"></i> Eliminar
+												</button>
+												<button class="btn btn-info btn-m"
+													style="padding: 6px 12px 5px 10px; min-width: 100px;"
+													th:value="${item.itemId}" data-toggle="modal"
+													data-target="#removeModal">
+													<i th:id="'i'+${item.itemId}"
+														class="glyphicon glyphicon-cog"></i> Editar
+												</button>
+												<button class="btn btn-warning btn-m"
+													style="padding: 6px 12px 5px 10px; min-width: 100px;"
+													th:value="${item.itemId}" data-toggle="modal"
+													data-target="#removeModal">
+													<i th:id="'i'+${item.itemId}"
+														class="glyphicon glyphicon-cog"></i> Renovar
+												</button>
+											</div>
 										</div>
 									</div>
 <!-- 								</div> -->
 							</a>
+							<hr class="hrStyle2"/>
 						</div>
 					</div>
 				</div>

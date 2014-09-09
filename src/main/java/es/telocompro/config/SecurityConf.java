@@ -62,6 +62,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             	.failureHandler(new LoginFailureHandler())
             	.successHandler(new LoginSuccessHandler())
             	.defaultSuccessUrl("/loginRedirect")
+            	.failureUrl("/login-error")
                 .loginPage("/login").permitAll()
             	.and()
             .logout()

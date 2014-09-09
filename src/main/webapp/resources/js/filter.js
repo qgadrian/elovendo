@@ -134,6 +134,29 @@ function dieRmv(val) {
 	$('#removeModal').modal('hide');
 }
 
+function favClick(toggle) {
+	console.log("clicked fav at " + toggle.value);
+	var f = toggle.value;
+	var e = "/site/item/fav";
+	jQuery.post( e,
+			{id: f}).done(function(data) {
+				console.log("data: " + data);
+				if (data) {
+					document.getElementById('i'+f).className = "glyphicon glyphicon-heart";
+//						$('#f'+f).prop('checked', true);
+				}
+				else {
+					document.getElementById('i'+f).className = "glyphicon glyphicon-heart-empty";
+//						$('#f'+f).prop('checked', false);
+				}
+			}).fail(function() {
+			    alert( "error" );
+			  })
+			  .always(function() {
+			    alert( "finished" );
+			});
+}
+
 function submitSearchForm() {
 	quizSearchForm = jQuery("#prizeForm");
 	//disable empty fields so they don't clutter up the url
