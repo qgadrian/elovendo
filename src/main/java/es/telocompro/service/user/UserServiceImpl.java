@@ -11,6 +11,7 @@ import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,6 +101,9 @@ public class UserServiceImpl implements UserService {
 //			System.out.println("ERROR: Creating avatar resource for user " + user.getUserId());
 //			e.printStackTrace();
 //		}
+		
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		user.setPassword(encoder.encode(password));
 		
 		// return the updated user with the avatar path asigned
 		return userRepository.save(user);

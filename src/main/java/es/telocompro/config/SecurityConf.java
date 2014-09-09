@@ -1,12 +1,15 @@
 package es.telocompro.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 
 import es.telocompro.rest.handler.LoginFailureHandler;
@@ -28,7 +31,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     public void configureGlobal(UserDetailsService userDetailsService, AuthenticationManagerBuilder auth) 
     		throws Exception {
         auth
-            .userDetailsService(userDetailsService);
+            .userDetailsService(userDetailsService)
+            .passwordEncoder(new BCryptPasswordEncoder());
     }
 
     // DOCUMENTATION: http://docs.spring.io/spring-security/site/docs/3.2.x/guides/form.html
