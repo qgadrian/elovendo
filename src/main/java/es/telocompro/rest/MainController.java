@@ -74,13 +74,13 @@ public class MainController implements ErrorController {
 		return "";
     }
 	
-	@RequestMapping(value = "/login-error")
-	public String loginErrorPage(HttpSession session, HttpServletRequest request, Model model, Device device) {
-		
-		model.addAttribute("error", true);
-		
-		return "elovendo/login";
-	}
+//	@RequestMapping(value = "/login-error")
+//	public String loginErrorPage(HttpSession session, HttpServletRequest request, Model model, Device device) {
+//		
+//		model.addAttribute("error", true);
+//		
+//		return "elovendo/login";
+//	}
 
 	@RequestMapping(value = "/loginRedirect")
 	@ResponseStatus(HttpStatus.OK)

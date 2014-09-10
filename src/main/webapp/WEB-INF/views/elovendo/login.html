@@ -73,7 +73,7 @@
 			</div>
 		</div>
 		
-		<div th:if="${error}" class="alert alert-danger text-center" role="alert" style="margin:40px auto 0px auto; max-width: 330px;">
+		<div th:if="${param.error}" class="alert alert-danger text-center" role="alert" style="margin:40px auto 0px auto; max-width: 330px;">
 				<p><strong>User name or password incorrect</strong></p>
 		</div>
 
@@ -83,14 +83,17 @@
         <input type="text" class="form-control" placeholder="Usuario" 
         required="required" autofocus="autofocus" name="username"/>
         <input type="password" class="form-control" placeholder="Password" 
-        required="required" name="password"/>
-        <div class="checkbox">
+        required="required" name="password"/> 
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+			<div class="checkbox">
           <label>
             <input type="checkbox" value="remember-me"/> Remember me
           </label>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
+      
+      <p><a th:href="@{/auth/twitter}"><img th:src="@{/resources/social/twitter/sign-in-with-twitter-d.png}" border="0"/></a></p>
 
     </div> <!-- /container -->
 

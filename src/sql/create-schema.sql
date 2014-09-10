@@ -215,3 +215,10 @@ CREATE TABLE pendingVote(
 		CONSTRAINT fk_favorite_userId FOREIGN KEY (userId) REFERENCES userprofile(userid),
 		CONSTRAINT fk_favorite_itemId FOREIGN KEY (itemId) REFERENCES item(itemid)
 	);
+	
+	create table persistent_logins (
+		username varchar(64) not null, 
+		series varchar(64) primary key, 
+		token varchar(64) not null, 
+		last_used timestamp not null
+	);
