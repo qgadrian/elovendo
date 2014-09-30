@@ -134,27 +134,41 @@ function dieRmv(val) {
 	$('#removeModal').modal('hide');
 }
 
-function favClick(toggle) {
-	console.log("clicked fav at " + toggle.value);
-	var f = toggle.value;
+function favClick(value, d) {
+	var f = value;
+//	var cv = pValue;
+//	var cn = pName;
+	var cv = $("meta[name='_csrf']").attr("content");
+	var cn = $("meta[name='_csrf_header']").attr("content");
 	var e = "/site/item/fav";
-	jQuery.post( e,
-			{id: f}).done(function(data) {
-				console.log("data: " + data);
-				if (data) {
-					document.getElementById('i'+f).className = "glyphicon glyphicon-heart";
-//						$('#f'+f).prop('checked', true);
-				}
-				else {
-					document.getElementById('i'+f).className = "glyphicon glyphicon-heart-empty";
-//						$('#f'+f).prop('checked', false);
-				}
-			}).fail(function() {
-			    alert( "error" );
-			  })
-			  .always(function() {
-			    alert( "finished" );
-			});
+//	jQuery.post(e, {id: f}).done(function(data) {
+//				console.log("data: " + data);
+//				if (data) {
+//					document.getElementById('i'+f).className = "glyphicon glyphicon-heart";
+////						$('#f'+f).prop('checked', true);
+//				}
+//				else {
+//					document.getElementById('i'+f).className = "glyphicon glyphicon-heart-empty";
+////						$('#f'+f).prop('checked', false);
+//				}
+//			}).fail(function() {
+//			    alert( "error" );
+//			  });
+//			  .always(function() {
+//			    alert( "finished" );
+//			});
+	
+	$.ajax({
+		  type: "POST",
+		  beforeSend: function (request) { request.setRequestHeader(cn, cv); },
+		  url: e,
+		  data: {id: f},
+		  success: function(data) { 
+			  if (data) alert( "favorite");
+			  else alert("not favorite");
+		  },
+		  error: function() { alert( "error" ); }
+		});
 }
 
 function submitSearchForm() {

@@ -13,7 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.annotations.Immutable;
 
 import es.telocompro.model.user.User;
@@ -78,6 +80,11 @@ public class Message {
 
 	public long getIpAddress() {
 		return ipAddress;
+	}
+	
+	@Transient
+	public boolean isToday() {
+		return DateUtils.isSameDay(Calendar.getInstance(), this.messageDate);
 	}
 
 }

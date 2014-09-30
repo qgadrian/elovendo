@@ -6,10 +6,10 @@ import es.telocompro.model.message.Message;
 import es.telocompro.model.message.MessageState;
 import es.telocompro.model.message.MessageThread;
 import es.telocompro.model.user.User;
-import es.telocompro.rest.controller.exception.InvalidMessageThreadException;
-import es.telocompro.rest.controller.exception.MessageThreadAlreadyExistsException;
-import es.telocompro.rest.controller.exception.MessageThreadNotFoundException;
-import es.telocompro.rest.controller.exception.UserNotFoundException;
+import es.telocompro.rest.exception.InvalidMessageThreadException;
+import es.telocompro.rest.exception.MessageThreadAlreadyExistsException;
+import es.telocompro.rest.exception.MessageThreadNotFoundException;
+import es.telocompro.rest.exception.UserNotFoundException;
 
 public interface MessageService {
 	
@@ -43,4 +43,5 @@ public interface MessageService {
 	
 	public MessageState getMessageState(Long messageId, User user);
 
+	public String getLastMessage(long messageThreadId);
 }

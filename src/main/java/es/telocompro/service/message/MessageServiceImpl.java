@@ -16,10 +16,10 @@ import es.telocompro.model.message.MessageStateRepository;
 import es.telocompro.model.message.MessageThread;
 import es.telocompro.model.message.MessageThreadRepository;
 import es.telocompro.model.user.User;
-import es.telocompro.rest.controller.exception.InvalidMessageThreadException;
-import es.telocompro.rest.controller.exception.MessageThreadAlreadyExistsException;
-import es.telocompro.rest.controller.exception.MessageThreadNotFoundException;
-import es.telocompro.rest.controller.exception.UserNotFoundException;
+import es.telocompro.rest.exception.InvalidMessageThreadException;
+import es.telocompro.rest.exception.MessageThreadAlreadyExistsException;
+import es.telocompro.rest.exception.MessageThreadNotFoundException;
+import es.telocompro.rest.exception.UserNotFoundException;
 import es.telocompro.service.user.UserService;
 
 @Service("messageService")
@@ -182,6 +182,16 @@ public class MessageServiceImpl implements MessageService {
 	private void updateMessageState(MessageState messageState, boolean read) {
 		messageState.setReadState(read);
 		messageStateRepository.save(messageState);
+	}
+
+	@Override
+	public String getLastMessage(long messageThreadId) {
+		List<String> lastMessage =
+				messageRepository.findLastMessageFromMessageThread(messageThreadId, new PageRequest(0, 1)).getContent();
+		
+		if (!lastMessage.isEmpty())
+			return lastMessage.get(0);
+		return "";
 	}
 
 }

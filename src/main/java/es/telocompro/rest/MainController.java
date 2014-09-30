@@ -23,11 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import es.telocompro.model.item.Item;
 import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.user.User;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.item.category.CategoryService;
+import es.telocompro.service.user.UserService;
 import es.telocompro.util.Constant;
 
 /**
@@ -40,6 +40,8 @@ public class MainController implements ErrorController {
 	
     @Autowired
     private ItemService itemService;
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private CategoryService categoryService;
@@ -100,16 +102,6 @@ public class MainController implements ErrorController {
 		} 
 		
 		return "";
-    	
-//    	 User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//    	 String userId = String.valueOf(user.getUserId());
-//    	 
-//    	 model.addAttribute(user);
-//
-//    	if (device.isNormal())
-////    		return principal.getName() + " you are loggued motherfucker!!! and your id is " + userId + " btw";
-//    		return "welcome";
-//    	return "hola? " + principal.getName() +"? your id is " + userId + "?";
     }
     
     @RequestMapping(value="/logout")
@@ -124,6 +116,48 @@ public class MainController implements ErrorController {
     	
     	return "";
     }
+    
+//    @RequestMapping(value="/signup")
+//    public String signupRedirect(WebRequest request) throws UserNotFoundException {
+//    	
+//    	User user = null;
+//		SecurityContext context = SecurityContextHolder.getContext();
+//		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+//			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//    	
+//    	ProviderSignInUtils providerSignInUtils = new ProviderSignInUtils();
+//		Connection<?> connection = providerSignInUtils.getConnectionFromSession(request);
+////		UserProfile socialMediaProfile = connection.fetchUserProfile();
+//		
+//		try {
+//			
+//			ConnectionKey connectionKey = connection.getKey();
+//			String compositeKey = connectionKey.getProviderUserId() + connectionKey.getProviderId();
+//			User socialUser = userService.findUserBySocialUserKey(compositeKey);
+//			
+//			if (socialUser != null) {
+//				Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+//				SecurityContextHolder.getContext().setAuthentication(authentication);
+//			}
+//			
+//			return "redirect:/site/profile";
+//		} catch(UserNotFoundException e) {
+//			
+//			if (connection != null && connection.test()) {
+//				
+//				if (connection.getApi() instanceof Facebook) {
+////					Facebook facebook = (Facebook) connection.getApi();
+////					FacebookProfile facebookProfile = facebook.userOperations().getUserProfile();
+//					ConnectionData data = connection.createData();
+//					user.setSocialCompositeKey(data.getProviderUserId() + data.getProviderId());
+//				}
+//				
+//				userService.updateUser(user);
+//			}
+//			
+//			return "redirect:/index";
+//		}
+//    }
     
     /** 
      * 
@@ -149,7 +183,7 @@ public class MainController implements ErrorController {
     	// SubCategories
     	@SuppressWarnings("unchecked")
 		List<SubCategory> subCategories = IteratorUtils.toList(
-				categoryService.findAllSubCategories().iterator());
+				categoryService.getAllSubCategories().iterator());
     	model.addAttribute("subCategories", subCategories);
     	
         return "elovendo/index";

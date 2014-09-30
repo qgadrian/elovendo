@@ -1,4 +1,4 @@
-package es.telocompro.rest.controller.exception;
+package es.telocompro.rest.exception;
 
 @SuppressWarnings("serial")
 public class UserNotFoundException extends Exception {

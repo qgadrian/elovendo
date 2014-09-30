@@ -41,10 +41,11 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "userid")
     private Long userId;
+	
+	private String socialCompositeKey;
 
 	@NotNull
-//	@Length(min = 2, max = 20)
-	@Pattern(regexp=Constant.LOGIN_PATTERN)
+//	@Pattern(regexp=Constant.LOGIN_PATTERN)
     private String login;
 
     @Column(name = "password")
@@ -60,7 +61,10 @@ public class User implements UserDetails {
     private String phone;
     private String email;
     
-    private String avatar; // avatar path
+    @Column(name="whatssap")
+    private boolean whatssapUser;
+
+	private String avatar; // avatar path
     @Transient
     private String avatar200h;
     
@@ -91,14 +95,17 @@ public class User implements UserDetails {
 
     public User() { }
 
-    public User(String login, String password, String firstName, String lastName, String address, String phone,
+    public User(String login, String password, String socialCompositeKey, 
+    			String firstName, String lastName, String address, String phone, boolean whatssapUser,
                 String email, String avatar, Role role, SocialMediaService signInProvider) {
         this.login = login;
         this.password = password;
+        this.socialCompositeKey = socialCompositeKey;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.phone = phone;
+        this.whatssapUser = whatssapUser;
         this.email = email;
 //        this.province = province;
         this.avatar = avatar;
@@ -169,6 +176,14 @@ public class User implements UserDetails {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+    
+    public boolean isWhatssapUser() {
+		return whatssapUser;
+	}
+
+	public void setWhatssapUser(boolean whatssapUser) {
+		this.whatssapUser = whatssapUser;
+	}
 
     public String getEmail() {
         return email;
@@ -222,7 +237,15 @@ public class User implements UserDetails {
 		return avatar.concat(".jpg");
 	}
     
-    public String getAvatar200h() {
+    public String getSocialCompositeKey() {
+		return socialCompositeKey;
+	}
+
+	public void setSocialCompositeKey(String socialCompositeKey) {
+		this.socialCompositeKey = socialCompositeKey;
+	}
+
+	public String getAvatar200h() {
 		return avatar.concat("-200h.jpg");
 	}
 

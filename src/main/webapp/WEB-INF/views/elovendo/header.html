@@ -19,6 +19,7 @@
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
 <link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
+
 <!-- <link rel="stylesheet" type="text/css" href="/css/styleweb.css" media="screen" /> -->
 
 <!-- Header handler -->
@@ -156,7 +157,7 @@
 		function getMessages() {
 			$.get("/elovendo/messages/getUnread", function(data) {
 				try {
-				document.getElementById('messageBadge').innerHTML = data; 
+					document.getElementById('messageBadge').innerHTML = data; 
 				} catch(err) {}
 			});
 		}

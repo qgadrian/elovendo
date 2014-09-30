@@ -50,19 +50,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.telocompro.model.item.Item;
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.user.User;
-import es.telocompro.rest.controller.exception.InsufficientPointsException;
-import es.telocompro.rest.controller.exception.ItemNotFoundException;
-import es.telocompro.rest.controller.exception.LoginNotAvailableException;
-import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
-import es.telocompro.rest.controller.exception.PurchaseDuplicateException;
-import es.telocompro.rest.controller.exception.SubCategoryNotFoundException;
-import es.telocompro.rest.controller.exception.UserNotFoundException;
+import es.telocompro.rest.exception.EmailNotAvailableException;
+import es.telocompro.rest.exception.InsufficientPointsException;
+import es.telocompro.rest.exception.InvalidSelfVoteException;
+import es.telocompro.rest.exception.InvalidVoteUsersException;
+import es.telocompro.rest.exception.ItemNotFoundException;
+import es.telocompro.rest.exception.LoginNotAvailableException;
+import es.telocompro.rest.exception.ProvinceNotFoundException;
+import es.telocompro.rest.exception.PurchaseDuplicateException;
+import es.telocompro.rest.exception.SubCategoryNotFoundException;
+import es.telocompro.rest.exception.UserNotFoundException;
+import es.telocompro.rest.exception.VoteDuplicateException;
 import es.telocompro.service.exception.InvalidItemNameMinLenghtException;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.item.category.CategoryService;
@@ -110,6 +115,7 @@ public class UserWebController {
 		
 		model.addAttribute("totalItems", itemService.getNumberUserItems(user));
 		
+		// votes
 		int votesPositive = userService.getVotesPositive(user);
 		int votesNegative = userService.getVotesNegative(user);
 		int totalVotes = votesPositive + votesNegative;
@@ -117,6 +123,9 @@ public class UserWebController {
 		model.addAttribute("votesNegative", votesNegative);
 		model.addAttribute("votesQueued", userService.getVotesQueued(user));
 		model.addAttribute("totalVotes", totalVotes);
+		
+		// last favorites
+		model.addAttribute("lastFavs", favoriteService.getLastFavs(user));
 		
 		return "elovendo/user/profile";
 	}
@@ -142,15 +151,151 @@ public class UserWebController {
 		return "elovendo/user/publicProfile";
 	}
 
-	/** Add a new user **/
+	/** Add a new user 
+	 * @throws EmailNotAvailableException 
+	 * @throws LoginNotAvailableException **/
 
-	@RequestMapping(value = "register", method = RequestMethod.GET)
-	public String addUserPage(Model model) {
+	@RequestMapping(value ="register", method = RequestMethod.GET)
+	public String addUserPage(WebRequest request, Model model) throws LoginNotAvailableException, EmailNotAvailableException {
+//		ProviderSignInUtils providerSignInUtils = new ProviderSignInUtils();
+//		Connection<?> connection = providerSignInUtils.getConnectionFromSession(request);
+//		
+//		if (connection != null && connection.test()) {
+//			
+//			String firstName = "", lastName = "", email = "", username = "";
+//			byte[] userImage = null;
+//			
+//			if (connection.getApi() instanceof Facebook) {
+//				Facebook facebook = (Facebook) connection.getApi();
+//				FacebookProfile facebookProfile = facebook.userOperations().getUserProfile();
+//				userImage = facebook.userOperations().getUserProfileImage();
+//				username = "gorgorito";
+//				firstName = facebookProfile.getFirstName();
+//				lastName = facebookProfile.getLastName();
+//				email = facebookProfile.getEmail();
+//			}
+////			else if (connection.getApi() instanceof Google) {
+////				Google google = (Google) connection.getApi();
+////				userImage = google.plusOperations().getGoogleProfile().getImageUrl().getBytes();
+////				username = google.plusOperations().getGoogleProfile().getDisplayName();
+////				firstName = google.plusOperations().getGoogleProfile().getDisplayName();
+////				lastName = google.plusOperations().getGoogleProfile().getGivenName();
+////				email = google.plusOperations().getGoogleProfile().getAccountEmail();
+////			}
+//			
+//			Role role = new Role(RoleEnum.ROLE_USER);
+//			
+//			User user = new User(username, connection.createData().getAccessToken(), 
+//					firstName, lastName, "", "", email, null, role, SocialMediaService.FACEBOOK);
+//			
+//			user = userService.addUser(user, userImage);
+//			
+//			model.addAttribute("user", user);
+//			
+//			Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+//			SecurityContextHolder.getContext().setAuthentication(authentication);
+//			
+//			// FAQ: To obtain session id
+//			//	RequestContextHolder.currentRequestAttributes().getSessionId();
+//			
+//			return "elovendo/user/add_user";
+//		}
+
 		model.addAttribute("user", new User());
-		model.addAttribute("provinceName", new String());
-
 		return "elovendo/user/add_user";
 	}
+	
+	@RequestMapping(value ="socialRegister", method = RequestMethod.GET)
+	public String addSocialUserPage(WebRequest request, Model model) throws LoginNotAvailableException, EmailNotAvailableException {
+		return "elovendo/user/add_social_user";
+//		ProviderSignInUtils providerSignInUtils = new ProviderSignInUtils();
+//		Connection<?> connection = providerSignInUtils.getConnectionFromSession(request);
+//		
+//		if (connection != null && connection.test()) {
+//			
+//			String firstName = "", lastName = "", email = "", username = "";
+//			byte[] userImage = null;
+//			
+//			if (connection.getApi() instanceof Facebook) {
+//				Facebook facebook = (Facebook) connection.getApi();
+//				FacebookProfile facebookProfile = facebook.userOperations().getUserProfile();
+//				userImage = facebook.userOperations().getUserProfileImage();
+//				username = "";
+//				firstName = facebookProfile.getFirstName();
+//				lastName = facebookProfile.getLastName();
+//				email = facebookProfile.getEmail();
+//			}
+//			
+//			Role role = new Role(RoleEnum.ROLE_USER);
+//			
+//			User user = new User(username, connection.createData().getAccessToken(), 
+//					firstName, lastName, "", "", email, null, role, SocialMediaService.FACEBOOK);
+//			
+//			user = userService.addUser(user, userImage);
+//			
+//			model.addAttribute("user", user);
+//			
+//			Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+//			SecurityContextHolder.getContext().setAuthentication(authentication);
+//			
+//			// FAQ: To obtain session id
+//			//	RequestContextHolder.currentRequestAttributes().getSessionId();
+//			
+//			return "elovendo/user/add_social_user";
+//		}
+//
+//		// Who knows...
+//		model.addAttribute("user", new User());
+//		return "elovendo/user/add_user";
+	}
+	
+//	@RequestMapping(value ="socialRegister", method = RequestMethod.POST)
+//	public String addSocialUserPage(@RequestParam(value="username", required=true) String username,
+//			Model model, WebRequest request) 
+//			throws LoginNotAvailableException, EmailNotAvailableException {
+//		
+//		ProviderSignInUtils providerSignInUtils = new ProviderSignInUtils();
+//		Connection<?> connection = providerSignInUtils.getConnectionFromSession(request);
+//		
+//		if (connection != null && connection.test()) {
+//			
+//			String firstName = "", lastName = "", email = "";
+//			byte[] userImage = null;
+//			
+//			if (connection.getApi() instanceof Facebook) {
+//				Facebook facebook = (Facebook) connection.getApi();
+//				FacebookProfile facebookProfile = facebook.userOperations().getUserProfile();
+//				userImage = facebook.userOperations().getUserProfileImage();
+//				firstName = facebookProfile.getFirstName();
+//				lastName = facebookProfile.getLastName();
+//				email = facebookProfile.getEmail();
+//			}
+//			
+//			Role role = new Role(RoleEnum.ROLE_USER);
+//			
+//			ConnectionData data = connection.createData();
+//			String cmpKey = connection.getKey().getProviderUserId() + connection.getKey().getProviderId();
+//			
+//			User user = new User(username, null, cmpKey, firstName, lastName,
+//					"", "", email, null, role, SocialMediaService.FACEBOOK);
+//			
+//			user = userService.addUser(user, userImage);
+//			
+//			model.addAttribute("user", user);
+//			
+//			Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+//			SecurityContextHolder.getContext().setAuthentication(authentication);
+//			
+//			// FAQ: To obtain session id
+//			//	RequestContextHolder.currentRequestAttributes().getSessionId();
+//			
+//			return "redirect:/index";
+//		}
+//
+//		// Who knows...
+//		model.addAttribute("user", new User());
+//		return "elovendo/user/add_user";
+//	}
 
 	@RequestMapping(value = "quick_register", method = RequestMethod.GET)
 	public String quickAddUserPage(Model model) {
@@ -166,7 +311,7 @@ public class UserWebController {
 			BindingResult result,
 			@ModelAttribute(value = "profilePic") MultipartFile profilePic,
 			@ModelAttribute(value = "confirmPassword") String confirmPassword,
-			ModelMap model, Locale locale) throws LoginNotAvailableException {
+			ModelMap model, Locale locale) throws LoginNotAvailableException, EmailNotAvailableException {
 		// FIXME: Edit input type email
 		// TODO: Get confirmPassword to validate
 
@@ -258,6 +403,8 @@ public class UserWebController {
 					.getAuthentication().getPrincipal();
 
 		model.addAttribute("user", user);
+		
+		model.addAttribute("uw", user.isWhatssapUser());
 
 		return "elovendo/user/profileEdit";
 	}
@@ -312,13 +459,14 @@ public class UserWebController {
 //	}
 	
 	@RequestMapping(value = "user/edit", method = RequestMethod.POST)
-	public String editUserPage(
+	public String processEditUserPage(
 			@RequestParam(required=false, defaultValue="")  String password,
 			@RequestParam(required=false, defaultValue="") String confirmPassword,
 			@RequestParam(required=false, defaultValue="") String email,
 			@RequestParam(required=false, defaultValue="") String firstName,
 			@RequestParam(required=false, defaultValue="") String lastName,
-			@RequestParam(required=false, defaultValue="") String phone,
+			@RequestParam(required=false, defaultValue="missing") String phone,
+			@RequestParam(value="uw", required=false, defaultValue="off") String whatssapUser,
 			@ModelAttribute(value = "profilePic") MultipartFile profilePic,
 			Model model, Locale locale) throws LoginNotAvailableException {
 
@@ -342,14 +490,15 @@ public class UserWebController {
 //				logger.error("Form has errors");
 //				return "elovendo/user/profileEdit";
 //			} else {
-		logger.error("received: " + password + ";" + email + firstName + lastName + phone );
+		logger.error("received: " + password + " ; " + email + firstName + lastName + phone );
 				byte[] profilePicBytes = null;
-				if (!profilePic.isEmpty())
+				if (!profilePic.isEmpty()) {
 					try {
 						profilePicBytes = profilePic.getBytes();
 					} catch (IOException e) {
 						System.out.println("Error converting to bytes image file");
 					}
+				}
 
 				User user = null;
 				SecurityContext context = SecurityContextHolder.getContext();
@@ -364,12 +513,41 @@ public class UserWebController {
 				if (!firstName.equals("")) user.setFirstName(firstName);
 				if (!lastName.equals("")) user.setLastName(lastName);
 				if (!email.equals("")) user.setPassword(email);
+//				if (!phone.equals("missing")) user.setPhone(phone);
+				user.setPhone(phone);
+				user.setWhatssapUser(whatssapUser.equalsIgnoreCase("on"));
 				
 				userService.updateUser(user, profilePicBytes);
 
-				return "elovendo/user/registered_successful";
+				return "redirect:/site/profile";
 //			}
 	}
+	
+	/**
+	 * VOTE STUFF
+	 * @throws InvalidVoteUsersException 
+	 * @throws VoteDuplicateException 
+	 * @throws ItemNotFoundException 
+	 * @throws InvalidSelfVoteException 
+	 */
+	@RequestMapping(value = "vote", method = RequestMethod.POST)
+	public @ResponseBody boolean processVote(
+			@RequestParam(value="uv", required=true) long receiverId,
+			@RequestParam(value="iv", required=true) long itemId,
+			@RequestParam(value="vt", required=true) int voteType,
+			@RequestParam(value="msg", required=true) String voteMessage)
+			throws UserNotFoundException, PurchaseDuplicateException, ItemNotFoundException, 
+			VoteDuplicateException, InvalidVoteUsersException, InvalidSelfVoteException {
+		
+		User user = null;
+		SecurityContext context = SecurityContextHolder.getContext();
+		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+			user = (User) SecurityContextHolder.getContext()
+					.getAuthentication().getPrincipal();
+		
+		return userService.voteUser(user.getUserId(), receiverId, itemId, voteType, voteMessage) != null;
+	}
+	
 
 	/**
 	 * ITEMS STUFF
@@ -395,10 +573,10 @@ public class UserWebController {
 		model.addAttribute("user", user);
 
 		List<Category> categories = IteratorUtils.toList(categoryService
-				.findAllCategories().iterator());
+				.getAllCategories().iterator());
 		model.addAttribute("categories", categories);
 		List<SubCategory> subCategories = IteratorUtils.toList(categoryService
-				.findAllSubCategories().iterator());
+				.getAllSubCategories().iterator());
 		model.addAttribute("subCategories", subCategories);
 
 		return "elovendo/item/add_item";
@@ -441,11 +619,11 @@ public class UserWebController {
 
 			@SuppressWarnings("unchecked")
 			List<Category> categories = IteratorUtils.toList(categoryService
-					.findAllCategories().iterator());
+					.getAllCategories().iterator());
 			model.addAttribute("categories", categories);
 			@SuppressWarnings("unchecked")
 			List<SubCategory> subCategories = IteratorUtils
-					.toList(categoryService.findAllSubCategories().iterator());
+					.toList(categoryService.getAllSubCategories().iterator());
 			model.addAttribute("subCategories", subCategories);
 			
 			model.addAttribute("user", user);
@@ -551,10 +729,10 @@ public class UserWebController {
 	 * @throws PurchaseDuplicateException
 	 * @throws UserNotFoundException
 	 **/
-	// http://83.165.60.132:8080/site/paypalok
-	@RequestMapping(value = "paypalok", method = RequestMethod.POST)
+	// http://www.elovendo.com/site/paypalprocess
+	@RequestMapping(value = "paypalprocess", method = RequestMethod.POST)
 	@Async
-	public String processIPN(HttpServletRequest request)
+	public @ResponseBody void processIPN(HttpServletRequest request)
 			throws UserNotFoundException, PurchaseDuplicateException {
 
 		String PAY_PAL_DEBUG = "https://www.sandbox.paypal.com/cgi-bin/webscr";
@@ -566,7 +744,7 @@ public class UserWebController {
 
 		String paymentStatus = "";
 
-		System.out.println("POST Confirm");
+//		logger.debug("Received IPN from payment");
 
 		// Create client for Http communication
 		HttpClient httpClient = HttpClientBuilder.create().build();
@@ -604,7 +782,7 @@ public class UserWebController {
 
 				nameValuePairs.add(new BasicNameValuePair(param, value));
 				params.put(param, value);
-				System.out.println(param + "=" + value);
+//				System.out.println(param + "=" + value);
 				// Get the payment status
 				if (param.equalsIgnoreCase("payment_status"))
 					paymentStatus = value;
@@ -665,21 +843,21 @@ public class UserWebController {
 					logger.error("PAYMENT FROM GOSTH: " + e.getMessage());
 				}
 
-				return "elovendo/pricing/paymentOk";
+//				return "elovendo/pricing/paymentOk";
 			} else {
 				System.out.println("shit, payment not confirmed");
-				return "elovendo/pricing/paymentFailed";
+//				return "elovendo/pricing/paymentFailed";
 			}
 
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			return "redirect:/error";
+//			return "redirect:/error";
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
-			return "redirect:/error";
+//			return "redirect:/error";
 		} catch (IOException e) {
 			e.printStackTrace();
-			return "redirect:/error";
+//			return "redirect:/error";
 		}
 	}
 

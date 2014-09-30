@@ -43,6 +43,16 @@ header#top {
 	border-color: #7c2d82; 
 }
 
+.headerStyle .btn-info:hover, .btn-info:focus, .btn-info:active, .btn-info.active, .open>.dropdown-toggle.btn-info {
+	background-color: #665086;
+	border-color: #7c2d82;
+}
+
+.headerStyle .btn-info {
+	background-color: #563D7C;
+	border-color: #7c2d82;
+}
+
 .headerStyle .btn-info:active, .btn-info:focus { 
 	background-color: #31135d;
 	border-color: #7c2d82; 
