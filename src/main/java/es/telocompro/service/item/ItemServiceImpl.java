@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -19,15 +20,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import es.telocompro.model.item.Item;
+import es.telocompro.model.item.ItemForm;
 import es.telocompro.model.item.ItemRepository;
 import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.user.User;
-import es.telocompro.rest.controller.exception.ItemNotFoundException;
-import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
-import es.telocompro.rest.controller.exception.SubCategoryNotFoundException;
-import es.telocompro.rest.controller.exception.UserNotFoundException;
+import es.telocompro.rest.exception.ItemNotFoundException;
+import es.telocompro.rest.exception.NotUserItemException;
+import es.telocompro.rest.exception.ProvinceNotFoundException;
+import es.telocompro.rest.exception.SubCategoryNotFoundException;
+import es.telocompro.rest.exception.UserNotFoundException;
 import es.telocompro.service.exception.InvalidItemNameMinLenghtException;
 import es.telocompro.service.item.category.CategoryService;
 import es.telocompro.service.user.UserService;
@@ -39,7 +43,6 @@ import es.telocompro.util.IOUtil;
  * All rights reserved.
  */
 
-@SuppressWarnings(value = "unused")
 @Service("itemService")
 public class ItemServiceImpl implements ItemService {
 	
@@ -62,7 +65,7 @@ public class ItemServiceImpl implements ItemService {
     	
     	User user = userService.findUserByLogin(userName);
 //    	SubCategory subCategory = categoryService.getSubCategoryByName(subCategoryId);
-    	SubCategory subCategory = categoryService.findSubCategoryBySubCategoryId(subCategoryId);
+    	SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(subCategoryId);
 //        Province province = provinceService.findProvinceByName(provinceName);
     	
     	if (title.length() < MIN_ITEM_TITLE_LENGHT) throw new InvalidItemNameMinLenghtException(title);
@@ -72,6 +75,20 @@ public class ItemServiceImpl implements ItemService {
     	
     	double latitude = Double.parseDouble(_latitude);
     	double longitude = Double.parseDouble(_longitude);
+    	
+    	// Randomize exact latitude
+    	Random random = new Random();
+    	double rangeMax = 0.003;
+    	double rangeMin = 0.001;
+    	
+    	if (random.nextInt(2) == 0)
+    		latitude = latitude + (rangeMin + (rangeMax - rangeMin) * random.nextDouble());
+    	else
+    		latitude = latitude - (rangeMin + (rangeMax - rangeMin) * random.nextDouble());
+    	if (random.nextInt(2) == 0)
+    		longitude = longitude + (rangeMin + (rangeMax - rangeMin) * random.nextDouble());
+    	else
+    		longitude = longitude - (rangeMin + (rangeMax - rangeMin) * random.nextDouble());
     	
     	// create item
         Item item = new Item(user, subCategory, title, description,
@@ -90,6 +107,12 @@ public class ItemServiceImpl implements ItemService {
         return item;
     }
     
+    /**
+     * Saves an image to disk naming as unique filename
+     * @param item
+     * @param bytes
+     * @return Image file path
+     */
     private String saveImage(Item item, byte[] bytes) {
     	String imageFileName = itemHash(item);
     	
@@ -142,7 +165,7 @@ public class ItemServiceImpl implements ItemService {
     	item.setUser(user);
     	
 //    	SubCategory subCategory = categoryService.getSubCategoryByName(subCategoryName);
-    	SubCategory subCategory = categoryService.findSubCategoryBySubCategoryId(subCategoryId);
+    	SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(subCategoryId);
 //        Province province = provinceService.findProvinceByName(provinceName);
         
         // Validation
@@ -175,7 +198,75 @@ public class ItemServiceImpl implements ItemService {
     	
     }
     
-    private String itemHash(Item item) {
+    @Override
+	public Item addItem(ItemForm itemForm, User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+    
+	@Override
+	public Item updateItem(ItemForm itemForm, User user, long subCategoryId, MultipartFile mainImage,
+			MultipartFile image1, MultipartFile image2, MultipartFile image3)
+			throws ItemNotFoundException, NotUserItemException {
+		
+		if (!itemForm.getUser().equals(user)) 
+			throw new NotUserItemException(itemForm.getItemId(), user.getUserId());
+		
+		Item item = getItemById(itemForm.getItemId());
+		if (item == null) throw new ItemNotFoundException(itemForm.getItemId());
+		
+		// If subCategory is changed, get it
+		if (subCategoryId != item.getSubCategory().getId()) {
+			SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(subCategoryId);
+			item.setSubCategory(subCategory);
+		}
+		
+		// Save new images (produce an unique name for an item)
+        if (!mainImage.isEmpty()) {
+        	byte[] mainImageBytes = null;
+        	try { mainImageBytes = mainImage.getBytes(); // Main image
+    		} catch (IOException e) { logger.debug("Error converting image for user " + user.getUserId()); }
+        	item.setMainImage(saveImage(item, mainImageBytes));
+        }
+        if (!image1.isEmpty()) {
+        	byte[] image1Bytes = null;
+        	try { image1Bytes = image1.getBytes(); // Image 1
+    		} catch (IOException e) { logger.debug("Error converting image for user " + user.getUserId()); }
+        	item.setImage1(saveImage(item, image1Bytes));
+        }
+        if (!image2.isEmpty()) {
+        	byte[] image2Bytes = null;
+        	try { image2Bytes = image2.getBytes(); // Image 2
+    		} catch (IOException e) { logger.debug("Error converting image for user " + user.getUserId()); }
+        	item.setImage2(saveImage(item, image2Bytes));
+        }
+        if (!image3.isEmpty()) {
+        	byte[] image3Bytes = null;
+        	try { image3Bytes = image3.getBytes(); // Image 3
+    		} catch (IOException e) { logger.debug("Error converting image for user " + user.getUserId()); }
+        	item.setImage3(saveImage(item, image3Bytes));
+        }
+        
+		item.setTitle(itemForm.getTitle());
+		item.setDescription(itemForm.getDescription());
+		item.setPrize(itemForm.getPrize());
+		item.setSubCategory(itemForm.getSubCategory());
+		item.setYoutubeVideo(itemForm.getYoutubeVideo());
+		item.setFeatured(itemForm.isFeatured());
+		item.setHighlight(itemForm.isHighlight());
+		item.setAutoRenew(itemForm.isAutoRenew());
+		
+		// If lat or lng are different from original, randomize the given ones
+		if (itemForm.getLatitude() != item.getLatitude() || itemForm.getLongitude() != item.getLongitude()) {
+			Double[] latLng = randomizeCoordinates(itemForm.getLatitude(), itemForm.getLongitude());
+			item.setLatitude(latLng[0]);
+			item.setLongitude(latLng[1]);
+		}
+		
+		return itemRepository.save(item);
+	}
+
+	private String itemHash(Item item) {
     	return String.valueOf(
     			(item.getUser().getUserId() + Calendar.getInstance().getTimeInMillis()) );
     }
@@ -307,4 +398,36 @@ public class ItemServiceImpl implements ItemService {
 	public int getNumberUserItems(Long userId) {
 		return itemRepository.findNumberUserItems(userId);
 	}
+
+	@Override
+	public Iterable<Item> getAll(Iterable<Long> ids) {
+		return itemRepository.findAll(ids);
+	}
+	
+	/**
+	 * Returns randomized coordinates by the given ones.
+	 * @param latitude
+	 * @param longitude
+	 * @return Array of two elements, [LAT, LNG]
+	 */
+	private Double[] randomizeCoordinates(double latitude, double longitude) {
+    	// Randomize exact latitude
+    	Random random = new Random();
+    	double rangeMax = 0.003;
+    	double rangeMin = 0.001;
+    	
+    	if (random.nextInt(2) == 0)
+    		latitude = latitude + (rangeMin + (rangeMax - rangeMin) * random.nextDouble());
+    	else
+    		latitude = latitude - (rangeMin + (rangeMax - rangeMin) * random.nextDouble());
+    	if (random.nextInt(2) == 0)
+    		longitude = longitude + (rangeMin + (rangeMax - rangeMin) * random.nextDouble());
+    	else
+    		longitude = longitude - (rangeMin + (rangeMax - rangeMin) * random.nextDouble());
+    	
+    	Double[] coords = {latitude, longitude};
+    	
+    	return coords;
+	}
+	
 }

@@ -1,11 +1,13 @@
 package es.telocompro.service.item;
 
 import es.telocompro.model.item.Item;
+import es.telocompro.model.item.ItemForm;
 import es.telocompro.model.user.User;
-import es.telocompro.rest.controller.exception.ItemNotFoundException;
-import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
-import es.telocompro.rest.controller.exception.SubCategoryNotFoundException;
-import es.telocompro.rest.controller.exception.UserNotFoundException;
+import es.telocompro.rest.exception.ItemNotFoundException;
+import es.telocompro.rest.exception.NotUserItemException;
+import es.telocompro.rest.exception.ProvinceNotFoundException;
+import es.telocompro.rest.exception.SubCategoryNotFoundException;
+import es.telocompro.rest.exception.UserNotFoundException;
 import es.telocompro.service.exception.InvalidItemNameMinLenghtException;
 
 import java.io.IOException;
@@ -14,6 +16,7 @@ import java.sql.Blob;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by @adrian on 17/06/14.
@@ -65,6 +68,8 @@ public interface ItemService {
     		byte[] image1, byte[] image2, byte[] image3, boolean featured, boolean highlight) 
     		throws InvalidItemNameMinLenghtException, UserNotFoundException, 
     		SubCategoryNotFoundException, ProvinceNotFoundException;
+    
+    public Item addItem(ItemForm itemForm, User user);
 
     /**
      * Get all items
@@ -147,6 +152,10 @@ public interface ItemService {
      */
     public Item updateItem(Long itemId, String title, String description, double prize, boolean renew, 
     		boolean featured, boolean highlight);
+    
+	public Item updateItem(ItemForm itemForm, User user, long subCategoryId,
+			MultipartFile mainImage, MultipartFile image1, MultipartFile image2, MultipartFile image3)
+			throws ItemNotFoundException, NotUserItemException;
 
     /**
      * Deletes an item
@@ -156,4 +165,6 @@ public interface ItemService {
     
     public int getNumberUserItems(User user);
     public int getNumberUserItems(Long userId);
+    
+    public Iterable<Item> getAll(Iterable<Long> ids);
 }

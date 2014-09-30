@@ -14,9 +14,9 @@
 <!-- Javascript -->
 <script src="/js/jquery-1.11.0.min.js"></script>
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="/css/bootstrap.min.css"/>
 <!-- Latest compiled and minified JavaScript -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 
 </head>
 <body>
@@ -25,10 +25,35 @@
 	<div th:replace="elovendo/header"></div>
 	
 	<div class="container">
-		<div class="row" th:each="messageThread : ${conversations}">
-			<a th:href="@{'/elovendo/messages/conversation/' + ${messageThread.messageThreadId}}"
-			th:text="${messageThread.participant1.login} +' y '+ ${messageThread.participant2.login}">
-			</a>
+<!-- 		<div class="row" th:each="messageThread : ${conversations}"> -->
+<!-- 			<a th:href="@{'/elovendo/messages/conversation/' + ${messageThread.messageThreadId}}" -->
+<!-- 			th:text="${messageThread.participant1.login} +' y '+ ${messageThread.participant2.login}"> -->
+<!-- 			</a> -->
+<!-- 		</div> -->
+
+		<div class="row">
+			<div class="col-xs-12 col-md-12 text-center"
+				style="margin-bottom: 20px;">
+				<h1>Mis conversaciones</h1>
+				<hr class="hrStyle2" />
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="list-group" th:each="messageThread : ${conversations}">
+			  <a th:if="${messageThread.unreadMessages} > 0"
+			  	th:href="@{'/elovendo/messages/conversation/' + ${messageThread.messageThreadId}}" 
+			  	class="list-group-item list-group-item-success">
+			    <h4 class="list-group-item-heading" th:text="${messageThread.partner}">user</h4>
+			    <p class="list-group-item-text" th:text="${messageThread.lastMessage}">...</p>
+			  </a>
+			  <a th:unless="${messageThread.unreadMessages} > 0"
+			  	th:href="@{'/elovendo/messages/conversation/' + ${messageThread.messageThreadId}}" 
+			  	class="list-group-item">
+			    <h4 class="list-group-item-heading" th:text="${messageThread.partner}">user</h4>
+			    <p class="list-group-item-text" th:text="${messageThread.lastMessage}">...</p>
+			  </a>
+			</div>
 		</div>
 	</div>
 

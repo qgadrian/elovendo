@@ -6,9 +6,9 @@ import java.util.Calendar;
 import org.springframework.data.domain.Page;
 
 import es.telocompro.model.purchase.Purchase;
-import es.telocompro.rest.controller.exception.PurchaseDuplicateException;
-import es.telocompro.rest.controller.exception.PurchaseNotFoundException;
-import es.telocompro.rest.controller.exception.UserNotFoundException;
+import es.telocompro.rest.exception.PurchaseDuplicateException;
+import es.telocompro.rest.exception.PurchaseNotFoundException;
+import es.telocompro.rest.exception.UserNotFoundException;
 
 public interface PurchaseService {
 	

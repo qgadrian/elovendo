@@ -10,7 +10,6 @@ import javax.imageio.ImageIO;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,12 +21,13 @@ import es.telocompro.model.user.UserRepository;
 import es.telocompro.model.user.role.Role;
 import es.telocompro.model.user.role.RoleRepository;
 import es.telocompro.model.vote.Vote;
-import es.telocompro.model.vote.VoteRepository;
-import es.telocompro.rest.controller.exception.InvalidVoteUsersException;
-import es.telocompro.rest.controller.exception.ItemNotFoundException;
-import es.telocompro.rest.controller.exception.LoginNotAvailableException;
-import es.telocompro.rest.controller.exception.UserNotFoundException;
-import es.telocompro.rest.controller.exception.VoteDuplicateException;
+import es.telocompro.rest.exception.EmailNotAvailableException;
+import es.telocompro.rest.exception.InvalidSelfVoteException;
+import es.telocompro.rest.exception.InvalidVoteUsersException;
+import es.telocompro.rest.exception.ItemNotFoundException;
+import es.telocompro.rest.exception.LoginNotAvailableException;
+import es.telocompro.rest.exception.UserNotFoundException;
+import es.telocompro.rest.exception.VoteDuplicateException;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.vote.VoteService;
 import es.telocompro.util.IOUtil;
@@ -39,7 +39,7 @@ import es.telocompro.util.RoleEnum;
 
 @Service("userService")
 @Transactional(readOnly = false)
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserRepository userRepository;
@@ -59,17 +59,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	// an user and pass it
 	// BE CAREFULL WITH USER DISABLED BY DEFAULT
 	@Override
-	public User addUser(String login, String password, String firstName, String lastName, 
-			String address, String phone, String email, byte[] avatar) throws LoginNotAvailableException {
+	public User addUser(String login, String password, String cmpKey, String firstName, String lastName, 
+			String address, String phone, boolean whatssapUser, String email, byte[] avatar) 
+					throws LoginNotAvailableException, EmailNotAvailableException {
 		
-		if (userRepository.findByLogin(login) != null ) throw new LoginNotAvailableException(login);
+		User user = userRepository.findByLogin(login); 
+		if (user != null ) throw new LoginNotAvailableException(login);
+		else if (userRepository.findByEmail(email) != null )
+			throw new EmailNotAvailableException(login);
 		
 		// At this point, all new users always will be ROLE_USER
 		Role role = roleRepository.findByRoleName(RoleEnum.ROLE_USER);
 		
 		// Create user (notice the null for avatar path)
-		User user = new User(login, password, firstName, lastName, address,
-				phone, email, null, role, null);
+		user = new User(login, password, cmpKey, firstName, lastName, address,
+				phone, whatssapUser, email, null, role, null);
 
 		user = userRepository.save(user);
 		user.setAvatar(saveProfilePic(user, avatar));
@@ -104,14 +108,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 //		}
 		
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		user.setPassword(encoder.encode(password));
+		
+		if (password != null) user.setPassword(encoder.encode(password));
 		
 		// return the updated user with the avatar path asigned
 		return userRepository.save(user);
 	}
 	
 	@Override
-	public User addUser(User user, byte[] profilePicBytes) throws LoginNotAvailableException {
+	public User addUser(User user, byte[] profilePicBytes) throws LoginNotAvailableException, EmailNotAvailableException {
 		
 //		String login = user.getLogin();
 //		
@@ -133,8 +138,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 //		
 //		return userRepository.save(user);
 		
-		return addUser(user.getLogin(), user.getPassword(), user.getFirstName(),
-				user.getLastName(), user.getAddress(), user.getPhone(), user.getEmail(), profilePicBytes);
+		return addUser(user.getLogin(), user.getPassword(), user.getSocialCompositeKey(),
+				user.getFirstName(), user.getLastName(), user.getAddress(), user.getPhone(), 
+				user.isWhatssapUser(), user.getEmail(), profilePicBytes);
 	}
 
 	@Override
@@ -207,13 +213,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	// TODO: If Paypal, increase the reability value for users
 	@Override
 	public Vote voteUser(Long userIdVote, Long userIdReceive, Long itemId, int voteType, String voteMessage) 
-			throws UserNotFoundException, ItemNotFoundException, VoteDuplicateException, InvalidVoteUsersException {
+			throws UserNotFoundException, ItemNotFoundException, VoteDuplicateException, InvalidVoteUsersException, 
+			InvalidSelfVoteException {
 		User userVote = userRepository.findOne(userIdVote);
 		User userReceive = userRepository.findOne(userIdReceive);
 		Item item = itemService.getItemById(itemId);
 		
 		if (userVote == null) throw new UserNotFoundException(userIdVote);
 		if (userReceive == null) throw new UserNotFoundException(userIdReceive);
+		if (userVote.equals(userReceive)) throw new InvalidSelfVoteException(userVote.getUserId());
 		if (item == null) throw new ItemNotFoundException(itemId);
 		
 		// Check if user already voted for this item
@@ -271,18 +279,34 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public int getVotesPositive(User user) {
-		return voteService.getVotesPositive(user.getUserId());
+		return voteService.getNumberVotesPositive(user.getUserId());
 	}
 
 	@Override
 	public int getVotesNegative(User user) {
-		return voteService.getVotesNegative(user.getUserId());
+		return voteService.getNumberVotesNegative(user.getUserId());
 	}
 
 
 	@Override
 	public int getVotesQueued(User user) {
-		return voteService.getVotesQueued(user.getUserId());
+		return voteService.getNumberVotesQueued(user.getUserId());
+	}
+
+	@Override
+	public User findUserByEmail(String email) throws UserNotFoundException {
+		User user = userRepository.findByEmail(email);
+		if (user == null) throw new UserNotFoundException(email);
+		return user;
+	}
+
+	@Override
+	public User findUserBySocialUserKey(String compositeKey)
+			throws UserNotFoundException {
+		User user = userRepository.findUserBySocialUserKey(compositeKey);
+		if (user == null) throw new UserNotFoundException(compositeKey);
+		
+		return user;
 	}
 	
 }

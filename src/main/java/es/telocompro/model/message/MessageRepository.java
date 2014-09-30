@@ -11,7 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository("messageRepository")
 public interface MessageRepository extends PagingAndSortingRepository<Message, Long>{
 
-	@Query("SELECT m FROM Message m WHERE messageThreadId = :messageThread")
+	@Query("SELECT m FROM Message m WHERE messageThreadId = :messageThread ORDER BY messageDate")
 	Page<Message> findMessagesByMessageThread(@Param("messageThread") Long messageThread, Pageable pageable);
+	
+	@Query("SELECT messageText FROM Message m WHERE messageThreadId = :messageThread ORDER BY messageDate DESC")
+	Page<String> findLastMessageFromMessageThread(@Param("messageThread") Long messageThread, Pageable pageable);
 	
 }

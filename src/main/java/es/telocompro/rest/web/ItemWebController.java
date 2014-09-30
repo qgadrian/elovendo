@@ -2,31 +2,41 @@ package es.telocompro.rest.web;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import es.telocompro.model.item.Item;
+import es.telocompro.model.item.ItemForm;
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.subcategory.SubCategory;
-import es.telocompro.rest.controller.exception.ItemNotFoundException;
+import es.telocompro.model.user.User;
+import es.telocompro.rest.exception.ItemNotFoundException;
+import es.telocompro.rest.exception.NotUserItemException;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.item.category.CategoryService;
 import es.telocompro.service.user.UserService;
 import es.telocompro.service.vote.VoteService;
 import es.telocompro.util.Constant;
 import es.telocompro.util.PageWrapper;
-
 import static es.telocompro.util.Constant.S_ITEMS_PER_PAGE;
 
 @Controller
@@ -139,7 +149,7 @@ public class ItemWebController {
     	
     	@SuppressWarnings("unchecked")
 		List<Category> categories = IteratorUtils.toList(
-				categoryService.findAllCategories().iterator());
+				categoryService.getAllCategories().iterator());
 		model.addAttribute("categories", categories);
     	
     	// FIXME: Broken search
@@ -182,7 +192,7 @@ public class ItemWebController {
 		
 		@SuppressWarnings("unchecked")
 		List<Category> categories = IteratorUtils.toList(
-				categoryService.findAllCategories().iterator());
+				categoryService.getAllCategories().iterator());
 		model.addAttribute("categories", categories);
 		
 		if (prizeMin != 0)
@@ -232,7 +242,7 @@ public class ItemWebController {
 
 		@SuppressWarnings("unchecked")
 		List<Category> categories = IteratorUtils.toList(categoryService
-				.findAllCategories().iterator());
+				.getAllCategories().iterator());
 		model.addAttribute("categories", categories);
 
 		model.addAttribute("page", pageWrapper);
@@ -266,7 +276,7 @@ public class ItemWebController {
     	
     	@SuppressWarnings("unchecked")
 		List<Category> categories = IteratorUtils.toList(
-				categoryService.findAllCategories().iterator());
+				categoryService.getAllCategories().iterator());
 		model.addAttribute("categories", categories);
 
     	
@@ -279,7 +289,8 @@ public class ItemWebController {
     /**
 	 * FIND RANDOM
 	 */
-    private List<Item> getRandomItems(int maxItems, String subCategory) {
+    @SuppressWarnings("unused")
+	private List<Item> getRandomItems(int maxItems, String subCategory) {
     	return itemService.getRandomFeaturedItems(maxItems, subCategory);
     }
     
@@ -296,8 +307,8 @@ public class ItemWebController {
 		catch (ItemNotFoundException e) { return "elovendo/error/error"; }
 		
     	model.addAttribute("item", item);
-    	model.addAttribute("votesPositive", voteService.getVotesPositive(item.getUser().getUserId()));
-    	model.addAttribute("votesNegative", voteService.getVotesNegative(item.getUser().getUserId()));
+    	model.addAttribute("votesPositive", voteService.getNumberVotesPositive(item.getUser().getUserId()));
+    	model.addAttribute("votesNegative", voteService.getNumberVotesNegative(item.getUser().getUserId()));
     	model.addAttribute("totalItems", itemService.getNumberUserItems(item.getUser().getUserId()));
     	
     	return "elovendo/item/itemView";
@@ -316,6 +327,70 @@ public class ItemWebController {
 		if(prizeMax > 0) tmp = tmp.concat("&max="+prizeMax);
 		
 		return tmp;
+	}
+	
+	/** EDIT ITEM 
+	 * @throws ItemNotFoundException 
+	 * @throws NotUserItemException **/
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "edit/item/{itemId}", method = RequestMethod.GET)
+	public String editItemPage(Model model,
+			@PathVariable long itemId) throws ItemNotFoundException, NotUserItemException {
+		
+		User user = null;
+		SecurityContext context = SecurityContextHolder.getContext();
+		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+			user = (User) SecurityContextHolder.getContext()
+					.getAuthentication().getPrincipal();
+		
+		Item item = itemService.getItemById(itemId);
+		ItemForm itemForm = new ItemForm(item);
+		
+		if (!item.getUser().equals(user))
+			throw new NotUserItemException(itemId, user.getUserId());
+		
+		model.addAttribute("user", user);
+		model.addAttribute("item", itemForm);
+		
+		List<Category> categories = IteratorUtils.toList(categoryService
+				.getAllCategories().iterator());
+		model.addAttribute("categories", categories);
+		
+		List<SubCategory> subCategories = IteratorUtils.toList(categoryService
+				.getAllSubCatByCategoryId(item.getSubCategory().getCategory().getCategoryId()).iterator());
+		model.addAttribute("subCategories", subCategories);
+
+		return "elovendo/item/edit/edit_item";
+	}
+	
+	@RequestMapping(value = "edit/item/{itemId}", method = RequestMethod.POST)
+	public String processEditItemPage(Model model,
+			@PathVariable long itemId,
+			@Valid @ModelAttribute(value = "item") ItemForm itemForm,
+			@RequestParam("subCategory") long subCategoryId,
+			@RequestParam("mI") MultipartFile mainImage,
+			@RequestParam("i1") MultipartFile image1,
+			@RequestParam("i2") MultipartFile image2,
+			@RequestParam("i3") MultipartFile image3,
+			BindingResult result) throws ItemNotFoundException, NotUserItemException {
+		
+		User user = null;
+		SecurityContext context = SecurityContextHolder.getContext();
+		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+			user = (User) SecurityContextHolder.getContext()
+					.getAuthentication().getPrincipal();
+		
+		// Validate params
+		// set item params
+		// update item
+		
+		itemForm.setUser(user);
+		itemForm.setItemId(itemId);
+		
+		itemService.updateItem(itemForm, user, subCategoryId, mainImage, image1, image2, image3);
+
+		return "elovendo/item/item_create_successful";
 	}
 
 }

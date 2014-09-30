@@ -48,10 +48,10 @@ public class Item {
     @JoinColumn(name = "subcategoryid")
     private SubCategory subCategory;
 
-    @Length(min = 5, max = 60)
+//    @Length(min = 5, max = 60)
     private String title;
     
-    @Length(max = 1000)
+//    @Length(max = 1000)
     private String description;
     
     private BigDecimal prize;
@@ -77,7 +77,7 @@ public class Item {
     private String image2;
     private String image3;
     
-    @Pattern(regexp=Constant.YOUTUBE_URL_PATTERN)
+//    @Pattern(regexp=Constant.YOUTUBE_URL_PATTERN)
     private String youtubeVideo;
     
     // Premium features
@@ -116,7 +116,6 @@ public class Item {
         this.image2 = image2;
         this.image3 = image3;
         this.youtubeVideo = youtubeVideo;
-//        this.province = province;
         
         Calendar endDate = Calendar.getInstance();
         endDate.add(Calendar.DATE, Constant.ITEM_DEFAULT_DURATION);
@@ -129,9 +128,9 @@ public class Item {
         this.longitude = longitude;
         
         double latRad = Math.toRadians(latitude);
-        this.cosRadLat = (float) Math.cos(latRad);
-        this.sinRadLat = (float) Math.sin(latRad);
-		this.radLng = (float) Math.toRadians(longitude);
+        this.cosRadLat = Math.cos(latRad);
+        this.sinRadLat = Math.sin(latRad);
+		this.radLng = Math.toRadians(longitude);
     }
     
     public Item(Item item, double distance) {
@@ -142,14 +141,11 @@ public class Item {
 		this.description = item.getDescription();
 		this.prize = item.getPrize();
 		
-		this.startDate = Calendar.getInstance();
-		Calendar endDate = Calendar.getInstance();
-		endDate.add(Calendar.DATE, Constant.ITEM_DEFAULT_DURATION);
-		this.endDate = endDate;
+		this.startDate = item.startDate;
+		this.endDate = item.getEndDate();
 		
 		this.mainImage = item.getMainImageName();
 		
-//		this.distance = distance;
 		this.distance = new DecimalFormat("##.##").format(distance);
 		
 		this.image1 = item.getImage1();
@@ -168,6 +164,7 @@ public class Item {
 	}
 
 	public String getDistance() {
+//		return new DecimalFormat("##.##").format(distance);ç
 		return distance;
 	}
 

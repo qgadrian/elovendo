@@ -6,12 +6,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import es.telocompro.model.user.User;
 import es.telocompro.model.vote.Vote;
-import es.telocompro.rest.controller.exception.InvalidVoteUsersException;
-import es.telocompro.rest.controller.exception.ItemNotFoundException;
-import es.telocompro.rest.controller.exception.LoginNotAvailableException;
-import es.telocompro.rest.controller.exception.ProvinceNotFoundException;
-import es.telocompro.rest.controller.exception.UserNotFoundException;
-import es.telocompro.rest.controller.exception.VoteDuplicateException;
+import es.telocompro.rest.exception.EmailNotAvailableException;
+import es.telocompro.rest.exception.InvalidSelfVoteException;
+import es.telocompro.rest.exception.InvalidVoteUsersException;
+import es.telocompro.rest.exception.ItemNotFoundException;
+import es.telocompro.rest.exception.LoginNotAvailableException;
+import es.telocompro.rest.exception.ProvinceNotFoundException;
+import es.telocompro.rest.exception.UserNotFoundException;
+import es.telocompro.rest.exception.VoteDuplicateException;
 
 /**
  * Created by @adrian on 17/06/14.
@@ -34,11 +36,14 @@ public interface UserService extends UserDetailsService {
      * @param provinceName
      * @return
      * @throws LoginNotAvailableException
+     * @throws EmailNotAvailableException 
      * @throws ProvinceNotFoundException
      * @throws IOException 
      */
-    public User addUser(String login, String password, String firstName, String lastName, String address,
-                        String phone, String email, byte[] avatar) throws LoginNotAvailableException;
+	public User addUser(String login, String password, String cmpKey,
+			String firstName, String lastName, String address, String phone,
+			boolean whatssapUser, String email, byte[] avatar)
+			throws LoginNotAvailableException, EmailNotAvailableException;
     
     /**
      * Adds an user
@@ -46,10 +51,11 @@ public interface UserService extends UserDetailsService {
      * @param provinceName
      * @return
      * @throws LoginNotAvailableException
+     * @throws EmailNotAvailableException 
      * @throws ProvinceNotFoundException
      */
     public User addUser(User user, byte[] profilePicBytes) 
-    		throws LoginNotAvailableException;
+    		throws LoginNotAvailableException, EmailNotAvailableException;
 
     /**
      * Finds a user by its id
@@ -65,6 +71,10 @@ public interface UserService extends UserDetailsService {
      * @throws UserNotFoundException 
      */
     public User findUserByLogin(String login) throws UserNotFoundException;
+    
+    public User findUserByEmail(String email) throws UserNotFoundException;
+    
+    public User findUserBySocialUserKey(String compositeKey) throws UserNotFoundException;
 
     /**
      * Updates an user
@@ -107,15 +117,17 @@ public interface UserService extends UserDetailsService {
      * @throws ItemNotFoundException
      * @throws VoteDuplicateException 
      * @throws InvalidVoteUsersException 
+     * @throws InvalidSelfVoteException 
      */
 	public Vote voteUser(Long userIdVote, Long userIdReceive, Long itemId,
 			int voteType, String voteMessage) throws UserNotFoundException,
 			ItemNotFoundException, VoteDuplicateException,
-			InvalidVoteUsersException;
+			InvalidVoteUsersException, InvalidSelfVoteException;
 
 	public int getVotesPositive(User user);
 
 	public int getVotesNegative(User user);
 
 	public int getVotesQueued(User user);
+	
 }

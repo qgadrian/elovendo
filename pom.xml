@@ -203,6 +203,11 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>3.2.5.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+			<version>3.2.5.RELEASE</version>
+		</dependency>
 
 		<!-- Servlet API and JSTL -->
 		<dependency>
@@ -228,42 +233,56 @@
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.2.1</version> <!-- makesure correct version here -->
 		</dependency>
+		
+		<!-- Java mail -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>javax.mail-api</artifactId>
+			<version>1.5.2</version>
+		</dependency>
 
 		<!--SOCIAL -->
-		<dependency>
-		<groupId>org.springframework.social</groupId>
-		<artifactId>spring-social-config</artifactId>
-		<version>1.1.0.RELEASE</version>
-		</dependency>
-		<dependency>
-		<groupId>org.springframework.social</groupId>
-		<artifactId>spring-social-core</artifactId>
-		<version>1.1.0.RELEASE</version>
-		</dependency>
-		<dependency>
-		<groupId>org.springframework.social</groupId>
-		<artifactId>spring-social-security</artifactId>
-		<version>1.1.0.RELEASE</version>
-		</dependency>
-		<dependency>
-		<groupId>org.springframework.social</groupId>
-		<artifactId>spring-social-web</artifactId>
-		<version>1.1.0.RELEASE</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 		<groupId>org.springframework.social</groupId> -->
+<!-- 		<artifactId>spring-social-config</artifactId> -->
+<!-- 		<version>1.1.0.RELEASE</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 		<groupId>org.springframework.social</groupId> -->
+<!-- 		<artifactId>spring-social-core</artifactId> -->
+<!-- 		<version>1.1.0.RELEASE</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 		<groupId>org.springframework.social</groupId> -->
+<!-- 		<artifactId>spring-social-security</artifactId> -->
+<!-- 		<version>1.1.0.RELEASE</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 		<groupId>org.springframework.social</groupId> -->
+<!-- 		<artifactId>spring-social-web</artifactId> -->
+<!-- 		<version>1.1.0.RELEASE</version> -->
+<!-- 		</dependency> -->
 
 		<!-- Spring Social Facebook -->
-		<dependency>
-		<groupId>org.springframework.social</groupId>
-		<artifactId>spring-social-facebook</artifactId>
-		<version>1.1.1.RELEASE</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 		<groupId>org.springframework.social</groupId> -->
+<!-- 		<artifactId>spring-social-facebook</artifactId> -->
+<!-- 		<version>1.1.1.RELEASE</version> -->
+<!-- 		</dependency> -->
 
 		<!-- Spring Social Twitter -->
-		<dependency>
-		<groupId>org.springframework.social</groupId>
-		<artifactId>spring-social-twitter</artifactId>
-		<version>1.1.0.RELEASE</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 		<groupId>org.springframework.social</groupId> -->
+<!-- 		<artifactId>spring-social-twitter</artifactId> -->
+<!-- 		<version>1.1.0.RELEASE</version> -->
+<!-- 		</dependency> -->
+		
+		<!-- Spring Social Google -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.springframework.social</groupId> -->
+<!-- 			<artifactId>spring-social-google</artifactId> -->
+<!-- 			<version>1.0.0.RELEASE</version> -->
+<!-- 		</dependency> -->
 
 		<!-- THYEMLEAF -->
 		<dependency>
@@ -372,9 +391,9 @@
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
-				<includes>
-					<include>spring-config.xml</include>
-				</includes>
+<!-- 				<includes> -->
+<!-- 					<include>spring-config.xml</include> -->
+<!-- 				</includes> -->
 			</resource>
 
 			<!-- Continue considering resources the files in src/main/resources, but 
@@ -390,10 +409,10 @@
 			<testResource>
 				<directory>src/test/resources</directory>
 				<filtering>true</filtering>
-				<includes>
-					<include>spring-config-test.xml</include>
-					<include>hibernate-config-experiments.xml</include>
-				</includes>
+<!-- 				<includes> -->
+<!-- 					<include>spring-config-test.xml</include> -->
+<!-- 					<include>hibernate-config-experiments.xml</include> -->
+<!-- 				</includes> -->
 			</testResource>
 
 			<!-- Continue considering resources the files in src/test/resources, but 
@@ -493,6 +512,12 @@
 <!-- 		<snapshots> -->
 <!-- 		<enabled>true</enabled> -->
 <!-- 		</snapshots> -->
+<!-- 		</repository> -->
+
+<!-- 		<repository> -->
+<!-- 			<id>spring.social.google</id> -->
+<!-- 			<name>Spring Social Google</name> -->
+<!-- 			<url>https://github.com/GabiAxel/maven/raw/master/</url> -->
 <!-- 		</repository> -->
 		
 	</repositories>

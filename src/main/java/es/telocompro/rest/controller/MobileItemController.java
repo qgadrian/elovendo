@@ -1,10 +1,11 @@
 package es.telocompro.rest.controller;
 
+import static es.telocompro.util.Constant.S_ITEMS_PER_PAGE;
 import es.telocompro.model.item.Item;
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.CategoryRepository;
-import es.telocompro.rest.controller.exception.ItemNotFoundException;
-import es.telocompro.rest.controller.exception.WrongItemSubCategoryRequestException;
+import es.telocompro.rest.exception.ItemNotFoundException;
+import es.telocompro.rest.exception.WrongItemSubCategoryRequestException;
 import es.telocompro.rest.util.RestItemObject;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.util.Constant;
@@ -15,6 +16,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import scala.annotation.meta.getter;
@@ -40,10 +42,10 @@ import javax.servlet.http.HttpServletResponse;
  * All rights reserved.
  */
 
-@RestController
+@Controller
 @SuppressWarnings("unused")
 @RequestMapping(Constant.MOBILE_API_URL_PREFIX_V1 + "/bazaar/c/")
-public class ItemController {
+public class MobileItemController {
 
     @Autowired
     private ItemService itemService;
@@ -106,18 +108,25 @@ public class ItemController {
     @SuppressWarnings("unchecked")
 	@RequestMapping(value="/2/{subcategoryname}", params = {"p","s"}, 
 	method = RequestMethod.GET, produces = "application/json")
-    public JSONObject getItemsBySubCategory(@PathVariable("subcategoryname") String subCategoryName,
-    		@RequestParam(value="filter", required=false) String filter, 
-    		@RequestParam(value="prizeMin", required=false, defaultValue="0") int prizeMin,
-    		@RequestParam(value="prizeMax", required=false, defaultValue="0") int prizeMax,
-    		@RequestParam("p") int page, @RequestParam( "s" ) int size,
+    public @ResponseBody JSONObject getItemsBySubCategory(@PathVariable("subcategoryname") String subCategoryName,
+    		@RequestParam(value="filter", required=false) String filter,
+    		@RequestParam(value="title", required=false, defaultValue="") String title,
+    		@RequestParam(value="dis", required=false, defaultValue="0") double dis,
+    		@RequestParam(value="lat", required=false, defaultValue="0") double lat,
+    		@RequestParam(value="lng", required=false, defaultValue="0") double lng,
+    		@RequestParam(value = "min", required = false, defaultValue = "0") int prizeMin,
+			@RequestParam(value = "max", required = false, defaultValue = "0") int prizeMax,
+			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
+			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size,
     		HttpServletResponse response) {
     	
     	String[] filterParams = filter.split(",");
     	
     	//TODO: Maybe could be better a query with the params in filter?
 //    	Page<Item> p = itemService.getAllItemsBySubCategory(subCategoryName, prizeMin, prizeMax, page, size);
-    	Page<Item> p = null;
+    	
+    	Page<Item> p = 
+    			itemService.getItemsByParams(title, subCategoryName, dis, lat, lng, prizeMin, prizeMax, page, size);
     	List<Item> list = p.getContent();
 
     	// Obtain the desired page and format a JSON with data
@@ -162,16 +171,19 @@ public class ItemController {
     				itemJsonObject.put("title", item.getTitle()); break;
     			case "description": 
     				itemJsonObject.put("description", item.getDescription()); break;
-//    			case "province": 
-//    				itemJsonObject.put("province", item.getProvince().getProvinceName()); break;
     			case "prize": 
     				itemJsonObject.put("prize", item.getPrize()); break;
+    			case "distance":
+    				itemJsonObject.put("distance", item.getDistance()); break;
+    			case "lat":
+    				itemJsonObject.put("lat",item.getLatitude()); break;
+    			case "lng":
+    				itemJsonObject.put("lng", item.getLongitude()); break;
     			case "userName": 
     				itemJsonObject.put("userName", item.getUser().getLogin()); break;
     			case "profilePic": 
     				itemJsonObject.put("profilePic", 
-//    						"http://192.168.0.5:8080/" + item.getUser().getAvatar()); break;
-    						"http://83.165.60.132:8080/" + item.getUser().getAvatar()); break;
+    					"http://www.elovendo.com/" + item.getUser().getAvatar()); break;
     			case "userValue": 
     				itemJsonObject.put("userValue", item.getUser().getUserValue()); break;
     			case "subCategory": 
@@ -179,8 +191,7 @@ public class ItemController {
     			case "category": 
     				itemJsonObject.put("category", item.getSubCategory().getCategory().getCategoryName()); break;
     			case "imageHome": 
-//    				itemJsonObject.put("imageHome", "http://192.168.0.5:8080/" + item.getImgHome()); break;
-    				itemJsonObject.put("imageHome", "http://83.165.60.132:8080/" + item.getMainImage200h()); break;
+    				itemJsonObject.put("imageHome", "http://www.elovendo.com/" + item.getMainImage200h()); break;
 			}
 		}
     	
@@ -196,15 +207,17 @@ public class ItemController {
     	itemJsonObject.put("itemid", item.getItemId());
 		itemJsonObject.put("title", item.getTitle());
 		itemJsonObject.put("description", item.getDescription());
-//		itemJsonObject.put("province", item.getProvince().getProvinceName());
+		itemJsonObject.put("distance", item.getDistance());
+		itemJsonObject.put("lat", item.getLatitude());
+		itemJsonObject.put("lng", item.getLongitude());
 		itemJsonObject.put("prize", item.getPrize());
 		itemJsonObject.put("userName", item.getUser().getLogin());
 		itemJsonObject.put("profilePic", 
-				"http://192.168.0.5:8080/" + item.getUser().getAvatar());
+				"http://www.elovendo.com/" + item.getUser().getAvatar200h());
 		itemJsonObject.put("userValue", item.getUser().getUserValue());
 		itemJsonObject.put("subcategory", item.getSubCategory().getSubCategoryName());
 		itemJsonObject.put("category", item.getSubCategory().getCategory().getCategoryName());
-		itemJsonObject.put("imageHome", "http://192.168.0.5:8080/" + item.getMainImage200h() + Constant.IMG_SUFFIX_JPG);
+		itemJsonObject.put("imageHome", "http://www.elovendo.com/" + item.getMainImage200h());
 		
 		return itemJsonObject;
     }

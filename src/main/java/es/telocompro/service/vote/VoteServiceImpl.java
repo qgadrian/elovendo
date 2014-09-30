@@ -3,15 +3,18 @@ package es.telocompro.service.vote;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import es.telocompro.model.item.Item;
 import es.telocompro.model.user.User;
 import es.telocompro.model.vote.Vote;
 import es.telocompro.model.vote.VoteRepository;
-import es.telocompro.rest.controller.exception.InvalidVoteUsersException;
-import es.telocompro.rest.controller.exception.ItemNotFoundException;
-import es.telocompro.rest.controller.exception.UserNotFoundException;
+import es.telocompro.rest.exception.InvalidSelfVoteException;
+import es.telocompro.rest.exception.InvalidVoteUsersException;
+import es.telocompro.rest.exception.ItemNotFoundException;
+import es.telocompro.rest.exception.UserNotFoundException;
 import es.telocompro.service.item.ItemService;
 import es.telocompro.service.user.UserService;
 import static es.telocompro.util.Constant.*;
@@ -40,7 +43,7 @@ public class VoteServiceImpl implements VoteService {
 	@Override
 	public Vote addVote(Long userIdVote, Long userIdReceive, Long itemId, int voteType,
 			float reability, String voteMessage) throws UserNotFoundException, ItemNotFoundException, 
-			InvalidVoteUsersException {
+			InvalidVoteUsersException, InvalidSelfVoteException {
 		
 		User userVote = userService.findUserById(userIdVote);
 		User userReceive = userService.findUserById(userIdReceive);
@@ -48,6 +51,7 @@ public class VoteServiceImpl implements VoteService {
 		
 		if (userVote == null) throw new UserNotFoundException(userIdVote);
 		if (userReceive == null) throw new UserNotFoundException(userIdReceive);
+		if (userVote.equals(userReceive)) throw new InvalidSelfVoteException(userVote.getUserId());
 		if (item == null) throw new ItemNotFoundException(itemId);
 		
 		// Vote value
@@ -121,17 +125,35 @@ public class VoteServiceImpl implements VoteService {
 	}
 
 	@Override
-	public int getVotesPositive(Long userId) {
-		return voteRepository.findVotesPositive(userId);
+	public int getNumberVotesPositive(Long userId) {
+		return voteRepository.findNumberVotesPositive(userId);
 	}
 
 	@Override
-	public int getVotesNegative(Long userId) {
-		return voteRepository.findVotesNegative(userId);
+	public int getNumberVotesNegative(Long userId) {
+		return voteRepository.findNumberVotesNegative(userId);
 	}
 	
 	@Override
-	public int getVotesQueued(Long userId) {
-		return voteRepository.findVotesQueued(userId);
+	public int getNumberVotesQueued(Long userId) {
+		return voteRepository.findNumberVotesQueued(userId);
+	}
+
+	@Override
+	public Page<Vote> getVotesPositive(Long userId, int page, int size) {
+		PageRequest request = new PageRequest(page, size);
+		return voteRepository.findVotesPositive(userId, request);
+	}
+
+	@Override
+	public Page<Vote> getVotesNegative(Long userId, int page, int size) {
+		PageRequest request = new PageRequest(page, size);
+		return voteRepository.findVotesNegative(userId, request);
+	}
+
+	@Override
+	public Page<Vote> getVotesQueued(Long userId, int page, int size) {
+		PageRequest request = new PageRequest(page, size);
+		return voteRepository.findVotesQueued(userId, request);
 	}
 }

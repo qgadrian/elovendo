@@ -2,20 +2,84 @@ package es.telocompro.model.item;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.NumberFormat;
+import org.springframework.format.annotation.NumberFormat.Style;
+
+import es.telocompro.model.item.category.subcategory.SubCategory;
+import es.telocompro.model.user.User;
+import es.telocompro.util.Constant;
+
 public class ItemForm {
 	
-	private String title, description, subCategory, youtubeVideo, latitude, longitude;
+	private Long itemId;
+	private User user;
+	
+	@Length(min = 5, max = 60)
+	@NotNull
+	private String title;
+	
+	@Length(max = 1000)
+	@NotNull
+	private String description;
+	
+	@NotNull 
+	@NumberFormat(style = Style.NUMBER) 
+	@Min(0)
 	private BigDecimal prize;
-	public ItemForm(String title, String description, String subCategory,
-			String youtubeVideo, String latitude, String longitude,
-			BigDecimal prize) {
+	
+	private SubCategory subCategory;
+	
+    @Pattern(regexp=Constant.YOUTUBE_URL_PATTERN)
+	private String youtubeVideo;
+    
+    @NotNull
+	private double latitude;
+    
+    @NotNull
+	private double longitude;
+    
+    private boolean featured;
+    private boolean highlight;
+    private boolean autoRenew;
+    
+    public ItemForm() {}
+	
+	public ItemForm(long itemId, User user, String title, String description, BigDecimal prize,
+			SubCategory subCategory, String youtubeVideo, double latitude,
+			double longitude, boolean featured, boolean highlight,
+			boolean autoRenew) {
+		this.itemId = itemId;
+		this.user = user;
 		this.title = title;
 		this.description = description;
+		this.prize = prize;
 		this.subCategory = subCategory;
 		this.youtubeVideo = youtubeVideo;
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.prize = prize;
+		this.featured = featured;
+		this.highlight = highlight;
+		this.autoRenew = autoRenew;
+	}
+
+	public ItemForm(Item item) {
+		this.itemId = item.getItemId();
+		this.user = item.getUser();
+		this.title = item.getTitle();
+		this.description = item.getDescription();
+		this.prize = item.getPrize();
+		this.subCategory = item.getSubCategory();
+		this.youtubeVideo = item.getYoutubeVideo();
+		this.latitude = item.getLatitude();
+		this.longitude = item.getLongitude();
+		this.featured = item.isFeatured();
+		this.highlight = item.isHighlight();
+		this.autoRenew = item.isAutoRenew();
 	}
 	
 	public String getTitle() {
@@ -24,16 +88,16 @@ public class ItemForm {
 	public String getDescription() {
 		return description;
 	}
-	public String getSubCategory() {
+	public SubCategory getSubCategory() {
 		return subCategory;
 	}
 	public String getYoutubeVideo() {
 		return youtubeVideo;
 	}
-	public String getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
-	public String getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
 	public BigDecimal getPrize() {
@@ -47,6 +111,74 @@ public class ItemForm {
 		item.setPrize(prize);
 		item.setYoutubeVideo(youtubeVideo);
 		return item;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setPrize(BigDecimal prize) {
+		this.prize = prize;
+	}
+
+	public void setSubCategory(SubCategory subCategory) {
+		this.subCategory = subCategory;
+	}
+
+	public void setYoutubeVideo(String youtubeVideo) {
+		this.youtubeVideo = youtubeVideo;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	public boolean isFeatured() {
+		return featured;
+	}
+
+	public void setFeatured(boolean featured) {
+		this.featured = featured;
+	}
+
+	public boolean isHighlight() {
+		return highlight;
+	}
+
+	public void setHighlight(boolean highlight) {
+		this.highlight = highlight;
+	}
+
+	public boolean isAutoRenew() {
+		return autoRenew;
+	}
+
+	public void setAutoRenew(boolean autoRenew) {
+		this.autoRenew = autoRenew;
+	}
+
+	public Long getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(Long itemId) {
+		this.itemId = itemId;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 }

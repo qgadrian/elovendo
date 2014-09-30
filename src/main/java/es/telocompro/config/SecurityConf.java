@@ -1,7 +1,6 @@
 package es.telocompro.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,12 +9,9 @@ import org.springframework.security.config.annotation.web.servlet.configuration.
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
-import org.springframework.social.security.SocialUserDetailsService;
-import org.springframework.social.security.SpringSocialConfigurer;
 
 import es.telocompro.rest.handler.UserLogoutSuccessHandler;
-import es.telocompro.service.social.SimpleSocialUserDetailsService;
-import es.telocompro.service.user.UserService;
+import es.telocompro.util.ApiRequestMatcher;
 import es.telocompro.util.CharacterEncodingFilter;
 
 /**
@@ -65,6 +61,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             	.antMatchers("/items/item/**").authenticated()
             	.antMatchers("/site/delete/**").authenticated()
             	.antMatchers("/logout").authenticated()
+            	.antMatchers("/elovendo/messages/**").authenticated()
                 .and()
             .formLogin()
 //            	.failureHandler(new LoginFailureHandler())
@@ -82,15 +79,16 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             	.deleteCookies("jsessionid", "JSESSIONID")
             	.permitAll()
             .and()
-            	.rememberMe()
-            .and()
-            	.apply(new SpringSocialConfigurer());
+            	.rememberMe();
+//            .and()
+//            	.apply(new SpringSocialConfigurer());
 //            	.and()
 //            .sessionManagement()
 //            .maximumSessions(5);
         
-        // TO MAKE MOBILE WORK
-//        http.csrf().disable(); 
+        // Disabling CSRF for API
+        ApiRequestMatcher requestMatcher = ApiRequestMatcher.getInstance();
+        http.csrf().requireCsrfProtectionMatcher(requestMatcher);
         
 //        http.rememberMe().tokenRepository(persistentTokenRepository()).tokenValiditySeconds(1209600).userDetailsService(userDetailsService);
         
@@ -105,10 +103,10 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 //    	return db;
 //    }
     
-    @Bean
-    public SocialUserDetailsService socialUserDetailsService() {
-        return new SimpleSocialUserDetailsService();
-    }
+//    @Bean
+//    public SocialUserDetailsService socialUserDetailsService() {
+//        return new SimpleSocialUserDetailsService();
+//    }
 
 }
 
