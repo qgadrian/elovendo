@@ -549,179 +549,179 @@ public class UserWebController {
 	}
 	
 
-	/**
-	 * ITEMS STUFF
-	 */
-
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/items/item", method = RequestMethod.GET)
-	public String addItemPage(Model model) {
-		model.addAttribute("item", new Item());
-		model.addAttribute("provinceName", new String());
-		model.addAttribute("categoryName", new Category());
-		model.addAttribute("subCategoryName", new SubCategory());
-
-		User _user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			_user = (User) SecurityContextHolder.getContext()
-					.getAuthentication().getPrincipal();
-
-		// TODO: Ugly workaround in sake for save my mental healthy
-		User user = userService.findUserById(_user.getUserId());
-		
-		model.addAttribute("user", user);
-
-		List<Category> categories = IteratorUtils.toList(categoryService
-				.getAllCategories().iterator());
-		model.addAttribute("categories", categories);
-		List<SubCategory> subCategories = IteratorUtils.toList(categoryService
-				.getAllSubCategories().iterator());
-		model.addAttribute("subCategories", subCategories);
-
-		return "elovendo/item/add_item";
-	}
-
-	@RequestMapping(value = "items/item", method = RequestMethod.POST)
-	public String processAddItemWeb(
-			@Valid @ModelAttribute(value = "item") Item item,
-			BindingResult result,
-			@RequestParam(value = "lat", required=true) String lat,
-			@RequestParam(value = "lng", required=true) String lng,
-			@ModelAttribute(value = "categoryName") String categoryName,
-			@ModelAttribute(value = "subCategoryName") long subCategoryId,
-			@ModelAttribute(value = "featured") String _featured,
-			@ModelAttribute(value = "highlight") String _highlight,
-			@ModelAttribute(value = "autoRenew") String _autoRenew,
-			@RequestParam("mI") MultipartFile _mainImage,
-			@RequestParam("i1") MultipartFile _image1,
-			@RequestParam("i2") MultipartFile _image2,
-			@RequestParam("i3") MultipartFile _image3,
-			Model model)
-			throws InvalidItemNameMinLenghtException,
-			ProvinceNotFoundException, UserNotFoundException,
-			SubCategoryNotFoundException, IOException,
-			InsufficientPointsException {
-
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext()
-					.getAuthentication().getPrincipal();
-		model.addAttribute("user", user);
-
-		if (result.hasErrors()) {
-			logger.error("add item form has errors ");
-			for (FieldError e : result.getFieldErrors()) {
-				logger.error(e.getRejectedValue() + " - " + e.getField());
-				logger.warn("because: " + e.getDefaultMessage());
-			};
-
-			@SuppressWarnings("unchecked")
-			List<Category> categories = IteratorUtils.toList(categoryService
-					.getAllCategories().iterator());
-			model.addAttribute("categories", categories);
-			@SuppressWarnings("unchecked")
-			List<SubCategory> subCategories = IteratorUtils
-					.toList(categoryService.getAllSubCategories().iterator());
-			model.addAttribute("subCategories", subCategories);
-			
-			model.addAttribute("user", user);
-
-			return "elovendo/item/add_item";
-
-		} else {
-			// Sanitize item description HTML string
-			// TODO: more check on tags used
-			// TODO: This is service's job service
-			PolicyFactory policy = new HtmlPolicyBuilder()
-					.allowElements("b", "u", "i", "p", "br", "h1", "h2", "h3",
-							"h4", "h5", "h6", "span", "ul", "li").allowAttributes("class")
-					.onElements("b", "u", "i", "p", "br", "h1", "h2", "h3",
-							"h4", "h5", "h6", "span", "ul", "li").requireRelNofollowOnLinks()
-					.toFactory();
-
-			String safeDescription = policy.sanitize(item.getDescription());
-			item.setDescription(safeDescription);
-			
-			// Youtube video format
-			if (!item.getYoutubeVideo().equals("")) {
-				String wellYoutubeVideo = item.getYoutubeVideo();
-				wellYoutubeVideo = Strings.replace(wellYoutubeVideo, "watch?v=", "embed/");
-				item.setYoutubeVideo(wellYoutubeVideo);
-			}
-			
-			item.setLatitude(Double.parseDouble(lat));
-			item.setLongitude(Double.parseDouble(lng));
-
-			byte[] mainImageBytes = null;
-			byte[] image1Bytes = null;
-			byte[] image2Bytes = null;
-			byte[] image3Bytes = null;
-
-			// Main image
-			try { mainImageBytes = _mainImage.getBytes();
-			} catch (IOException e) { logger.debug("Error converting image for user " + user.getUserId()); }
-			// Image 1
-			try { image1Bytes = _image1.getBytes();
-			} catch (IOException e) { logger.debug("Error converting image for user " + user.getUserId()); }
-			// Image 2
-			try { image2Bytes = _image2.getBytes();
-			} catch (IOException e) { logger.debug("Error converting image for user " + user.getUserId()); }
-			// Image 3
-			try { image2Bytes = _image2.getBytes();
-			} catch (IOException e) { logger.debug("Error converting image for user " + user.getUserId()); }
-
-			boolean featured = _featured.equalsIgnoreCase("on");
-			boolean highlight = _highlight.equalsIgnoreCase("on");
-			boolean autoRenew = _autoRenew.equalsIgnoreCase("on");
-
-			int totalPoints = 0;
-			if (featured)
-				totalPoints += Constant.OP_FEATURE_PRIZE;
-			if (highlight)
-				totalPoints += Constant.OP_HIGLIGHT_PRIZE;
-			if (autoRenew)
-				totalPoints += Constant.OP_AUTORENEW_PRIZE;
-
-			if (user.getPoints() < totalPoints)
-				throw new InsufficientPointsException();
-			else {
-				user.setPoints(user.getPoints() - totalPoints);
-				userService.updateUser(user);
-			}
-
-			itemService.addItem(item, subCategoryId, mainImageBytes, image1Bytes, image2Bytes, 
-					image3Bytes, featured, highlight);
-
-			return "elovendo/item/item_create_successful";
-		}
-	}
+//	/**
+//	 * ITEMS STUFF
+//	 */
+//
+//	@SuppressWarnings("unchecked")
+//	@RequestMapping(value = "/items/item", method = RequestMethod.GET)
+//	public String addItemPage(Model model) {
+//		model.addAttribute("item", new Item());
+//		model.addAttribute("provinceName", new String());
+//		model.addAttribute("categoryName", new Category());
+//		model.addAttribute("subCategoryName", new SubCategory());
+//
+//		User _user = null;
+//		SecurityContext context = SecurityContextHolder.getContext();
+//		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+//			_user = (User) SecurityContextHolder.getContext()
+//					.getAuthentication().getPrincipal();
+//
+//		// TODO: Ugly workaround in sake for save my mental healthy
+//		User user = userService.findUserById(_user.getUserId());
+//		
+//		model.addAttribute("user", user);
+//
+//		List<Category> categories = IteratorUtils.toList(categoryService
+//				.getAllCategories().iterator());
+//		model.addAttribute("categories", categories);
+//		List<SubCategory> subCategories = IteratorUtils.toList(categoryService
+//				.getAllSubCategories().iterator());
+//		model.addAttribute("subCategories", subCategories);
+//
+//		return "elovendo/item/add_item";
+//	}
+//
+//	@RequestMapping(value = "items/item", method = RequestMethod.POST)
+//	public String processAddItemWeb(
+//			@Valid @ModelAttribute(value = "item") Item item,
+//			BindingResult result,
+//			@RequestParam(value = "lat", required=true) String lat,
+//			@RequestParam(value = "lng", required=true) String lng,
+//			@ModelAttribute(value = "categoryName") String categoryName,
+//			@ModelAttribute(value = "subCategoryName") long subCategoryId,
+//			@ModelAttribute(value = "featured") String _featured,
+//			@ModelAttribute(value = "highlight") String _highlight,
+//			@ModelAttribute(value = "autoRenew") String _autoRenew,
+//			@RequestParam("mI") MultipartFile _mainImage,
+//			@RequestParam("i1") MultipartFile _image1,
+//			@RequestParam("i2") MultipartFile _image2,
+//			@RequestParam("i3") MultipartFile _image3,
+//			Model model)
+//			throws InvalidItemNameMinLenghtException,
+//			ProvinceNotFoundException, UserNotFoundException,
+//			SubCategoryNotFoundException, IOException,
+//			InsufficientPointsException {
+//
+//		User user = null;
+//		SecurityContext context = SecurityContextHolder.getContext();
+//		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+//			user = (User) SecurityContextHolder.getContext()
+//					.getAuthentication().getPrincipal();
+//		model.addAttribute("user", user);
+//
+//		if (result.hasErrors()) {
+//			logger.error("add item form has errors ");
+//			for (FieldError e : result.getFieldErrors()) {
+//				logger.error(e.getRejectedValue() + " - " + e.getField());
+//				logger.warn("because: " + e.getDefaultMessage());
+//			};
+//
+//			@SuppressWarnings("unchecked")
+//			List<Category> categories = IteratorUtils.toList(categoryService
+//					.getAllCategories().iterator());
+//			model.addAttribute("categories", categories);
+//			@SuppressWarnings("unchecked")
+//			List<SubCategory> subCategories = IteratorUtils
+//					.toList(categoryService.getAllSubCategories().iterator());
+//			model.addAttribute("subCategories", subCategories);
+//			
+//			model.addAttribute("user", user);
+//
+//			return "elovendo/item/add_item";
+//
+//		} else {
+//			// Sanitize item description HTML string
+//			// TODO: more check on tags used
+//			// TODO: This is service's job service
+//			PolicyFactory policy = new HtmlPolicyBuilder()
+//					.allowElements("b", "u", "i", "p", "br", "h1", "h2", "h3",
+//							"h4", "h5", "h6", "span", "ul", "li").allowAttributes("class")
+//					.onElements("b", "u", "i", "p", "br", "h1", "h2", "h3",
+//							"h4", "h5", "h6", "span", "ul", "li").requireRelNofollowOnLinks()
+//					.toFactory();
+//
+//			String safeDescription = policy.sanitize(item.getDescription());
+//			item.setDescription(safeDescription);
+//			
+//			// Youtube video format
+//			if (!item.getYoutubeVideo().equals("")) {
+//				String wellYoutubeVideo = item.getYoutubeVideo();
+//				wellYoutubeVideo = Strings.replace(wellYoutubeVideo, "watch?v=", "embed/");
+//				item.setYoutubeVideo(wellYoutubeVideo);
+//			}
+//			
+//			item.setLatitude(Double.parseDouble(lat));
+//			item.setLongitude(Double.parseDouble(lng));
+//
+//			byte[] mainImageBytes = null;
+//			byte[] image1Bytes = null;
+//			byte[] image2Bytes = null;
+//			byte[] image3Bytes = null;
+//
+//			// Main image
+//			try { mainImageBytes = _mainImage.getBytes();
+//			} catch (IOException e) { logger.debug("Error converting image for user " + user.getUserId()); }
+//			// Image 1
+//			try { image1Bytes = _image1.getBytes();
+//			} catch (IOException e) { logger.debug("Error converting image for user " + user.getUserId()); }
+//			// Image 2
+//			try { image2Bytes = _image2.getBytes();
+//			} catch (IOException e) { logger.debug("Error converting image for user " + user.getUserId()); }
+//			// Image 3
+//			try { image2Bytes = _image2.getBytes();
+//			} catch (IOException e) { logger.debug("Error converting image for user " + user.getUserId()); }
+//
+//			boolean featured = _featured.equalsIgnoreCase("on");
+//			boolean highlight = _highlight.equalsIgnoreCase("on");
+//			boolean autoRenew = _autoRenew.equalsIgnoreCase("on");
+//
+//			int totalPoints = 0;
+//			if (featured)
+//				totalPoints += Constant.OP_FEATURE_PRIZE;
+//			if (highlight)
+//				totalPoints += Constant.OP_HIGLIGHT_PRIZE;
+//			if (autoRenew)
+//				totalPoints += Constant.OP_AUTORENEW_PRIZE;
+//
+//			if (user.getPoints() < totalPoints)
+//				throw new InsufficientPointsException();
+//			else {
+//				user.setPoints(user.getPoints() - totalPoints);
+//				userService.updateUser(user);
+//			}
+//
+//			itemService.addItem(item, subCategoryId, mainImageBytes, image1Bytes, image2Bytes, 
+//					image3Bytes, featured, highlight);
+//
+//			return "elovendo/item/item_create_successful";
+//		}
+//	}
 	
-	/** DELETE ITEM */
-
-	@RequestMapping(value = "delete/item", method = RequestMethod.POST)
-	public @ResponseBody int deleteItem(@RequestParam(value = "id", required = true, defaultValue = "0") long itemId) {
-		itemService.deleteItem(itemId);
-		return (int) itemId;
-	}
-
-	/** SET ITEM FAVORITE 
-	 * @throws ItemNotFoundException */
-
-	@RequestMapping(value = "item/fav", method = RequestMethod.POST)
-	public @ResponseBody boolean toggleItemFavorite(
-			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException {
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext()
-					.getAuthentication().getPrincipal();
-		
-		if (user == null) return false;
-		
-		return favoriteService.toggleFavorite(user, itemId);
-	}
+//	/** DELETE ITEM */
+//
+//	@RequestMapping(value = "delete/item", method = RequestMethod.POST)
+//	public @ResponseBody int deleteItem(@RequestParam(value = "id", required = true, defaultValue = "0") long itemId) {
+//		itemService.deleteItem(itemId);
+//		return (int) itemId;
+//	}
+//
+//	/** SET ITEM FAVORITE 
+//	 * @throws ItemNotFoundException */
+//
+//	@RequestMapping(value = "item/fav", method = RequestMethod.POST)
+//	public @ResponseBody boolean toggleItemFavorite(
+//			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException {
+//		User user = null;
+//		SecurityContext context = SecurityContextHolder.getContext();
+//		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+//			user = (User) SecurityContextHolder.getContext()
+//					.getAuthentication().getPrincipal();
+//		
+//		if (user == null) return false;
+//		
+//		return favoriteService.toggleFavorite(user, itemId);
+//	}
 
 	/**
 	 * PAYPAL

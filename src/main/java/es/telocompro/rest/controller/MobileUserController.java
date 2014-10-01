@@ -161,7 +161,7 @@ public class MobileUserController {
 		}
 		
 		return (itemService.addItem(userName, subCategoryId, title, description, prize, 
-				imgBytes, null, null, null, "", featured, highlight, latitude, longitude) != null); 
+				imgBytes, null, null, null, "", featured, highlight, autoRenew, latitude, longitude) != null); 
 	}
 
 	/**
