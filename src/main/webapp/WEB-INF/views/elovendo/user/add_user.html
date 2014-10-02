@@ -63,11 +63,11 @@
 				<h2><small>Datos de tu cuenta</small></h2>
 				<hr/>
 				<!-- Username 2-20 characters -->
-				<div class="col-sm-8 col-sm-offset-2" th:if="${#fields.hasErrors('user.login')}">
-					<div class="alert alert-danger" role="alert">
-							<span class="alert-link" role="alert" th:errors="${user.login}">Error</span>
-					</div>
-				</div>
+<!-- 				<div class="col-sm-8 col-sm-offset-2" th:if="${#fields.hasErrors('user.login')}"> -->
+<!-- 					<div class="alert alert-danger" role="alert"> -->
+<!-- 							<span class="alert-link" role="alert" th:errors="${user.login}">Error</span> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
 				<div class="form-group">
 					<div class="col-sm-8 col-sm-offset-2">
 						<label for="title" class="col-sm-2 control-label">Usuario</label> 
@@ -80,20 +80,31 @@
 					</div>
 				</div>
 				<!-- Password (UpperCase, LowerCase, Number/SpecialChar and min 8 Chars) -->
-				<div class="col-sm-8 col-sm-offset-2" th:if="${#fields.hasErrors('user.password')}">
-					<div class="alert alert-danger" role="alert">
-							<span class="alert-link"
-							role="alert" th:errors="${user.password}">Error</span>
-					</div>
-				</div>
+<!-- 				<div class="col-sm-8 col-sm-offset-2" th:if="${#fields.hasErrors('user.password')}"> -->
+<!-- 					<div class="alert alert-danger" role="alert"> -->
+<!-- 							<span class="alert-link" -->
+<!-- 							role="alert" th:errors="${user.password}">Error</span> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
 				<div class="form-group">
 					<div class="col-sm-8 col-sm-offset-2">
 						<label for="password" class="col-sm-2 control-label" th:text="#{label.password}">Password</label> 
 						<div class="col-sm-8">
-							<input class="form-control" id="password" name="password"
-							type="password" placeholder="Contraseña" th:field="${user.password}"
-							th:title="#{password.invalid}" required="required"
+							<input th:unless="${#fields.hasErrors('user.password')}" class="form-control" 
+							id="password" name="password" type="password" 
+							placeholder="Contraseña" th:title="#{password.invalid}"
 							pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
+							<div th:if="${#fields.hasErrors('user.password')}"
+								class="form-group has-error">
+								<label class="control-label" for="inputError1"
+									th:errors="${user.password}"
+									style="text-align: center !important">Input with error</label>
+								<input class="form-control" id="password"
+									name="password" type="password"
+									placeholder="Contraseña"
+									th:title="#{password.invalid}"
+									pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
+							</div>
 						</div>
 					</div>
 				</div>
@@ -101,11 +112,21 @@
 					<div class="col-sm-8 col-sm-offset-2">
 						<label for="confirmPassword" class="col-sm-2 control-label" th:text="#{label.confirmPassword}">Confirm Password</label> 
 						<div class="col-sm-8">
-							<input class="form-control" id="confirmPassword" name="confirmPassword"
-							type="password" placeholder="Confirmar contraseña"
-							th:title="#{password.invalid}" required="required"
+							<input th:unless="${#fields.hasErrors('user.confirmPassword')}" class="form-control" 
+							id="confirmPassword" name="confirmPassword" type="password" 
+							placeholder="Contraseña" th:title="#{password.invalid}"
 							pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
-<!-- 							<span th:if="${#fields.hasErrors('user.login')}" th:errors="${user.login}">Error</span> -->
+							<div th:if="${#fields.hasErrors('user.confirmPassword')}"
+								class="form-group has-error">
+								<label class="control-label" for="inputError1"
+									th:errors="${user.confirmPassword}"
+									style="text-align: center !important">Input with error</label>
+								<input class="form-control" id="confirmPassword"
+									name="confirmPassword" type="password"
+									placeholder="Contraseña"
+									th:title="#{password.invalid}"
+									pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
+							</div>
 						</div>
 					</div>
 				</div>
@@ -113,9 +134,19 @@
 					<div class="col-sm-8 col-sm-offset-2">
 						<label for="email" class="col-sm-2 control-label" th:text="#{label.email}">Email Address</label> 
 						<div class="col-sm-8">
-							<input class="form-control" type="email" id="email" th:title="#{email.invalid}"
-							placeholder="Correo electrónico" th:field="${user.email}" required="required"/>
-<!-- 							<span th:if="${#fields.hasErrors('user.login')}" th:errors="${user.login}">Error</span> -->
+							<input th:unless="${#fields.hasErrors('user.email')}"
+								class="form-control" type="email" id="email"
+								th:title="#{email.invalid}" th:field="${user.email}"
+								placeholder="Correo electrónico" th:value="${user.email}" />
+							<div th:if="${#fields.hasErrors('user.email')}"
+								class="form-group has-error">
+								<label class="control-label" for="emailError"
+									th:errors="${user.email}"
+									style="text-align: center !important">Input with error</label>
+								<input class="form-control" class="form-control" type="email"
+									id="email" th:title="#{email.invalid}" th:field="${user.email}"
+									placeholder="Correo electrónico" th:value="${user.email}" />
+							</div>
 						</div>
 					</div>
 				</div>

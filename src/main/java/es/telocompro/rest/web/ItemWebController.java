@@ -328,18 +328,13 @@ public class ItemWebController {
 		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
 			_user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		// Workaround to get updated user with recent purchased points, if
-		// proceed
+		// Workaround to get updated user with recent purchased points, if proceeds
 		User user = userService.findUserById(_user.getUserId());
 
 		model.addAttribute("user", user);
 
 		List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
 		model.addAttribute("categories", categories);
-		// List<SubCategory> subCategories =
-		// IteratorUtils.toList(categoryService
-		// .getAllSubCategories().iterator());
-		// model.addAttribute("subCategories", subCategories);
 
 		return "elovendo/item/add_item";
 	}
@@ -367,12 +362,6 @@ public class ItemWebController {
 			@SuppressWarnings("unchecked")
 			List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
 			model.addAttribute("categories", categories);
-			// @SuppressWarnings("unchecked")
-			// List<SubCategory> subCategories = IteratorUtils
-			// .toList(categoryService.getAllSubCategories().iterator());
-			// model.addAttribute("subCategories", subCategories);
-
-			// model.addAttribute("user", user);
 
 			return "elovendo/item/add_item";
 

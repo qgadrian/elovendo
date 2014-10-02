@@ -27,19 +27,22 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ItemService {
 
 	/**
-	 * Adds an item
-	 * 
+	 * Adds an item giving parameters
 	 * @param userName
-	 * @param subCategoryName
+	 * @param subCategoryId
 	 * @param title
 	 * @param description
-	 * @param provinceName
 	 * @param prize
 	 * @param mainImage
+	 * @param image1
+	 * @param image2
+	 * @param image3
+	 * @param youtubeVideo
 	 * @param featured
 	 * @param highlight
-	 * @param location
-	 *            Coordinates (lat, long)
+	 * @param autoRenew
+	 * @param latitude
+	 * @param longitude
 	 * @return
 	 * @throws InvalidItemNameMinLenghtException
 	 * @throws UserNotFoundException
@@ -50,26 +53,21 @@ public interface ItemService {
 			byte[] mainImage, byte[] image1, byte[] image2, byte[] image3, String youtubeVideo, boolean featured,
 			boolean highlight, boolean autoRenew, String latitude, String longitude) throws InvalidItemNameMinLenghtException,
 			UserNotFoundException, SubCategoryNotFoundException, ProvinceNotFoundException;
-//
-//	/**
-//	 * Adds an item with external values
-//	 * 
-//	 * @param item
-//	 * @param subCategoryName
-//	 * @param provinceName
-//	 * @param imgBytes
-//	 * @param featured
-//	 * @param hightlight
-//	 * @return Item added
-//	 * @throws InvalidItemNameMinLenghtException
-//	 * @throws UserNotFoundException
-//	 * @throws SubCategoryNotFoundException
-//	 * @throws ProvinceNotFoundException
-//	 */
-//	public Item addItem(Item item, long subCategoryName, byte[] mainImage, byte[] image1, byte[] image2, byte[] image3,
-//			boolean featured, boolean highlight) throws InvalidItemNameMinLenghtException, UserNotFoundException,
-//			SubCategoryNotFoundException, ProvinceNotFoundException;
 
+
+	/**
+	 * Adds an item using {@link ItemForm} and giving parameters
+	 * @param itemForm
+	 * @param user
+	 * @param subCategoryId SubCategoryId for item's SubCategory
+	 * @param mainImage Main image for item's page
+	 * @param image1
+	 * @param image2
+	 * @param image3
+	 * @return Item created
+	 * @throws SubCategoryNotFoundException
+	 * @throws InsufficientPointsException
+	 */
 	public Item addItem(ItemForm itemForm, User user,long subCategoryId, MultipartFile mainImage, MultipartFile image1,
 			MultipartFile image2, MultipartFile image3) throws SubCategoryNotFoundException, InsufficientPointsException;
 
