@@ -363,6 +363,8 @@ public class ItemWebController {
 			@SuppressWarnings("unchecked")
 			List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
 			model.addAttribute("categories", categories);
+			
+			model.addAttribute("user", user);
 
 			return "elovendo/item/add_item";
 

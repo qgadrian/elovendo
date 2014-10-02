@@ -96,20 +96,19 @@
 <!-- 					<input type="text" class="form-control" id="title" name="" -->
 <!-- 					placeholder="Enter title" th:field="${item.title}" required="required" pattern=".{5,40}" -->
 <!-- 					th:title="#{Length.item.title}"/> -->
-					<input th:unless="${#fields.hasErrors('item.title')}" type="text" class="form-control" 
-					id="title" name="" placeholder="Enter title" th:field="${item.title}" required="required" 
-					pattern=".{5,40}" th:title="#{Length.item.title}" />
-							<div th:if="${#fields.hasErrors('user.password')}"
-								class="form-group has-error">
-								<label class="control-label" for="inputError1"
-									th:errors="${user.password}"
-									style="text-align: center !important">Input with error</label>
-								<input class="form-control" id="password"
-									name="password" type="password"
-									placeholder="Contraseña"
-									th:title="#{password.invalid}"
-									pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
-							</div>
+					<input th:unless="${#fields.hasErrors('item.title')}" type="text"
+						class="form-control" id="title" name="" placeholder="Enter title"
+						th:field="${item.title}" required="required" pattern=".{5,40}"
+						th:title="#{Length.item.title}" />
+					<div th:if="${#fields.hasErrors('item.title')}"
+						class="form-group has-error">
+						<label class="control-label" for="inputError1"
+							th:errors="${item.title}" style="text-align: center !important">Input
+							with error</label> <input class="form-control" type="text"
+							class="form-control" id="title" name="" placeholder="Enter title"
+							th:field="${item.title}" required="required" pattern=".{5,40}"
+							th:title="#{Length.item.title}" />
+					</div>
 				</div>
 			</div>
 			<div class="form-group">

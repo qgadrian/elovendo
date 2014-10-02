@@ -46,10 +46,12 @@ public class MobileUserController {
 
 	/***************************************/
 	/* USER STUFF */
-	/***************************************/
+	/**
+	 * @throws UserNotFoundException 
+	 * *************************************/
 
 	@RequestMapping(value = "users/{userid}", method = RequestMethod.GET)
-	public User getUser(@PathVariable("userid") Long userId) {
+	public User getUser(@PathVariable("userid") Long userId) throws UserNotFoundException {
 		return userService.findUserById(userId);
 	}
 
