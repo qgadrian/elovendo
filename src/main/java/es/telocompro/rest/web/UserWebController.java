@@ -567,25 +567,23 @@ public class UserWebController {
 							residence_country);
 
 					if (paymentStatus.equalsIgnoreCase(PAYMENT_COMPLETED)) {
+						logger.debug("Payment received: " + params.get("txn_id"));
 						User user = userService.findUserById(userId);
-						user.setPoints(item_number);
-						userService.updateUser(user);
-
-						// Not working
-						// Authentication authentication = new
-						// UsernamePasswordAuthenticationToken(
-						// user, user.getPassword(), user.getAuthorities());
-						// SecurityContextHolder.getContext().setAuthentication(authentication);
+						int points = user.getPoints() + item_number;
+						user.setPoints(points);
+						user = userService.updateUser(user);
+						
+						Authentication authentication = new UsernamePasswordAuthenticationToken(user, 
+								user.getPassword(), user.getAuthorities());
+						SecurityContextHolder.getContext().setAuthentication(authentication);
 
 					}
 				} catch (UserNotFoundException e) {
 					logger.error("PAYMENT FROM GOSTH: " + e.getMessage());
 				}
 
-				// return "elovendo/pricing/paymentOk";
 			} else {
-				System.out.println("shit, payment not confirmed");
-				// return "elovendo/pricing/paymentFailed";
+				logger.debug("Payment not confirmed for " + params.get("txn_id"));
 			}
 
 		} catch (UnsupportedEncodingException e) {
