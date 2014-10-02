@@ -315,11 +315,12 @@ public class ItemWebController {
 
 	/**
 	 * ADD ITEMS
+	 * @throws UserNotFoundException 
 	 */
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "add/item", method = RequestMethod.GET)
-	public String addItemPage(Model model) {
+	public String addItemPage(Model model) throws UserNotFoundException {
 
 		model.addAttribute("item", new ItemForm());
 
@@ -353,11 +354,11 @@ public class ItemWebController {
 
 		if (result.hasErrors()) {
 			logger.error("add item form has errors ");
+			
 			for (FieldError e : result.getFieldErrors()) {
 				logger.error(e.getRejectedValue() + " - " + e.getField());
 				logger.warn("because: " + e.getDefaultMessage());
 			}
-			;
 
 			@SuppressWarnings("unchecked")
 			List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
