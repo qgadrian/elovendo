@@ -68,7 +68,7 @@ public interface ItemService {
 	 * @throws SubCategoryNotFoundException
 	 * @throws InsufficientPointsException
 	 */
-	public Item addItem(ItemForm itemForm, User user,long subCategoryId, MultipartFile mainImage, MultipartFile image1,
+	public Item addItem(ItemForm itemForm, User user, MultipartFile mainImage, MultipartFile image1,
 			MultipartFile image2, MultipartFile image3) throws SubCategoryNotFoundException, InsufficientPointsException;
 
 	/**
@@ -166,7 +166,7 @@ public interface ItemService {
 	public Item updateItem(Long itemId, String title, String description, double prize, boolean renew,
 			boolean featured, boolean highlight);
 
-	public Item updateItem(ItemForm itemForm, User user, long subCategoryId, MultipartFile mainImage,
+	public Item updateItem(ItemForm itemForm, User user, MultipartFile mainImage,
 			MultipartFile image1, MultipartFile image2, MultipartFile image3) throws ItemNotFoundException,
 			NotUserItemException, SubCategoryNotFoundException;
 

@@ -4,6 +4,7 @@ import static es.telocompro.util.Constant.S_ITEMS_PER_PAGE;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import javax.validation.Valid;
 
@@ -292,11 +293,15 @@ public class ItemWebController {
 		return "elovendo/item/edit/edit_item";
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "edit/item/{itemId}", method = RequestMethod.POST)
-	public String processEditItemPage(Model model, @PathVariable long itemId,
-			@Valid @ModelAttribute(value = "item") ItemForm itemForm, BindingResult result,
-			@RequestParam("subCategory") long subCategoryId, @RequestParam("mI") MultipartFile mainImage,
-			@RequestParam("i1") MultipartFile image1, @RequestParam("i2") MultipartFile image2,
+	public String processEditItemPage(Model model, 
+			@PathVariable long itemId,
+			@Valid @ModelAttribute(value = "item") ItemForm itemForm, 
+			BindingResult result, 
+			@RequestParam("mI") MultipartFile mainImage,
+			@RequestParam("i1") MultipartFile image1, 
+			@RequestParam("i2") MultipartFile image2,
 			@RequestParam("i3") MultipartFile image3) throws ItemNotFoundException, NotUserItemException,
 			SubCategoryNotFoundException {
 
@@ -305,12 +310,25 @@ public class ItemWebController {
 		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
 			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		itemForm.setUser(user);
-		itemForm.setItemId(itemId);
+		if (result.hasErrors()) {
+			model.addAttribute("user", user);
+			model.addAttribute("item", itemForm);
 
-		itemService.updateItem(itemForm, user, subCategoryId, mainImage, image1, image2, image3);
+			List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
+			model.addAttribute("categories", categories);
 
-		return "elovendo/item/item_create_successful";
+			List<SubCategory> subCategories = IteratorUtils.toList(categoryService.getAllSubCatByCategoryId(
+					itemForm.getCategory()).iterator());
+			model.addAttribute("subCategories", subCategories);
+
+			return "elovendo/item/edit/edit_item";
+		}
+		else { 
+			itemForm.setUser(user);
+			itemForm.setItemId(itemId);
+			itemService.updateItem(itemForm, user, mainImage, image1, image2, image3);
+			return "elovendo/item/item_create_successful";
+		}
 	}
 
 	/**
@@ -341,24 +359,26 @@ public class ItemWebController {
 	}
 
 	@RequestMapping(value = "add/item", method = RequestMethod.POST)
-	public String processAddItemWeb(@Valid @ModelAttribute(value = "item") ItemForm itemForm, BindingResult result,
-			@RequestParam("subCategory") long subCategoryId, @RequestParam("mI") MultipartFile mainImage,
-			@RequestParam("i1") MultipartFile image1, @RequestParam("i2") MultipartFile image2,
-			@RequestParam("i3") MultipartFile image3, Model model) throws InvalidItemNameMinLenghtException,
+	public String processAddItemWeb(
+			@Valid @ModelAttribute(value = "item") ItemForm itemForm, BindingResult result,
+			@RequestParam("mI") MultipartFile mainImage,
+			@RequestParam("i1") MultipartFile image1, 
+			@RequestParam("i2") MultipartFile image2,
+			@RequestParam("i3") MultipartFile image3, 
+			Model model, Locale locale) throws InvalidItemNameMinLenghtException,
 			UserNotFoundException, SubCategoryNotFoundException, IOException, InsufficientPointsException {
 
 		User user = null;
 		SecurityContext context = SecurityContextHolder.getContext();
 		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
 			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+//		if (subCategory == null) {
+//			logger.error("subCategory is null");
+//			result.addError(new FieldError("", "subCategory", defaultMessage));
+//		}
 
 		if (result.hasErrors()) {
-			logger.error("add item form has errors ");
-			
-			for (FieldError e : result.getFieldErrors()) {
-				logger.error(e.getRejectedValue() + " - " + e.getField());
-				logger.warn("because: " + e.getDefaultMessage());
-			}
 
 			@SuppressWarnings("unchecked")
 			List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
@@ -370,7 +390,7 @@ public class ItemWebController {
 
 		} else {
 
-			itemService.addItem(itemForm, user, subCategoryId, mainImage, image1, image2, image3);
+			itemService.addItem(itemForm, user, mainImage, image1, image2, image3);
 
 			return "elovendo/item/item_create_successful";
 		}

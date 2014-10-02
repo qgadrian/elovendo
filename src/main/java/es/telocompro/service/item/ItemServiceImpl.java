@@ -165,11 +165,11 @@ public class ItemServiceImpl implements ItemService {
 //	}
 
 	@Override
-	public Item addItem(ItemForm itemForm, User user, long subCategoryId, MultipartFile mainImage, 
+	public Item addItem(ItemForm itemForm, User user, MultipartFile mainImage, 
 			MultipartFile image1, MultipartFile image2, MultipartFile image3) 
 					throws SubCategoryNotFoundException, InsufficientPointsException {
 		
-		SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(subCategoryId);
+		SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(itemForm.getSubCategory());
 		
 		// Check if user's points are enough to purchase premium options selected
 		int totalPoints = 0;
@@ -221,7 +221,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Item updateItem(ItemForm itemForm, User user, long subCategoryId, MultipartFile mainImage,
+	public Item updateItem(ItemForm itemForm, User user, MultipartFile mainImage,
 			MultipartFile image1, MultipartFile image2, MultipartFile image3) throws ItemNotFoundException,
 			NotUserItemException, SubCategoryNotFoundException {
 
@@ -233,10 +233,11 @@ public class ItemServiceImpl implements ItemService {
 			throw new ItemNotFoundException(itemForm.getItemId());
 
 		// If subCategory is changed, get it
-		if (subCategoryId != item.getSubCategory().getId()) {
-			SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(subCategoryId);
-			item.setSubCategory(subCategory);
-		}
+		SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(itemForm.getSubCategory());
+//		if (subCategoryId != item.getSubCategory().getId()) {
+//			SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(subCategoryId);
+//			item.setSubCategory(subCategory);
+//		}
 
 		// Save new images (produce an unique name for an item)
 		saveMultiPartFileImage(item, mainImage);
@@ -283,7 +284,7 @@ public class ItemServiceImpl implements ItemService {
 		item.setTitle(itemForm.getTitle());
 		item.setDescription(itemForm.getDescription());
 		item.setPrize(itemForm.getPrize());
-		item.setSubCategory(itemForm.getSubCategory());
+		item.setSubCategory(subCategory);
 		item.setYoutubeVideo(itemForm.getYoutubeVideo());
 		item.setFeatured(itemForm.isFeatured());
 		item.setHighlight(itemForm.isHighlight());

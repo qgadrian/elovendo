@@ -10,7 +10,6 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.NumberFormat;
 import org.springframework.format.annotation.NumberFormat.Style;
 
-import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.user.User;
 import es.telocompro.util.Constant;
 
@@ -24,7 +23,6 @@ public class ItemForm {
 	private String title;
 	
 	@Length(max = 1000)
-	@NotNull
 	private String description;
 	
 	@NotNull 
@@ -32,7 +30,11 @@ public class ItemForm {
 	@Min(0)
 	private BigDecimal prize;
 	
-	private SubCategory subCategory;
+	@NotNull
+	@Min(1)
+	private long subCategory;
+	
+	private long category;
 	
     @Pattern(regexp=Constant.YOUTUBE_URL_PATTERN)
 	private String youtubeVideo;
@@ -50,7 +52,7 @@ public class ItemForm {
     public ItemForm() {}
 	
 	public ItemForm(long itemId, User user, String title, String description, BigDecimal prize,
-			SubCategory subCategory, String youtubeVideo, double latitude,
+			long subCategory, long category, String youtubeVideo, double latitude,
 			double longitude, boolean featured, boolean highlight,
 			boolean autoRenew) {
 		this.itemId = itemId;
@@ -59,6 +61,7 @@ public class ItemForm {
 		this.description = description;
 		this.prize = prize;
 		this.subCategory = subCategory;
+		this.category = category;
 		this.youtubeVideo = youtubeVideo;
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -73,7 +76,8 @@ public class ItemForm {
 		this.title = item.getTitle();
 		this.description = item.getDescription();
 		this.prize = item.getPrize();
-		this.subCategory = item.getSubCategory();
+		this.subCategory = item.getSubCategory().getId();
+		this.category = item.getSubCategory().getCategory().getCategoryId();
 		this.youtubeVideo = item.getYoutubeVideo();
 		this.latitude = item.getLatitude();
 		this.longitude = item.getLongitude();
@@ -88,7 +92,7 @@ public class ItemForm {
 	public String getDescription() {
 		return description;
 	}
-	public SubCategory getSubCategory() {
+	public long getSubCategory() {
 		return subCategory;
 	}
 	public String getYoutubeVideo() {
@@ -104,6 +108,14 @@ public class ItemForm {
 		return prize;
 	}
 	
+	public long getCategory() {
+		return category;
+	}
+
+	public void setCategory(long category) {
+		this.category = category;
+	}
+
 	public Item getItemObject() {
 		Item item = new Item();
 		item.setTitle(title);
@@ -125,7 +137,7 @@ public class ItemForm {
 		this.prize = prize;
 	}
 
-	public void setSubCategory(SubCategory subCategory) {
+	public void setSubCategory(long subCategory) {
 		this.subCategory = subCategory;
 	}
 

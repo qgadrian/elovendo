@@ -93,21 +93,17 @@
 			<div class="form-group">
 				<label for="title" class="col-sm-2 control-label">Title</label> 
 				<div class="col-sm-10">
-<!-- 					<input type="text" class="form-control" id="title" name="" -->
-<!-- 					placeholder="Enter title" th:field="${item.title}" required="required" pattern=".{5,40}" -->
-<!-- 					th:title="#{Length.item.title}"/> -->
 					<input th:unless="${#fields.hasErrors('item.title')}" type="text"
 						class="form-control" id="title" name="" placeholder="Enter title"
 						th:field="${item.title}" required="required" pattern=".{5,40}"
 						th:title="#{Length.item.title}" />
 					<div th:if="${#fields.hasErrors('item.title')}"
 						class="form-group has-error">
-						<label class="control-label" for="inputError1"
-							th:errors="${item.title}" style="text-align: center !important">Input
-							with error</label> <input class="form-control" type="text"
-							class="form-control" id="title" name="" placeholder="Enter title"
-							th:field="${item.title}" required="required" pattern=".{5,40}"
-							th:title="#{Length.item.title}" />
+						<label class="control-label" for="title"
+							th:errors="${item.title}" style="text-align: center!important">Input with error</label> 
+							<input class="form-control" type="text" class="form-control" 
+							id="title" name="" placeholder="Enter title" th:field="${item.title}" 
+							required="required" pattern=".{5,40}" th:title="#{Length.item.title}" />
 					</div>
 				</div>
 			</div>
@@ -118,17 +114,34 @@
 						<!-- FIXME -->
 						<!-- Pasting formatted HTML when creating item makes show formatted everywhere -->
 						<!-- it's important make sure pasting DOES AS TEXT/PLAIN -->
-						<textarea id="textarea" class="form-control textarea" rows="15" th:field="${item.description}" 
-						required="required" placeholder="Descripción..." maxlength="500"
-						th:title="#{Length.item.description}"></textarea>
+						<textarea th:unless="${#fields.hasErrors('item.description')}" id="textarea" 
+							class="form-control textarea" rows="15" th:field="${item.description}" 
+							required="required" placeholder="Descripción..." maxlength="500"
+							th:title="#{Length.item.description}"></textarea>
+						<div th:if="${#fields.hasErrors('item.description')}"
+							class="form-group has-error">
+							<label class="control-label" for="title"
+								th:errors="${item.title}" style="text-align: center !important">Input
+								with error</label> 
+							<textarea id="textarea" class="form-control textarea" rows="15" 
+								th:field="${item.description}" required="required" placeholder="Descripción..." 
+								maxlength="500" th:title="#{Length.item.description}"></textarea>
+						</div>
 					</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="title" class="col-sm-2 control-label">Prize</label> 
 				<div class="col-sm-10">
-					<input type="number" class="form-control" id="prize" min="0"
-					placeholder="Enter prize" th:field="${item.prize}" required="required"/>
+					<input th:unless="${#fields.hasErrors('item.prize')}" type="number" class="form-control" 
+						id="prize" min="0" placeholder="Enter prize" th:field="${item.prize}" required="required"/>
+					<div th:if="${#fields.hasErrors('item.prize')}"
+						class="form-group has-error">
+						<label class="control-label" for="prize"
+							th:errors="${item.prize}" style="text-align: center!important">Input with error</label> 
+							<input type="number" class="form-control" id="prize" min="0" 
+								placeholder="Enter prize" th:field="${item.prize}" required="required" />
+					</div>
 				</div>
 			</div>
 <!-- 			<div class="form-group"> -->
@@ -157,14 +170,13 @@
 			<div class="form-group">
 				<label for="subCategory" class="col-sm-2 control-label">SubCategoría</label>
 				<div class="col-sm-10">
-<!-- 					<select class="form-control" th:value="${subCategoryName}" name="subCategoryName"> -->
-<!-- 					  <option th:each="subCategory : ${subCategories}"  -->
-<!-- 					          th:value="${subCategory.subCategoryName}"  -->
-<!-- 					          th:text="${subCategory.subCategoryName}">Province</option> -->
-<!-- 					</select> -->
-					<select id="subCategory" class="form-control" name="subCategory">
-						
-					</select>
+					<select th:unless="${#fields.hasErrors('item.subCategory')}" 
+						id="subCategory" class="form-control" name="subCategory"> </select>
+					<div th:if="${#fields.hasErrors('item.subCategory')}" class="form-group has-error">
+						<label class="control-label" for="prize"
+							th:errors="${item.subCategory}" style="text-align: center!important">Input with error</label> 
+						<select id="subCategory" class="form-control" name="subCategory"> </select>
+					</div>
 				</div>
 			</div>
 			<div class="form-group">
