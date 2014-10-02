@@ -3,24 +3,26 @@ package es.telocompro.rest.controller;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.subcategory.SubCategory;
-import es.telocompro.rest.controller.exception.CategoriesNotFoundException;
+import es.telocompro.rest.exception.CategoryNotFoundException;
 import es.telocompro.service.item.category.CategoryService;
+import es.telocompro.util.Constant;
 
 /**
  * Created by @adrian on 18/06/14.
  * All rights reserved.
  */
 
-@RestController
-@RequestMapping(value = "/bazaar/")  
-public class CategoryController {
+@Controller
+@RequestMapping(value = Constant.MOBILE_API_URL_PREFIX_V1 + "/bazaar/")  
+public class MobileCategoryController {
 
     @Autowired
     private CategoryService categoryService;
@@ -29,8 +31,8 @@ public class CategoryController {
      * Get category list
      */
     @RequestMapping(value="categories", method = RequestMethod.GET)
-    public Iterable<Category> getCategories() {
-        return categoryService.findAllCategoriesOrderByCategoryId();
+    public @ResponseBody Iterable<Category> getCategories() {
+        return categoryService.getAllCategoriesOrderByCategoryId();
     }
 
     /**
@@ -38,20 +40,22 @@ public class CategoryController {
      */
     @SuppressWarnings("unchecked")
 	@RequestMapping(value = "{category}", method = RequestMethod.GET)
-    public JSONArray getSubCategories(@PathVariable("category") String categoryName) 
-    throws CategoriesNotFoundException {
+    public @ResponseBody JSONArray getSubCategories(@PathVariable("category") String categoryName) 
+    throws CategoryNotFoundException {
         Iterable<SubCategory> subCategories =
         		categoryService.getAllSubCatByCategoryIdOrderBySubCatId(categoryName);
         
         if (subCategories == null) {
-        	throw new CategoriesNotFoundException(categoryName);
+        	throw new CategoryNotFoundException(categoryName);
         }
         
     	JSONArray jsonArray = new JSONArray();
     	for (SubCategory subCategory : subCategories) {
     		JSONObject object = new JSONObject();
     		object.put("subCategoryName", subCategory.getSubCategoryName());
+    		object.put("subCategoryId", subCategory.getId());
     		object.put("categoryName", subCategory.getCategory().getCategoryName());
+    		object.put("categoryId", subCategory.getCategory().getCategoryId());
     		jsonArray.add(object);
     	}
         

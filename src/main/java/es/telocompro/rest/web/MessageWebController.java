@@ -2,6 +2,7 @@ package es.telocompro.rest.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,10 +28,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import es.telocompro.model.message.Message;
 import es.telocompro.model.message.MessageThread;
 import es.telocompro.model.user.User;
-import es.telocompro.rest.controller.exception.InvalidMessageThreadException;
-import es.telocompro.rest.controller.exception.MessageThreadAlreadyExistsException;
-import es.telocompro.rest.controller.exception.MessageThreadNotFoundException;
-import es.telocompro.rest.controller.exception.UserNotFoundException;
+import es.telocompro.rest.exception.InvalidMessageThreadException;
+import es.telocompro.rest.exception.MessageThreadAlreadyExistsException;
+import es.telocompro.rest.exception.MessageThreadNotFoundException;
+import es.telocompro.rest.exception.UserNotFoundException;
 import es.telocompro.service.message.MessageService;
 import es.telocompro.util.IOUtil;
 import es.telocompro.util.PageWrapper;
@@ -56,9 +57,31 @@ public class MessageWebController {
 			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		List<MessageThread> conversations = new ArrayList<>();
+		
+		String partner;
+		
 		try {
 			conversations = IteratorUtils.toList(messageService.getMessageThreads(user).iterator());
-		} catch (NullPointerException e) {}
+			
+			// Set for each conversation which user is speaking with curent user (avoid show conversation as with himself)
+			MessageThread messageThread = conversations.iterator().next();
+			String p1 = messageThread.getParticipant1().getLogin();
+			String p2 = messageThread.getParticipant2().getLogin();
+			
+			String lastMessage = messageService.getLastMessage(messageThread.getMessageThreadId());
+			int unreadMessages = messageService.getUnreadMessages(user.getLogin());
+			
+			partner = p1.equals(user.getLogin()) ? p2 : p1;
+			
+			for (MessageThread thread : conversations) {
+				thread.setPartner(partner);
+				thread.setLastMessage(lastMessage);
+				thread.setUnreadMessages(unreadMessages);
+			}
+			
+		} catch (NullPointerException | UserNotFoundException | NoSuchElementException e) {
+			logger.debug("Exception at messages inbox");
+		}
 
 		model.addAttribute("conversations", conversations);
 		
@@ -88,6 +111,9 @@ public class MessageWebController {
 		
 		model.addAttribute("messageThreadId", messageThreadId);
 		
+		model.addAttribute("user", user);
+		model.addAttribute("userAvatar", user.getAvatar200h());
+		
 		return "elovendo/message/conversationView";
 		
 	}
@@ -116,7 +142,7 @@ public class MessageWebController {
 			messageObject.put("pic", message.getSender().getAvatar200h());
 			messageObject.put("userName", message.getSender().getLogin());
 			messageObject.put("message", message.getMessageText());
-			messageObject.put("date", message.getMessageDate());
+			messageObject.put("date", message.getMessageDate().getTimeInMillis());
 			
 			messageArray.add(messageObject);
 		}

@@ -5,6 +5,9 @@
 	
 <head>
 <meta charset="UTF-8"/>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<!-- default header name is X-CSRF-TOKEN -->
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <title>Conversación</title>
 
 <!-- ************************* -->
@@ -19,6 +22,7 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
 <link rel="stylesheet" href="/css/messageStyle.css"/>
+<link rel="stylesheet" href="/css/styleweb.css"/>
 
 </head>
 <body onload="scroll()">
@@ -29,31 +33,67 @@
 	<div class="container">
 		<div class="row">
 			<div class="message-wrap col-lg-12">
-				<div class="msg-wrap" id="messages">
+				<div class="msg-wrap elochat" id="messages">
 					<div class="msg" id="msg-body">
-						<div class="row" th:each="message : ${conversation}">
+						<div class="row chatRow" th:each="message : ${conversation}">
 							<!-- 	<a class="pull-left" href="#"> <img class="media-object" -->
 							<!-- 	data-src="holder.js/64x64" alt="64x64" -->
 							<!-- 	style="width: 32px; height: 32px;" -->
 							<!-- 	th:src="@{'http://83.165.60.132:8080/' + ${message.sender.avatar200h}}" /> -->
 							<!-- 	</a> -->
-							<div class="media-body">
-								<h5 class="media-heading"
-									th:text="${message.sender.login} + ' dice:'"></h5>
-								<p class="col-lg-10 bg-info" th:text="${message.messageText}"></p>
+							<div th:if="${message.sender.login == user.login}">
+								<div class="pull-right userPicChat" style="margin-left: 15px"> 
+									<img alt="Generic placeholder image" th:src="@{'http://www.elovendo.com/' + ${message.sender.avatar}}">
+								</div>
+								<div class="pull-right media-body chat-pop chatcurr">
+									<h4 class="media-heading">
+										<span th:text="${message.sender.login} + ' dice:'"></span>
+										<span class="pull-left">
+											<abbr class="timeago" 
+											th:title="${#calendars.format(message.messageDate, 'dd MMMM yyyy, HH:mm')}">
+											<span th:if="${message.isToday()}" 
+											th:text="${#calendars.format(message.messageDate, 'HH:mm')}"></span>
+											<span th:unless="${message.isToday()}" 
+											th:text="${#calendars.format(message.messageDate, 'dd MMMM')}"></span>
+											</abbr> <i class="fa fa-clock-o"></i>
+										</span>
+										</h4>
+									<p class="pull-left" th:text="${message.messageText}"></p>
+								</div>
+							</div>
+							<div th:unless="${message.sender.login == user.login}">
+								<div class="pull-left userPicChat" style="margin-right: 15px"> 
+									<img alt="Generic placeholder image" th:src="@{'http://www.elovendo.com/' + ${message.sender.avatar}}">
+								</div>
+								<div class="media-body chat-pop">
+									<h4 class="media-heading">
+										<span th:text="${message.sender.login} + ' dice:'"></span>
+										<span class="pull-right">
+											<abbr class="timeago" 
+											th:title="${#calendars.format(message.messageDate, 'dd MMMM yyyy, HH:mm')}">
+											<span th:if="${message.isToday()}" 
+											th:text="${#calendars.format(message.messageDate, 'HH:mm')}"></span>
+											<span th:unless="${message.isToday()}" 
+											th:text="${#calendars.format(message.messageDate, 'dd MMMM')}"></span>
+											</abbr> <i class="fa fa-clock-o"></i>
+										</span>
+									</h4>
+									<p th:text="${message.messageText}"></p>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				
+				<div class="divide-20"></div>
 
-				<div class="send-wrap ">
-					<textarea class="form-control send-message" rows="3" id="message"
-						placeholder="..."></textarea>
-				</div>
-				<div class="btn-panel">
-					<a href="" id="sendMsg"
-						class="col-lg-4 btn btn-primary text-right pull-right"
-						role="button"><i class="fa fa-plus"></i>Enviar mensaje</a>
+				<div class="chat-form">
+					<div class="input-group">
+						<textarea class="form-control" rows="3" id="message" placeholder="..." style="resize:none"></textarea>
+						<span id="sendMsg" class="input-group-addon btn btn-primary">
+							Send
+						</span>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -64,48 +104,93 @@
 		var c = /*[[${messageThreadId}]]*/ '';
 		var h = /*[[${session.userName}]]*/ '';
 		var s = "/elovendo/messages/send";
+		var cv = $("meta[name='_csrf']").attr("content");
+		var cn = $("meta[name='_csrf_header']").attr("content");
 		var m2 = '';
 		$("#sendMsg").click(function(event) {
 			m2 = $('#message').val();
 			event.preventDefault();
-			
+
 			$.ajax({
-	            type : 'POST',
-	            url : s,
-	            data : ({
-	                m : c,
-	                messageText: m2
-	            })
-	        });
-		    
+				type : 'POST',
+				beforeSend : function(request) {
+					request.setRequestHeader(cn, cv);
+				},
+				url : s,
+				data : ({
+					m : c,
+					messageText : m2
+				})
+			});
+
 			app(h, m2);
-		    document.getElementById('message').value = '';
+			document.getElementById('message').value = '';
 		});
+
+		function app(u, m) {
+
+			var d = document.createElement('div');
+			d.className = "pull-right media-body chat-pop chatcurr";
+
+			var uu = document.createElement('h4');
+			uu.className = 'media-heading';
+			uu.innerHTML = u + " says:";
+
+			var ssA = document.createElement('abbr');
+			ssA.className = "timeago";
+
+			var sd2 = document.createElement('span');
+			sd2.className = "pull-left";
+
+			var ss2 = document.createElement('span');
+			var today = new Date();
+			var hh = today.getHours();
+			var mm = today.getMinutes();
+			mm = mm > 9 ? mm : "0" + mm;
+			ss2.innerHTML = hh + ":" + mm;
+			var dd = today.getDate();
+			var mo = today.toUTCString().split(' ')[2];
+			var yy = today.getFullYear();
+
+			ssA.title = dd + " " + mo + " " + yy + ", " + hh + ":" + mm;
+
+			ssA.appendChild(ss2);
+			sd2.appendChild(ssA);
+			uu.appendChild(sd2);
+
+			var mm = document.createElement('p');
+			mm.className = 'pull-left';
+			mm.innerHTML = m;
+
+			d.appendChild(uu);
+			d.appendChild(mm);
+
+			// Father div
+			var fd = document.createElement('div');
+			fd.className = 'row chatRow';
+
+			// Image
+
+			var id = document.createElement('div');
+			id.className = "pull-right userPicChat";
+			id.style.marginLeft = "15px";
+
+			var im = document.createElement('img');
+			var ua = /*[[${userAvatar}]]*/'usera';
+			im.src = "http://www.elovendo.com/" + ua;
+			id.appendChild(im);
+
+			fd.appendChild(id);
+			fd.appendChild(d);
+
+			$("#msg-body").append(fd);
+			scroll();
+		}
 		/*]]>*/
 	</script>
 	
-	<script type="text/javascript">
-		var lt = 5000;
-		
-		function app(u, m) {
-			console.log('m is ' + m);
-			var d = document.createElement('div');
-			d.className = 'row';
-			
-			var uu = document.createElement('h5');
-			uu.className = 'media-heading';
-			uu.innerHTML = u + " says:";
-			
-			var mm = document.createElement('small');
-			mm.className= 'col-lg-10';
-			mm.innerHTML = m;
-			
-			d.appendChild(uu);
-			d.appendChild(mm);
-			
-			$("#msg-body").append(d);
-			scroll();
-		}
+	<script > 
+	var lt = 5000;
 	
 		function scroll() {
 // 			var d = document.getElementById("messages");
@@ -120,43 +205,67 @@
 		}
 		
 		window.setInterval(function() {
-// 			$.ajax({
-// 				url : 'http://www.elovendo.com:8080/elovendo/messages/conversation/1/update',
-// 				type : "GET",
-// 				dataType : "jsonp",
-// 				async : false,
-// 				success : function(msg) {
-// 					console.log(msg);
-// 				},
-// 				error : function() {
-// 					console.log("where error happens");
-// 				}
-// 			});
-// 			$.getJSON("http://83.165.60.132:8080/elovendo/messages/conversation/1/update", function(json) {
 	
 			$.getJSON("http://www.elovendo.com/elovendo/messages/conversation/1/update", function(json) {
 				console.log(json);
 
-// 				var text = json.content[0].message;
 				jQuery.each(json.content, function() {
-// 					jQuery.each(this, function(i, val) {
-// 						console.log(i + " has value " + val);
-// 					})
-					var div = document.createElement('div');
-					div.className = 'row';
+
+					var d = document.createElement('div');
+					d.className = "pull-left media-body chat-pop";
+		
+					var uu = document.createElement('h4');
+					uu.className = 'media-heading';
+					uu.innerHTML = this.userName + " says:";
+		
+					var ssA = document.createElement('abbr');
+					ssA.className = "timeago";
+		
+					var sd2 = document.createElement('span');
+					sd2.className = "pull-right";
+		
+					var ss2 = document.createElement('span');
+					var today = new Date(this.date);
+					var hh = today.getHours();
+					var mm = today.getMinutes();
+					mm = mm > 9 ? mm : "0" + mm;
+					ss2.innerHTML = hh + ":" + mm;
+					var dd = today.getDate();
+					var mo = today.toUTCString().split(' ')[2];
+					var yy = today.getFullYear();
 					
-					var u = document.createElement('h5');
-					u.className = 'media-heading';
-					u.innerHTML = this.userName + " says:";
-					
-					var m = document.createElement('small');
-					m.className= 'col-lg-10';
-					m.innerHTML = this.message;
-					
-					div.appendChild(u);
-					div.appendChild(m);
-					
-					$("#msg-body").append(div);
+					ssA.title = dd + " " + mo + " " + yy + ", " + hh + ":" + mm;
+		
+					ssA.appendChild(ss2);
+					sd2.appendChild(ssA);
+					uu.appendChild(sd2);
+		
+					var mm = document.createElement('p');
+					mm.className = 'pull-left';
+					mm.innerHTML = this.message;
+		
+					d.appendChild(uu);
+					d.appendChild(mm);
+		
+					// Father div
+					var fd = document.createElement('div');
+					fd.className = 'row chatRow';
+		
+					// Image
+		
+					var id = document.createElement('div');
+					id.className = "pull-left userPicChat";
+					id.style.marginRight = "15px";
+		
+					var im = document.createElement('img');
+					var ua = this.pic;
+					im.src = "http://www.elovendo.com/" + ua;
+					id.appendChild(im);
+		
+					fd.appendChild(id);
+					fd.appendChild(d);
+		
+					$("#msg-body").append(fd);
 					scroll();
 				});
 
@@ -168,23 +277,30 @@
 		
 		}, lt);
 		
-	
-// Tip:
-	
-// 		{
-// 			  "content" : [ {
-// 			    "message" : "hjk",
-// 			    "userName" : "pepito",
-// 			    "pic" : "imgs/avatars/2-200h.jpg",
-// 			    "date" : 1409575239000
-// 			  }, {
-// 			    "message" : "hjk",
-// 			    "userName" : "pepito",
-// 			    "pic" : "imgs/avatars/2-200h.jpg",
-// 			    "date" : 1409575240000
-// 			  } ]
-// 			}
+		
+		$('#message').keypress(function(e) {
+			if (e.which == 13) {
+				e.preventDefault();
+				console.log("pressed enter");
+				$('#sendMsg').click();
+			}
+		});
 
+		// Tip:
+
+		// 		{
+		// 			  "content" : [ {
+		// 			    "message" : "hjk",
+		// 			    "userName" : "pepito",
+		// 			    "pic" : "imgs/avatars/2-200h.jpg",
+		// 			    "date" : 1409575239000
+		// 			  }, {
+		// 			    "message" : "hjk",
+		// 			    "userName" : "pepito",
+		// 			    "pic" : "imgs/avatars/2-200h.jpg",
+		// 			    "date" : 1409575240000
+		// 			  } ]
+		// 			}
 	</script>
 
 </body>

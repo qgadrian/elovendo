@@ -159,3 +159,37 @@ color: #3C763D;
 .btn-group-danger .dropdown-menu a{
     color:#fff;
 }
+
+/********************************************************/
+/* Btn mag												*/
+/********************************************************/
+
+.btn-mag { 
+	background-color: #563D7C;
+	border-color: #7c2d82;
+	color: #FFF!important;
+}
+
+.btn-mago:hover { 
+	background-color: #665086;
+	border-color: #7c2d82;
+	color: #FFF!important; 
+}
+
+.btn-mag:hover, .btn-mag:focus, .btn-mag:active, .btn-mag.active, .open>.dropdown-toggle.btn-mag {
+	background-color: #665086;
+	border-color: #7c2d82;
+	color: #FFF!important;
+}
+
+.btn-mag {
+	background-color: #563D7C;
+	border-color: #7c2d82;
+	color: #FFF!important;
+}
+
+.btn-mag:active, .btn-mag:focus { 
+	background-color: #31135d;
+	border-color: #7c2d82;
+	color: #FFF!important; 
+}

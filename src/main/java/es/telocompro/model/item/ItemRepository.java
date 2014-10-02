@@ -10,8 +10,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import es.telocompro.model.user.User;
-
 /**
  * Created by @adrian on 17/06/14.
  * All rights reserved.
@@ -207,6 +205,12 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     		+ "(:cat = '' OR i.subCategory.subCategoryName = :cat OR i.subCategory.category.categoryName = :cat) "
     		+ "AND (:dis >= 5000.0 OR "
     		+ "(6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :dis)")
+//    @Query("SELECT new Item(i, SQRT(POW(:lat - latitude , 2) + POW(:lng - longitude, 2)) * 100) "
+//    		+ "FROM Item i WHERE endDate > NOW() AND title LIKE %:title% "
+//    		+ "AND (:pMin <= 0.0 OR prize > :pMin) AND (:pMax <= 0.0 OR prize < :pMax) AND "
+//    		+ "(:cat = '' OR i.subCategory.subCategoryName = :cat OR i.subCategory.category.categoryName = :cat) "
+//    		+ "AND (:dis >= 5000.0 OR "
+//    		+ "SQRT(POW(:lat - latitude , 2) + POW(:lng - longitude, 2)) * 100 < :dis)")
     Page<Item> findByParams(@Param("title") String title, 
     		@Param("cat") String cat, @Param("lat") double latitude, 
     		@Param("lng") double longitude, @Param("dis") double distance,

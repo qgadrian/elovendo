@@ -3,12 +3,15 @@ package es.telocompro.service.vote;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import es.telocompro.model.item.Item;
 import es.telocompro.model.user.User;
 import es.telocompro.model.vote.Vote;
-import es.telocompro.rest.controller.exception.InvalidVoteUsersException;
-import es.telocompro.rest.controller.exception.ItemNotFoundException;
-import es.telocompro.rest.controller.exception.UserNotFoundException;
+import es.telocompro.rest.exception.InvalidSelfVoteException;
+import es.telocompro.rest.exception.InvalidVoteUsersException;
+import es.telocompro.rest.exception.ItemNotFoundException;
+import es.telocompro.rest.exception.UserNotFoundException;
 
 public interface VoteService {
 	
@@ -39,13 +42,20 @@ public interface VoteService {
 	 * @throws UserNotFoundException
 	 * @throws ItemNotFoundException 
 	 * @throws InvalidVoteUsersException 
+	 * @throws InvalidSelfVoteException 
 	 */
 	public Vote addVote(Long userIdVote, Long userIdReceive, Long itemId, int voteType, 
-			float reability, String voteMessage) throws UserNotFoundException, ItemNotFoundException, InvalidVoteUsersException;
+			float reability, String voteMessage) throws UserNotFoundException, ItemNotFoundException, InvalidVoteUsersException, InvalidSelfVoteException;
 	
-	public int getVotesPositive(Long userId);
+	public int getNumberVotesPositive(Long userId);
 	
-	public int getVotesNegative(Long userId);
+	public int getNumberVotesNegative(Long userId);
 	
-	public int getVotesQueued(Long userId);
+	public int getNumberVotesQueued(Long userId);
+	
+	public Page<Vote> getVotesPositive(Long userId, int page, int size);
+	
+	public Page<Vote> getVotesNegative(Long userId, int page, int size);
+	
+	public Page<Vote> getVotesQueued(Long userId, int page, int size);
 }

@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import es.telocompro.model.purchase.Purchase;
 import es.telocompro.model.purchase.PurchaseRepository;
 import es.telocompro.model.user.User;
-import es.telocompro.rest.controller.exception.PurchaseDuplicateException;
-import es.telocompro.rest.controller.exception.PurchaseNotFoundException;
-import es.telocompro.rest.controller.exception.UserNotFoundException;
+import es.telocompro.rest.exception.PurchaseDuplicateException;
+import es.telocompro.rest.exception.PurchaseNotFoundException;
+import es.telocompro.rest.exception.UserNotFoundException;
 import es.telocompro.service.user.UserService;
 
 @Service("purchaseService")

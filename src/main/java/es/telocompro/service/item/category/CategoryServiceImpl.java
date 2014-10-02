@@ -6,6 +6,7 @@ import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.CategoryRepository;
 import es.telocompro.model.item.category.subcategory.SubCategory;
 import es.telocompro.model.item.category.subcategory.SubCategoryRepository;
+import es.telocompro.rest.exception.SubCategoryNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
     private SubCategoryRepository subCategoryRepository;
 
     @Override
-    public Iterable<Category> findAllCategoriesOrderByCategoryId() {
+    public Iterable<Category> getAllCategoriesOrderByCategoryId() {
         return categoryRepository.findAllOrderByCategoryId();
     }
 
@@ -44,23 +45,25 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public Iterable<Category> findAllCategories() {
+	public Iterable<Category> getAllCategories() {
 		return categoryRepository.findAll();
 	}
 
 	@Override
-	public Iterable<SubCategory> findAllSubCategories() {
+	public Iterable<SubCategory> getAllSubCategories() {
 		return subCategoryRepository.findAll();
 	}
 	
 	@Override
-	public List<SubCategory> findAllSubCategoriesFromSubCategoryName(String subCategoryName) {
+	public List<SubCategory> getAllSubCategoriesFromSubCategoryName(String subCategoryName) {
 		return categoryRepository.findAllSubCategoriesFromSubCategoryName(subCategoryName);
 	}
 
 	@Override
-	public SubCategory findSubCategoryBySubCategoryId(long subCategoryId) {
-		return subCategoryRepository.findOne(subCategoryId);
+	public SubCategory getSubCategoryBySubCategoryId(long subCategoryId) throws SubCategoryNotFoundException {
+		SubCategory subCategory = subCategoryRepository.findOne(subCategoryId);
+		if (subCategory == null) throw new SubCategoryNotFoundException(subCategoryId);
+		return subCategory;
 	}
 
 	@Override

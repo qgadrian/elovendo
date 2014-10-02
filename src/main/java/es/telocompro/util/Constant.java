@@ -24,11 +24,16 @@ public class Constant {
 	 */
 	
 	public static final String ALL_PATH = "all";
+	public static final String VOTE_POSITIVE_STRING = "positive";
+	public static final String VOTE_NEGATIVE_STRING = "negative";
+	public static final String VOTE_PENDING_STRING = "pending";
 	
 	/**
 	 * URL PREFIXES
 	 */
 	public static final String MOBILE_API_URL_PREFIX_V1 = "/api/zorg/";
+	public static final String API_PATTERN = "/api/.*";
+	public static final String PAYPAL_PROCESS_PATTERN = "/site/paypalprocess";
 	
 	/**
 	 * IMAGES SUFIXES
@@ -41,7 +46,9 @@ public class Constant {
 	 * PATTERNS
 	 */
 	public static final String LOGIN_PATTERN = "^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$";
-	public static final String PASSWORD_PATTERN = "(?=^.{8,200}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
+	public static final String EMAIL_PATTERN="/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$/";
+	public static final String PASSWORD_PATTERN = "^$|(?=^.{8,255}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
+//	public static final String YOUTUBE_URL_PATTERN = "^$|((http|https)\\:\\/\\/)?(www\\.)?(youtube\\.com/embed/|youtu\\.?be/embed/)\\/.+$";
 	public static final String YOUTUBE_URL_PATTERN = "^$|((http|https)\\:\\/\\/)?(www\\.)?(youtube\\.com|youtu\\.?be)\\/.+$";
 	
 	/**

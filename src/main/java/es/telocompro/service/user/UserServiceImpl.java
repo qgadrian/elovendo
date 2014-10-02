@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.Logger;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,20 +15,25 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import es.telocompro.model.item.Item;
+import es.telocompro.model.user.EditUserForm;
 import es.telocompro.model.user.User;
+import es.telocompro.model.user.UserForm;
 import es.telocompro.model.user.UserRepository;
 import es.telocompro.model.user.role.Role;
 import es.telocompro.model.user.role.RoleRepository;
 import es.telocompro.model.vote.Vote;
-import es.telocompro.model.vote.VoteRepository;
-import es.telocompro.rest.controller.exception.InvalidVoteUsersException;
-import es.telocompro.rest.controller.exception.ItemNotFoundException;
-import es.telocompro.rest.controller.exception.LoginNotAvailableException;
-import es.telocompro.rest.controller.exception.UserNotFoundException;
-import es.telocompro.rest.controller.exception.VoteDuplicateException;
+import es.telocompro.rest.exception.EmailNotAvailableException;
+import es.telocompro.rest.exception.InvalidSelfVoteException;
+import es.telocompro.rest.exception.InvalidVoteUsersException;
+import es.telocompro.rest.exception.ItemNotFoundException;
+import es.telocompro.rest.exception.LoginNotAvailableException;
+import es.telocompro.rest.exception.UserNotFoundException;
+import es.telocompro.rest.exception.VoteDuplicateException;
 import es.telocompro.service.item.ItemService;
+import es.telocompro.service.item.ItemServiceImpl;
 import es.telocompro.service.vote.VoteService;
 import es.telocompro.util.IOUtil;
 import es.telocompro.util.RoleEnum;
@@ -39,7 +45,9 @@ import es.telocompro.util.RoleEnum;
 @Service("userService")
 @Transactional(readOnly = false)
 public class UserServiceImpl implements UserService {
-
+	
+	Logger logger = Logger.getLogger(UserServiceImpl.class);
+	
 	@Autowired
 	UserRepository userRepository;
 	@Autowired
@@ -58,20 +66,24 @@ public class UserServiceImpl implements UserService {
 	// an user and pass it
 	// BE CAREFULL WITH USER DISABLED BY DEFAULT
 	@Override
-	public User addUser(String login, String password, String firstName, String lastName, 
-			String address, String phone, String email, byte[] avatar) throws LoginNotAvailableException {
+	public User addUser(String login, String password, String cmpKey, String firstName, String lastName, 
+			String address, String phone, boolean whatssapUser, String email, byte[] avatar) 
+					throws LoginNotAvailableException, EmailNotAvailableException {
 		
-		if (userRepository.findByLogin(login) != null ) throw new LoginNotAvailableException(login);
+		User user = userRepository.findByLogin(login); 
+		if (user != null ) throw new LoginNotAvailableException(login);
+		else if (userRepository.findByEmail(email) != null )
+			throw new EmailNotAvailableException(login);
 		
 		// At this point, all new users always will be ROLE_USER
 		Role role = roleRepository.findByRoleName(RoleEnum.ROLE_USER);
 		
 		// Create user (notice the null for avatar path)
-		User user = new User(login, password, firstName, lastName, address,
-				phone, email, null, role, null);
+		user = new User(login, password, cmpKey, firstName, lastName, address,
+				phone, whatssapUser, email, null, role, null);
 
 		user = userRepository.save(user);
-		user.setAvatar(saveProfilePic(user, avatar));
+		user.setAvatar(saveUserImage(user, avatar));
 //		/** SAVE AVATAR IMAGE IN THE RESOURCE FOLDER **/
 //		if (avatar != null) try {
 //			// Save user for get an userId
@@ -103,14 +115,15 @@ public class UserServiceImpl implements UserService {
 //		}
 		
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		user.setPassword(encoder.encode(password));
+		
+		if (password != null) user.setPassword(encoder.encode(password));
 		
 		// return the updated user with the avatar path asigned
 		return userRepository.save(user);
 	}
 	
 	@Override
-	public User addUser(User user, byte[] profilePicBytes) throws LoginNotAvailableException {
+	public User addUser(User user, byte[] profilePicBytes) throws LoginNotAvailableException, EmailNotAvailableException {
 		
 //		String login = user.getLogin();
 //		
@@ -132,20 +145,63 @@ public class UserServiceImpl implements UserService {
 //		
 //		return userRepository.save(user);
 		
-		return addUser(user.getLogin(), user.getPassword(), user.getFirstName(),
-				user.getLastName(), user.getAddress(), user.getPhone(), user.getEmail(), profilePicBytes);
+		return addUser(user.getLogin(), user.getPassword(), user.getSocialCompositeKey(),
+				user.getFirstName(), user.getLastName(), user.getAddress(), user.getPhone(), 
+				user.isWhatssapUser(), user.getEmail(), profilePicBytes);
 	}
 
 	@Override
-	public User findUserById(Long userId) {
-		return userRepository.findOne(userId);
-	}
-
-	@Override
-	public User findUserByLogin(String login) throws UserNotFoundException {
-		User user = userRepository.findByLogin(login);
-		if (user == null) throw new UserNotFoundException(login);
+	public User addUser(UserForm userForm, MultipartFile userPic) throws LoginNotAvailableException,
+			EmailNotAvailableException, UserNotFoundException {
+		
+		try { 
+			findUserByLogin(userForm.getLogin());
+			throw new LoginNotAvailableException(userForm.getLogin());
+		} catch (UserNotFoundException e) {}
+		
+		try {
+			findUserByEmail(userForm.getEmail());
+			throw new EmailNotAvailableException(userForm.getEmail());
+		} catch (UserNotFoundException e) {}
+		
+		// At this point, all new users always will be ROLE_USER
+		Role role = roleRepository.findByRoleName(RoleEnum.ROLE_USER);
+		
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String password = userForm.getPassword();
+		if (password != null) userForm.setPassword(encoder.encode(password));
+		
+		User user = new User(userForm.getLogin(), userForm.getPassword(), null, userForm.getFirstName(),
+				userForm.getLastName(), userForm.getAddress(), userForm.getPhone(), userForm.isWhatssapUser(),
+				userForm.getEmail(), null, role, null);
+		
+		user = userRepository.save(user);
+		saveMultiPartFileImage(user, userPic);
+		
 		return user;
+	}
+	
+	@Override
+	public User updateUser(EditUserForm userForm, long userId, MultipartFile userPic) throws UserNotFoundException {
+		User user = findUserById(userId);
+		
+		// Password might be empty (unchanged). If not, change it
+		if (!userForm.getPassword().isEmpty()) {
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			String password = userForm.getPassword();
+			user.setPassword(encoder.encode(password));
+		}
+		
+		user.setFirstName(userForm.getFirstName());
+		user.setLastName(userForm.getLastName());
+		user.setPhone(userForm.getPhone());
+		user.setWhatssapUser(userForm.isWhatssapUser());
+		user.setEmail(userForm.getEmail());
+		user.setAddress(userForm.getAddress());
+		
+		saveMultiPartFileImage(user, userPic);
+		
+		return userRepository.save(user);
 	}
 
 	@Override
@@ -181,7 +237,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public User updateUser(User user, byte[] profilePic) {
-		if (profilePic != null) user.setAvatar(saveProfilePic(user, profilePic));
+		if (profilePic != null) user.setAvatar(saveUserImage(user, profilePic));
 		return userRepository.save(user);
 	}
 
@@ -206,13 +262,15 @@ public class UserServiceImpl implements UserService {
 	// TODO: If Paypal, increase the reability value for users
 	@Override
 	public Vote voteUser(Long userIdVote, Long userIdReceive, Long itemId, int voteType, String voteMessage) 
-			throws UserNotFoundException, ItemNotFoundException, VoteDuplicateException, InvalidVoteUsersException {
+			throws UserNotFoundException, ItemNotFoundException, VoteDuplicateException, InvalidVoteUsersException, 
+			InvalidSelfVoteException {
 		User userVote = userRepository.findOne(userIdVote);
 		User userReceive = userRepository.findOne(userIdReceive);
 		Item item = itemService.getItemById(itemId);
 		
 		if (userVote == null) throw new UserNotFoundException(userIdVote);
 		if (userReceive == null) throw new UserNotFoundException(userIdReceive);
+		if (userVote.equals(userReceive)) throw new InvalidSelfVoteException(userVote.getUserId());
 		if (item == null) throw new ItemNotFoundException(itemId);
 		
 		// Check if user already voted for this item
@@ -236,8 +294,77 @@ public class UserServiceImpl implements UserService {
 		return voteService.addVote(userIdVote, userIdReceive, itemId, voteType, reability, voteMessage);
 		
 	}
+
+	@Override
+	public int getVotesPositive(User user) {
+		return voteService.getNumberVotesPositive(user.getUserId());
+	}
+
+	@Override
+	public int getVotesNegative(User user) {
+		return voteService.getNumberVotesNegative(user.getUserId());
+	}
+
+
+	@Override
+	public int getVotesQueued(User user) {
+		return voteService.getNumberVotesQueued(user.getUserId());
+	}
+
+	@Override
+	public User findUserByEmail(String email) throws UserNotFoundException {
+		User user = userRepository.findByEmail(email);
+		if (user == null) throw new UserNotFoundException(email);
+		return user;
+	}
 	
-	private String saveProfilePic(User user, byte[] profilePic) {
+	@Override
+	public User findUserById(Long userId) throws UserNotFoundException {
+		User user = userRepository.findOne(userId);
+		if (user == null) throw new UserNotFoundException(userId);
+		return user;
+	}
+
+	@Override
+	public User findUserByLogin(String login) throws UserNotFoundException {
+		User user = userRepository.findByLogin(login);
+		if (user == null) throw new UserNotFoundException(login);
+		return user;
+	}
+
+	@Override
+	public User findUserBySocialUserKey(String compositeKey)
+			throws UserNotFoundException {
+		User user = userRepository.findUserBySocialUserKey(compositeKey);
+		if (user == null) throw new UserNotFoundException(compositeKey);
+		
+		return user;
+	}
+	
+	/**
+	 * Gets {@link MultipartFile} image data, saves it to a file and updates {@link User} information with file path
+	 * @param user
+	 * @param file
+	 */
+	private void saveMultiPartFileImage(User user, MultipartFile file) {
+		if (!file.isEmpty()) {
+			byte[] bytes = null;
+			try {
+				bytes = file.getBytes(); // Main image
+			} catch (IOException e) {
+				logger.debug("Error converting image");
+			}
+			user.setAvatar(saveUserImage(user, bytes));
+		}
+	}
+	
+	/**
+	 * Saves image into a user's image folders, and returns the file path.
+	 * @param user
+	 * @param profilePic
+	 * @return File path for image bytes saved.
+	 */
+	private String saveUserImage(User user, byte[] profilePic) {
 		if (profilePic != null) try {
 			// Create folder (if not created) for /img/avatars/{userId}.jpg
 			File folderPath = new File(IOUtil.calculateAvatarFilePath());
@@ -267,21 +394,4 @@ public class UserServiceImpl implements UserService {
 		}
 		return null;
 	}
-
-	@Override
-	public int getVotesPositive(User user) {
-		return voteService.getVotesPositive(user.getUserId());
-	}
-
-	@Override
-	public int getVotesNegative(User user) {
-		return voteService.getVotesNegative(user.getUserId());
-	}
-
-
-	@Override
-	public int getVotesQueued(User user) {
-		return voteService.getVotesQueued(user.getUserId());
-	}
-	
 }

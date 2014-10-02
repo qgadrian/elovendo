@@ -1,4 +1,4 @@
-package es.telocompro.rest.controller.exception;
+package es.telocompro.rest.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -43,7 +43,7 @@ public class Vote {
     
 	private int voteValue;
 	
-	@Size(max=20)
+	@Size(max=50)
     private String voteMessage;
 	
 	protected Vote() {}

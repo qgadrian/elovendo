@@ -1,7 +1,6 @@
 package es.telocompro.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,12 +8,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 
-import es.telocompro.rest.handler.LoginFailureHandler;
-import es.telocompro.rest.handler.LoginSuccessHandler;
 import es.telocompro.rest.handler.UserLogoutSuccessHandler;
+import es.telocompro.util.ApiRequestMatcher;
 import es.telocompro.util.CharacterEncodingFilter;
 
 /**
@@ -26,6 +23,11 @@ import es.telocompro.util.CharacterEncodingFilter;
 @EnableWebMvcSecurity
 //@EnableGlobalMethodSecurity
 public class SecurityConf extends WebSecurityConfigurerAdapter {
+	
+//	@Autowired
+//	DataSource dataSource;
+//	@Autowired
+//    TextEncryptor textEncryptor;
 	
 	@Autowired
     public void configureGlobal(UserDetailsService userDetailsService, AuthenticationManagerBuilder auth) 
@@ -50,19 +52,22 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 //            	.antMatchers("/resources/**", "/signup").permitAll()
 //                .antMatchers("/bazaar/*").permitAll()
 //                .antMatchers("/bazaar/items/**").authenticated()
+            	.antMatchers("/login", "/favicon.ico").permitAll()
             	.antMatchers("/imgs/**").permitAll() //TODO: Not sure if necesary...
-            	.antMatchers("/login").permitAll()
+//            	.antMatchers("/login").permitAll()
             	.antMatchers("/site/user/**").permitAll()
             	.antMatchers("/bazaar/**").permitAll()
+            	.antMatchers("/auth/**").permitAll()
             	.antMatchers("/items/item/**").authenticated()
             	.antMatchers("/site/delete/**").authenticated()
             	.antMatchers("/logout").authenticated()
+            	.antMatchers("/elovendo/messages/**").authenticated()
                 .and()
             .formLogin()
-            	.failureHandler(new LoginFailureHandler())
-            	.successHandler(new LoginSuccessHandler())
+//            	.failureHandler(new LoginFailureHandler())
+//            	.successHandler(new LoginSuccessHandler())
             	.defaultSuccessUrl("/loginRedirect")
-            	.failureUrl("/login-error")
+            	.failureUrl("/login?error")
                 .loginPage("/login").permitAll()
             	.and()
             .logout()
@@ -73,17 +78,35 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/index")
             	.deleteCookies("jsessionid", "JSESSIONID")
             	.permitAll()
-            	.and()
-            .sessionManagement()
-            .maximumSessions(5);
+            .and()
+            	.rememberMe();
+//            .and()
+//            	.apply(new SpringSocialConfigurer());
+//            	.and()
+//            .sessionManagement()
+//            .maximumSessions(5);
         
-        http.csrf().disable();
+        // Disabling CSRF for API
+        ApiRequestMatcher requestMatcher = ApiRequestMatcher.getInstance();
+        http.csrf().requireCsrfProtectionMatcher(requestMatcher);
         
-        http.rememberMe();
+//        http.rememberMe().tokenRepository(persistentTokenRepository()).tokenValiditySeconds(1209600).userDetailsService(userDetailsService);
         
         /** HTTPS **/
 //        http.requiresChannel().anyRequest().requiresSecure();
     }
+    
+//    @Bean
+//    public PersistentTokenRepository persistentTokenRepository() {
+//    	JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
+//    	db.setDataSource(dataSource);
+//    	return db;
+//    }
+    
+//    @Bean
+//    public SocialUserDetailsService socialUserDetailsService() {
+//        return new SimpleSocialUserDetailsService();
+//    }
 
 }
 

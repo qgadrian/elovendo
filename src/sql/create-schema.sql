@@ -3,18 +3,21 @@
 ---------------------------------------------------
 
 -- Eliminamos tablas.
+	--SET FOREIGN_KEY_CHECKS = 0;
 	/*DROP TABLE IF EXISTS image CASCADE*/;
 	DROP TABLE IF EXISTS messageState CASCADE;
 	DROP TABLE IF EXISTS message CASCADE;
 	DROP TABLE IF EXISTS messageThread CASCADE;
 	DROP TABLE IF EXISTS vote CASCADE;
 	DROP TABLE IF EXISTS purchase CASCADE;
-    DROP TABLE IF EXISTS item CASCADE;
-    DROP TABLE IF EXISTS subcategory CASCADE;
-    DROP TABLE IF EXISTS category CASCADE;
+	DROP TABLE IF EXISTS favorite CASCADE;
+	DROP TABLE IF EXISTS item CASCADE;
+	DROP TABLE IF EXISTS subcategory CASCADE;
+	DROP TABLE IF EXISTS category CASCADE;
+	DROP TABLE IF EXISTS persistent_logins;
 	DROP TABLE IF EXISTS userprofile CASCADE;
 	DROP TABLE IF EXISTS role CASCADE;
-	DROP TABLE IF EXISTS province CASCADE;
+	--SET FOREIGN_KEY_CHECKS = 1;
 
 ---
 
@@ -39,12 +42,14 @@
 --TODO: save register date to see how long is member
 	CREATE TABLE userprofile (
 		  userid BIGINT NOT NULL AUTO_INCREMENT,
-		  login VARCHAR(15) NOT NULL,
-		  password VARCHAR(200),
+		  login VARCHAR(23) NOT NULL,
+		  password VARCHAR(255),
+		  socialCompositeKey VARCHAR(255),
 		  firstname VARCHAR(20) NOT NULL,
 		  lastname VARCHAR(20) NOT NULL,
 		  address VARCHAR(100),
 		  phone VARCHAR(20),
+		  whatssap TINYINT(1),
 		  email VARCHAR(255) NOT NULL,
 		  avatar VARCHAR(255),
 		  userValue INT NOT NULL DEFAULT 0,
@@ -55,6 +60,7 @@
 		  sign_in_provider VARCHAR(20),
 		  CONSTRAINT pk_userid PRIMARY KEY (userid),
 		  CONSTRAINT u_login UNIQUE(login),
+		  CONSTRAINT u_email UNIQUE(email),
 		  CONSTRAINT fk_user_roleid FOREIGN KEY (roleid) REFERENCES role(roleid) ON UPDATE CASCADE ON DELETE CASCADE,
 		  CONSTRAINT check_votespositive CHECK (votespositive > 0),
 		  CONSTRAINT check_votesnegative CHECK (votesnegative > 0),
@@ -104,9 +110,9 @@
     	    autoRenew BOOLEAN NOT NULL,
     	    latitude DOUBLE NOT NULL,
     	    longitude DOUBLE NOT NULL,
-    	    cosRadLat DOUBLE NOT NULL,
-    	    sinRadLat DOUBLE NOT NULL,
-    	    radLng TEXT NOT NULL,
+    	    cosRadLat BLOB NOT NULL,
+    	    sinRadLat BLOB NOT NULL,
+    	    radLng BLOB NOT NULL,
     	    CONSTRAINT pk_item PRIMARY KEY (itemid),
     	    CONSTRAINT fk_item_userid FOREIGN KEY (userid) REFERENCES userprofile(userid) ON UPDATE CASCADE ON DELETE CASCADE,
     	    CONSTRAINT fk_item_subcategoryid FOREIGN KEY (subcategoryid) REFERENCES subcategory(subcategoryid) ON UPDATE CASCADE ON DELETE CASCADE
@@ -122,7 +128,7 @@
         voteType TINYINT(1),
         voteState BOOLEAN,
         voteValue INTEGER NOT NULL,
-        voteMessage VARCHAR(20),
+        voteMessage VARCHAR(50),
         CONSTRAINT pk_vote PRIMARY KEY (voteId),
         CONSTRAINT fk_vote_useridvote FOREIGN KEY (userIdVote) REFERENCES userprofile(userid) ON UPDATE CASCADE ON DELETE CASCADE,
         CONSTRAINT fk_vote_useridreceive FOREIGN KEY (userIdReceive) REFERENCES userprofile(userid) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -214,4 +220,11 @@ CREATE TABLE pendingVote(
 		favDate DATETIME NOT NULL,
 		CONSTRAINT fk_favorite_userId FOREIGN KEY (userId) REFERENCES userprofile(userid),
 		CONSTRAINT fk_favorite_itemId FOREIGN KEY (itemId) REFERENCES item(itemid)
+	);
+	
+	create table persistent_logins (
+		username varchar(64) not null, 
+		series varchar(64) primary key, 
+		token varchar(64) not null, 
+		last_used timestamp not null
 	);

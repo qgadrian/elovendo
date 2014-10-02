@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Immutable;
 
@@ -32,6 +33,13 @@ public class MessageThread {
 	@JoinColumn(name="participant2", referencedColumnName="userId")
 	private User participant2;
 	
+	@Transient
+	private String partner;
+	@Transient
+	private int unreadMessages;
+	@Transient
+	private String lastMessage;
+	
 	public MessageThread() {}
 
 	public MessageThread(User participant1, User participant2) {
@@ -49,5 +57,29 @@ public class MessageThread {
 
 	public User getParticipant2() {
 		return participant2;
+	}
+
+	public String getPartner() {
+		return partner;
+	}
+
+	public void setPartner(String partner) {
+		this.partner = partner;
+	}
+
+	public int getUnreadMessages() {
+		return unreadMessages;
+	}
+
+	public void setUnreadMessages(int unreadMessages) {
+		this.unreadMessages = unreadMessages;
+	}
+
+	public String getLastMessage() {
+		return lastMessage;
+	}
+
+	public void setLastMessage(String lastMessage) {
+		this.lastMessage = lastMessage;
 	}
 }

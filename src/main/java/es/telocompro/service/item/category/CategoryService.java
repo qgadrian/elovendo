@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.subcategory.SubCategory;
+import es.telocompro.rest.exception.SubCategoryNotFoundException;
 
 /**
  * Created by @adrian on 18/06/14.
@@ -15,7 +16,7 @@ public interface CategoryService {
      * Finds all categories ordering them by its id
      * @return Categories
      */
-    public Iterable<Category> findAllCategoriesOrderByCategoryId();
+    public Iterable<Category> getAllCategoriesOrderByCategoryId();
 
     /**
      * Return all subCategories from a given category
@@ -31,9 +32,9 @@ public interface CategoryService {
      */
     public Iterable<SubCategory> getAllSubCatByCategoryId(long categoryId);
     
-    public List<SubCategory> findAllSubCategoriesFromSubCategoryName(String subCategoryName);
+    public List<SubCategory> getAllSubCategoriesFromSubCategoryName(String subCategoryName);
     
-    public SubCategory findSubCategoryBySubCategoryId(long subCategoryId);
+    public SubCategory getSubCategoryBySubCategoryId(long subCategoryId) throws SubCategoryNotFoundException;
     
     /**
      * Returns subCategory searching by its name
@@ -42,8 +43,8 @@ public interface CategoryService {
      */
     public SubCategory getSubCategoryByName(String subCategoryName);
     
-    public Iterable<Category> findAllCategories();
-    public Iterable<SubCategory> findAllSubCategories();
+    public Iterable<Category> getAllCategories();
+    public Iterable<SubCategory> getAllSubCategories();
     
     public Iterable<SubCategory> getAllSubCategoriesFromCategoryName(String categoryName);
 }

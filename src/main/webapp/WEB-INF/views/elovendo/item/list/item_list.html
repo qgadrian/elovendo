@@ -5,6 +5,9 @@
 
 <head>
 <meta charset="UTF-8" />
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<!-- default header name is X-CSRF-TOKEN -->
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <title>Ver anuncios</title>
 
 <link rel="shortcut icon" type="image/x-icon" href="/images/webimg/favicon.ico" />
@@ -218,9 +221,10 @@
 	<!-- 									<button onclick="favClick(this)" type="submit" class="btn btn-danger btn-m pull-right" -->
 	<!-- 									th:value="${item.itemId}" data-toggle="button"> -->
 	<!-- 									<i class="glyphicon glyphicon-heart-empty"></i></button> -->
-										<div class="btn-group pull-right" data-toggle="buttons">
+										<div class="btn-group pull-right" data-toggle="buttons"
+											th:onclick="'favClick(' + ${item.itemId} + ', this)'">
 	  										<label class="btn btn-danger btn-m" style="padding: 6px 12px 5px 10px;">
-	  											<input onclick="favClick(this)" type="hidden" th:value="${item.itemId}" th:id="'f' + ${item.itemId}"/>
+<!-- 	  											<input type="hidden" th:value="${item.itemId}" th:id="'f' + ${item.itemId}"/> -->
 	  											<i th:id="'i'+${item.itemId}" class="glyphicon glyphicon-heart-empty"></i>
 	  										</label>
 	  									</div>
@@ -279,7 +283,7 @@
 											<span class="label label-danger">
 											<i class="glyphicon glyphicon-fire"></i> Nuevo</span>
 										</h4>
-										<h4 th:if="${item.user.phone} != null" style="display: inline; ">
+										<h4 th:if="${item.user.whatssapUser}" style="display: inline; ">
 											<span class="label label-success">
 											<i class="glyphicon glyphicon-phone"></i> Whatssap</span>
 										</h4>
@@ -294,11 +298,12 @@
 										</span>
 										</h4>
 										<div class="btn-group pull-right" style="margin-right: 10px;">
-	<!-- 										<a th:href="@{'/bazaar/item/' + ${item.itemId}}" class="btn btn-default" -->
-	<!-- 											role="button">Ver anuncio</a> -->
-											
 	
 										</div>
+<!-- 										<div class="btn btn-primary pull-right" th:attr="data-user=${item.user.login}" data-toggle="modal" -->
+<!-- 							data-target="#myModal"> -->
+<!-- 	  										<i class="glyphicon glyphicon-send" style="margin-right: 4px;"></i> Mensaje -->
+<!-- 	  									</div> -->
 									</div>
 								</div>
 							</div>
@@ -308,6 +313,7 @@
 							data-target="#myModal">
 							<i class="glyphicon glyphicon-send" style="margin-right: 4px;"></i> Mensaje
 						</button>
+						
 					</div>
 				</div>
 			</div>
@@ -415,8 +421,11 @@
 		
 		$('#messageForm').submit(function(event) {
 		    event.preventDefault();
+			var cv = $("meta[name='_csrf']").attr("content");
+		    var cn = $("meta[name='_csrf_header']").attr("content");
 		    $.ajax({
 	            type : 'POST',
+	            beforeSend: function (request) { request.setRequestHeader(cn, cv); },
 	            url : sendMessageUrl,
 	            data : ({
 	                receiver : $('#receiver').val(),
@@ -428,17 +437,6 @@
 		    document.getElementById('messageText').value = '';
 		    $('#myModal').modal('hide');
 		});
-
-// 		$('#geoFilter').submit(function(event) {
-// // 			getLocation();
-// 			console.log(this);
-// 			console.log("doc lat " + document.getElementById('lat').value);
-// 			var input = $("<input>")
-// 				.attr("type", "hidden")
-// 				.attr("name", "lat").val(document.getElementById('lat').val());
-// 			this.append($(input));
-// // 			location.href = window.location.pathname + "?dis=" + $('#dis').val + "fuck";
-// 		});
 		
 		function getLocation() {
 			var lat = getURLParameter('lat');
@@ -469,27 +467,6 @@
 		     document.getElementById('receiver').value = user;
 		});
 		
-// 		var placeSearch, autocomplete;
-// 		function initAutoComplete() {
-// 		  // Create the autocomplete object, restricting the search
-// 		  // to geographical location types.
-// 		  autocomplete = new google.maps.places.Autocomplete(
-// 		      /** @type {HTMLInputElement} */(document.getElementById('autocomplete')),
-// 		      { types: ['geocode'] });
-// 		  // When the user selects an address from the dropdown,
-// 		  // populate the address fields in the form.
-// 		  google.maps.event.addListener(autocomplete, 'place_changed', function() {
-// 		    geoAddress();
-// 		  });
-// 		}
-		
-// 		function geoAddress() {
-// 			var place = autocomplete.getPlace();
-// // 			console.log("result: " + place.geometry.location.lat());
-// // 			console.log("result: " + place.geometry.location.lng());
-// 			document.getElementById('lat').value = place.geometry.location.lat();
-// 			document.getElementById('lng').value = place.geometry.location.lng();
-// 		}
 	</script>
 
 </body>
