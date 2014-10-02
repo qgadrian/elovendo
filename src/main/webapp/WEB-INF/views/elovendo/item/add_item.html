@@ -89,7 +89,7 @@
 
 	<div class="container">
 		<div><h3>Información del anuncio</h3><hr class="hrStyle2" /></div>
-		<form class="form-horizontal" role="form" th:action="@{/site/items/item}" method="post" enctype="multipart/form-data" >
+		<form class="form-horizontal" role="form" th:action="@{/bazaar/add/item}" method="post" enctype="multipart/form-data" >
 			<div class="form-group">
 				<label for="title" class="col-sm-2 control-label">Title</label> 
 				<div class="col-sm-10">
@@ -131,7 +131,7 @@
 			<div class="form-group">
 				<label for="category" class="col-sm-2 control-label">Categoría</label>
 				<div class="col-sm-10">
-					<select id="category" class="form-control" th:value="${categoryName}" name="categoryName">
+					<select id="category" class="form-control" name="category">
 					  <option th:each="category : ${categories}" 
 					          th:value="${category.categoryId}" 
 					          th:text="${category.categoryName}">Category</option>
@@ -149,7 +149,7 @@
 <!-- 					          th:value="${subCategory.subCategoryName}"  -->
 <!-- 					          th:text="${subCategory.subCategoryName}">Province</option> -->
 <!-- 					</select> -->
-					<select id="subCategory" class="form-control" name="subCategoryName">
+					<select id="subCategory" class="form-control" name="subCategory">
 						
 					</select>
 				</div>
@@ -215,8 +215,11 @@
 					<div class="form-group">
 						<label for="exampleInputEmail1">Mi anuncio estará en...</label> <input
 							class="form-control" id="autocomplete" placeholder="Puedes hacer click en el mapa o escribirlo aquí..."
-							type="text"> <input type="hidden" id="lat" name="lat"
-							value="0" /> <input type="hidden" id="lng" name="lng" value="0" />
+							type="text"> 
+<!-- 							<input type="hidden" id="lat" name="lat" value="0" />  -->
+<!-- 							<input type="hidden" id="lng" name="lng" value="0" /> -->
+							<input type="hidden" id="lat" name="lat" th:field="${item.latitude}"/> 
+							<input type="hidden" id="lng" name="lng" th:field="${item.longitude}"/>
 					</div>
 				</div>
 			</div>

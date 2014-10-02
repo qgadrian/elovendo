@@ -3,8 +3,11 @@ package es.telocompro.service.user;
 import java.io.IOException;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.multipart.MultipartFile;
 
+import es.telocompro.model.user.EditUserForm;
 import es.telocompro.model.user.User;
+import es.telocompro.model.user.UserForm;
 import es.telocompro.model.vote.Vote;
 import es.telocompro.rest.exception.EmailNotAvailableException;
 import es.telocompro.rest.exception.InvalidSelfVoteException;
@@ -56,13 +59,17 @@ public interface UserService extends UserDetailsService {
      */
     public User addUser(User user, byte[] profilePicBytes) 
     		throws LoginNotAvailableException, EmailNotAvailableException;
+    
+    public User addUser(UserForm userForm, MultipartFile userPic) 
+    		throws LoginNotAvailableException, EmailNotAvailableException, UserNotFoundException;
 
     /**
      * Finds a user by its id
      * @param userId
      * @return
+     * @throws UserNotFoundException 
      */
-    public User findUserById(Long userId);
+    public User findUserById(Long userId) throws UserNotFoundException;
     
     /**
      * Finds a user by its login
@@ -99,6 +106,8 @@ public interface UserService extends UserDetailsService {
     public User updateUser(User user);
     
     public User updateUser(User user, byte[] profilePic);
+    
+    public User updateUser(EditUserForm userForm, long userId, MultipartFile userPic) throws UserNotFoundException;
     /**
      * Deletes an user
      * @param userId

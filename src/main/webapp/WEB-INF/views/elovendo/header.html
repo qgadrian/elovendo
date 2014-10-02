@@ -119,7 +119,7 @@
 									<p th:switch="${#httpServletRequest.remoteUser}" class="navbar-btn">
 										<a th:case="null" href="/login" class="btn btn-info"
 										th:text="#{sell.button}">  Sell </a>
-										<a th:case="*" href="/site/items/item" class="btn btn-info"
+										<a th:case="*" href="/bazaar/add/item" class="btn btn-info"
 										th:text="#{sell.button}">  Sell </a>
 									</p>
 								</li>

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import es.telocompro.model.item.category.Category;
 import es.telocompro.model.item.category.subcategory.SubCategory;
-import es.telocompro.rest.exception.CategoriesNotFoundException;
+import es.telocompro.rest.exception.CategoryNotFoundException;
 import es.telocompro.service.item.category.CategoryService;
 import es.telocompro.util.Constant;
 
@@ -41,12 +41,12 @@ public class MobileCategoryController {
     @SuppressWarnings("unchecked")
 	@RequestMapping(value = "{category}", method = RequestMethod.GET)
     public @ResponseBody JSONArray getSubCategories(@PathVariable("category") String categoryName) 
-    throws CategoriesNotFoundException {
+    throws CategoryNotFoundException {
         Iterable<SubCategory> subCategories =
         		categoryService.getAllSubCatByCategoryIdOrderBySubCatId(categoryName);
         
         if (subCategories == null) {
-        	throw new CategoriesNotFoundException(categoryName);
+        	throw new CategoryNotFoundException(categoryName);
         }
         
     	JSONArray jsonArray = new JSONArray();

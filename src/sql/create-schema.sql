@@ -42,7 +42,7 @@
 --TODO: save register date to see how long is member
 	CREATE TABLE userprofile (
 		  userid BIGINT NOT NULL AUTO_INCREMENT,
-		  login VARCHAR(15) NOT NULL,
+		  login VARCHAR(23) NOT NULL,
 		  password VARCHAR(255),
 		  socialCompositeKey VARCHAR(255),
 		  firstname VARCHAR(20) NOT NULL,
