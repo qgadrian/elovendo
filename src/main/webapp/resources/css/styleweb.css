@@ -705,6 +705,28 @@ li.active span.round-tabs.red{
     color: #f1685e;
 }
 
+span.round-tabs.violet{
+    color: #974ddd;
+    border: 2px solid #974ddd;
+}
+
+li.active span.round-tabs.violet{
+    background: #fff !important;
+    border: 2px solid #ddd;
+    color: #974ddd;
+}
+
+span.round-tabs.lblue{
+    color: #58ACFA;
+    border: 2px solid #58ACFA;
+}
+
+li.active span.round-tabs.lblue{
+    background: #fff !important;
+    border: 2px solid #ddd;
+    color: #58ACFA;
+}
+
 span.round-tabs.grey{
     color: #999;border: 2px solid #999;
 }

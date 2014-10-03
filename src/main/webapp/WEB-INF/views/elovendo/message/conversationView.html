@@ -16,6 +16,7 @@
 
 <!-- Javascript -->
 <script src="/js/jquery-1.11.0.min.js"></script>
+<script src="/js/jquery.cookie.js"></script>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
 <!-- Latest compiled and minified JavaScript -->
@@ -93,6 +94,11 @@
 						<span id="sendMsg" class="input-group-addon btn btn-primary">
 							Send
 						</span>
+					</div>
+					<div class="checkbox pull-right">
+						<label>
+							<input type="checkbox" th:text="#{Checkbox.message.enter}" id="enterCheckbox"> 
+						</label>
 					</div>
 				</div>
 			</div>
@@ -276,12 +282,25 @@
 			});
 		
 		}, lt);
+
+		$(document).ready( function() {
+			var state = $.cookie("usesEnter") == "true" ? true : false;
+			console.log("coockie " + state);
+			$('#enterCheckbox').prop('checked', state);
+		});
+		
+		$('#enterCheckbox').change(function() {
+			var state = $(this).is(":checked");
+			$.cookie("usesEnter", state);
+		});
 		
 		
 		$('#message').keypress(function(e) {
-			if (e.which == 13) {
+			var state = $('#enterCheckbox').prop('checked');
+			console.log("cb " + state);
+			if (e.which == 13 && state) {
 				e.preventDefault();
-				console.log("pressed enter");
+				console.log("pressed enter and is cookie");
 				$('#sendMsg').click();
 			}
 		});
