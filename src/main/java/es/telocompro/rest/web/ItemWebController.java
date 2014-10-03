@@ -10,9 +10,6 @@ import javax.validation.Valid;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.log4j.Logger;
-import org.elasticsearch.common.Strings;
-import org.owasp.html.HtmlPolicyBuilder;
-import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -21,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +34,6 @@ import es.telocompro.model.user.User;
 import es.telocompro.rest.exception.InsufficientPointsException;
 import es.telocompro.rest.exception.ItemNotFoundException;
 import es.telocompro.rest.exception.NotUserItemException;
-import es.telocompro.rest.exception.ProvinceNotFoundException;
 import es.telocompro.rest.exception.SubCategoryNotFoundException;
 import es.telocompro.rest.exception.UserNotFoundException;
 import es.telocompro.service.exception.InvalidItemNameMinLenghtException;
@@ -342,13 +337,10 @@ public class ItemWebController {
 
 		model.addAttribute("item", new ItemForm());
 
-		User _user = null;
+		User user = null;
 		SecurityContext context = SecurityContextHolder.getContext();
 		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			_user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		// Workaround to get updated user with recent purchased points, if proceeds
-		User user = userService.findUserById(_user.getUserId());
+			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		model.addAttribute("user", user);
 
@@ -418,10 +410,9 @@ public class ItemWebController {
 		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
 			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		if (user == null)
-			return false;
+		if (user == null) return false;
 
-		return favoriteService.toggleFavorite(user, itemId);
+		return favoriteService.setFavorite(user, itemId) != null;
 	}
 
 }

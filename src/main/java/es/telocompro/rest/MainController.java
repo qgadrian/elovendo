@@ -112,7 +112,7 @@ public class MainController implements ErrorController {
     	Cookie cookie = new Cookie("JSESSIONID", null);
     	response.addCookie(cookie);
     	
-    	if (device.isNormal()) return "elovendo/index";
+    	if (device.isNormal()) return "redirect:/elovendo/index";
     	
     	return "";
     }

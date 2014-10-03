@@ -51,7 +51,11 @@
 
 	<!-- Header -->
 	<div th:replace="elovendo/header"></div>
-	
+
+	<div id="favMesDiv" class="falert alert alert-info" style="display:none;">
+		<span id="favMes"></span>
+	</div>
+
 	<div class="container">
 		<div class="row">
 			<!-- Filter -->
@@ -407,37 +411,65 @@
 		</div>
 	</div>
 
-	<script type="text/javascript">
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var okm = /*[[#{Alert.itemList.favorite.ok}]]*/ 'Added to favorite';
+	var fm = /*[[#{Alert.itemList.favorite.error}]]*/ 'Error adding to favorite. Please try again.';
+	/*]]>*/
 	
-	var sendMessageUrl = "/elovendo/messages/send";
-	
+	function favClick(value, d) {
+		var f = value;
+		var cv = $("meta[name='_csrf']").attr("content");
+		var cn = $("meta[name='_csrf_header']").attr("content");
+		var e = "/bazaar/item/fav";
+		
+		$.ajax({
+			  type: "POST",
+			  beforeSend: function (request) { request.setRequestHeader(cn, cv); },
+			  url: e,
+			  data: {id: f},
+			  success: function(data) {
+					$('#favMes').text(okm);
+					$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				},
+				error : function() {
+					$('#favMes').text(fm);
+					$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				}
+			});
+		}
+
+		var sendMessageUrl = "/elovendo/messages/send";
+
 		function mouseHover() {
 			console.log("rep hover");
 		}
-		
+
 		$('#myModal').on('hidden', function() {
 			$('#messageText').value = '';
 		})
-		
-		$('#messageForm').submit(function(event) {
-		    event.preventDefault();
-			var cv = $("meta[name='_csrf']").attr("content");
-		    var cn = $("meta[name='_csrf_header']").attr("content");
-		    $.ajax({
-	            type : 'POST',
-	            beforeSend: function (request) { request.setRequestHeader(cn, cv); },
-	            url : sendMessageUrl,
-	            data : ({
-	                receiver : $('#receiver').val(),
-	                messageText: $('#messageText').val()
-	            })
 
-	        });
-		    
-		    document.getElementById('messageText').value = '';
-		    $('#myModal').modal('hide');
+		$('#messageForm').submit(function(event) {
+			event.preventDefault();
+			var cv = $("meta[name='_csrf']").attr("content");
+			var cn = $("meta[name='_csrf_header']").attr("content");
+			$.ajax({
+				type : 'POST',
+				beforeSend : function(request) {
+					request.setRequestHeader(cn, cv);
+				},
+				url : sendMessageUrl,
+				data : ({
+					receiver : $('#receiver').val(),
+					messageText : $('#messageText').val()
+				})
+
+			});
+
+			document.getElementById('messageText').value = '';
+			$('#myModal').modal('hide');
 		});
-		
+
 		function getLocation() {
 			var lat = getURLParameter('lat');
 			var lng = getURLParameter('lng');
@@ -450,23 +482,22 @@
 				navigator.geolocation.getCurrentPosition(getPosition);
 			}
 		}
-		
+
 		function fillFilter() {
 			var dis = getURLParameter('dis');
 			if (dis != null)
 				document.getElementById('dis').value = dis;
 		}
-		
+
 		function getPosition(position) {
 			document.getElementById('lat').value = position.coords.latitude;
 			document.getElementById('lng').value = position.coords.longitude;
 		}
-		
-		$('a[data-toggle=modal], button[data-toggle=modal]').click(function () {
-		     var user = $(this).data('user');
-		     document.getElementById('receiver').value = user;
+
+		$('a[data-toggle=modal], button[data-toggle=modal]').click(function() {
+			var user = $(this).data('user');
+			document.getElementById('receiver').value = user;
 		});
-		
 	</script>
 
 </body>

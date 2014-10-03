@@ -37,6 +37,13 @@ public class FavoriteServiceImpl implements FavoriteService {
 			return false;
 		}
 	}
+	
+	@Override
+	public Favorite setFavorite(User user, Long itemId) throws ItemNotFoundException {
+		Item item = getItem(itemId);
+		Favorite favorite = new Favorite(user.getUserId(), item.getItemId());
+		return favRepository.save(favorite);
+	}
 
 //	@Override
 //	public boolean removeFavorite(User user, Long itemId) throws ItemNotFoundException {
@@ -57,7 +64,8 @@ public class FavoriteServiceImpl implements FavoriteService {
 //		
 //		return favRepository.findOne(favKey) != null;
 //	}
-	
+
+
 	private Item getItem(Long itemId) throws ItemNotFoundException {
 		Item item = itemService.getItemById(itemId);
 		if (item == null) throw new ItemNotFoundException(itemId);
