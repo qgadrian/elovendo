@@ -364,11 +364,6 @@ public class ItemWebController {
 		SecurityContext context = SecurityContextHolder.getContext();
 		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
 			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
-//		if (subCategory == null) {
-//			logger.error("subCategory is null");
-//			result.addError(new FieldError("", "subCategory", defaultMessage));
-//		}
 
 		if (result.hasErrors()) {
 

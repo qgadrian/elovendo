@@ -28,6 +28,7 @@
 <link rel="stylesheet" type="text/css" href="/css/styleweb.css"/>
 
 <script src="/js/geo.js"></script>
+<script src="/js/filter.js"></script>
 <!-- Google autocomplete  -->
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;libraries=places"></script>
 
@@ -40,203 +41,203 @@
 <!-- 	<div class="container-fluid"> -->
 		<div class="container">
 
-		<!-- 			<form class="form-wrapper cf" method="GET" action="/bazaar/search" name="search"> -->
-		<!-- 				<input type="text" name="title" placeholder="¿Qué quieres buscar?" required=""/> -->
-		<!-- 				<button type="submit">Buscar</button> -->
-		<!-- 			</form> -->
-		
-		<div class="row">
-			<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px; height:100px;">
-				<img src="/images/webimg/logo-full-200h.png" style="height:100px;"/>
-			</div>
-		</div>
-		
-		<div class="row">
-			<div class="col-xs-12 col-md-12 text-center">
-				<div class='search-box' style="margin-bottom:20px;">
-						<form class="col-lg-12" role="search" method="GET" action="/bazaar/search" name="search" id="search">
-							<div class="input-group">
-								<input type="text" class="form-control input-lg" placeholder="¿Qué quieres buscar?" 
-									required="required" id="srch-term" name="title"/>
-								<div class="input-group-btn">
-									<select id="subCategorySelect" name="subcategory" class="btn btn-default input-lg" 
-									form="search" style="background-color:#FFF;">
-										<option selected="selected" value="">Todas las categorías</option>
-										<option th:each="subCategory : ${subCategories}" 
-										th:value="${subCategory.subCategoryName}" th:text="${subCategory.subCategoryName}"> 
-										SubCategory </option>
-									</select>
-									<input type="hidden" id="lat" name="lat" value="0"/>
-									<input type="hidden" id="lng" name="lng" value="0"/>
-									<button class="btn btn-default input-lg" type="submit">
-										<i class="glyphicon glyphicon-search"></i>
-									</button>
-								</div>
-							</div>
-						</form>
-					</div>
-			</div>
-		</div>
-
-	<!-- MENU DE PRINCIPAL -->
-		<div class="row">
-			<!-- Featured -->
-			<div class="col-xs-4 col-md-4">
-				<!-- title -->
-				<div class="row">
-					<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;">
-						<h2 style="font-family: 'Raleway', 'Andika', sans-serif; color: #563D7C">PATROCINADOS</h2>
-						<hr class="hrStyle2"/>
-					</div>
-				</div>
-				<div class="row" th:each="item : ${featuredItems}">
-					<div class="col-xs-12 col-md-12">
-						<a th:href="@{'/bazaar/item/' + ${item.itemId}}" class="featuredSection">
-							<div class="thumbnail">
-<!-- 								<a th:href="@{'/bazaar/item/' + ${item.itemId}}"> -->
-									<img data-src="holder.js/300x300" alt="..." 
-									th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}"/>
-<!-- 								</a> -->
-<hr />
-								<div class="caption">
-									<h4 th:text="${item.title}">Title</h4>
-									<p th:if="${#strings.length(item.plainDescription)} &gt; 99" 
-										th:utext="${#strings.substring(item.plainDescription, 0, 100)}"
-										class="featuredTextDesc">Description</p>
-									<p th:if="${#strings.length(item.plainDescription)} &lt; 100" 
-										th:utext="${item.plainDescription}"
-										class="featuredTextDesc">Description</p>
-								</div>
-							</div>
-						</a>
-						<button class="btn btn-primary indexMsg" role="button"
-							th:attr="data-user=${item.user.login}" data-toggle="modal"
-							data-target="#myModal">
-							<i class="glyphicon glyphicon-send" style="margin-right: 4px;"></i>
-							Mensaje
-						</button>
-					</div>
+			<!-- 			<form class="form-wrapper cf" method="GET" action="/bazaar/search" name="search"> -->
+			<!-- 				<input type="text" name="title" placeholder="¿Qué quieres buscar?" required=""/> -->
+			<!-- 				<button type="submit">Buscar</button> -->
+			<!-- 			</form> -->
+			
+			<div class="row">
+				<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px; height:100px;">
+					<img src="/images/webimg/logo-full-200h.png" style="height:100px;"/>
 				</div>
 			</div>
 			
-			<form >
-				<input type="hidden" value="stuff">
-			</form>
-			
-			<!-- Categories -->
-			<div class="col-xs-8 col-md-8 categoryIndex">
-				<!-- title -->
-				<div class="row">
-					<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;">
-						<h2 style="font-family: 'Raleway', 'Andika', sans-serif; color: #563D7C">CATEGORÍAS</h2>
-						<hr class="hrStyle2"/>
+			<div class="row">
+				<div class="col-xs-12 col-md-12 text-center">
+					<div class='search-box' style="margin-bottom:20px;">
+							<form class="col-lg-12" role="search" method="GET" action="/bazaar/search" name="search" id="search">
+								<div class="input-group">
+									<input type="text" class="form-control input-lg" placeholder="¿Qué quieres buscar?" 
+										required="required" id="srch-term" name="title"/>
+									<div class="input-group-btn">
+										<select id="subCategorySelect" name="subcategory" class="btn btn-default input-lg" 
+										form="search" style="background-color:#FFF;">
+											<option selected="selected" value="">Todas las categorías</option>
+											<option th:each="subCategory : ${subCategories}" 
+											th:value="${subCategory.subCategoryName}" th:text="${subCategory.subCategoryName}"> 
+											SubCategory </option>
+										</select>
+										<input type="hidden" id="lat" name="lat" value="0"/>
+										<input type="hidden" id="lng" name="lng" value="0"/>
+										<button class="btn btn-default input-lg" type="submit">
+											<i class="glyphicon glyphicon-search"></i>
+										</button>
+									</div>
+								</div>
+							</form>
+						</div>
+				</div>
+			</div>
+	
+		<!-- MENU DE PRINCIPAL -->
+			<div class="row">
+				<!-- Featured -->
+				<div class="col-xs-4 col-md-4">
+					<!-- title -->
+					<div class="row">
+						<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;">
+							<h2 style="font-family: 'Raleway', 'Andika', sans-serif; color: #563D7C">PATROCINADOS</h2>
+							<hr class="hrStyle2"/>
+						</div>
+					</div>
+					<div class="row" th:each="item : ${featuredItems}">
+						<div class="col-xs-12 col-md-12">
+							<a th:href="@{'/bazaar/item/' + ${item.itemId}}" class="featuredSection">
+								<div class="thumbnail">
+	<!-- 								<a th:href="@{'/bazaar/item/' + ${item.itemId}}"> -->
+										<img data-src="holder.js/300x300" alt="..." 
+										th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}"/>
+	<!-- 								</a> -->
+	<hr />
+									<div class="caption">
+										<h4 th:text="${item.title}">Title</h4>
+										<p th:if="${#strings.length(item.plainDescription)} &gt; 99" 
+											th:utext="${#strings.substring(item.plainDescription, 0, 100)}"
+											class="featuredTextDesc">Description</p>
+										<p th:if="${#strings.length(item.plainDescription)} &lt; 100" 
+											th:utext="${item.plainDescription}"
+											class="featuredTextDesc">Description</p>
+									</div>
+								</div>
+							</a>
+							<button class="btn btn-primary indexMsg" role="button"
+								th:attr="data-user=${item.user.login}" data-toggle="modal"
+								data-target="#myModal">
+								<i class="glyphicon glyphicon-send" style="margin-right: 4px;"></i>
+								Mensaje
+							</button>
+						</div>
 					</div>
 				</div>
-				<div class="row">
-<!-- 						<div class="col-xs-6 col-md-6"> -->
-<!-- 							<a href="/bazaar/category/tecnologia" class="thumbnail">  -->
-<!-- 							<img src="/images/categories/technology.jpg" data-src="holder.js/100%x150" /> -->
-<!-- 							</a> -->
-<!-- 						</div> -->
-					<div class="col-xs-6 col-md-6">
-            			<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
-            				<img src="/images/categories/technology.jpg" data-src="holder.js/100%x150" />
-            				<div class="caption post-content">
-                				<h3 >Tecnología</h3> 
-        					</div>
-						</a>
+				
+				<form >
+					<input type="hidden" value="stuff">
+				</form>
+				
+				<!-- Categories -->
+				<div class="col-xs-8 col-md-8 categoryIndex">
+					<!-- title -->
+					<div class="row">
+						<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;">
+							<h2 style="font-family: 'Raleway', 'Andika', sans-serif; color: #563D7C">CATEGORÍAS</h2>
+							<hr class="hrStyle2"/>
+						</div>
 					</div>
-					<div class="col-xs-6 col-md-6">
-						<a href="/bazaar/category/deportes" class="thumbnail" style="text-decoration: none;">
-							<img src="/images/categories/sport.jpg" data-src="holder.js/100%x150" />
-<!-- 							<div class="caption"> -->
+					<div class="row">
+	<!-- 						<div class="col-xs-6 col-md-6"> -->
+	<!-- 							<a href="/bazaar/category/tecnologia" class="thumbnail">  -->
+	<!-- 							<img src="/images/categories/technology.jpg" data-src="holder.js/100%x150" /> -->
+	<!-- 							</a> -->
+	<!-- 						</div> -->
+						<div class="col-xs-6 col-md-6">
+	            			<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
+	            				<img src="/images/categories/technology.jpg" data-src="holder.js/100%x150" />
+	            				<div class="caption post-content">
+	                				<h3 >Tecnología</h3> 
+	        					</div>
+							</a>
+						</div>
+						<div class="col-xs-6 col-md-6">
+							<a href="/bazaar/category/deportes" class="thumbnail" style="text-decoration: none;">
+								<img src="/images/categories/sport.jpg" data-src="holder.js/100%x150" />
+	<!-- 							<div class="caption"> -->
+									<div class="caption post-content">
+									<h3>Deportes</h3> 
+									</div>
+	<!-- 							</div> -->
+							</a>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-6 col-md-6">
+							<a href="/bazaar/category/tecnologia" class="thumbnail thumbnail2" style="text-decoration: none;">
+								<img src="/images/categories/house.jpg" data-src="holder.js/100%x150" />
 								<div class="caption post-content">
-								<h3>Deportes</h3> 
+									<h3 >Hogar</h3> 
 								</div>
-<!-- 							</div> -->
-						</a>
+							</a>
+						</div>
+						<div class="col-xs-6 col-md-6">
+							<a href="/bazaar/category/tecnologia" class="thumbnail thumbnail2" style="text-decoration: none;">
+								<img src="/images/categories/car.jpg" data-src="holder.js/100%x150" />
+								<div class="caption post-content">
+									<h3>Motor</h3> 
+								</div>
+							</a>
+						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-6 col-md-6">
-						<a href="/bazaar/category/tecnologia" class="thumbnail thumbnail2" style="text-decoration: none;">
-							<img src="/images/categories/house.jpg" data-src="holder.js/100%x150" />
-							<div class="caption post-content">
-								<h3 >Hogar</h3> 
-							</div>
-						</a>
+					<div class="row">
+						<div class="col-xs-6 col-md-6">
+							<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
+								<img src="/images/categories/puppy.jpg" data-src="holder.js/100%x150" />
+								<div class="caption post-content">
+									<h3 >Mascotas</h3> 
+								</div>
+							</a>
+						</div>
+						<div class="col-xs-6 col-md-6">
+							<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
+								<img src="/images/categories/book.jpg" data-src="holder.js/100%x150" />
+								<div class="caption post-content">
+									<h3 >Libros</h3> 
+								</div>
+							</a>
+						</div>
 					</div>
-					<div class="col-xs-6 col-md-6">
-						<a href="/bazaar/category/tecnologia" class="thumbnail thumbnail2" style="text-decoration: none;">
-							<img src="/images/categories/car.jpg" data-src="holder.js/100%x150" />
-							<div class="caption post-content">
-								<h3>Motor</h3> 
-							</div>
-						</a>
+					<div class="row">
+						<div class="col-xs-6 col-md-6">
+							<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
+								<img src="/images/categories/fashion.jpg" data-src="holder.js/100%x150" />
+								<div class="caption post-content">
+									<h3 >Moda</h3> 
+								</div>
+							</a>
+						</div>
+						<div class="col-xs-6 col-md-6">
+							<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
+								<img src="/images/categories/jewelry.jpg" data-src="holder.js/100%x150" />
+								<div class="caption post-content">
+									<h3 >Joyas</h3> 
+								</div>
+							</a>
+						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-6 col-md-6">
-						<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
-							<img src="/images/categories/puppy.jpg" data-src="holder.js/100%x150" />
-							<div class="caption post-content">
-								<h3 >Mascotas</h3> 
-							</div>
-						</a>
-					</div>
-					<div class="col-xs-6 col-md-6">
-						<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
-							<img src="/images/categories/book.jpg" data-src="holder.js/100%x150" />
-							<div class="caption post-content">
-								<h3 >Libros</h3> 
-							</div>
-						</a>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-6 col-md-6">
-						<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
-							<img src="/images/categories/fashion.jpg" data-src="holder.js/100%x150" />
-							<div class="caption post-content">
-								<h3 >Moda</h3> 
-							</div>
-						</a>
-					</div>
-					<div class="col-xs-6 col-md-6">
-						<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
-							<img src="/images/categories/jewelry.jpg" data-src="holder.js/100%x150" />
-							<div class="caption post-content">
-								<h3 >Joyas</h3> 
-							</div>
-						</a>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-6 col-md-6">
-						<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
-							<img src="/images/categories/toy.jpg" data-src="holder.js/100%x150" />
-							<div class="caption post-content">
-								<h3 >Juguetes</h3> 
-							</div>
-						</a>
-					</div>
-					<div class="col-xs-6 col-md-6">
-						<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
-							<img src="/images/categories/music.jpg" data-src="holder.js/100%x150" />
-							<div class="caption post-content">
-								<h3 >Música</h3> 
-							</div>
-						</a>
+					<div class="row">
+						<div class="col-xs-6 col-md-6">
+							<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
+								<img src="/images/categories/toy.jpg" data-src="holder.js/100%x150" />
+								<div class="caption post-content">
+									<h3 >Juguetes</h3> 
+								</div>
+							</a>
+						</div>
+						<div class="col-xs-6 col-md-6">
+							<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
+								<img src="/images/categories/music.jpg" data-src="holder.js/100%x150" />
+								<div class="caption post-content">
+									<h3 >Música</h3> 
+								</div>
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<!-- FIN -->
-		
-		<!-- Footer -->
-		<div th:include="elovendo/footer"></div>
+			<!-- FIN -->
+			
+			<!-- Footer -->
+			<div th:include="elovendo/footer"></div>
 
-	</div>
+		</div>
 	
 	<script type="text/javascript">
 // 		$('a').bind('click', function geoSearch(e) {

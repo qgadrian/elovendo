@@ -7,6 +7,26 @@ $(document).ready( function() {
 	var categorySelect = document.getElementById("categorySelect");
 	var provinceSelect = document.getElementById("categorySelect");
 	
+//	$.get("/elovendo/messages/getUnread", function(data) {
+//		try {
+//			console.log("checking for new messages");
+//			document.getElementById('messageBadge').innerHTML = data;
+//			if (data>0) {
+//				console.log("There are message unread");
+//				var al = document.createElement('div');
+//				al.className = 'falert alert alert-warning';
+//				al.id = "favMesDiv";
+//				var sp = document.createElement('span');
+//				sp.id = "favMes";
+//				sp.innerHTML = "New message";
+//				al.appendChild(sp);
+//				var cont = document.getElementById('container');
+//				document.body.insertBefore(al, cont);
+//				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+//			}
+//		} catch(err) {}
+//	});
+	
 	$('#categorySelect').change( function() {
 		var select = $(this).val();
 		

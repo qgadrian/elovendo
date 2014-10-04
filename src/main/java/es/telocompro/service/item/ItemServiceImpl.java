@@ -185,7 +185,6 @@ public class ItemServiceImpl implements ItemService {
 		
 		// Sanitize item description HTML string
 		// TODO: more check on tags used
-		// TODO: This is service's job
 		PolicyFactory policy = new HtmlPolicyBuilder()
 				.allowElements("b", "u", "i", "p", "br", "h1", "h2", "h3", "h4", "h5", "h6", "span", "ul", "li")
 				.allowAttributes("class")
@@ -234,52 +233,12 @@ public class ItemServiceImpl implements ItemService {
 
 		// If subCategory is changed, get it
 		SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(itemForm.getSubCategory());
-//		if (subCategoryId != item.getSubCategory().getId()) {
-//			SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(subCategoryId);
-//			item.setSubCategory(subCategory);
-//		}
 
 		// Save new images (produce an unique name for an item)
 		saveMultiPartFileImage(item, mainImage);
 		saveMultiPartFileImage(item, image1);
 		saveMultiPartFileImage(item, image2);
 		saveMultiPartFileImage(item, image3);
-//		if (!mainImage.isEmpty()) {
-//			byte[] mainImageBytes = null;
-//			try {
-//				mainImageBytes = mainImage.getBytes(); // Main image
-//			} catch (IOException e) {
-//				logger.debug("Error converting image for user " + user.getUserId());
-//			}
-//			item.setMainImage(saveImage(item, mainImageBytes));
-//		}
-//		if (!image1.isEmpty()) {
-//			byte[] image1Bytes = null;
-//			try {
-//				image1Bytes = image1.getBytes(); // Image 1
-//			} catch (IOException e) {
-//				logger.debug("Error converting image for user " + user.getUserId());
-//			}
-//			item.setImage1(saveImage(item, image1Bytes));
-//		}
-//		if (!image2.isEmpty()) {
-//			byte[] image2Bytes = null;
-//			try {
-//				image2Bytes = image2.getBytes(); // Image 2
-//			} catch (IOException e) {
-//				logger.debug("Error converting image for user " + user.getUserId());
-//			}
-//			item.setImage2(saveImage(item, image2Bytes));
-//		}
-//		if (!image3.isEmpty()) {
-//			byte[] image3Bytes = null;
-//			try {
-//				image3Bytes = image3.getBytes(); // Image 3
-//			} catch (IOException e) {
-//				logger.debug("Error converting image for user " + user.getUserId());
-//			}
-//			item.setImage3(saveImage(item, image3Bytes));
-//		}
 
 		item.setTitle(itemForm.getTitle());
 		item.setDescription(itemForm.getDescription());
@@ -290,7 +249,7 @@ public class ItemServiceImpl implements ItemService {
 		item.setHighlight(itemForm.isHighlight());
 		item.setAutoRenew(itemForm.isAutoRenew());
 
-		// If lat or lng are different from original, randomize the given ones
+		// If latitude or longitude are different from original, randomize the given ones
 		if (itemForm.getLatitude() != item.getLatitude() || itemForm.getLongitude() != item.getLongitude()) {
 			Double[] latLng = randomizeCoordinates(itemForm.getLatitude(), itemForm.getLongitude());
 			item.setLatitude(latLng[0]);
@@ -332,16 +291,6 @@ public class ItemServiceImpl implements ItemService {
 			throw new ItemNotFoundException(itemId);
 		return item;
 	}
-
-	// @Override
-	// public Page<Item> getItemByTitleAndSubCategory(String title, String
-	// subCategory, int page, int size) {
-	// if (subCategory != null && !subCategory.equalsIgnoreCase(""))
-	// return itemRepository.findByTitleAndSubCategory(title, subCategory, new
-	// PageRequest(page, size));
-	// else
-	// return itemRepository.findByTitle(title, new PageRequest(page, size));
-	// }
 
 	/**
 	 * For simplicity I will work with integers, but passing to repository
@@ -479,7 +428,7 @@ public class ItemServiceImpl implements ItemService {
 			try {
 				bytes = file.getBytes(); // Main image
 			} catch (IOException e) {
-				logger.debug("Error converting image");
+				logger.debug("Error getting bytes from image");
 			}
 			item.setMainImage(saveImage(item, bytes));
 		}

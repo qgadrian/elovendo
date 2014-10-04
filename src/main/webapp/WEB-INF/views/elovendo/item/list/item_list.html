@@ -50,11 +50,7 @@
 <body style="background-color:#FBFAF9;" onload="getLocation(); fillFilter(); popSub(); initAutoComplete()">
 
 	<!-- Header -->
-	<div th:replace="elovendo/header"></div>
-
-	<div id="favMesDiv" class="falert alert alert-info" style="display:none;">
-		<span id="favMes"></span>
-	</div>
+	<div th:include="elovendo/header"></div>
 
 	<div class="container">
 		<div class="row">

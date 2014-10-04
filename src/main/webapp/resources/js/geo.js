@@ -108,7 +108,7 @@ var placeSearch, autocomplete;
 			// initialize geosearch in index
 			var arr = [], l = document.links;
 			for(var i=0; i<l.length; i++) {
-			  console.log(l[i].href);
+//			  console.log(l[i].href);
 			  var ela = l[i].href;
 			  if (ela.indexOf("bazaar/category") > -1) {
 				  l[i].href = ela + "?lat=" + lat + "&lng=" + lng;
