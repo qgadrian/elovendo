@@ -88,7 +88,27 @@
 	</div>
 
 	<div class="container">
-		<div><h3>Información del anuncio</h3><hr class="hrStyle2" /></div>
+		<div>
+			<h3>Información del anuncio</h3>
+			<hr class="hrStyle2" />
+		</div>
+		
+		<div th:if="${insPoints}" class="alert alert-danger" role="alert">
+			<p class="text-center">
+				<strong th:text="#{Error.points.insufficient.title}">Insufficient points</strong>
+			</p>
+			<p class="text-center">
+				<span th:text="#{Error.points.insufficient.explain1}"></span>
+				<strong>
+				<span th:text="${user.points}"></span>
+				<span th:text="#{Error.points.insufficient.explain2}"></span>
+				</strong>
+				<span th:text="#{Error.points.insufficient.explain3}"></span>
+				<a href="/site/pricing/points" class="alert-link" 
+					th:text="#{Error.points.insufficient.explain4}">You should purchase more</a>
+			</p>
+		</div>
+		
 		<form class="form-horizontal" role="form" th:action="@{/bazaar/add/item}" method="post" enctype="multipart/form-data" >
 			<div class="form-group">
 				<label for="title" class="col-sm-2 control-label">Title</label> 
@@ -370,21 +390,25 @@
 			});
         </script>
 
-		<script type="text/javascript">
-		$("[name='geolocation']").bootstrapSwitch({
-			checked: true
-		});
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		var f = /*[[${item.featured}]]*/ false;
+		var h = /*[[${item.highlight}]]*/ false;
+		var a = /*[[${item.autoRenew}]]*/ false;
+		/*]]>*/
+		
+		console.log("lalalala " + f + " " + h + " " + a);
 		
 		$("[name='featured']").bootstrapSwitch({
-			checked: false
+			state: f
 		});
 		
 		$("[name='highlight']").bootstrapSwitch({
-			checked: false
+			state: h
 		});
 
 		$("[name='autoRenew']").bootstrapSwitch({
-			checked: false
+			state: a
 		});
 		 
 // 		$("[name='geolocation']").on('switchChange.bootstrapSwitch', function(event, state) {

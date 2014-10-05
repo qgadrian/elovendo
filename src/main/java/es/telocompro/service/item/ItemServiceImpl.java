@@ -19,6 +19,9 @@ import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -180,7 +183,11 @@ public class ItemServiceImpl implements ItemService {
 		if (user.getPoints() < totalPoints) throw new InsufficientPointsException();
 		else {
 			user.setPoints(user.getPoints() - totalPoints);
-			userService.updateUser(user);
+			user = userService.updateUser(user);
+			// Update session user with the new points balance
+			Authentication authentication = new UsernamePasswordAuthenticationToken(user, 
+					user.getPassword(), user.getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(authentication);
 		}
 		
 		// Sanitize item description HTML string
@@ -222,7 +229,7 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public Item updateItem(ItemForm itemForm, User user, MultipartFile mainImage,
 			MultipartFile image1, MultipartFile image2, MultipartFile image3) throws ItemNotFoundException,
-			NotUserItemException, SubCategoryNotFoundException {
+			NotUserItemException, SubCategoryNotFoundException, InsufficientPointsException {
 
 		if (!itemForm.getUser().equals(user))
 			throw new NotUserItemException(itemForm.getItemId(), user.getUserId());
@@ -233,6 +240,24 @@ public class ItemServiceImpl implements ItemService {
 
 		// If subCategory is changed, get it
 		SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(itemForm.getSubCategory());
+		
+		// Check if user's points are enough to purchase premium options selected
+		int totalPoints = 0;
+		if (itemForm.isFeatured()) totalPoints += Constant.OP_FEATURE_PRIZE;
+		if (itemForm.isHighlight()) totalPoints += Constant.OP_HIGLIGHT_PRIZE;
+		if (itemForm.isAutoRenew()) totalPoints += Constant.OP_AUTORENEW_PRIZE;
+
+		if (user.getPoints() < totalPoints) {
+			throw new InsufficientPointsException();
+		}
+		else {
+			user.setPoints(user.getPoints() - totalPoints);
+			user = userService.updateUser(user);
+			// Update session user with the new points balance
+			Authentication authentication = new UsernamePasswordAuthenticationToken(user, 
+					user.getPassword(), user.getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+		}
 
 		// Save new images (produce an unique name for an item)
 		saveMultiPartFileImage(item, mainImage);

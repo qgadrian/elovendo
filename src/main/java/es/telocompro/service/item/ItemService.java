@@ -168,7 +168,7 @@ public interface ItemService {
 
 	public Item updateItem(ItemForm itemForm, User user, MultipartFile mainImage,
 			MultipartFile image1, MultipartFile image2, MultipartFile image3) throws ItemNotFoundException,
-			NotUserItemException, SubCategoryNotFoundException;
+			NotUserItemException, SubCategoryNotFoundException, InsufficientPointsException;
 
 	/**
 	 * Deletes an item

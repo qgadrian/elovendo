@@ -137,8 +137,8 @@ public class ItemForm {
 		this.prize = prize;
 	}
 
-	public void setSubCategory(long subCategory) {
-		this.subCategory = subCategory;
+	public void setSubCategory(long subCategoryId) {
+		this.subCategory = subCategoryId;
 	}
 
 	public void setYoutubeVideo(String youtubeVideo) {

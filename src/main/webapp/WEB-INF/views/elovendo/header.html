@@ -162,10 +162,8 @@
 	$(document).ready(function() {
 		$.get("/elovendo/messages/getUnread", function(data) {
 			try {
-				console.log("checking for new messages");
 				document.getElementById('messageBadge').innerHTML = data;
 				if (data>0) {
-					console.log("There are message unread");
 					var al = document.createElement('div');
 					al.className = 'falert alert alert-success';
 					al.id = "favMesDiv";

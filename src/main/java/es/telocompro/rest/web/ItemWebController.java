@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,6 +63,8 @@ public class ItemWebController {
 	private CategoryService categoryService;
 	@Autowired
 	private FavoriteService favoriteService;
+	@Autowired
+	private MessageSource messageSource;
 
 	/**
 	 * FIND BY TITLE
@@ -251,81 +255,7 @@ public class ItemWebController {
 
 		return tmp;
 	}
-
-	/**
-	 * EDIT ITEM
-	 * 
-	 * @throws ItemNotFoundException
-	 * @throws NotUserItemException
-	 **/
-
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "edit/item/{itemId}", method = RequestMethod.GET)
-	public String editItemPage(Model model, @PathVariable long itemId) throws ItemNotFoundException,
-			NotUserItemException {
-
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		Item item = itemService.getItemById(itemId);
-		ItemForm itemForm = new ItemForm(item);
-
-		if (!item.getUser().equals(user))
-			throw new NotUserItemException(itemId, user.getUserId());
-
-		model.addAttribute("user", user);
-		model.addAttribute("item", itemForm);
-
-		List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
-		model.addAttribute("categories", categories);
-
-		List<SubCategory> subCategories = IteratorUtils.toList(categoryService.getAllSubCatByCategoryId(
-				item.getSubCategory().getCategory().getCategoryId()).iterator());
-		model.addAttribute("subCategories", subCategories);
-
-		return "elovendo/item/edit/edit_item";
-	}
-
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "edit/item/{itemId}", method = RequestMethod.POST)
-	public String processEditItemPage(Model model, 
-			@PathVariable long itemId,
-			@Valid @ModelAttribute(value = "item") ItemForm itemForm, 
-			BindingResult result, 
-			@RequestParam("mI") MultipartFile mainImage,
-			@RequestParam("i1") MultipartFile image1, 
-			@RequestParam("i2") MultipartFile image2,
-			@RequestParam("i3") MultipartFile image3) throws ItemNotFoundException, NotUserItemException,
-			SubCategoryNotFoundException {
-
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (result.hasErrors()) {
-			model.addAttribute("user", user);
-			model.addAttribute("item", itemForm);
-
-			List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
-			model.addAttribute("categories", categories);
-
-			List<SubCategory> subCategories = IteratorUtils.toList(categoryService.getAllSubCatByCategoryId(
-					itemForm.getCategory()).iterator());
-			model.addAttribute("subCategories", subCategories);
-
-			return "elovendo/item/edit/edit_item";
-		}
-		else { 
-			itemForm.setUser(user);
-			itemForm.setItemId(itemId);
-			itemService.updateItem(itemForm, user, mainImage, image1, image2, image3);
-			return "elovendo/item/item_create_successful";
-		}
-	}
-
+	
 	/**
 	 * ADD ITEMS
 	 * @throws UserNotFoundException 
@@ -377,8 +307,105 @@ public class ItemWebController {
 
 		} else {
 
-			itemService.addItem(itemForm, user, mainImage, image1, image2, image3);
+			try {
+				itemService.addItem(itemForm, user, mainImage, image1, image2, image3);
+			} catch (InsufficientPointsException e) {
+				@SuppressWarnings("unchecked")
+				List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
+				model.addAttribute("categories", categories);
+				model.addAttribute("user", user);
+				model.addAttribute("insPoints", true);
+				return "elovendo/item/add_item";
+			}
 
+			return "elovendo/item/item_create_successful";
+		}
+	}
+
+
+	/**
+	 * EDIT ITEM
+	 * 
+	 * @throws ItemNotFoundException
+	 * @throws NotUserItemException
+	 **/
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "edit/item/{itemId}", method = RequestMethod.GET)
+	public String editItemPage(Model model, @PathVariable long itemId) throws ItemNotFoundException,
+			NotUserItemException {
+
+		User user = null;
+		SecurityContext context = SecurityContextHolder.getContext();
+		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		Item item = itemService.getItemById(itemId);
+		ItemForm itemForm = new ItemForm(item);
+
+		if (!item.getUser().equals(user))
+			throw new NotUserItemException(itemId, user.getUserId());
+
+		model.addAttribute("user", user);
+		model.addAttribute("item", itemForm);
+
+		List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
+		model.addAttribute("categories", categories);
+		List<SubCategory> subCategories = IteratorUtils.toList(categoryService.getAllSubCatByCategoryId(
+				itemForm.getCategory()).iterator());
+		model.addAttribute("subCategories", subCategories);
+
+		return "elovendo/item/edit/edit_item";
+	}
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "edit/item/{itemId}", method = RequestMethod.POST)
+	public String processEditItemPage(Model model, 
+			@PathVariable long itemId,
+			@Valid @ModelAttribute(value = "item") ItemForm itemForm, 
+			BindingResult result, 
+			@RequestParam("mI") MultipartFile mainImage,
+			@RequestParam("i1") MultipartFile image1, 
+			@RequestParam("i2") MultipartFile image2,
+			@RequestParam("i3") MultipartFile image3) throws ItemNotFoundException, NotUserItemException,
+			SubCategoryNotFoundException {
+
+		User user = null;
+		SecurityContext context = SecurityContextHolder.getContext();
+		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (result.hasErrors()) {
+			model.addAttribute("user", user);
+			model.addAttribute("item", itemForm);
+
+			List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
+			model.addAttribute("categories", categories);
+			List<SubCategory> subCategories = IteratorUtils.toList(categoryService.getAllSubCatByCategoryId(
+					itemForm.getCategory()).iterator());
+			model.addAttribute("subCategories", subCategories);
+
+			return "elovendo/item/edit/edit_item";
+		}
+		else { 
+			itemForm.setUser(user);
+			itemForm.setItemId(itemId);
+			
+			try {
+				itemService.updateItem(itemForm, user, mainImage, image1, image2, image3);
+			} catch (InsufficientPointsException e) {
+				List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
+				model.addAttribute("categories", categories);
+				List<SubCategory> subCategories = IteratorUtils.toList(categoryService.getAllSubCatByCategoryId(
+						itemForm.getCategory()).iterator());
+				model.addAttribute("subCategories", subCategories);
+
+				model.addAttribute("user", user);
+				model.addAttribute("item", itemForm);
+				model.addAttribute("insPoints", true);
+				return "elovendo/item/add_item";
+			}
+			
 			return "elovendo/item/item_create_successful";
 		}
 	}

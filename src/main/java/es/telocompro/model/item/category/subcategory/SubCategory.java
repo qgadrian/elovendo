@@ -44,4 +44,9 @@ public class SubCategory {
     public String getSubCategoryName() {
         return subCategoryName;
     }
+
+	@Override
+	public String toString() {
+		return "SubCategory [id=" + id + ", category=" + category + ", subCategoryName=" + subCategoryName + "]";
+	}
 }
