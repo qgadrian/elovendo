@@ -166,7 +166,11 @@
 				<label for="subCategory" class="col-sm-2 control-label">SubCategoría</label>
 				<div class="col-sm-10">
 					<select th:unless="${#fields.hasErrors('item.subCategory')}" 
-						id="subCategory" class="form-control" name="subCategory"> </select>
+						id="subCategory" class="form-control" name="subCategory"> 
+						<option th:each="subCategory : ${subCategories}" 
+					          th:value="${subCategory.id}" 
+					          th:text="${subCategory.subCategoryName}">SubCategory</option>
+					</select>
 					<div th:if="${#fields.hasErrors('item.subCategory')}" class="form-group has-error">
 						<label class="control-label" for="prize"
 							th:errors="${item.subCategory}" style="text-align: center!important">Input with error</label> 
