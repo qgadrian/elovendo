@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -39,6 +40,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -89,6 +92,8 @@ public class UserWebController {
 	private FavoriteService favoriteService;
 	@Autowired
 	private MessageSource messageSource;
+	@Resource(name="sessionRegistry")
+	private SessionRegistry sessionRegistry;
 
 	/**
 	 * USER STUFF
@@ -568,22 +573,39 @@ public class UserWebController {
 
 					if (paymentStatus.equalsIgnoreCase(PAYMENT_COMPLETED)) {
 						logger.debug("Payment received: " + params.get("txn_id"));
+						logger.error("Payment received: " + params.get("txn_id"));
+
 						User user = userService.findUserById(userId);
+
 						int points = user.getPoints() + item_number;
 						user.setPoints(points);
 						user = userService.updateUser(user);
 						
-						Authentication authentication = new UsernamePasswordAuthenticationToken(user, 
-								user.getPassword(), user.getAuthorities());
-						SecurityContextHolder.getContext().setAuthentication(authentication);
+//						List<SessionInformation> li = sessionRegistry.getAllSessions(user, false);
+//						for (SessionInformation si : li) {
+//							sessionRegistry.registerNewSession(si.getSessionId(), user);
+//						}
+						
+						@SuppressWarnings({ "rawtypes", "unchecked" })
+						List<User> lwi = (ArrayList<User>) (ArrayList) sessionRegistry.getAllPrincipals();
+						for (User u : lwi) {
+							if (u.equals(user)) {
+								List<SessionInformation> li = sessionRegistry.getAllSessions(u, false);
+								u.setPoints(user.getPoints());
+								for (SessionInformation si : li)
+									sessionRegistry.registerNewSession(si.getSessionId(), u);
+							}
+						}
 
 					}
 				} catch (UserNotFoundException e) {
-					logger.error("PAYMENT FROM GOSTH: " + e.getMessage());
+					logger.error("Payment from non existing user: " + userId);
+				} catch (PurchaseDuplicateException e) {
+					logger.error("Purchase " + params.get("txn_id") + " duplicated");
 				}
 
 			} else {
-				logger.debug("Payment not confirmed for " + params.get("txn_id"));
+				logger.error("Payment not confirmed for " + params.get("txn_id"));
 			}
 
 		} catch (UnsupportedEncodingException e) {

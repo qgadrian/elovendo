@@ -1,5 +1,6 @@
 package es.telocompro.model.user;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -31,7 +32,7 @@ import es.telocompro.util.SocialMediaService;
 
 @Entity
 @Table(name = "userprofile")
-public class User implements UserDetails {
+public class User implements UserDetails, Principal {
 	private static final long serialVersionUID = -8564691953630292818L;
 
 	@Id
@@ -322,6 +323,21 @@ public class User implements UserDetails {
 
 		User user = (User) obj;
 		return user.getLogin().equals(this.login);
+	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", socialCompositeKey=" + socialCompositeKey + ", login=" + login
+				+ ", password=" + password + ", firstName=" + firstName + ", lastName=" + lastName + ", address="
+				+ address + ", phone=" + phone + ", email=" + email + ", whatssapUser=" + whatssapUser + ", avatar="
+				+ avatar + ", avatar200h=" + avatar200h + ", registerDate=" + registerDate + ", userValue=" + userValue
+				+ ", points=" + points + ", role=" + role + ", enabled=" + enabled + ", signInProvider="
+				+ signInProvider + "]";
+	}
+
+	@Override
+	public String getName() {
+		return this.login;
 	}
 
 }

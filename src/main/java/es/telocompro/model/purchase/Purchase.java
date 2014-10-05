@@ -138,4 +138,13 @@ public class Purchase {
 	public void setPayment_status(String payment_status) {
 		this.payment_status = payment_status;
 	}
+
+	@Override
+	public String toString() {
+		return "Purchase [txn_id=" + txn_id + ", payment_date=" + payment_date + ", user=" + user + ", payment_status="
+				+ payment_status + ", item_name=" + item_name + ", ipn_track_id=" + ipn_track_id + ", receiver_id="
+				+ receiver_id + ", item_number=" + item_number + ", mc_gross=" + mc_gross + ", mc_fee=" + mc_fee
+				+ ", first_name=" + first_name + ", last_name=" + last_name + ", payer_email=" + payer_email
+				+ ", residence_country=" + residence_country + "]";
+	}
 }

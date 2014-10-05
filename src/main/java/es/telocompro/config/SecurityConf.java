@@ -1,14 +1,28 @@
 package es.telocompro.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
 import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
+import org.springframework.security.web.session.ConcurrentSessionFilter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import es.telocompro.rest.handler.UserLogoutSuccessHandler;
 import es.telocompro.util.ApiRequestMatcher;
@@ -28,6 +42,9 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 //	DataSource dataSource;
 //	@Autowired
 //    TextEncryptor textEncryptor;
+	
+	@Autowired
+	CompositeSessionAuthenticationStrategy compositeSessionAuthenticationStrategy;
 	
 	@Autowired
     public void configureGlobal(UserDetailsService userDetailsService, AuthenticationManagerBuilder auth) 
@@ -79,7 +96,10 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             	.deleteCookies("jsessionid", "JSESSIONID")
             	.permitAll()
             .and()
-            	.rememberMe();
+            	.rememberMe()
+            .and()
+            		.sessionManagement()
+            			.sessionAuthenticationStrategy(compositeSessionAuthenticationStrategy);
 //            .and()
 //            	.apply(new SpringSocialConfigurer());
 //            	.and()
@@ -96,6 +116,43 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 //        http.requiresChannel().anyRequest().requiresSecure();
     }
     
+    @Bean
+    public CompositeSessionAuthenticationStrategy compositeSessionAuthenticationStrategy(
+    		ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlAuthenticationStrategy, 
+    		SessionFixationProtectionStrategy sessionFixationProtectionStrategy, 
+    		RegisterSessionAuthenticationStrategy registerSessionAuthenticationStrategy) {
+    	List<SessionAuthenticationStrategy> strategies = new ArrayList<>();
+    	strategies.add(concurrentSessionControlAuthenticationStrategy);
+    	strategies.add(sessionFixationProtectionStrategy);
+    	strategies.add(registerSessionAuthenticationStrategy);
+    	return new CompositeSessionAuthenticationStrategy(strategies);
+    }
+    
+    @Bean
+    public SessionFixationProtectionStrategy sessionFixationProtectionStrategy() {
+    	return new SessionFixationProtectionStrategy();
+    }
+    
+    @Bean
+    public RegisterSessionAuthenticationStrategy registerSessionAuthenticationStrategy(SessionRegistry sessionRegistry) {
+    	return new RegisterSessionAuthenticationStrategy(sessionRegistry);
+    }
+    
+    @Bean
+    public ConcurrentSessionControlAuthenticationStrategy strategy(SessionRegistry sessionRegistry) {
+    	return new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
+    }
+   
+    @Bean
+    public ConcurrentSessionFilter concurrencyFilter(SessionRegistry sessionRegistry) {
+    	return new ConcurrentSessionFilter(sessionRegistry, "/logout");
+    }
+    
+    @Bean
+    public SessionRegistry sessionRegistry() {
+    	return new SessionRegistryImpl();
+    }
+    
 //    @Bean
 //    public PersistentTokenRepository persistentTokenRepository() {
 //    	JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
@@ -109,7 +166,6 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 //    }
 
 }
-
 
 
 //@Autowired
