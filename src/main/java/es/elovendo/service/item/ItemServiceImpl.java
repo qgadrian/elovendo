@@ -357,8 +357,8 @@ public class ItemServiceImpl implements ItemService {
 		if (subCategory.equalsIgnoreCase(Constant.ALL_PATH))
 			subCategory = "";
 
-		logger.error("dis : " + dis + " ; lat: " + lat + " ; lng: " + lng + " cat: " + subCategory + " min "
-				+ bPrizeMin + " max " + bPrizeMax);
+//		logger.debug("dis : " + dis + " ; lat: " + lat + " ; lng: " + lng + " cat: " + subCategory + " min "
+//				+ bPrizeMin + " max " + bPrizeMax);
 
 		return itemRepository.findByParams(title, subCategory, lat, lng, dis, bPrizeMin.doubleValue(),
 				bPrizeMax.doubleValue(), pageRequest);

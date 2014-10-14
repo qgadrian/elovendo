@@ -3,9 +3,9 @@
 //  window.location = $(this).val();
 //});
 
-$(document).ready( function() {
-	var categorySelect = document.getElementById("categorySelect");
-	var provinceSelect = document.getElementById("categorySelect");
+//$(document).ready( function() {
+//	var categorySelect = document.getElementById("categorySelect");
+//	var provinceSelect = document.getElementById("categorySelect");
 	
 //	$.get("/elovendo/messages/getUnread", function(data) {
 //		try {
@@ -27,35 +27,27 @@ $(document).ready( function() {
 //		} catch(err) {}
 //	});
 	
-	$('#categorySelect').change( function() {
-		var select = $(this).val();
-		
-		if (select != "")
-			location.href = "/bazaar/" + $(this).val() + getUrlParams();
-	});
+//	$('#categorySelect').change( function() {
+//		var select = $(this).val();
+//		
+//		if (select != "")
+//			location.href = "/bazaar/" + $(this).val() + getUrlParams();
+//	});
 	
-	$('#subCategory').change( function() {
-		console.log('sub ' + $(this).innerHTML);
-		var select = $(this).val();
-		if (select != "") {
-			location.href = "/bazaar/sub/" + $('#subCategory option:selected').text() + getUrlParams();
-		}
-	});
-	
-	var p = "http://www.elovendo.com/bazaar/";
-	var suf = "getsubs/";
-	$('#categoryFilter').change( function() {
-		var select = $(this).val();
-		
-		if (select != "")
-			location.href = "/bazaar/category/" + $(this).val() + getUrlParams();
-		else
-			location.href = "/bazaar/all" + getUrlParams();
-	});
-});
+//	var p = "http://www.elovendo.com/bazaar/";
+//	var suf = "getsubs/";
+//	$('#categoryFilter').change( function() {
+//		var select = $(this).val();
+//		
+//		if (select != "")
+//			location.href = "/bazaar/category/" + $(this).val() + getUrlParams();
+//		else
+//			location.href = "/bazaar/all" + getUrlParams();
+//	});
+//});
 
 function setRad(dis) {
-	console.log("ok");
+//	console.log("ok");
 	document.getElementById('dis').value = dis;
 	
 	var mi = getURLParameter('min');
@@ -86,21 +78,12 @@ function setRad(dis) {
 }
 
 function popSub() {
-	var hodor = document.URL;
-	var dog;
-	if (hodor.indexOf("bazaar/category") > -1) {
-		var sa = hodor.lastIndexOf("/")+1;
-		var jim = hodor.indexOf("?");
-		dog = hodor.substr(sa,jim-sa);
-		// FIXME: Work with index
-		if (dog.indexOf("ecnolog") > -1) dog = "Tecnología";
-	}
+	var cat = $("#category").find(":selected").val();
 	
-	$("#categoryFilter").val(dog);
+//	$("#categoryFilter").val(dog);
 	
-	var p = "http://www.elovendo.com/bazaar/";
-	var suf = "getsubs/s/";
-	$.getJSON(p+suf+dog, function(json) {
+	var p = "http://www.elovendo.com/bazaar/getsubs/";
+	$.getJSON(p+cat, function(json) {
 		jQuery.each(json.output, function() {
 			var o = document.createElement('option');
 			o.value = this.id;
@@ -154,10 +137,34 @@ function dieRmv(val) {
 	$('#removeModal').modal('hide');
 }
 
-function submitSearchForm() {
-	quizSearchForm = jQuery("#prizeForm");
-	//disable empty fields so they don't clutter up the url
-	quizSearchForm.find(':input[value=""]').attr('disabled', true);
-	
-	quizSearchForm.submit();
+//function submitSearchForm() {
+//	console.log("submiting prize");
+////	form = $("#prizeForm");
+////	var params = getUrlParams();
+////	console.log("params " + params);
+////	
+////	form.submit(function(e) {
+////		console.log("submitted form " + e);
+////	})
+//	return true;
+////	//disable empty fields so they don't clutter up the url
+////	form.find(':input[value=""]').attr('disabled', true);
+//}
+
+function removeParam(key, sourceURL) {
+    var rtn = sourceURL.split("?")[0],
+        param,
+        params_arr = [],
+        queryString = (sourceURL.indexOf("?") !== -1) ? sourceURL.split("?")[1] : "";
+    if (queryString !== "") {
+        params_arr = queryString.split("&");
+        for (var i = params_arr.length - 1; i >= 0; i -= 1) {
+            param = params_arr[i].split("=")[0];
+            if (param === key) {
+                params_arr.splice(i, 1);
+            }
+        }
+        rtn = rtn + "?" + params_arr.join("&");
+    }
+    return rtn;
 }

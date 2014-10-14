@@ -16,6 +16,8 @@ import java.math.BigDecimal;
 import java.sql.Blob;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -146,14 +148,11 @@ public interface ItemService {
 
 	/**
 	 * Returns random 'maxItems' items
-	 * 
 	 * @param maxItems
-	 *            Max items to retrieve
-	 * @param subCategory
-	 *            @Nullable SubCategory to find items.
-	 * @return Randomized items
+	 * @param filter SubCategory or category name. This parameter can be null to get all items
+	 * @return
 	 */
-	public List<Item> getRandomFeaturedItems(int maxItems, String filter);
+	public List<Item> getRandomFeaturedItems(int maxItems, @Nullable String filter);
 
 	/**
 	 * Updates an item

@@ -38,6 +38,7 @@
 <!-- Styles -->
 <link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
 
+<script src="/js/purl.js"></script>
 <script src="/js/filter.js"></script>
 <script src="/js/bootstrap-slider.js"></script>
 <script src="/js/geo.js"></script>
@@ -137,7 +138,7 @@
 							<label for="exampleInputEmail1">Subcategoría</label>
 							<form>
 								<select id="subCategory" class="form-control">
-									<option value="0" th:text="#{Form.subCategory.select.default}"> Select </option> 
+									<option value="0" th:text="#{Form.subCategory.select.default}"> Select</option> 
 									<option th:each="subCategory : ${subCategories}" 
 										th:value="${subCategory.id}" 
 										th:text="${subCategory.subCategoryName}"> </option>
@@ -151,16 +152,16 @@
 						<div class="form-group">
 							<label for="exampleInputEmail1">Precio</label>
 							<form class="form-inline" id="prizeForm"
-								th:action="@{'/bazaar/' + ${url}}" method="GET" name="prizeForm"
-								onsubmit="submitSearchForm()">
-									<input type="number" min="0" class="form-control"
+								th:action="@{'/bazaar/' + ${url}}" method="GET" name="prizeForm">
+									<input type="number" min="0" class="form-control" id="prizeMin"
 										placeholder="Mínimo" th:value="${prizeMin}"
 										name="min" style="max-width:100px;"/> 
-									<input type="number" min="0" class="form-control"
+									<input type="number" min="0" class="form-control" id="prizeMax"
 										placeholder="Máximo" th:value="${prizeMax}"
 										name="max" style="max-width:100px;"/>
 								<button type="submit" class="btn btn-default">Filtrar precio</button>
 							</form>
+							<!-- onsubmit="return submitSearchForm()" -->
 						</div>
 					</div>
 				</div>
@@ -411,20 +412,62 @@
 	/*<![CDATA[*/
 	var okm = /*[[#{Alert.itemList.favorite.ok}]]*/ 'Added to favorite';
 	var fm = /*[[#{Alert.itemList.favorite.error}]]*/ 'Error adding to favorite. Please try again.';
-	var cat = /*[[${category.categoryId}]]*/ '0';
-	var sCat = /*[[${subCategoryId}]]*/ 0;
+	var cat = /*[[${categoryId}]]*/ '0';
+	var sCat = /*[[${subCategoryId}]]*/ '0';
 	/*]]>*/
 	
 	$(document).ready( function() {
 		$('#category').val(cat);
 		$('#subCategory').val(sCat);
+		
+		$('#prizeForm').submit(function(e) {
+			var destUrl = e.currentTarget.action + getUrlParams();
+			var min = $('#prizeMin').val();
+			var max = $('#prizeMax').val();
+			
+			var currMin = $.url(destUrl).param('min');
+			if (min != '') {
+				if (getURLParameter('min') == null)
+					destUrl = destUrl + "&min=" + min;
+				else destUrl = destUrl.replace('min='+currMin, 'min='+min);
+			} else if (currMin != '') {
+				destUrl = removeParam('min', destUrl);
+			}
+			
+			var currMax = $.url(destUrl).param('max');
+			if (max != '') {
+				if (getURLParameter('max') == null)
+					destUrl = destUrl + "&max=" + max;
+				else destUrl = destUrl.replace('max='+currMax, 'max='+max);
+			} else if (currMax != '') {
+				destUrl = removeParam('max', destUrl);
+			}
+			
+			location.href = destUrl;
+			return false;
+		})
 	});
 	
 	$('#category').change( function() {
 		var select = $(this).find(":selected").text();
-		console.log("cat changed " + $(this).find(":selected").text());
+		var selVar = $(this).find(":selected").val();
+// 		console.log("cat changed " + $(this).find(":selected").text());
 		if (select != "")
+			if (selVar == 0)
+				location.href = "/bazaar/category/all" + getUrlParams();
+			else
+				location.href = "/bazaar/category/" + select + getUrlParams();
+	});
+	
+	$('#subCategory').change( function() {
+// 		console.log("subChanged to " + $(this).val());
+		var select = $(this).val();
+		if (select != 0) {
+			location.href = "/bazaar/sub/" + $('#subCategory option:selected').text() + getUrlParams();
+		} else {
+			var select = $('#category').find(":selected").text();
 			location.href = "/bazaar/category/" + select + getUrlParams();
+		}
 	});
 	
 	function favClick(value, d) {
@@ -451,9 +494,9 @@
 
 		var sendMessageUrl = "/elovendo/messages/send";
 
-		function mouseHover() {
-			console.log("rep hover");
-		}
+// 		function mouseHover() {
+// 			console.log("rep hover");
+// 		}
 
 		$('#myModal').on('hidden', function() {
 			$('#messageText').value = '';
@@ -483,8 +526,8 @@
 		function getLocation() {
 			var lat = getURLParameter('lat');
 			var lng = getURLParameter('lng');
-			console.log(lat);
-			console.log(lng);
+// 			console.log(lat);
+// 			console.log(lng);
 			if (lat != null && lng != null) {
 				document.getElementById('lat').value = lat;
 				document.getElementById('lng').value = lng;
@@ -495,8 +538,11 @@
 
 		function fillFilter() {
 			var dis = getURLParameter('dis');
-			if (dis != null)
-				document.getElementById('dis').value = dis;
+			if (dis != null) document.getElementById('dis').value = dis;
+			var min = getURLParameter('min');
+			if (min != null) document.getElementById('prizeMin').value = min;
+			var max = getURLParameter('max');
+			if (max != null) document.getElementById('prizeMax').value = max;
 		}
 
 		function getPosition(position) {

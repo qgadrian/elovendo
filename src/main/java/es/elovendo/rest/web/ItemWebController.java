@@ -101,6 +101,54 @@ public class ItemWebController {
 
 		return "elovendo/item/list/item_list";
 	}
+	
+	/**
+	 * FIND ALL ITEMS
+	 */
+
+	@RequestMapping(value = "category/all", method = RequestMethod.GET)
+	public String allItemList(Model model,
+			@RequestParam(value = "title", required = false, defaultValue = "") String title,
+			@RequestParam(value = "dis", required = false, defaultValue = "0") double dis,
+			@RequestParam(value = "lat", required = false, defaultValue = "0") double lat,
+			@RequestParam(value = "lng", required = false, defaultValue = "0") double lng,
+			@RequestParam(value = "min", required = false, defaultValue = "0") int prizeMin,
+			@RequestParam(value = "max", required = false, defaultValue = "0") int prizeMax,
+			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
+			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) 
+					throws CategoryNotFoundException {
+
+		model.addAttribute("featuredItems", 
+				itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, null));
+
+		String urlLocation = "category/all";
+		model.addAttribute("url", urlLocation);
+		
+		model.addAttribute("categoryId", 0);
+		model.addAttribute("subCategoryId", 0);
+
+		@SuppressWarnings("unchecked")
+		List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
+		model.addAttribute("categories", categories);
+
+		if (prizeMin != 0)
+			model.addAttribute("prizeMin", prizeMin);
+		if (prizeMax != 0)
+			model.addAttribute("prizeMax", prizeMax);
+
+		Page<Item> p = itemService.getItemsByParams(title, Constant.ALL_PATH, dis, lat, lng, 
+				prizeMin, prizeMax, page, size);
+
+		String fixedUrl = fixPaginationUrl(Constant.ALL_PATH, title, dis, lat, lng, prizeMin, prizeMax);
+
+		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixedUrl);
+		List<Item> items = p.getContent();
+
+		model.addAttribute("page", pageWrapper);
+		model.addAttribute("itemsList", items);
+
+		return "elovendo/item/list/item_list";
+	}
 
 	/**
 	 * FIND BY CATEGORY
@@ -125,7 +173,8 @@ public class ItemWebController {
 		model.addAttribute("url", urlLocation);
 		
 		Category category = categoryService.getCategoryByCategoryName(categoryName);
-		model.addAttribute("category", category);
+//		model.addAttribute("category", category);
+		model.addAttribute("categoryId", category.getCategoryId());
 		model.addAttribute("subCategoryId", 0);
 
 		@SuppressWarnings("unchecked")
@@ -174,7 +223,8 @@ public class ItemWebController {
 		String urlLocation = "sub/" + subCategoryName;
 		model.addAttribute("url", urlLocation);
 		Category category = categoryService.getCategoryBySubCategoryName(subCategoryName);
-		model.addAttribute("category", category);
+//		model.addAttribute("category", category);
+		model.addAttribute("categoryId", category.getCategoryId());
 		SubCategory subCategory = categoryService.getSubCategoryByName(subCategoryName);
 		model.addAttribute("subCategoryId", subCategory.getId());
 
