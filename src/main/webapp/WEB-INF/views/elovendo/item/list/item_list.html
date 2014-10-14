@@ -121,10 +121,10 @@
 						<div class="form-group">
 							<label for="exampleInputEmail1">Categoría</label>
 							<form>
-								<select id="categoryFilter" class="form-control">
-									<option value="all"> Todas las categorías </option> 
+								<select id="category" class="form-control">
+									<option value="0" th:text="#{Form.category.select.default}"> All categories </option> 
 									<option th:each="category : ${categories}" 
-									th:value="${category.categoryName}"  th:text="${category.categoryName}"> 
+									th:value="${category.categoryId}"  th:text="${category.categoryName}"> 
 									Category </option>
 								</select>
 							</form>
@@ -137,10 +137,10 @@
 							<label for="exampleInputEmail1">Subcategoría</label>
 							<form>
 								<select id="subCategory" class="form-control">
-<!-- 									<option value=""> Selecciona subcategoría </option>  -->
-<!-- 									<option th:each="subCategory : ${subCategories}"  -->
-<!-- 									th:value="${subCategory.subCategoryName}"  th:text="${subCategory.subCategoryName}">  -->
-<!-- 									SubCategory </option> -->
+									<option value="0" th:text="#{Form.subCategory.select.default}"> Select </option> 
+									<option th:each="subCategory : ${subCategories}" 
+										th:value="${subCategory.id}" 
+										th:text="${subCategory.subCategoryName}"> </option>
 								</select>
 							</form>
 						</div>
@@ -411,7 +411,21 @@
 	/*<![CDATA[*/
 	var okm = /*[[#{Alert.itemList.favorite.ok}]]*/ 'Added to favorite';
 	var fm = /*[[#{Alert.itemList.favorite.error}]]*/ 'Error adding to favorite. Please try again.';
+	var cat = /*[[${category.categoryId}]]*/ '0';
+	var sCat = /*[[${subCategoryId}]]*/ 0;
 	/*]]>*/
+	
+	$(document).ready( function() {
+		$('#category').val(cat);
+		$('#subCategory').val(sCat);
+	});
+	
+	$('#category').change( function() {
+		var select = $(this).find(":selected").text();
+		console.log("cat changed " + $(this).find(":selected").text());
+		if (select != "")
+			location.href = "/bazaar/category/" + select + getUrlParams();
+	});
 	
 	function favClick(value, d) {
 		var f = value;
