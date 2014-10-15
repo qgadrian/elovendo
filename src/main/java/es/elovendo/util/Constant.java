@@ -16,6 +16,12 @@ public class Constant {
 	public static final int ITEMS_PER_PAGE = 15;
 	public static final String S_ITEMS_PER_PAGE = "15";
 	
+	/**
+	 * Category - SubCategory
+	 */
+	public static final String CATEGORY = "category";
+	public static final String SUBCATEGORY = "subCategory";
+	
 	/** DEFAULT RADIUS SEARCH (in KM) */
 	public static final double DEFAULT_RADIUS_SEARCH = 5;
 	

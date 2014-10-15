@@ -68,10 +68,11 @@ public class ItemWebController {
 
 	/**
 	 * FIND BY TITLE
+	 * @throws CategoryNotFoundException 
 	 */
 	@RequestMapping(value = "search", method = RequestMethod.GET)
 	public String itemListByTitleSearchPage(Model model,
-			@RequestParam(value = "subcategory", required = false, defaultValue = "") String subCategory,
+			@RequestParam(value = "category", required = false, defaultValue = "") long categoryId,
 			@RequestParam("title") String title,
 			@RequestParam(value = "dis", required = false, defaultValue = "0") double dis,
 			@RequestParam(value = "lat", required = false, defaultValue = "0") double lat,
@@ -79,19 +80,24 @@ public class ItemWebController {
 			@RequestParam(value = "min", required = false, defaultValue = "0") int prizeMin,
 			@RequestParam(value = "max", required = false, defaultValue = "0") int prizeMax,
 			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
-			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) {
+			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) 
+					throws CategoryNotFoundException {
 
-		model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, subCategory));
+		model.addAttribute("featuredItems", itemService
+				.getRandomFeaturedItemsFromCategoryId(Constant.MAX_RANDOM_ITEMS, categoryId));
 
 		@SuppressWarnings("unchecked")
 		List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
 		model.addAttribute("categories", categories);
 
-		// FIXME: Broken search
-		Page<Item> p = itemService.getItemsByParams(title, subCategory, dis, lat, lng, prizeMin, prizeMax, page, size);
+		model.addAttribute("categoryId", categoryId);
+
+//		Category category = categoryService.getCategoryByCategoryId(categoryId);
+		Page<Item> p = itemService.getItemsByParams(title, categoryId, Constant.CATEGORY, dis, lat, 
+				lng, prizeMin, prizeMax, page, size);
 
 		// Quick workaround for manage pagination with searches
-		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixPaginationUrl(subCategory, title, dis, lat, lng,
+		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixPaginationUrl(categoryId, title, dis, lat, lng,
 				prizeMin, prizeMax));
 
 		List<Item> items = p.getContent();
@@ -313,6 +319,23 @@ public class ItemWebController {
 			int prizeMin, int prizeMax) {
 
 		String tmp = categoryName + "?lat=" + lat + "&lng=" + lng;
+
+		if (!title.equals(""))
+			tmp = tmp.concat("&title=" + title);
+		if (dis > 0)
+			tmp = tmp.concat("&dis=" + dis);
+		if (prizeMin > 0)
+			tmp = tmp.concat("&min=" + prizeMin);
+		if (prizeMax > 0)
+			tmp = tmp.concat("&max=" + prizeMax);
+
+		return tmp;
+	}
+	
+	private String fixPaginationUrl(long categoryId, String title, double dis, double lat, double lng,
+			int prizeMin, int prizeMax) {
+
+		String tmp = "search?category=" + categoryId + "&lat=" + lat + "&lng=" + lng;
 
 		if (!title.equals(""))
 			tmp = tmp.concat("&title=" + title);

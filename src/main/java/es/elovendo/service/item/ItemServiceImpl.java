@@ -342,7 +342,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Page<Item> getItemsByParams(String title, String subCategory, double dis, double lat, double lng,
+	public Page<Item> getItemsByParams(String title, String name, double dis, double lat, double lng,
 			int prizeMin, int prizeMax, int page, int size) {
 
 		// Page Request
@@ -354,15 +354,37 @@ public class ItemServiceImpl implements ItemService {
 		if (dis <= 0)
 			dis = Constant.DEFAULT_RADIUS_SEARCH;
 
-		if (subCategory.equalsIgnoreCase(Constant.ALL_PATH))
-			subCategory = "";
+		if (name.equalsIgnoreCase(Constant.ALL_PATH))
+			name = "";
 
 //		logger.debug("dis : " + dis + " ; lat: " + lat + " ; lng: " + lng + " cat: " + subCategory + " min "
 //				+ bPrizeMin + " max " + bPrizeMax);
 
-		return itemRepository.findByParams(title, subCategory, lat, lng, dis, bPrizeMin.doubleValue(),
+		return itemRepository.findByParams(title, name, lat, lng, dis, bPrizeMin.doubleValue(),
 				bPrizeMax.doubleValue(), pageRequest);
 
+	}
+	@Override
+	public Page<Item> getItemsByParams(String title, long id, String type, double dis, double lat, double lng,
+			int prizeMin, int prizeMax, int page, int size) {
+		
+		// Page Request
+		PageRequest pageRequest = new PageRequest(page, size);
+
+		BigDecimal bPrizeMin = prizeMin > 0 ? new BigDecimal(prizeMin) : new BigDecimal(0);
+		BigDecimal bPrizeMax = prizeMin > prizeMax ? new BigDecimal(0) : new BigDecimal(prizeMax);
+
+		if (dis <= 0)
+			dis = Constant.DEFAULT_RADIUS_SEARCH;
+
+		if (type.equalsIgnoreCase(Constant.CATEGORY)) {
+			return itemRepository.findByParams(title, id, true, lat, lng, dis, bPrizeMin.doubleValue(),
+					bPrizeMax.doubleValue(), pageRequest);
+		} else {
+			return itemRepository.findByParams(title, id, false, lat, lng, dis, bPrizeMin.doubleValue(),
+					bPrizeMax.doubleValue(), pageRequest);
+		}
+		
 	}
 
 	public List<Item> getRandomFeaturedItems(int maxItems, String filter) {
@@ -370,6 +392,13 @@ public class ItemServiceImpl implements ItemService {
 			return itemRepository.findRandomFeaturedItemsByFilter(new PageRequest(0, maxItems), filter);
 		else
 			return itemRepository.findRandomFeaturedItems(new PageRequest(0, maxItems));
+	}
+
+	@Override
+	public List<Item> getRandomFeaturedItemsFromCategoryId(int maxItems, long categoryId) {
+		PageRequest request = new PageRequest(0, maxItems);
+		if (categoryId == 0) return itemRepository.findRandomFeaturedItems(request);
+		else  return itemRepository.findRandomFeaturedItemsByCategoryId(categoryId, request);
 	}
 
 	@Override

@@ -48,7 +48,7 @@
 			
 			<div class="row">
 				<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px; height:100px;">
-					<img src="/images/webimg/logo-full-200h.png" style="height:100px;"/>
+					<img src="/images/webimg/logo-full-200h.png" style="height:100px;"/> beta
 				</div>
 			</div>
 			
@@ -60,12 +60,13 @@
 									<input type="text" class="form-control input-lg" placeholder="¿Qué quieres buscar?" 
 										required="required" id="srch-term" name="title"/>
 									<div class="input-group-btn">
-										<select id="subCategorySelect" name="subcategory" class="btn btn-default input-lg" 
+										<select id="categoryIndex" name="category" class="btn btn-default input-lg" 
 										form="search" style="background-color:#FFF;">
-											<option selected="selected" value="">Todas las categorías</option>
-											<option th:each="subCategory : ${subCategories}" 
-											th:value="${subCategory.subCategoryName}" th:text="${subCategory.subCategoryName}"> 
-											SubCategory </option>
+											<option selected="selected" value="0" 
+												th:text="#{Form.category.select.default}">All categories</option>
+											<option th:each="category : ${categories}" 
+												th:value="${category.categoryId}" th:text="${category.categoryName}"> 
+											Category </option>
 										</select>
 										<input type="hidden" id="lat" name="lat" value="0"/>
 										<input type="hidden" id="lng" name="lng" value="0"/>

@@ -10,6 +10,7 @@ import es.elovendo.rest.exception.ProvinceNotFoundException;
 import es.elovendo.rest.exception.SubCategoryNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.service.exception.InvalidItemNameMinLenghtException;
+import es.elovendo.util.Constant;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -143,8 +144,38 @@ public interface ItemService {
 	 */
 	public Page<Item> getAllItemsByCategory(String categoryName, int prizeMin, int prizeMax, int page, int size);
 
-	public Page<Item> getItemsByParams(String title, String subCategory, double dis, double lat, double lng,
+	/**
+	 * Returns items with the given parameters
+	 * @param title
+	 * @param name Category or SubCategory name
+	 * @param dis
+	 * @param lat
+	 * @param lng
+	 * @param prizeMin
+	 * @param prizeMax
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	public Page<Item> getItemsByParams(String title, String name, double dis, double lat, double lng,
 			int prizeMin, int prizeMax, int page, int size);
+	
+	/**
+	 * Returns items with the given parameters
+	 * @param title
+	 * @param id Category or SubCategory id
+	 * @param type Using {@link Constant} CATEGORY or SUBCATEGORY to indicate the id character
+	 * @param dis
+	 * @param lat
+	 * @param lng
+	 * @param prizeMin
+	 * @param prizeMax
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	public Page<Item> getItemsByParams(String title, long id, String type, double dis, double lat,
+			double lng, int prizeMin, int prizeMax, int page, int size);
 
 	/**
 	 * Returns random 'maxItems' items
@@ -153,6 +184,14 @@ public interface ItemService {
 	 * @return
 	 */
 	public List<Item> getRandomFeaturedItems(int maxItems, @Nullable String filter);
+	
+	/**
+	 * Returns random 'maxItems' items
+	 * @param maxItems
+	 * @param categoryId SubCategory or category name. This parameter can be null to get all items
+	 * @return Random list
+	 */
+	public List<Item> getRandomFeaturedItemsFromCategoryId(int maxItems, long categoryId);
 
 	/**
 	 * Updates an item

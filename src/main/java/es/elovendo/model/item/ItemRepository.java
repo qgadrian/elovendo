@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -63,6 +64,10 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     @Query("SELECT DISTINCT i FROM Item i WHERE i.featured = 1 AND (i.subCategory.subCategoryName = :name "
     		+ "OR i.subCategory.category.categoryName = :name) AND endDate > NOW() ORDER BY RAND()")
     List<Item> findRandomFeaturedItemsByFilter(Pageable pageable, @Param("name") String filter);
+    
+    @Query("SELECT DISTINCT i FROM Item i WHERE i.featured = 1 AND i.subCategory.category.categoryId = :categoryId "
+    		+ "AND endDate > NOW() ORDER BY RAND()")
+	List<Item> findRandomFeaturedItemsByCategoryId(@Param("categoryId") long categoryId, Pageable pageable);
     
     /*************************************************************************************************************/
     
@@ -202,7 +207,7 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     @Query("SELECT new Item(i, (6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat))) "
     		+ "FROM Item i WHERE endDate > NOW() AND title LIKE %:title% "
     		+ "AND (:pMin <= 0.0 OR prize > :pMin) AND (:pMax <= 0.0 OR prize < :pMax) AND "
-    		+ "(:cat = '' OR i.subCategory.subCategoryName = :cat OR i.subCategory.category.categoryName = :cat) "
+    		+ "(:name = '' OR i.subCategory.subCategoryName = :name OR i.subCategory.category.categoryName = :name) "
     		+ "AND (:dis >= 5000.0 OR "
     		+ "(6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :dis)")
 //    @Query("SELECT new Item(i, SQRT(POW(:lat - latitude , 2) + POW(:lng - longitude, 2)) * 100) "
@@ -212,8 +217,22 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
 //    		+ "AND (:dis >= 5000.0 OR "
 //    		+ "SQRT(POW(:lat - latitude , 2) + POW(:lng - longitude, 2)) * 100 < :dis)")
     Page<Item> findByParams(@Param("title") String title, 
-    		@Param("cat") String cat, @Param("lat") double latitude, 
+    		@Param("name") String name, @Param("lat") double latitude, 
     		@Param("lng") double longitude, @Param("dis") double distance,
     		@Param("pMin") double prizemin, @Param("pMax") double prizemax, Pageable pageable);
+    
 
+    // Use 0L to comparison a long value
+    @Query("SELECT new Item(i, (6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat))) "
+    		+ "FROM Item i WHERE endDate > NOW() AND title LIKE %:title% "
+    		+ "AND (:pMin <= 0.0 OR prize > :pMin) AND (:pMax <= 0.0 OR prize < :pMax) AND "
+    		+ "((:isCategory = TRUE AND :cat > 0L AND i.subCategory.category.categoryId = :cat) OR "
+    		+ "(:cat > 0L AND i.subCategory.id = :cat) OR :cat = 0L) "
+    		+ "AND (:dis >= 5000.0 OR "
+    		+ "(6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :dis)")
+    Page<Item> findByParams(@Param("title") String title, 
+    		@Param("cat") long cat, @Param("isCategory") boolean isCategory, 
+    		@Param("lat") double latitude, @Param("lng") double longitude, 
+    		@Param("dis") double distance, @Param("pMin") double prizemin, 
+    		@Param("pMax") double prizemax, Pageable pageable);
 }

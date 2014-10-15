@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import es.elovendo.model.item.category.Category;
 import es.elovendo.model.item.category.subcategory.SubCategory;
 import es.elovendo.model.user.User;
 import es.elovendo.service.item.ItemService;
@@ -183,6 +184,10 @@ public class MainController implements ErrorController {
     		session.setAttribute("userName", user.getLogin());
     	}
     	model.addAttribute("user", user);
+    	
+    	@SuppressWarnings("unchecked")
+		List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
+		model.addAttribute("categories", categories);
     	
     	// SubCategories
     	@SuppressWarnings("unchecked")
