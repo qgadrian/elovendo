@@ -1,6 +1,9 @@
 package es.elovendo.rest.web;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -24,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.common.collect.Lists;
 
 import es.elovendo.model.message.Message;
 import es.elovendo.model.message.MessageThread;
@@ -106,7 +111,8 @@ public class MessageWebController {
 		Page<Message> conversationPage = messageService.getMessageThreadMessages(messageThreadId, user);
 		PageWrapper<Message> pageWrapper = 
 				new PageWrapper<Message>(conversationPage, "inbox?messageThreadId=" + messageThreadId);
-		List<Message> conversation = pageWrapper.getContent();		
+		
+		List<Message> conversation = Lists.reverse(pageWrapper.getContent());
 
 		model.addAttribute("conversation", conversation);
 		
