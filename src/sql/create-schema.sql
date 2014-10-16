@@ -2,6 +2,8 @@
 -- Sentencias de creación de tablas y secuencias --
 ---------------------------------------------------
 
+-- GRANT ALL PRIVILEGES ON elovendo.* to admin@localhost IDENTIFIED BY 'password';
+
 -- Eliminamos tablas.
 	--SET FOREIGN_KEY_CHECKS = 0;
 	/*DROP TABLE IF EXISTS image CASCADE*/;

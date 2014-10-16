@@ -29,7 +29,7 @@ public class BeanConf {
     public DataSource dataSource() {
     	BasicDataSource ds = new BasicDataSource();
 		ds.setDriverClassName("com.mysql.jdbc.Driver");
-		ds.setUrl("jdbc:mysql://localhost:3306/telocompro");
+		ds.setUrl("jdbc:mysql://localhost:3306/elovendo");
 		ds.setUsername("admin");
 		ds.setPassword("admin");
 		return ds;

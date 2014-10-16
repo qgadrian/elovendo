@@ -2,13 +2,6 @@
 -- Sentencias de creación de tablas y secuencias --
 ---------------------------------------------------
 
--- PROVINCE
---INSERT INTO province VALUES (1, 'A Coruña');
---INSERT INTO province VALUES (2, 'Barcelona');
---INSERT INTO province VALUES (3, 'Madrid');
---INSERT INTO province VALUES (4, 'Lugo');
-
-
 -- ROLES
 
 INSERT INTO role VALUES (1, 'ROLE_USER');
