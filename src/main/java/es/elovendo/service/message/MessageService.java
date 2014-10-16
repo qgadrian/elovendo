@@ -7,6 +7,7 @@ import es.elovendo.model.message.MessageState;
 import es.elovendo.model.message.MessageThread;
 import es.elovendo.model.user.User;
 import es.elovendo.rest.exception.InvalidMessageThreadException;
+import es.elovendo.rest.exception.MessageTextTooLongException;
 import es.elovendo.rest.exception.MessageThreadAlreadyExistsException;
 import es.elovendo.rest.exception.MessageThreadNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
@@ -23,11 +24,11 @@ public interface MessageService {
 			throws MessageThreadAlreadyExistsException, UserNotFoundException;
 	
 	public Message sendMessage(User sender, String receiver, String messageText, long ipAddress) 
-			throws MessageThreadAlreadyExistsException, UserNotFoundException;
+			throws MessageThreadAlreadyExistsException, UserNotFoundException, MessageTextTooLongException;
 	
 	public Message sendMessage(User sender, long messageThreadId, String messageText, long ipAddress) 
 			throws MessageThreadAlreadyExistsException, UserNotFoundException, 
-			InvalidMessageThreadException, MessageThreadNotFoundException;
+			InvalidMessageThreadException, MessageThreadNotFoundException, MessageTextTooLongException;
 	
 	public Page<MessageThread> getMessageThreads(User user);
 	

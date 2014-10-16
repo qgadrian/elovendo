@@ -17,6 +17,7 @@ import es.elovendo.model.message.MessageThread;
 import es.elovendo.model.message.MessageThreadRepository;
 import es.elovendo.model.user.User;
 import es.elovendo.rest.exception.InvalidMessageThreadException;
+import es.elovendo.rest.exception.MessageTextTooLongException;
 import es.elovendo.rest.exception.MessageThreadAlreadyExistsException;
 import es.elovendo.rest.exception.MessageThreadNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
@@ -82,10 +83,13 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public Message sendMessage(User sender, String _receiver,
-			String messageText, long ipAddress) throws MessageThreadAlreadyExistsException, UserNotFoundException {
-		User receiver = userService.findUserByLogin(_receiver);
+	public Message sendMessage(User sender, String _receiver, String messageText, long ipAddress)
+			throws MessageThreadAlreadyExistsException, UserNotFoundException, MessageTextTooLongException {
+		if (messageText.length() > 500)
+			throw new MessageTextTooLongException(sender.getUserId());
 		
+		User receiver = userService.findUserByLogin(_receiver);
+
 		return sendMessage(sender, receiver, messageText, ipAddress);
 	}
 	
@@ -93,7 +97,10 @@ public class MessageServiceImpl implements MessageService {
 	public Message sendMessage(User sender, long messageThreadId,
 			String messageText, long ipAddress)
 			throws MessageThreadAlreadyExistsException, UserNotFoundException, 
-			InvalidMessageThreadException, MessageThreadNotFoundException {
+			InvalidMessageThreadException, MessageThreadNotFoundException, MessageTextTooLongException {
+		
+		if (messageText.length() > 500)
+			throw new MessageTextTooLongException(sender.getUserId());
 		
 		MessageThread messageThread = messageThreadRepository.findOne(messageThreadId);
 		

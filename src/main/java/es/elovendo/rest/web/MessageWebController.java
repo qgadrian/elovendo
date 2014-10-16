@@ -29,6 +29,7 @@ import es.elovendo.model.message.Message;
 import es.elovendo.model.message.MessageThread;
 import es.elovendo.model.user.User;
 import es.elovendo.rest.exception.InvalidMessageThreadException;
+import es.elovendo.rest.exception.MessageTextTooLongException;
 import es.elovendo.rest.exception.MessageThreadAlreadyExistsException;
 import es.elovendo.rest.exception.MessageThreadNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
@@ -163,7 +164,7 @@ public class MessageWebController {
 			@RequestParam(value = "messageText", required=true) String messageText,
 			Model model, HttpServletRequest request) 
 					throws MessageThreadAlreadyExistsException, UserNotFoundException, InvalidMessageThreadException, 
-					MessageThreadNotFoundException {
+					MessageThreadNotFoundException, MessageTextTooLongException {
 		
 		User user = null;
 		SecurityContext context = SecurityContextHolder.getContext();
@@ -172,15 +173,13 @@ public class MessageWebController {
 				
 		long remoteIpAddress = IOUtil.Dot2LongIP(request.getRemoteAddr());
 		
-		//  message thread has priority over pointing to a receiver username 
+		//  message thread has priority over pointing to a receiver userName 
 		if (!messageThreadId.equals("")) {
 			long mThreadId = Long.valueOf(messageThreadId);
 			messageService.sendMessage(user, mThreadId, messageText, remoteIpAddress);
 		}
 		else
 			messageService.sendMessage(user, receiver, messageText, remoteIpAddress);
-
-//		return "elovendo/pricing/points";
 	}
 	
 	@RequestMapping(value="/getUnread", method = RequestMethod.GET)

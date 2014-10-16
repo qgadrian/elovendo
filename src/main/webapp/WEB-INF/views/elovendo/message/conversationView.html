@@ -90,7 +90,8 @@
 
 				<div class="chat-form">
 					<div class="input-group">
-						<textarea class="form-control" rows="3" id="message" placeholder="..." style="resize:none"></textarea>
+						<textarea class="form-control" rows="3" id="message" placeholder="..." style="resize:none"
+						maxlength="500"></textarea>
 						<span id="sendMsg" class="input-group-addon btn btn-primary">
 							Send
 						</span>
@@ -285,7 +286,7 @@
 
 		$(document).ready( function() {
 			var state = $.cookie("usesEnter") == "true" ? true : false;
-			console.log("coockie " + state);
+// 			console.log("coockie " + state);
 			$('#enterCheckbox').prop('checked', state);
 		});
 		
@@ -297,10 +298,10 @@
 		
 		$('#message').keypress(function(e) {
 			var state = $('#enterCheckbox').prop('checked');
-			console.log("cb " + state);
+// 			console.log("cb " + state);
 			if (e.which == 13 && state) {
 				e.preventDefault();
-				console.log("pressed enter and is cookie");
+// 				console.log("pressed enter and is cookie");
 				$('#sendMsg').click();
 			}
 		});

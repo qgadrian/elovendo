@@ -199,7 +199,7 @@ CREATE TABLE pendingVote(
 		messageId BIGINT NOT NULL AUTO_INCREMENT,
 		messageThreadId BIGINT NOT NULL,
 		senderId BIGINT NOT NULL,
-		text VARCHAR(255) NOT NULL,
+		text BLOB NOT NULL,
 		messageDate DATETIME NOT NULL,
 		ipAddress BIGINT NOT NULL,
 		CONSTRAINT pk_messageId PRIMARY KEY(messageId),
