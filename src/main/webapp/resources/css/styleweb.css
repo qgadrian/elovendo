@@ -601,8 +601,17 @@ a {
     margin: auto;
     margin-bottom: 0;
     box-sizing: border-box;
+/*     text-align:center; */
 
 }
+
+/* .board .nav-tabs>li { */
+/*     float:none; */
+/*     display:inline-block; */
+/*     *display:inline; ie7 fix */
+/*      zoom:1; hasLayout ie7 trigger */
+
+/* } */
 
 .board > div.board-inner{
     background: #fafafa url(http://subtlepatterns.com/patterns/geometry2.png);
