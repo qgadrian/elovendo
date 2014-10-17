@@ -310,12 +310,18 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
+	public List<Item> getLastItems(User user) {
+		return itemRepository.findLastItems(user.getUserId(), new PageRequest(0, Constant.MAX_LAST_ITEMS));
+	}
+
+	@Override
 	public Item getItemById(Long itemId) throws ItemNotFoundException {
 		Item item = itemRepository.findOne(itemId);
 		if (item == null)
 			throw new ItemNotFoundException(itemId);
 		return item;
 	}
+
 
 	/**
 	 * For simplicity I will work with integers, but passing to repository

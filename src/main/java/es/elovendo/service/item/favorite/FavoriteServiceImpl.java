@@ -15,6 +15,7 @@ import es.elovendo.model.item.favorite.FavoriteRepository;
 import es.elovendo.model.user.User;
 import es.elovendo.rest.exception.ItemNotFoundException;
 import es.elovendo.service.item.ItemService;
+import es.elovendo.util.Constant;
 
 @Service("favoriteService")
 public class FavoriteServiceImpl implements FavoriteService {
@@ -75,7 +76,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Item> getLastFavs(User user) {
-		PageRequest request = new PageRequest(0, 5);
+		PageRequest request = new PageRequest(0, Constant.MAX_LAST_FAVORITES);
 		List <Favorite> favs = favRepository.findLastFav(user.getUserId(), request).getContent();
 		List<Long> favsIds = new ArrayList<>(); 
 		

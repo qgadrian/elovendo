@@ -47,6 +47,9 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     @Query("SELECT i FROM Item i WHERE i.user.userId = :userId")
 	List<Item> findByUserId(@Param("userId") Long userId);
     
+    @Query("SELECT i FROM Item i WHERE i.user.userId = :userId AND endDate > NOW() ORDER BY startDate")
+    List<Item> findLastItems(@Param("userId") long userId, Pageable pageable);
+    
     /*************************************************************************************************************/
     
     /* RANDOM */

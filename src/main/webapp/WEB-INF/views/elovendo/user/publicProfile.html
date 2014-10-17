@@ -32,31 +32,46 @@
 	<div th:replace="elovendo/header"></div>
 	
 	<div class="container profileStyle">
-		<div class='tabs-x tabs-above'>
-			<ul id="myTab-1" class="nav nav-tabs" role="tablist">
-				<li class="active"><a href="#profileContent" role="tab" data-toggle="tab">
-				<i class="glyphicon glyphicon-user"></i> Perfil</a></li>
-				<li><a href="#itemsContent" role="tab-kv" data-toggle="tab">
-				<i class="glyphicon glyphicon-th-list"></i> Anuncios</a></li>
-				<li><a href="#favoriteContent" role="tab-kv" data-toggle="tab">
-				<i class="glyphicon glyphicon-stats"></i> Votos</a></li>
+		<div class='tabs-x tabs-above board'>
+			<ul id="profileTab" class="nav nav-tabs" role="tablist">
+				<li class="active">
+					<a href="#profileContent" role="tab" data-toggle="tab" title="Perfil">
+						<span class="round-tabs lblue"> 
+							<i class="glyphicon glyphicon-user"></i>
+						</span>
+					</a>
+				</li>
+				<li>
+					<a href="#itemsContent" role="tab" data-toggle="tab" title="Anuncios">
+						<span class="round-tabs violet"> 
+							<i class="glyphicon glyphicon-th-list"></i>
+						</span>
+					</a>
+				</li>
+				<li>
+					<a href="#votesContent" role="tab" data-toggle="tab" title="Votos">
+						<span class="round-tabs blue"> 
+							<i class="glyphicon glyphicon-stats"></i>
+						</span>
+					</a>
+				</li>
 			</ul>
 		</div>
 
 		<!--  user -->
 		<div id="tabContent" class="tab-content">
         	<div class="tab-pane fade in active" id="profileContent">
-        		<div class="container">
 					<div class="row">
 						<!-- Profile overview -->
 						<div class="col-md-4">
 							<!-- Thumbnails -->
 							<div class="thumbnail" >
 								<img alt="profile pic" class="profilePic" th:src="@{'http://www.elovendo.com/' + ${user.avatar}}" />
-								<div class="list-group">
-									<a href="www.elovendo.com" class="list-group-item"><span class="glyphicon glyphicon-briefcase"></span>
+								<div class="whiteList list-group">
+									<a class="list-group-item" href="#itemsContent" role="tab-kv" data-toggle="tab">
+									<span class="glyphicon glyphicon-briefcase"></span>
 									<span class="badge" th:text="${totalItems}">0</span>Anuncios</a>
-									<a class="list-group-item"><span class="glyphicon glyphicon-stats"></span><span class="badge" th:text="${totalVotes}"></span>Votos</a>
+									<a href="www.elovendo.com" class="list-group-item"><span class="glyphicon glyphicon-stats"></span><span class="badge" th:text="${totalVotes}"></span>Votos</a>
 									<a class="list-group-item"><span class="glyphicon glyphicon-thumbs-up"></span><span class="badge" th:text="${user.userValue}">0</span>Reputación</a>
 								</div>
 							</div><!-- /Thumbnails -->		
@@ -67,16 +82,8 @@
 								<div class="info-text">
 									<h3 th:text="'Perfil de ' + ${user.login}">username</h3>
 									<hr class="hrStyle" />
-									<p>Proin vitae volutpat tellus. Fusce erat libero, ultrices in egestas id, tincidunt quis ante. Nam volutpat purus sed justo hendrerit, ac pellentesque odio volutpat. Integer vitae purus tortor. Aenean ultricies porta rhoncus. Nullam eleifend, tortor quis porta consectetur, enim nunc rutrum erat, ut convallis augue libero ac orci.</p>
-									<p>Aenean ultricies porta rhoncus eleifend tortor quis.</p>
 								</div>
-			<!-- 					<ul class="social-icon"> -->
-			<!-- 						<li><a href="" class="social twitter">@twitter</a></li> -->
-			<!-- 						<li><a href="" class="social google_plus">@google+</a></li> -->
-			<!-- 						<li><a href="" class="social facebook">@facebook</a></li> -->
-			<!-- 						<li><a href="" class="social skype">@skype</a></li> -->
-			<!-- 					</ul> -->
-								<div class="list">
+								<div class="list" style="width: 50%;">
 									<ul class="list-group list-no-border">
 										<li class="list-group-item"><h4>Votos recibidos</h4></li>
 										<li class="list-group-item"><span class="badge" th:text="${votesPositive}">0</span>Positivos</li>
@@ -87,62 +94,43 @@
 							<h3 >Últimos anuncios publicados</h3>
 							<hr class="hrStyle" />
 							<div class="content-text">
-								<table class="table table-striped table-hover">
-									<thead>
-									  <tr>
-										<th>Voto</th>
-										<th>Comentario</th>
-									  </tr>
-									</thead>
-									<tbody>
-									  <tr>
-										<td>Smart House</td>
-										<td>Office furniture purchase</td>
-									  </tr>
-									  <tr>
-										<td>Smart House</td>
-										<td>Office furniture purchase</td>
-									  </tr>
-									  <tr>
-										<td>Smart House</td>
-										<td>Office furniture purchase</td>
-									  </tr>
-									  <tr>
-										<td>Smart House</td>
-										<td>Office furniture purchase</td>
-									  </tr>
-									  <tr>
-										<td>Smart House</td>
-										<td>Office furniture purchase</td>
-									  </tr>
-									</tbody>
-								</table>
-							</div>
+							<table class="table table-striped table-hover">
+								<thead>
+								  <tr>
+									<th>Título</th>
+									<th>Descripción</th>
+									<th>Precio</th>
+								  </tr>
+								</thead>
+								<tbody>
+									<tr th:each="item : ${lastItems}">
+										<td th:text="${item.title}"/>
+										<td th:text="${item.description}"/>
+										<td th:text="${item.prize}"/>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 						</div>
 					</div>
-				</div>
 			</div>
 
 			<!--  user annouces -->
 			<div class="tab-pane fade" id="itemsContent">
-				<div class="container">
 					<div class="row">
 						<div class="col-xs-12 col-md-12" >
-							asdsasda
+							items
 						</div>
 					</div>
-				</div>
 			</div>
 			
 			<!--  favourites -->
-			<div class="tab-pane fade" id="favoriteContent">
-				<div class="container">
+			<div class="tab-pane fade" id="votesContent">
 					<div class="row">
 						<div class="col-xs-12 col-md-12" >
-							<p>asdsasda</p>
+							<p>votos</p>
 						</div>
 					</div>
-				</div>
 			</div>
 			
 		</div>

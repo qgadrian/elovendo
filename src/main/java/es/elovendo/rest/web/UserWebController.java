@@ -56,6 +56,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.elovendo.model.item.Item;
 import es.elovendo.model.user.EditUserForm;
 import es.elovendo.model.user.User;
 import es.elovendo.model.user.UserForm;
@@ -72,6 +73,7 @@ import es.elovendo.service.item.category.CategoryService;
 import es.elovendo.service.item.favorite.FavoriteService;
 import es.elovendo.service.purchase.PurchaseService;
 import es.elovendo.service.user.UserService;
+import es.elovendo.util.Constant;
 
 @Controller
 @SuppressWarnings("unused")
@@ -139,6 +141,9 @@ public class UserWebController {
 
 		User user = userService.findUserByLogin(userName);
 		model.addAttribute("user", user);
+		
+		List<Item> lastItems = itemService.getLastItems(user);
+		model.addAttribute("lastItems", lastItems);
 
 		model.addAttribute("totalItems", itemService.getNumberUserItems(user));
 

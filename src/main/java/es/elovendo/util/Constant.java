@@ -11,6 +11,8 @@ public class Constant {
 	public static final int ITEM_DEFAULT_DURATION = 30;
 	public static final int DEFAULT_RENEW_DAYS = 30;
 	public static final int MAX_RANDOM_ITEMS = 12;
+	public static final int MAX_LAST_FAVORITES = 5;
+	public static final int MAX_LAST_ITEMS = 5;
 	
 	/** Items per page **/
 	public static final int ITEMS_PER_PAGE = 15;

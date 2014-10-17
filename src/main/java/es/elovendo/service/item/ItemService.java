@@ -20,6 +20,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import org.springframework.data.domain.Page;
+import org.springframework.hateoas.Link;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -109,6 +110,13 @@ public interface ItemService {
 	 * @throws ItemNotFoundException
 	 */
 	public Item getItemById(Long id) throws ItemNotFoundException;
+	
+	/**
+	 * Returns {@link Constant}.MAX_LAST_ITEMS items from the given user
+	 * @param user
+	 * @return
+	 */
+	public List<Item> getLastItems(User user);
 
 	/**
 	 * Finds a list of items that match the title
@@ -215,8 +223,18 @@ public interface ItemService {
 	 */
 	public void deleteItem(Long itemId);
 
+	/**
+	 * Returns number of active user items
+	 * @param user
+	 * @return Number of active user items
+	 */
 	public int getNumberUserItems(User user);
 
+	/**
+	 * Returns number of active user items
+	 * @param userId
+	 * @return Number of active user items
+	 */
 	public int getNumberUserItems(Long userId);
 
 	public Iterable<Item> getAll(Iterable<Long> ids);

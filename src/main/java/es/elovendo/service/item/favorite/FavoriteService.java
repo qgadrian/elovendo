@@ -13,6 +13,11 @@ public interface FavoriteService {
 	
 	public Favorite setFavorite(User user, Long itemId) throws ItemNotFoundException;
 	
+	/**
+	 * Returns {@link Constant}.MAX_LAST_FAVORITES items from the given user 
+	 * @param user User to obtain last favorites
+	 * @return
+	 */
 	public List<Item> getLastFavs(User user);
 
 //	public boolean removeFavorite(User user, Long itemId) throws ItemNotFoundException;
