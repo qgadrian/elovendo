@@ -59,7 +59,7 @@
 											</abbr> <i class="fa fa-clock-o"></i>
 										</span>
 										</h4>
-									<p class="pull-left" th:text="${message.messageText}"></p>
+									<p class="pull-left mesText" th:text="${message.messageText}"></p>
 								</div>
 							</div>
 							<div th:unless="${message.sender.login == user.login}">
@@ -79,7 +79,7 @@
 											</abbr> <i class="fa fa-clock-o"></i>
 										</span>
 									</h4>
-									<p th:text="${message.messageText}"></p>
+									<p class="mesText" th:text="${message.messageText}"></p>
 								</div>
 							</div>
 						</div>

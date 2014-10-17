@@ -223,6 +223,13 @@ text-align: right;
 	background-color: #5e87b0;
 	/* border-color: #507aa4; */
 }
+
+.elochat .mesText  {
+	width: 90%;
+	word-wrap: break-word;
+	text-align: left;
+}
+
 .elochatMes .btn {
 	/* display: inline-block; */
 	/* margin-bottom: 0; */

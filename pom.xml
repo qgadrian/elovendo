@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>elovendo</groupId>
 	<artifactId>elovendo</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<version>1.1</version>
 	<name>elovendo</name>
 	<url>http://maven.apache.org</url>
