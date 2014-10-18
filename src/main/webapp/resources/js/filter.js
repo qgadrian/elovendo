@@ -120,19 +120,24 @@ function getUrlParams() {
 
 function die() {
 	var itemId = document.getElementById('itemId').value;
-	var s = "/site/delete/item";
+	var s = "/bazaar/delete/item";
+	var cv = $("meta[name='_csrf']").attr("content");
+	var cn = $("meta[name='_csrf_header']").attr("content");
 	$.ajax({
-        type : 'POST',
-        url : s,
-        data : ({
-            id: itemId
-        }),
-        success: dieRmv
-    });
+		type : 'POST',
+		beforeSend : function(request) {
+			request.setRequestHeader(cn, cv);
+		},
+		url : s,
+		data : ({
+			id: itemId
+		}),
+		success: dieRmv
+	});
 }
 
 function dieRmv(val) {
-	console.log("died " + val); 
+//	console.log("died " + val); 
 	$('#did'+val).remove();
 	$('#removeModal').modal('hide');
 }

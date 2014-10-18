@@ -577,8 +577,7 @@ public class UserWebController {
 							residence_country);
 
 					if (paymentStatus.equalsIgnoreCase(PAYMENT_COMPLETED)) {
-						logger.debug("Payment received: " + params.get("txn_id"));
-						logger.error("Payment received: " + params.get("txn_id"));
+						logger.info("Payment received: " + params.get("txn_id"));
 
 						User user = userService.findUserById(userId);
 

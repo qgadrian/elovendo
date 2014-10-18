@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>elovendo</groupId>
 	<artifactId>elovendo</artifactId>
-	<packaging>jar</packaging>
-	<version>1.1</version>
+	<packaging>war</packaging>
+	<version>1.1.0.1</version>
 	<name>elovendo</name>
 	<url>http://maven.apache.org</url>
 
@@ -18,9 +18,8 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.1.6.RELEASE</version>
+		<version>1.1.8.RELEASE</version>
 <!-- 		<version>1.2.0.BUILD-SNAPSHOT</version> -->
-<!-- 		<version>1.1.7.BUILD-SNAPSHOT</version> -->
 	</parent>
 
 	<properties>
@@ -48,6 +47,9 @@
 		<servlet-version>3.1.0</servlet-version>
 		<jsp-version>2.2.1</jsp-version>
 		<jstl-version>1.2</jstl-version>
+		
+		<!-- start class -->
+<!-- 		<start-class>es.elovendo.ElovendoMain</start-class> -->
 
 	</properties>
 
@@ -93,6 +95,14 @@
 <!-- 				</exclusion> -->
 <!-- 			</exclusions> -->
 		</dependency>
+		
+		<!-- Provice the embedded container -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-tomcat</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
