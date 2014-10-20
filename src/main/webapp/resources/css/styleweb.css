@@ -873,3 +873,21 @@ left: 35%;
 	padding: 1em 1.3em;
 	z-index: 2000;
 }
+
+/*********************************************************************************/
+/* Error                                                                         */
+/*********************************************************************************/
+
+.error-template {
+	padding: 40px 15px;
+	text-align: center;
+}
+
+.error-actions {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.error-actions .btn {
+	margin-right: 10px;
+}
