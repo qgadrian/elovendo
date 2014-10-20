@@ -82,7 +82,7 @@
 
 	<div class="row">
 		<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;">
-			<h1>Crea tu anuncio</h1>
+			<h1>Editar tu anuncio</h1>
 			<hr class="hrStyle2"/>
 		</div>
 	</div>
@@ -109,22 +109,14 @@
 			</p>
 		</div>
 		
-		<form class="form-horizontal" role="form" th:action="@{/bazaar/add/item}" method="post" enctype="multipart/form-data" >
+		<form class="form-horizontal" role="form" th:action="@{'/bazaar/edit/item/' + ${item.itemId}}" 
+			method="post" enctype="multipart/form-data" >
 			<div class="form-group">
 				<label for="title" class="col-sm-2 control-label">Title</label> 
 				<div class="col-sm-10">
-					<input th:unless="${#fields.hasErrors('item.title')}" type="text"
-						class="form-control" id="title" name="" placeholder="Enter title"
-						th:field="${item.title}" required="required" pattern=".{5,40}"
-						th:title="#{Length.item.title}" />
-					<div th:if="${#fields.hasErrors('item.title')}"
-						class="form-group has-error">
-						<label class="control-label" for="title"
-							th:errors="${item.title}" style="text-align: center!important">Input with error</label> 
-							<input class="form-control" type="text" class="form-control" 
-							id="title" name="" placeholder="Enter title" th:field="${item.title}" 
-							required="required" pattern=".{5,40}" th:title="#{Length.item.title}" />
-					</div>
+					<input type="text" class="form-control" id="title"
+					placeholder="Enter title" th:field="${item.title}" required="required" pattern=".{5,40}"
+					th:title="#{Length.item.title}"/>
 				</div>
 			</div>
 			<div class="form-group">
@@ -134,34 +126,17 @@
 						<!-- FIXME -->
 						<!-- Pasting formatted HTML when creating item makes show formatted everywhere -->
 						<!-- it's important make sure pasting DOES AS TEXT/PLAIN -->
-						<textarea th:unless="${#fields.hasErrors('item.description')}" id="textarea" 
-							class="form-control textarea" rows="15" th:field="${item.description}" 
-							required="required" placeholder="Descripción..." maxlength="500"
-							th:title="#{Length.item.description}"></textarea>
-						<div th:if="${#fields.hasErrors('item.description')}"
-							class="form-group has-error">
-							<label class="control-label" for="title"
-								th:errors="${item.title}" style="text-align: center !important">Input
-								with error</label> 
-							<textarea id="textarea" class="form-control textarea" rows="15" 
-								th:field="${item.description}" required="required" placeholder="Descripción..." 
-								maxlength="500" th:title="#{Length.item.description}"></textarea>
-						</div>
+						<textarea id="textarea" class="form-control textarea" rows="15" th:field="${item.description}" 
+						required="required" placeholder="Descripción..." maxlength="500"
+						th:title="#{Length.item.description}"></textarea>
 					</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="title" class="col-sm-2 control-label">Prize</label> 
 				<div class="col-sm-10">
-					<input th:unless="${#fields.hasErrors('item.prize')}" type="number" class="form-control" 
-						id="prize" min="0" placeholder="Enter prize" th:field="${item.prize}" required="required"/>
-					<div th:if="${#fields.hasErrors('item.prize')}"
-						class="form-group has-error">
-						<label class="control-label" for="prize"
-							th:errors="${item.prize}" style="text-align: center!important">Input with error</label> 
-							<input type="number" class="form-control" id="prize" min="0" 
-								placeholder="Enter prize" th:field="${item.prize}" required="required" />
-					</div>
+					<input type="number" class="form-control" id="prize" min="0"
+					placeholder="Enter prize" th:field="${item.prize}" required="required"/>
 				</div>
 			</div>
 <!-- 			<div class="form-group"> -->
@@ -191,11 +166,19 @@
 				<label for="subCategory" class="col-sm-2 control-label">SubCategoría</label>
 				<div class="col-sm-10">
 					<select th:unless="${#fields.hasErrors('item.subCategory')}" 
-						id="subCategory" class="form-control" name="subCategory"> </select>
+						id="subCategory" class="form-control" name="subCategory"> 
+						<option th:each="subCategory : ${subCategories}" 
+					          th:value="${subCategory.id}" 
+					          th:text="${subCategory.subCategoryName}">SubCategory</option>
+					</select>
 					<div th:if="${#fields.hasErrors('item.subCategory')}" class="form-group has-error">
 						<label class="control-label" for="prize"
 							th:errors="${item.subCategory}" style="text-align: center!important">Input with error</label> 
-						<select id="subCategory" class="form-control" name="subCategory"> </select>
+						<select id="subCategory" class="form-control" name="subCategory"> 
+							<option th:each="subCategory : ${subCategories}" 
+					          th:value="${subCategory.id}" 
+					          th:text="${subCategory.subCategoryName}">SubCategory</option>
+						</select>
 					</div>
 				</div>
 			</div>
@@ -209,32 +192,28 @@
 			</div>
 			<div class="form-group">
 				<label for="principalImage" class="col-sm-2 control-label">Imagen principal</label>
-				<div class="col-sm-5 col-lg-4">
+				<div class="col-sm-10">
 					<input id="principalImage" type="file" class="file" data-show-upload="false" 
 					name="mI" accept=".jpg, .jpeg"/>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="exampleInputFile" class="col-sm-2 control-label">Resto imágenes</label>
-				<div class="col-sm-5 col-lg-4">
+				<div class="col-sm-10">
 					<input id="more-img-1" type="file" class="file" data-show-upload="false" 
 					name="i1" accept=".jpg, .jpeg"/>
 				</div>
-				<div class="col-sm-5 col-lg-4">
+			</div>
+			<div class="form-group">
+				<label for="exampleInputFile" class="col-sm-2 control-label">Resto imágenes</label>
+				<div class="col-sm-10">
 					<input id="more-img-2" type="file" class="file" data-show-upload="false" 
 					name="i2" accept=".jpg, .jpeg"/>
 				</div>
 			</div>
-<!-- 			<div class="form-group"> -->
-<!-- 				<label for="exampleInputFile" class="col-sm-2 control-label">Resto imágenes</label> -->
-<!-- 				<div class="col-sm-5 col-lg-4"> -->
-<!-- 					<input id="more-img-2" type="file" class="file" data-show-upload="false"  -->
-<!-- 					name="i2" accept=".jpg, .jpeg"/> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
 			<div class="form-group">
 				<label for="exampleInputFile" class="col-sm-2 control-label">Resto imágenes</label>
-				<div class="col-sm-5 col-lg-4">
+				<div class="col-sm-10">
 					<input id="more-img-3" type="file" class="file" data-show-upload="false" 
 					name="i3" accept=".jpg, .jpeg"/>
 				</div>
@@ -260,11 +239,8 @@
 					<div class="form-group">
 						<label for="exampleInputEmail1">Mi anuncio estará en...</label> <input
 							class="form-control" id="autocomplete" placeholder="Puedes hacer click en el mapa o escribirlo aquí..."
-							type="text"> 
-<!-- 							<input type="hidden" id="lat" name="lat" value="0" />  -->
-<!-- 							<input type="hidden" id="lng" name="lng" value="0" /> -->
-							<input type="hidden" id="lat" name="lat" th:field="${item.latitude}"/> 
-							<input type="hidden" id="lng" name="lng" th:field="${item.longitude}"/>
+							type="text"> <input type="hidden" id="lat" name="lat" th:field="${item.latitude}"
+							value="0" /> <input type="hidden" id="lng" name="lng" value="0" th:field="${item.longitude}"/>
 					</div>
 				</div>
 			</div>
@@ -331,8 +307,7 @@
 					</div>
 				</div>
 			</div>
-			<button type="submit" class="btn btn-success btn-lg btn-block" id="createButton" 
-				disabled="disabled">Crear anuncio</button>
+			<button type="submit" class="btn btn-success btn-lg btn-block" id="createButton">Editar anuncio</button>
 			<hr/>
 		</form>
 		
@@ -356,48 +331,37 @@
 	        	showCaption: true,
 	        	showRemove: true,
 	        	showUpload: false,
-	        	maxFileSize: 3000,
-	        	msgSizeTooLarge: "Sorry bro",
-	        	removeLabel: "Borrar",
-	        	browseLabel: "Buscar"
+	        	maxFileSize: 3000
 			});
 	        
 	        $("#more-img-2").fileinput({
 	        	showCaption: true,
 	        	showRemove: true,
 	        	showUpload: false,
-	        	maxFileSize: 3000,
-	        	msgSizeTooLarge: "Sorry bro",
-	        	removeLabel: "Borrar",
-	        	browseLabel: "Buscar"
+	        	maxFileSize: 3000
 			});
 	        
 	        $("#more-img-3").fileinput({
 	        	showCaption: true,
 	        	showRemove: true,
 	        	showUpload: false,
-	        	maxFileSize: 3000,
-	        	msgSizeTooLarge: "Sorry bro",
-	        	removeLabel: "Borrar",
-	        	browseLabel: "Buscar"
+	        	maxFileSize: 3000
 			});
 	        
 	        $("#principalImage").fileinput({
-	        	maxFileSize: 3000,
-	        	msgSizeTooLarge: "Sorry bro",
-	        	removeLabel: "Borrar",
-	        	browseLabel: "Buscar"
+	        	maxFileSize: 3000
 			});
         </script>
 
 		<script th:inline="javascript">
+		
 		/*<![CDATA[*/
+		var cat = /*[[${item.category}]]*/ 0;
+		var sCat = /*[[${item.subCategory}]]*/ 0;
 		var f = /*[[${item.featured}]]*/ false;
 		var h = /*[[${item.highlight}]]*/ false;
 		var a = /*[[${item.autoRenew}]]*/ false;
 		/*]]>*/
-		
-		console.log("lalalala " + f + " " + h + " " + a);
 		
 		$("[name='featured']").bootstrapSwitch({
 			state: f
@@ -410,22 +374,16 @@
 		$("[name='autoRenew']").bootstrapSwitch({
 			state: a
 		});
-		 
-// 		$("[name='geolocation']").on('switchChange.bootstrapSwitch', function(event, state) {
-// 			console.log(state); // true | false
-// 			if (state == true) {
-// 				document.getElementById("map_canvas").style.display = 'block';
-// 				initialize();
-// 			} else {
-// 				document.getElementById("map_canvas").style.display = 'none';
-// 			}
-// 		});
+
+		$(document).ready( function() {
+			$('#category').val(cat);
+			$('#subCategory').val(sCat);
+		});
 
 		var p = "http://www.elovendo.com/bazaar/";
 		var suf = "getsubs/";
 		$('#category').change( function() {
 			var s = $(this).val();
-			console.log('selected is ' + s);
 			// clean dom
 			var mn = document.getElementById('subCategory');
 			while (mn.firstChild) mn.removeChild(mn.firstChild);
@@ -444,72 +402,6 @@
 
 	<script type="text/javascript"
 		src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCQ-Utb1oduNieaf74WcrBdnwmVpPiJUFo&amp;sensor=TRUE&libraries=places">
-		
-	</script>
-	<script type="text/javascript">
-	
-		$('.file-caption-name').bind("DOMSubtreeModified",function(){
-			var s = this.innerHTML;
-			this.innerHTML = s.substr(0, 20);
-		});
-// 		var map = new google.maps.LatLng(la, lo);
-// 		getLocation();
-// 		var loc;
-// 		var marker;
-// 		var map;
-// 		var la = -34.397;
-// 		var lo = 150.644;
-		
-// 		function initialize() {
-// 			getLocation();
-// 			var mapOptions = {
-// 				center : new google.maps.LatLng(la, lo),
-// 				zoom : 1,
-// 				maxZoom: 18,
-// 				streetViewControl: false,
-// 				mapTypeId : google.maps.MapTypeId.ROADMAP
-// 			};
-// 			map = new google.maps.Map(
-// 				document.getElementById("map_canvas"), mapOptions);
-
-// 			// This event listener will call addMarker() when the map is clicked.
-// 			google.maps.event.addListener(map, 'click', function(event) {
-// 				marker.setMap(null);
-// 				addMarker(event.latLng);
-// 				document.getElementById("latitude").value = event.latLng.lat();
-// 				document.getElementById("longitude").value = event.latLng.lng();
-// 				document.getElementById('createButton').disabled = false;
-// 			});
-			
-// 			// Add a marker to the map and push to the array.
-// 			  function addMarker(location) {
-// 			    marker = new google.maps.Marker({
-// 			      position: location,
-// 			      map: map
-// 			    });
-// // 			    markers.push(marker);
-// 			  }
-			
-// 			// To add the marker to the map, use the 'map' property
-// // 			var marker = new google.maps.Marker({
-// // 				position: coorLang,
-// // 				map: map,
-// // 				title:"Localización"
-// // 			});
-// 			var marker = new google.maps.Marker();
-// 		}
-		
-// 		function getLocation() {
-// 			if (navigator.geolocation) {
-// 				navigator.geolocation.getCurrentPosition(getPosition);
-// 			}
-// 		}
-		
-// 		function getPosition(position) {
-// 			loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-// 			map.setCenter(loc);
-// 			map.setZoom(13);
-// 		}
 	</script>
 
 </body>

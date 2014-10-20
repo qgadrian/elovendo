@@ -5,6 +5,9 @@
 
 <head>
 <meta charset="UTF-8" />
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<!-- default header name is X-CSRF-TOKEN -->
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <title>Ver anuncios</title>
 
 <link rel="shortcut icon" type="image/x-icon" href="/images/webimg/favicon.ico" />
@@ -16,9 +19,9 @@
 <!-- Javascript -->
 <script src="/js/jquery-1.11.0.min.js"></script>
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="/css/bootstrap.min.css"/>
 <!-- Latest compiled and minified JavaScript -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 
 <!-- ************************* -->
 <!-- ********** Web ********** -->
@@ -35,18 +38,21 @@
 <!-- Styles -->
 <link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
 
-
-
+<script src="/js/purl.js"></script>
 <script src="/js/filter.js"></script>
 <script src="/js/bootstrap-slider.js"></script>
+<script src="/js/geo.js"></script>
+
+<!-- Google autocomplete  -->
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;libraries=places"></script>
 
 </head>
 <!-- <body class="homepage"> -->
-<body style="background-color:#FBFAF9;">
+<body style="background-color:#FBFAF9;" onload="getLocation(); fillFilter(); popSub(); initAutoComplete()">
 
 	<!-- Header -->
-	<div th:replace="elovendo/header"></div>
-	
+	<div th:include="elovendo/header"></div>
+
 	<div class="container">
 		<div class="row">
 			<!-- Filter -->
@@ -54,19 +60,75 @@
 				<!-- title -->
 				<div class="row">
 						<div class="col-xs-12">
-							<h1><small>Filtrar</small></h1>
-							<hr class="colorgraph"/>
+							<h1 style="margin-top: 0px;"><small>Filtrar</small></h1>
+							<hr class="hrStyle"/>
 						</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-12 col-md-12">
+						<div class="form-group" style="width: 100%!imporant;">
+							
+							<form id="locform" class="form-inline" name="locationForm" th:action="@{'/bazaar/' + ${url}}" >
+								<label for="autocomplete">Buscar desde...</label>
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="input-group" 
+												style="width: 100%;">
+											<input class="form-control" id="autocomplete"
+												placeholder="Lugar desde donde buscar..." type="text"> 
+											<input type="hidden" id="lat" name="lat" value="0" /> 
+											<input type="hidden" id="lng" name="lng" value="0" /> 
+											<span class="input-group-btn">
+												<button type="submit" class="btn btn-default">Buscar</button>
+											</span>
+										</div>
+									</div>
+								</div>
+	
+								<div class="row">
+									<div class="col-lg-12">
+									<label for="dis" style="margin-top: 15px;">Radio de distancia</label><br/>
+										<div class="input-group" style="width: 100%;">
+											<input type="number" min="0" class="form-control" id="dis"
+													placeholder="Hasta..." name="dis" step="0.01"/>
+											<div class="input-group-btn">
+												<button type="submit" class="btn btn-default" tabindex="-1">Buscar</button>
+												<button type="button"
+													class="btn btn-default dropdown-toggle"
+													data-toggle="dropdown" tabindex="-1">
+													<span class="caret"></span> <span class="sr-only">Toggle
+														Dropdown</span>
+												</button>
+												<ul class="dropdown-menu dropdown-menu-right" role="menu">
+													<li><a onclick="setRad(10)">10 KM</a></li>
+													<li><a onclick="setRad(30)">30KM</a></li>
+													<li><a onclick="setRad(80)">80KM</a></li>
+													<li><a onclick="setRad(200)">200KM</a></li>
+													<li><a onclick="setRad(500)">500KM</a></li>
+													<li><a onclick="setRad(1000)">1000KM</a></li>
+													<li class="divider"></li>
+													<li><a onclick="setRad(5000)">Todo el mundo</a></li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-md-12">
 						<div class="form-group">
-    						<label for="exampleInputEmail1">Provincia</label>
-							<select id="provinceSelect" class="form-control">
-								<option value=""> Selecciona provincia </option> 
-								<option th:each="province : ${provinces}" th:value="${province.provinceName}" 
-								th:text="${province.provinceName}"> Province </option>
-							</select>
+							<label for="exampleInputEmail1">Categoría</label>
+							<form>
+								<select id="category" class="form-control">
+									<option value="0" th:text="#{Form.category.select.default}"> All categories </option> 
+									<option th:each="category : ${categories}" 
+									th:value="${category.categoryId}"  th:text="${category.categoryName}"> 
+									Category </option>
+								</select>
+							</form>
 						</div>
 					</div>
 				</div>
@@ -75,11 +137,11 @@
 						<div class="form-group">
 							<label for="exampleInputEmail1">Subcategoría</label>
 							<form>
-								<select id="categorySelect" class="form-control">
-									<option value=""> Selecciona subcategoría </option> 
+								<select id="subCategory" class="form-control">
+									<option value="0" th:text="#{Form.subCategory.select.default}"> Select</option> 
 									<option th:each="subCategory : ${subCategories}" 
-									th:value="${subCategory.subCategoryName}"  th:text="${subCategory.subCategoryName}"> 
-									SubCategory </option>
+										th:value="${subCategory.id}" 
+										th:text="${subCategory.subCategoryName}"> </option>
 								</select>
 							</form>
 						</div>
@@ -89,188 +151,170 @@
 					<div class="col-xs-12 col-md-12">
 						<div class="form-group">
 							<label for="exampleInputEmail1">Precio</label>
-							<form class="form-inline"
-								th:action="@{'/bazaar/' + ${url}}" method="GET" name="prizeForm"
-								onsubmit="submitSearchForm()">
-									<input type="number" min="0" class="form-control"
+							<form class="form-inline" id="prizeForm"
+								th:action="@{'/bazaar/' + ${url}}" method="GET" name="prizeForm">
+									<input type="number" min="0" class="form-control" id="prizeMin"
 										placeholder="Mínimo" th:value="${prizeMin}"
 										name="min" style="max-width:100px;"/> 
-									<input type="number" min="0" class="form-control"
+									<input type="number" min="0" class="form-control" id="prizeMax"
 										placeholder="Máximo" th:value="${prizeMax}"
 										name="max" style="max-width:100px;"/>
 								<button type="submit" class="btn btn-default">Filtrar precio</button>
 							</form>
+							<!-- onsubmit="return submitSearchForm()" -->
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-xs-12 col-md-12 col-lg-12">
-						<div class="form-group">
-							<label for="exampleInputEmail1">Distancia</label>
-							<form class="form-inline" id="geoFilter"
-								th:action="@{'/bazaar/' + ${url}}" method="GET" name="prizeForm"
-								onsubmit="submitSearchForm()">
-									<input type="number" min="0" class="form-control"
-										placeholder="Hasta" th:value="${distance}"
-										name="dis" style="max-width:100px;"/> KM 
-									<input type="hidden" id="lat" value="0"/>
-									<input type="hidden" id="lng" value="0"/>
-								<button type="submit" class="btn btn-default">Filtrar</button>
-							</form>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12 col-md-12">
-						<label for="exampleInputEmail1">Distancia2</label>
-						<br /><b>Cerca de mi </b> <input id="priceSlider" type="text" class="span2" value="" 
-						data-slider-min="10" data-slider-max="1000" data-slider-step="1" 
-						data-slider-value="[0,1000]"/> <b> Todos</b>
-					</div>
-				</div>
-<!-- 				<div class="row top-buffer"> -->
 				<!-- FEATURED -->
-<!-- 				<div class="row"> -->
-<!-- 					<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;"> -->
-<!-- 						<h1 style="font-family: 'Andika', sans-serif; color: #6A016F">PATROCINADOS</h1><hr/> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
 				<!-- title -->
 				<div class="row">
 					<div class="col-xs-12">
 						<h1><small>Te puede interesar</small></h1>
-						<hr class="colorgraph"/>
+						<hr class="hrStyle2"/>
 					</div>
 				</div>
 				
 				<div class="row" th:each="item : ${featuredItems}">
 					<div class="col-xs-12 col-md-12">
-						<div class="featuredSection">
+						<a th:href="@{'/bazaar/item/' + ${item.itemId}}" class="featuredSection">
 							<div class="thumbnail">
-								<a th:href="@{'/bazaar/item/' + ${item.itemId}}">
+<!-- 								<a th:href="@{'/bazaar/item/' + ${item.itemId}}"> -->
 									<img data-src="holder.js/300x300" alt="..." 
-									th:src="@{'http://83.165.60.132:8080/' + ${item.mainImage200h}}"/>
-								</a>
+									th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}"/>
+<!-- 								</a> -->
+<hr />
 								<div class="caption">
-									<h3 th:text="${item.title}">Title</h3>
-									<p th:if="${#strings.length(item.description)} &gt; 99" 
-										th:utext="${#strings.substring(item.description, 0, 100)}"
+									<h4 th:text="${item.title}">Title</h4>
+									<p th:if="${#strings.length(item.plainDescription)} &gt; 99" 
+										th:utext="${#strings.substring(item.plainDescription, 0, 100)}"
 										class="featuredTextDesc">Description</p>
-									<p th:if="${#strings.length(item.description)} &lt; 100" 
-										th:utext="${item.description}" class="featuredTextDesc">Description</p>
-									<p>
-										<a href="#" class="btn btn-default" role="button">Ver anuncio</a>
-										<button class="btn btn-primary" data-toggle="modal" data-target="#myModal" 
-										th:attr="data-user=${item.user.login}" >Enviar mensaje</button>
-									</p>
+									<p th:if="${#strings.length(item.plainDescription)} &lt; 100" 
+										th:utext="${item.plainDescription}"
+										class="featuredTextDesc">Description</p>
 								</div>
 							</div>
-						</div>
+						</a>
+						<button class="btn btn-primary indexMsg" role="button"
+							th:attr="data-user=${item.user.login}" data-toggle="modal"
+							data-target="#myModal">
+							<i class="glyphicon glyphicon-send" style="margin-right: 4px;"></i>
+							Mensaje
+						</button>
 					</div>
 				</div>
 			</div>
-			<!-- Stuff list -->
+			<!-- STUFF LIST -->
 			<div class="col-xs-8 col-md-8 col-lg-8">
 				<div class="row" th:each="item : ${itemsList}">
-					<div class="col-xs-12 col-md-12 col-lg-12">
+					<div class="col-xs-12 col-md-12 col-lg-12 itemList">
 <!-- 						<div class="thumbnail featuredThumbnail"> -->
-						<div th:class="${item.highlight}? 'thumbnail featuredThumbnail' : 'thumbnail'">
-							<div class="row">
-								<div class="col-xs-6 col-md-4 col-lg-4">
-									<div class="thumbnail pull-left" style="min-height: 210px; max-height: 210px; width: 210px">
-										<a th:href="@{'/bazaar/item/' + ${item.itemId}}">
-											<img data-src="holder.js/300x300" alt="Image" 
-											th:src="@{'http://83.165.60.132:8080/' + ${item.mainImage200h}}"
-											style="max-height: 200px; width: 200px; text-align:center; vertical-align: middle;"/>
-										</a>
-									</div>
-								</div>
-								<div class="col-xs-6 col-md-8 col-lg-8">
-									<!-- favorite -->
-<!-- 									<button onclick="favClick(this)" type="submit" class="btn btn-danger btn-m pull-right" -->
-<!-- 									th:value="${item.itemId}" data-toggle="button"> -->
-<!-- 									<i class="glyphicon glyphicon-heart-empty"></i></button> -->
-									<div class="btn-group pull-right" data-toggle="buttons">
-  										<label class="btn btn-danger btn-m">
-  											<input onchange="favClick(this)" type="checkbox" th:value="${item.itemId}"/>
-  											<i th:id="'i'+${item.itemId}" class="glyphicon glyphicon-heart-empty"></i>
-  										</label>
-  									</div>
-									<!--  User info -->
-									<div class="row" style="margin-top: 10px;">
-										<div class="col-xs-4 col-md-4 col-lg-4 userPicMin" style="width: 80px; margin-right: 10px;">
-											<img data-src="holder.js/50x50" alt="Profile pic"
-												th:src="@{'http://83.165.60.132:8080/' + ${item.user.avatar}}"/>
+						<a th:href="@{'/bazaar/item/' + ${item.itemId}}">
+							<div th:class="${item.highlight}? 'thumbnail featuredThumbnail pop' : 'thumbnail'">
+								<div class="row">
+									<div class="col-xs-5 col-md-4 col-lg-4">
+										<div class="thumbnail pull-left itemList" style="min-height: 180px; max-height: 180px; width: 220px; max-width: 100%;">
+												<img data-src="holder.js/300x300" alt="Image" class="img-responsive center-block"
+												th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}"/>
 										</div>
-										<div class="col-xs-12 col-md-8 col-lg-8">
+									</div>
+									<div class="col-xs-7 col-md-8 col-lg-8">
+										<!-- favorite -->
+	<!-- 									<button onclick="favClick(this)" type="submit" class="btn btn-danger btn-m pull-right" -->
+	<!-- 									th:value="${item.itemId}" data-toggle="button"> -->
+	<!-- 									<i class="glyphicon glyphicon-heart-empty"></i></button> -->
+										<div class="btn-group pull-right" data-toggle="buttons"
+											th:onclick="'favClick(' + ${item.itemId} + ', this)'">
+	  										<label class="btn btn-danger btn-m" style="padding: 6px 12px 5px 10px;">
+<!-- 	  											<input type="hidden" th:value="${item.itemId}" th:id="'f' + ${item.itemId}"/> -->
+	  											<i th:id="'i'+${item.itemId}" class="glyphicon glyphicon-heart-empty"></i>
+	  										</label>
+	  									</div>
+										<!--  User info -->
+										<div class="row userInfo">
+											<div class="col-xs-4 col-md-4 col-lg-4 userPicMin" style="width: 80px; margin-right: 10px;">
+												<img data-src="holder.js/50x50" alt="Profile pic"
+													th:src="@{'http://www.elovendo.com/' + ${item.user.avatar}}"/>
+											</div>
+											<div class="col-xs-12 col-md-8 col-lg-8">
+												<div class="row">
+	<!-- 												<div class="col-xs-12 col-md-12"> -->
+														<p class="pull-left">Lo vende <span th:text="${item.user.login}">user</span>
+														en <span th:text="${item.subCategory.subCategoryName}"></span></p>
+	<!-- 												</div> -->
+	<!-- 												<div class="col-xs-12 col-md-12"> -->
+														<p class="pull-left">
+															<span
+																th:text="${#calendars.format(item.startDate, 'dd MMMM yyyy')}">
+																fecha</span> a las <span
+																th:text="${#calendars.format(item.startDate, 'HH:mm')}">
+																hora</span>
+														</p>
+	<!-- 												</div> -->
+												</div>
+											</div>
+										</div>
+										<!--  Caption -->
+										<div class="caption">
 											<div class="row">
-												<div class="col-xs-12 col-md-12">
-													<p class="pull-left">Creado por <span th:text="${item.user.login}">user</span></p>
-												</div>
-												<div class="col-xs-12 col-md-12">
-													<p class="pull-left">
-														<span
-															th:text="${#calendars.format(item.startDate, 'dd MMMM yyyy')}">
-															fecha</span> a las <span
-															th:text="${#calendars.format(item.startDate, 'HH:mm')}">
-															hora</span>
-													</p>
+												<div class="col-xs-12 col-md-12 col-lg-12">
+													<h3 th:text="${item.title}">Title</h3>
 												</div>
 											</div>
-										</div>
-									</div>
-									<!--  Caption -->
-									<div class="caption">
-										<div class="row">
-											<div class="col-xs-12 col-md-12 col-lg-12">
-												<h3 th:text="${item.title}">Title</h3>
-											</div>
-										</div>
-										<!--  Item info -->
-										<div class="row">
-											<div class="col-xs-12 col-md-12 col-lg-12">	
-												<p th:if="${#strings.length(item.plainDescription)} &gt; 99" 
-													th:utext="${#strings.substring(item.plainDescription, 0, 100)} + '(...)'">
-													Description</p>
-												<p th:if="${#strings.length(item.plainDescription)} &lt; 100" 
-													th:utext="${item.plainDescription}">Description</p>
-													<!-- class="mediumTextDesc"  -->
+											<!--  Item info -->
+											<div class="row">
+												<div class="col-xs-12 col-md-12 col-lg-12 itemDesc">	
+													<p th:if="${#strings.length(item.plainDescription)} &gt; 99" 
+														th:utext="${#strings.substring(item.plainDescription, 0, 100)} + '(...)'">
+														Description</p>
+													<p th:if="${#strings.length(item.plainDescription)} &lt; 100" 
+														th:utext="${item.plainDescription}">Description</p>
+														<!-- class="mediumTextDesc"  -->
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-12 col-md-12 col-lg-12" style="margin-bottom: 10px;">
-									<h2 style="display: inline; margin-left: 10px;">
-<!-- 											<span class="label label-info"> -->
-<!-- 												<span class="label label-info" th:text="${item.prize} + ' €'"></span> -->
-												<span class="label label-info" 
-												th:text="${#numbers.formatDecimal(item.prize, 0, 'COMMA', 0, 'POINT')} + ' €'"></span>
-<!-- 											 	<i class="glyphicon glyphicon-euro"></i></span> -->
+								<div class="row">
+									<div class="col-xs-10 col-md-12 col-lg-12" style="margin-bottom: 10px;">
+										<h2 style="display: inline; margin-left: 10px;">
+											<span class="label label-or" 
+											th:text="${#numbers.formatDecimal(item.prize, 0, 'COMMA', 0, 'POINT')} + ' €'"></span>
 										</h2>
-									<h3 th:if="${item.new}" style="display: inline; ">
-										<span class="label label-danger">
-										<i class="glyphicon glyphicon-fire"></i> Nuevo</span>
-									</h3>
-									<h3 th:if="${item.user.phone} != null" style="display: inline; ">
-										<span class="label label-success">
-										<i class="glyphicon glyphicon-phone"></i> Whatssap</span>
-									</h3>
-									<h3 th:if="${item.user.userValue} &gt; 70" style="display: inline;" 
-									onmouseover="mouseHover()"><span class="label label-rep">
-										<i class="glyphicon glyphicon-thumbs-up"></i> Reputado
+										<h4 th:if="${item.new}" style="display: inline; ">
+											<span class="label label-danger">
+											<i class="glyphicon glyphicon-fire"></i> Nuevo</span>
+										</h4>
+										<h4 th:if="${item.user.whatssapUser}" style="display: inline; ">
+											<span class="label label-success">
+											<i class="glyphicon glyphicon-phone"></i> Whatssap</span>
+										</h4>
+										<h4 th:if="${item.user.userValue} &gt; 70" style="display: inline;" 
+										onmouseover="mouseHover()"><span class="label label-rep">
+											<i class="glyphicon glyphicon-thumbs-up"></i> Reputado</span>
+										</h4>
+										<h4 style="display: inline;" >
+										<span class="label label-dis">
+											<i class="glyphicon glyphicon-globe"></i>
+											<span th:text="${'A ' + item.distance + ' KM'}"></span>
 										</span>
-									</h3>
-									<div class="btn-group pull-right" style="margin-right: 10px;">
-										<a th:href="@{'/bazaar/item/' + ${item.itemId}}" class="btn btn-default"
-											role="button">Ver anuncio</a>
-										<button class="btn btn-primary" role="button" th:attr="data-user=${item.user.login}"
-										data-toggle="modal" data-target="#myModal">Enviar mensaje</button>
+										</h4>
+										<div class="btn-group pull-right" style="margin-right: 10px;">
+	
+										</div>
+<!-- 										<div class="btn btn-primary pull-right" th:attr="data-user=${item.user.login}" data-toggle="modal" -->
+<!-- 							data-target="#myModal"> -->
+<!-- 	  										<i class="glyphicon glyphicon-send" style="margin-right: 4px;"></i> Mensaje -->
+<!-- 	  									</div> -->
 									</div>
 								</div>
 							</div>
-						</div>
+						</a>
+						<button class="btn btn-primary itemElement" role="button"
+							th:attr="data-user=${item.user.login}" data-toggle="modal"
+							data-target="#myModal">
+							<i class="glyphicon glyphicon-send" style="margin-right: 4px;"></i> Mensaje
+						</button>
+						
 					</div>
 				</div>
 			</div>
@@ -364,66 +408,152 @@
 		</div>
 	</div>
 
-	<script type="text/javascript">
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var okm = /*[[#{Alert.itemList.favorite.ok}]]*/ 'Added to favorite';
+	var fm = /*[[#{Alert.itemList.favorite.error}]]*/ 'Error adding to favorite. Please try again.';
+	var cat = /*[[${categoryId}]]*/ '0';
+	var sCat = /*[[${subCategoryId}]]*/ '0';
+	/*]]>*/
 	
-	var sendMessageUrl = "/elovendo/messages/send";
-	
-		function mouseHover() {
-			console.log("rep hover");
-		}
+	$(document).ready( function() {
+		$('#category').val(cat);
+		$('#subCategory').val(sCat);
 		
+		$('#prizeForm').submit(function(e) {
+			var destUrl = e.currentTarget.action + getUrlParams();
+			var min = $('#prizeMin').val();
+			var max = $('#prizeMax').val();
+			
+			var currMin = $.url(destUrl).param('min');
+			if (min != '') {
+				if (getURLParameter('min') == null)
+					destUrl = destUrl + "&min=" + min;
+				else destUrl = destUrl.replace('min='+currMin, 'min='+min);
+			} else if (currMin != '') {
+				destUrl = removeParam('min', destUrl);
+			}
+			
+			var currMax = $.url(destUrl).param('max');
+			if (max != '') {
+				if (getURLParameter('max') == null)
+					destUrl = destUrl + "&max=" + max;
+				else destUrl = destUrl.replace('max='+currMax, 'max='+max);
+			} else if (currMax != '') {
+				destUrl = removeParam('max', destUrl);
+			}
+			
+			location.href = destUrl;
+			return false;
+		})
+	});
+	
+	$('#category').change( function() {
+		var select = $(this).find(":selected").text();
+		var selVar = $(this).find(":selected").val();
+// 		console.log("cat changed " + $(this).find(":selected").text());
+		if (select != "")
+			if (selVar == 0)
+				location.href = "/bazaar/category/all" + getUrlParams();
+			else
+				location.href = "/bazaar/category/" + select + getUrlParams();
+	});
+	
+	$('#subCategory').change( function() {
+// 		console.log("subChanged to " + $(this).val());
+		var select = $(this).val();
+		if (select != 0) {
+			location.href = "/bazaar/sub/" + $('#subCategory option:selected').text() + getUrlParams();
+		} else {
+			var select = $('#category').find(":selected").text();
+			location.href = "/bazaar/category/" + select + getUrlParams();
+		}
+	});
+	
+	function favClick(value, d) {
+		var f = value;
+		var cv = $("meta[name='_csrf']").attr("content");
+		var cn = $("meta[name='_csrf_header']").attr("content");
+		var e = "/bazaar/item/fav";
+		
+		$.ajax({
+			  type: "POST",
+			  beforeSend: function (request) { request.setRequestHeader(cn, cv); },
+			  url: e,
+			  data: {id: f},
+			  success: function(data) {
+					$('#favMes').text(okm);
+					$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				},
+				error : function() {
+					$('#favMes').text(fm);
+					$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				}
+			});
+		}
+
+		var sendMessageUrl = "/elovendo/messages/send";
+
+// 		function mouseHover() {
+// 			console.log("rep hover");
+// 		}
+
 		$('#myModal').on('hidden', function() {
 			$('#messageText').value = '';
 		})
-		
-		$('#messageForm').submit(function(event) {
-		    event.preventDefault();
-		    $.ajax({
-	            type : 'POST',
-	            url : sendMessageUrl,
-	            data : ({
-	                receiver : $('#receiver').val(),
-	                messageText: $('#messageText').val()
-	            })
 
-	        });
-		    
-		    document.getElementById('messageText').value = '';
-		    $('#myModal').modal('hide');
+		$('#messageForm').submit(function(event) {
+			event.preventDefault();
+			var cv = $("meta[name='_csrf']").attr("content");
+			var cn = $("meta[name='_csrf_header']").attr("content");
+			$.ajax({
+				type : 'POST',
+				beforeSend : function(request) {
+					request.setRequestHeader(cn, cv);
+				},
+				url : sendMessageUrl,
+				data : ({
+					receiver : $('#receiver').val(),
+					messageText : $('#messageText').val()
+				})
+
+			});
+
+			document.getElementById('messageText').value = '';
+			$('#myModal').modal('hide');
 		});
-		
-		var la = $('#lat');
-		var lo = $('#lng');
-		$('#geoFilter').submit(function(event) {
-			getLocation();
-		});
-		
+
 		function getLocation() {
-			if (navigator.geolocation) {
+			var lat = getURLParameter('lat');
+			var lng = getURLParameter('lng');
+// 			console.log(lat);
+// 			console.log(lng);
+			if (lat != null && lng != null) {
+				document.getElementById('lat').value = lat;
+				document.getElementById('lng').value = lng;
+			} else if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(getPosition);
 			}
 		}
-		
+
+		function fillFilter() {
+			var dis = getURLParameter('dis');
+			if (dis != null) document.getElementById('dis').value = dis;
+			var min = getURLParameter('min');
+			if (min != null) document.getElementById('prizeMin').value = min;
+			var max = getURLParameter('max');
+			if (max != null) document.getElementById('prizeMax').value = max;
+		}
+
 		function getPosition(position) {
-			lat.value = position.coords.latitude;
-			lng.value = position.coords.longitude;
+			document.getElementById('lat').value = position.coords.latitude;
+			document.getElementById('lng').value = position.coords.longitude;
 		}
-		
-		function favClick(toggle) {
-			console.log("clicked fav at " + toggle.value);
-			if (toggle.checked)
-				document.getElementById('i'+toggle.value).className = "glyphicon glyphicon-heart";
-			else
-				document.getElementById('i'+toggle.value).className = "glyphicon glyphicon-heart-empty";
-			
-		}
-		
-		$('a[data-toggle=modal], button[data-toggle=modal]').click(function () {
-		     var user = $(this).data('user');
-		     document.getElementById('receiver').value = user;
+
+		$('a[data-toggle=modal], button[data-toggle=modal]').click(function() {
+			var user = $(this).data('user');
+			document.getElementById('receiver').value = user;
 		});
-		
-		$("#priceSlider").slider({});
 	</script>
 
 </body>

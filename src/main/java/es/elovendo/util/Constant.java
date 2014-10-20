@@ -63,7 +63,7 @@ public class Constant {
 	 * IMAGES
 	 */
 	
-	public static final String RESOURCE_IMAGES_PATH = "file:/home/elovendoadmin/elovendo/imgs/";
+	public static final String RESOURCE_IMAGES_PATH = "file:/home/elovendo/elovendo/imgs/";
 	
 	/**
 	 * VOTE

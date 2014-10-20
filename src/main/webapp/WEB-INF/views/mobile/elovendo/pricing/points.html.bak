@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="UTF-8" />
+<title th:text="#{points.title}">Title</title>
+
+<link href="/css/pricingStyle.css" rel="stylesheet" type="text/css" />
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="/css/styleweb.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+	<!-- Header -->
+	<div th:include="elovendo/header"></div>
+
+	<div id="container">
+		<div class="pricingtable">
+			<div class="top">
+				<h2>5 puntos</h2>
+			</div>
+			<ul>
+				<li><strong>Full</strong> Email Support</li>
+				<li><strong>25GB</strong> of Storage</li>
+				<li><strong>5</strong> Domains</li>
+				<li><strong>10</strong> Email Addresses</li>
+			</ul>
+
+			<hr />
+
+			<h1>
+				3<sup>€</sup>
+			</h1>
+			<p>per month</p>
+
+<!-- 						<a href="#" th:text="#{points.buy}">Buy</a> -->
+			<div th:switch="${user}">
+				<div th:case="null">
+					<form th:action="@{/login}" method="get">
+						<input type="hidden" name="referrer" value="site/pricing/points"/>
+						<input type="image" src="https://www.paypalobjects.com/es_ES/ES/i/btn/btn_buynowCC_LG.gif"
+							border="0" name="submit" alt="PayPal. La forma rápida y segura de pagar en Internet." />
+						<img alt="" border="0" src="https://www.paypalobjects.com/es_ES/i/scr/pixel.gif"
+							width="1" height="1" />
+					</form>
+				</div>
+				<div th:case="*">
+<!-- 					<script async="async" -->
+<!-- 						src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=adrianquintas-facilitator@gmail.com" -->
+<!-- 						data-button="buynow"  -->
+<!-- 						data-name="5 points" -->
+<!-- 						data-amount="5" data-currency="EUR" -->
+<!-- 						data-callback="http://83.165.60.132:8080/site/paypalok" -->
+<!-- 						data-env="sandbox"> -->
+<!-- 			</script> -->			
+<!-- 									th:attr="data-custom='__${user.userId}__'"  -->
+
+<!-- 					<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" -->
+<!-- 						method="post" target="_top"> -->
+<!-- 						<input type="hidden" name="cmd" value="_s-xclick"/>  -->
+<!-- 						<input type="hidden" name="charset" value="utf-8"/> -->
+<!-- 						<input type="hidden" name="custom" th:value="__${user.userId}__"/> -->
+<!-- 						<input type="hidden" name="encrypted" -->
+<!-- 						<input type="image" -->
+<!-- 							src="https://www.sandbox.paypal.com/es_ES/ES/i/btn/btn_buynowCC_LG.gif" -->
+<!-- 							border="0" name="submit" -->
+<!-- 							alt="PayPal. La forma rápida y segura de pagar en Internet."/> -->
+<!-- 						<img alt="" border="0" -->
+<!-- 							src="https://www.sandbox.paypal.com/es_ES/i/scr/pixel.gif" -->
+<!-- 							width="1" height="1"/> -->
+<!-- 					</form> -->
+
+					<form action="https://www.sandbox.paypal.com/cgi-bin/webscr"
+						method="post" target="_top" class="text-center">
+						<input type="hidden" name="cmd" value="_s-xclick" /> 
+						<input type="hidden" name="hosted_button_id" value="WNB543K5GFJD6" /> 
+						<input type="hidden" name="charset" value="utf-8" /> 
+						<input type="hidden" name="custom" th:value="__${user.userId}__" /> 
+						<input type="image" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/buy-logo-large.png"
+							alt="PayPal. La forma rápida y segura de pagar en Internet." />
+					</form>
+<!-- 					src="https://www.sandbox.paypal.com/es_ES/ES/i/btn/btn_buynowCC_LG.gif" -->
+<!-- <input type="image" class="ppb" name="submit" -->
+<!-- 							alt="PayPal. La forma rápida y segura de pagar en Internet." /> -->
+<!-- 						<img alt="" border="0" src="https://www.sandbox.paypal.com/es_ES/i/scr/pixel.gif" -->
+<!-- 							width="1" height="1" /> -->
+
+				</div>
+			</div>
+			
+<!-- 								<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" -->
+<!-- 						method="post" target="_top"> -->
+<!-- 						<input type="hidden" name="cmd" value="_s-xclick"/>  -->
+<!-- 						<input type="hidden" name="business" value="WNB543K5GFJD6"/>  -->
+<!-- 							<input type="hidden" name="lc" value="ES"/>  -->
+<!-- 							<input type="hidden" name="item_name" value="5 puntos"/>  -->
+<!-- 							<input type="hidden" name="amount" value="5.00" />  -->
+<!-- 							<input type="hidden" name="currency_code" value="EUR"/>  -->
+<!-- 							<input type="hidden" name="button_subtype" value="services"/>  -->
+<!-- 							<input type="hidden" name="no_note" value="0"/>  -->
+<!-- 							<input type="hidden" name="cn" value="Añadir instrucciones especiales para el vendedor:"/> -->
+<!-- 						<input type="hidden" name="charset" value="utf-8"/>  -->
+<!-- 						<input type="hidden" name="no_shipping" value="1"/>  -->
+<!-- 						<input type="hidden" name="rm" value="1"/>  -->
+<!-- 						<input type="hidden"  -->
+<!-- 							name="return" value="http://83.165.60.132:8080/site/pricing/paymentfailed"/> -->
+<!-- 						<input type="hidden" name="cancel_return" -->
+<!-- 							value="http://83.165.60.132:8080/site/pricing/paymentok"/> -->
+<!-- 						<input type="hidden" name="bn" -->
+<!-- 							value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHostedGuest"/>  -->
+<!-- 							<input type="image" -->
+<!-- 							src="https://www.sandbox.paypal.com/es_ES/ES/i/btn/btn_buynowCC_LG.gif" -->
+<!-- 							border="0" name="submit" -->
+<!-- 							alt="PayPal. La forma rápida y segura de pagar en Internet."/> -->
+<!-- 						<img alt="" border="0" src="https://www.sandbox.paypal.com/es_ES/i/scr/pixel.gif" -->
+<!-- 							width="1" height="1"/> -->
+<!-- 					</form> -->
+
+			<!-- <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top"> -->
+<!-- 				<input type="hidden" name="cmd" value="_s-xclick" />  -->
+<!-- 				<input type="hidden" name="hosted_button_id" value="ZV8UTLQAJC8RN" />  -->
+<!-- 				<input type="image" src="https://www.paypalobjects.com/es_ES/ES/i/btn/btn_buynowCC_LG.gif" -->
+<!-- 					border="0" name="submit" alt="PayPal. La forma rápida y segura de pagar en Internet." />  -->
+<!-- 				<input type="hidden" name="custom" value="lot of stuff"/> -->
+<!-- 				<img alt="" border="0" src="https://www.paypalobjects.com/es_ES/i/scr/pixel.gif"  -->
+<!-- 					width="1" height="1" /> -->
+<!-- 			</form> -->
+			
+			
+<!-- 			th:attr="data-name='555'"  -->
+
+<!-- 			<form action="https://www.paypal.com/cgi-bin/webscr" method="post"> -->
+<!-- 			<input type="hidden" name="cmd" value="_xclick"/> -->
+<!-- 			<input type="hidden" name="hosted_button_id" value="KN7ACTU8MVZNE"/> -->
+<!-- <input type="hidden" name="custom" value="lot of stuff"/> -->
+<!-- 			<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_subscribeCC_LG.gif"  -->
+<!-- 			border="0" name="submit" alt="PayPal - The safer, easier way to pay online!"/> -->
+<!-- 			<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1"/> -->
+<!-- 			</form> -->
+		</div>
+
+		<div class="pricingtable">
+			<div class="top">
+				<h2>15 puntos</h2>
+			</div>
+			<ul>
+				<li><strong>Full</strong> Email Support</li>
+				<li><strong>50GB</strong> of Storage</li>
+				<li><strong>10</strong> Domains</li>
+				<li><strong>20</strong> Email Addresses</li>
+			</ul>
+
+			<hr />
+
+			<h1>
+				6<sup>€</sup>
+			</h1>
+			<p>per month</p>
+
+			<a href="#" th:text="#{points.buy}">Buy</a>
+		</div>
+
+		<div class="pricingtable">
+			<div class="top">
+				<h2>50 puntos</h2>
+			</div>
+			<ul>
+				<li><strong>Full</strong> Email Support</li>
+				<li><strong>Unlimited</strong> Storage</li>
+				<li><strong>Unlimited</strong> Domains</li>
+				<li><strong>50</strong> Email Addresses</li>
+			</ul>
+
+			<hr />
+
+			<h1>
+				10<sup>€</sup>
+			</h1>
+
+			<form action="https://www.paypal.com/cgi-bin/webscr" method="post"
+				target="_top">
+				<input type="hidden" name="cmd" value="_s-xclick" /> <input
+					type="hidden" name="hosted_button_id" value="ZV8UTLQAJC8RN" /> <input
+					type="image"
+					src="https://www.paypalobjects.com/es_ES/ES/i/btn/btn_buynowCC_LG.gif"
+					border="0" name="submit"
+					alt="PayPal. La forma rápida y segura de pagar en Internet." /> 
+					<input type="hidden" name="custom" value="lot of stuff"/>
+					<img alt="" border="0"
+					src="https://www.paypalobjects.com/es_ES/i/scr/pixel.gif" width="1"
+					height="1" />
+			</form>
+
+
+			<!--       <a href="#" th:text="#{points.buy}">Buy</a> -->
+		</div>
+
+	</div>
+
+	<div class="container">
+		<div class="row text-center pad-top ">
+			<div class="col-md-12">
+				<h2>Comprar puntos</h2>
+			</div>
+		</div>
+		<div class="row text-center pad-top">
+			<div class="col-md-3 col-sm-3 col-xs-6">
+				<div class="panel panel-danger">
+					<div class="panel-heading">
+						<h4>4 PUNTOS</h4>
+					</div>
+					<div class="panel-body">
+
+						<ul class="plan">
+							<li class="price"><strong>1</strong> <i
+								class="fa fa-euro"></i></li>
+							<li><i class="fa fa-check"></i> Instantáneos *</li>
+							<li><i class="fa fa-check"></i> No caducan</li>
+						</ul>
+					</div>
+					<div class="panel-footer">
+						<div th:switch="${user}">
+							<div th:case="null">
+								<form th:action="@{/login}" method="get">
+									<input type="hidden" name="referrer"
+										value="site/pricing/points" /> <input type="image"
+										src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/buy-logo-large.png"
+										alt="PayPal. La forma rápida y segura de pagar en Internet." />
+								</form>
+							</div>
+							<div th:case="*">
+								<form action="https://www.sandbox.paypal.com/cgi-bin/webscr"
+									method="post" target="_top" class="text-center">
+									<input type="hidden" name="cmd" value="_s-xclick" /> <input
+										type="hidden" name="hosted_button_id" value="WNB543K5GFJD6" />
+									<input type="hidden" name="charset" value="utf-8" /> <input
+										type="hidden" name="custom" th:value="__${user.userId}__" />
+									<input type="image"
+										src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/buy-logo-large.png"
+										alt="PayPal. La forma rápida y segura de pagar en Internet." />
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-3 col-xs-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h4>9 PUNTOS</h4>
+					</div>
+					<div class="panel-body">
+
+						<ul class="plan">
+							<li class="price"><strong>2</strong> <i
+								class="fa fa-euro"></i></li>
+							<li><i class="fa fa-check"></i> Instantáneos *</li>
+							<li><i class="fa fa-check"></i> No caducan</li>
+						</ul>
+					</div>
+					<div class="panel-footer">
+						<div th:switch="${user}">
+							<div th:case="null">
+								<form th:action="@{/login}" method="get">
+									<input type="hidden" name="referrer"
+										value="site/pricing/points" /> <input type="image"
+										src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/buy-logo-large.png"
+										alt="PayPal. La forma rápida y segura de pagar en Internet." />
+								</form>
+							</div>
+							<div th:case="*">
+								<form action="https://www.sandbox.paypal.com/cgi-bin/webscr"
+									method="post" target="_top" class="text-center">
+									<input type="hidden" name="cmd" value="_s-xclick" /> <input
+										type="hidden" name="hosted_button_id" value="WNB543K5GFJD6" />
+									<input type="hidden" name="charset" value="utf-8" /> <input
+										type="hidden" name="custom" th:value="__${user.userId}__" />
+									<input type="image"
+										src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/buy-logo-large.png"
+										alt="PayPal. La forma rápida y segura de pagar en Internet." />
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-3 col-xs-6">
+				<div class="panel panel-success">
+					<div class="panel-heading">
+						<h4>12 PUNTOS</h4>
+					</div>
+					<div class="panel-body">
+
+						<ul class="plan">
+							<li class="price"><strong>3</strong> <i
+								class="fa fa-euro"></i></li>
+							<li><i class="fa fa-check"></i> Instantáneos *</li>
+							<li><i class="fa fa-check"></i> No caducan</li>
+						</ul>
+					</div>
+					<div class="panel-footer">
+						<div th:switch="${user}">
+							<div th:case="null">
+								<form th:action="@{/login}" method="get">
+									<input type="hidden" name="referrer"
+										value="site/pricing/points" /> <input type="image"
+										src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/buy-logo-large.png"
+										alt="PayPal. La forma rápida y segura de pagar en Internet." />
+								</form>
+							</div>
+							<div th:case="*">
+								<form action="https://www.sandbox.paypal.com/cgi-bin/webscr"
+									method="post" target="_top" class="text-center">
+									<input type="hidden" name="cmd" value="_s-xclick" /> <input
+										type="hidden" name="hosted_button_id" value="WNB543K5GFJD6" />
+									<input type="hidden" name="charset" value="utf-8" /> <input
+										type="hidden" name="custom" th:value="__${user.userId}__" />
+									<input type="image"
+										src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/buy-logo-large.png"
+										alt="PayPal. La forma rápida y segura de pagar en Internet." />
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-3 col-xs-6">
+				<div class="panel panel-info">
+					<div class="panel-heading">
+						<h4>20 PUNTOS</h4>
+					</div>
+					<div class="panel-body">
+						<ul class="plan">
+							<li class="price"><strong>4</strong> <i
+								class="fa fa-euro"></i></li>
+							<li><i class="fa fa-check"></i> Instantáneos *</li>
+							<li><i class="fa fa-check"></i> No caducan</li>
+						</ul>
+					</div>
+					<div class="panel-footer">
+						<div th:switch="${user}">
+							<div th:case="null">
+								<form th:action="@{/login}" method="get">
+									<input type="hidden" name="referrer"
+										value="site/pricing/points" /> <input type="image"
+										src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/buy-logo-large.png"
+										alt="PayPal. La forma rápida y segura de pagar en Internet." />
+								</form>
+							</div>
+							<div th:case="*">
+								<form action="https://www.sandbox.paypal.com/cgi-bin/webscr"
+									method="post" target="_top" class="text-center">
+									<input type="hidden" name="cmd" value="_s-xclick" /> <input
+										type="hidden" name="hosted_button_id" value="WNB543K5GFJD6" />
+									<input type="hidden" name="charset" value="utf-8" /> <input
+										type="hidden" name="custom" th:value="__${user.userId}__" />
+									<input type="image"
+										src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/buy-logo-large.png"
+										alt="PayPal. La forma rápida y segura de pagar en Internet." />
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

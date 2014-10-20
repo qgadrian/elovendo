@@ -31,7 +31,7 @@ public class BeanConf {
 		ds.setDriverClassName("com.mysql.jdbc.Driver");
 		ds.setUrl("jdbc:mysql://localhost:3306/elovendo");
 		ds.setUsername("elovendoSQLadmin");
-		ds.setPassword("eLa#A45#z23dRQaS5");
+		ds.setPassword("eLa#A45#z23dRQ02j3");
 		return ds;
     }
 	

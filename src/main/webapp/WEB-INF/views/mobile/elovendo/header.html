@@ -19,6 +19,7 @@
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
 <link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
+
 <!-- <link rel="stylesheet" type="text/css" href="/css/styleweb.css" media="screen" /> -->
 
 <!-- Header handler -->
@@ -27,7 +28,7 @@
 <!-- <meta charset="utf-8" /> -->
 <!-- <meta name="description" content="Elovendo" /> -->
 </head>
-	<body>
+	<body onload="getMessages()">
 <!-- 		<div id="header-outer"> -->
 <!-- 			<div id="top"> -->
 <!-- 				<a href="/elovendo/index"> -->
@@ -44,7 +45,7 @@
 <!-- http://www.thymeleaf.org/doc/usingthymeleaf.html#referencing-fragments-without-thfragment -->
 
 	<!-- Bootstrap nav bar -->
-	<nav class="navbar navbar-default" role="navigation">
+	<nav class="navbar navbar-default headerStyle" role="navigation">
 		<div class="container-fluid">
 			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
@@ -118,25 +119,26 @@
 									<p th:switch="${#httpServletRequest.remoteUser}" class="navbar-btn">
 										<a th:case="null" href="/login" class="btn btn-info"
 										th:text="#{sell.button}">  Sell </a>
-										<a th:case="*" href="/site/items/item" class="btn btn-info"
+										<a th:case="*" href="/bazaar/add/item" class="btn btn-info"
 										th:text="#{sell.button}">  Sell </a>
 									</p>
 								</li>
 							</ul>
 						
-							<ul class="nav navbar-nav">
+							<ul class="nav navbar-nav navbar-hs">
 								<li class="dropdown">
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-											<img th:src="@{'http://83.165.60.132:8080/' + ${session.userProfilePicMin}}"/>
+											<img th:src="@{'http://www.elovendo.com/' + ${session.userProfilePicMin}}"/>
 										<span th:text="${session.userName}"></span> <span class="caret"></span></a>
 									<ul class="dropdown-menu" role="menu">
-										<li><a href="#">Perfil</a></li>
+										<li><a href="/site/profile">Perfil</a></li>
 										<li><a href="#">Votos</a></li>
 										<li><a href="/site/pricing/points">Créditos</a></li>
 										<li class="divider"></li>
-										<li><a href="#"><span class="badge pull-right"
-										th:text="${T(es.telocompro.service.message.MessageServiceImpl).getUnreadMessages(session.userName)}">0</span>
-										Mensajes</a></li>
+										<li><a href="/elovendo/messages/inbox">
+											<span id ="messageBadge" class="badge pull-right">0</span>
+											Mensajes</a>
+										</li>
 										<li class="divider"></li>
 										<li><a href="/logout">Cerrar sesión</a></li>
 									</ul>
@@ -150,6 +152,35 @@
 		</div>
 		<!-- /.container-fluid -->
 	</nav>
+	
+	<script th:inline="javascript">
+	
+	/*<![CDATA[*/
+	var nm = /*[[#{Alert.message.new}]]*/ 'New message';
+	/*]]>*/
+	
+	$(document).ready(function() {
+		$.get("/elovendo/messages/getUnread", function(data) {
+			try {
+				document.getElementById('messageBadge').innerHTML = data;
+				if (data>0) {
+					var al = document.createElement('div');
+					al.className = 'falert alert alert-success';
+					al.id = "favMesDiv";
+					var sp = document.createElement('span');
+					sp.id = "favMes";
+					sp.innerHTML = nm;
+					al.appendChild(sp);
+					var cont = document.getElementById('container');
+					document.body.insertBefore(al, cont);
+					$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				}
+			} catch(err) {}
+		});
+	});
+	
+	</script>
+
 </body>
 </html>
 

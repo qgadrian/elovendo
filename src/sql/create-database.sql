@@ -39,6 +39,12 @@ INSERT INTO subcategory VALUES(9, 2, 'Zapatillas');
 INSERT INTO subcategory VALUES(10, 2, 'Bicicletas');
 INSERT INTO subcategory VALUES(11, 2, 'Accesorios');
 
+INSERT INTO subcategory VALUES(12, 3, 'Sofás');
+INSERT INTO subcategory VALUES(13, 3, 'Electrodomésticos');
+INSERT INTO subcategory VALUES(14, 3, 'Muebles');
+INSERT INTO subcategory VALUES(15, 3, 'Jardín');
+INSERT INTO subcategory VALUES(16, 3, 'Otros');
+
 
 -- ITEMS
 

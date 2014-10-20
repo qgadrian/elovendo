@@ -41,6 +41,9 @@
     
     <link rel="stylesheet" type="text/css" href="/css/loginStyle.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="/css/styleweb.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-social.css" media="screen" />
+<!--     <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" /> -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     
     <!-- ************************* -->
 <!-- ******* Bootstrap ******* -->
@@ -62,28 +65,50 @@
 <!--         <input type="submit" value="Log In"/> -->
 <!--     </form> -->
 
+	<!-- Header -->
+	<div th:replace="elovendo/header"></div>
+
     <div class="container">
     
     <div class="row">
-			<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px; height:200px;">
-				<img src="/images/webimg/logo-full-200h.png"/>
+			<div class="col-xs-12 col-md-12 text-center" style="margin-top:20px; height:200px;">
+				<a href="/index" ><img src="/images/webimg/logo-full-200h.png" /> </a>
 			</div>
+		</div>
+		
+		<div th:if="${param.error}" class="alert alert-danger text-center" role="alert" style="margin:40px auto 0px auto; max-width: 330px;">
+				<p><strong>User name or password incorrect</strong></p>
 		</div>
 
       <form class="form-signin" role="form" th:action="@{/login}" method="post"  accept-charset="UTF-8">
-        <h2 class="form-signin-heading">Inicia sesión</h2>
+        <h2 class="form-signin-heading" style="color: #563D7C">Inicia sesión</h2>
         <hr class="colorgraph" />
         <input type="text" class="form-control" placeholder="Usuario" 
         required="required" autofocus="autofocus" name="username"/>
         <input type="password" class="form-control" placeholder="Password" 
-        required="required" name="password"/>
-        <div class="checkbox">
+        required="required" name="password"/> 
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+			<div class="checkbox">
           <label>
             <input type="checkbox" value="remember-me"/> Remember me
           </label>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
+      
+      <div class="col-xs-4">
+	      <a th:href="@{/auth/facebook(scope='email')}" class="btn btn-block btn-social btn-facebook">
+	      	<i class="fa fa-facebook"></i> Facebook login
+	      </a>
+	      
+	       <a th:href="@{/auth/google(scope='email')}" class="btn btn-block btn-social btn-google-plus">
+	      	<i class="fa fa-google"></i> Google login
+	      </a>
+      
+      <p><a th:href="@{/auth/twitter(scope='email')}" class="btn btn-block btn-social btn-twitter">
+      	<i class="fa fa-twitter"></i> Twitter
+      </a></p>
+      </div>
 
     </div> <!-- /container -->
 
