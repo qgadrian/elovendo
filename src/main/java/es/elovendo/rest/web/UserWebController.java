@@ -56,6 +56,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
+
 import es.elovendo.model.item.Item;
 import es.elovendo.model.user.EditUserForm;
 import es.elovendo.model.user.User;
@@ -246,9 +250,19 @@ public class UserWebController {
 //					"Error.password.missmatch", null, locale)));
 //		}
 
+		// Validate email address
 		if (!EmailValidator.getInstance().isValid(userForm.getEmail())) {
 			result.addError(new FieldError("user", "email", messageSource.getMessage(
 					"Error.user.email", null, locale)));
+		}
+		
+		// Validate phone number
+		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+		PhoneNumber phoneNumber = new PhoneNumber();
+		phoneNumber.setCountryCode(34).setNationalNumber(userForm.getPhoneNumber());
+		if (!phoneUtil.isValidNumber(phoneNumber)) {
+			result.addError(new FieldError("user", "phone", messageSource.getMessage(
+					"Error.user.phone", null, locale)));
 		}
 		
 		// Validate that confirm password matches

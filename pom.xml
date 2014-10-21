@@ -96,7 +96,7 @@
 <!-- 			</exclusions> -->
 		</dependency>
 		
-		<!-- Provice the embedded container -->
+		<!-- Provide the embedded container -->
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -199,6 +199,13 @@
 			<groupId>org.imgscalr</groupId>
 			<artifactId>imgscalr-lib</artifactId>
 			<version>4.2</version>
+		</dependency>
+		
+		<!-- Phone validation -->
+		<dependency>
+			<groupId>com.googlecode.libphonenumber</groupId>
+			<artifactId>libphonenumber</artifactId>
+			<version>6.3.1</version>
 		</dependency>
 
 		<!--SECURITY -->

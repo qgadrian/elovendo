@@ -4,11 +4,15 @@
 
 
 /*********************************************************************************/
-/* Body                                                                         */
+/* Body and stuff                                                                */
 /*********************************************************************************/
 body {
 	background-color:#FBFAF9;
 /* 	font-family: Inconsolata; */
+}
+
+.form-fix {
+	z-index:0!important;
 }
 
 /*********************************************************************************/
@@ -678,7 +682,7 @@ span.round-tabs.green{
     border: 2px solid rgb(34, 194, 34);
 }
 
-li.active span.round-tabs.green{
+.board li.active span.round-tabs.green{
     background: #fff !important;
     border: 2px solid #ddd;
     color: rgb(34, 194, 34);
@@ -688,7 +692,7 @@ span.round-tabs.yellow{
     color: #febe29;border: 2px solid #febe29;
 }
 
-li.active span.round-tabs.yellow{
+.board li.active span.round-tabs.yellow{
     background: #fff !important;
     border: 2px solid #ddd;
     color: #febe29;
@@ -698,7 +702,7 @@ span.round-tabs.blue{
     color: #3e5e9a;border: 2px solid #3e5e9a;
 }
 
-li.active span.round-tabs.blue{
+.board li.active span.round-tabs.blue{
     background: #fff !important;
     border: 2px solid #ddd;
     color: #3e5e9a;
@@ -708,7 +712,7 @@ span.round-tabs.red{
     color: #f1685e;border: 2px solid #f1685e;
 }
 
-li.active span.round-tabs.red{
+.board li.active span.round-tabs.red{
     background: #fff !important;
     border: 2px solid #ddd;
     color: #f1685e;
@@ -719,7 +723,7 @@ span.round-tabs.violet{
     border: 2px solid #974ddd;
 }
 
-li.active span.round-tabs.violet{
+.board li.active span.round-tabs.violet{
     background: #fff !important;
     border: 2px solid #ddd;
     color: #974ddd;
@@ -730,7 +734,7 @@ span.round-tabs.lblue{
     border: 2px solid #58ACFA;
 }
 
-li.active span.round-tabs.lblue{
+.board li.active span.round-tabs.lblue{
     background: #fff !important;
     border: 2px solid #ddd;
     color: #58ACFA;
@@ -740,7 +744,7 @@ span.round-tabs.grey{
     color: #999;border: 2px solid #999;
 }
 
-li.active span.round-tabs.grey{
+.board li.active span.round-tabs.grey{
     background: #fff !important;
     border: 2px solid #ddd;
     color: #999;
@@ -764,7 +768,7 @@ li.active span.round-tabs.grey{
     z-index: 1;
     transition:0.2s ease-in-out;
 }*/
-li:after {
+.board li:after {
     content: " ";
     position: absolute;
     left: 45%;
@@ -777,7 +781,7 @@ li:after {
     transition:0.1s ease-in-out;
     
 }
-li.active:after {
+.board li.active:after {
     content: " ";
     position: absolute;
     left: 45%;
@@ -849,7 +853,7 @@ height: 50px;
 line-height:50px;
 }
 
-li.active:after {
+.board li.active:after {
 content: " ";
 position: absolute;
 left: 35%;

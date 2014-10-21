@@ -134,6 +134,33 @@ public class UserForm {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
+	
+	/* Helper methods */
+	
+	/**
+	 * Return the phone number trimmed
+	 * @return Phone's number without spaces
+	 */
+	public long getPhoneNumber() {
+		String temp = this.phone.replace("+", "");
+		if(this.phone.contains(" ")) {
+			String deleteTarget = temp.substring(0, this.phone.indexOf(" "));
+			temp = temp.replaceFirst(deleteTarget, "").trim();
+		}
+		return Long.valueOf(temp.replace(" ", ""));
+	}
+	
+	/**
+	 * Returns phone's number country code, without '+' symbol
+	 * @return Country code
+	 */
+	public int getCountryCode() {
+		String temp = this.phone.replace("+", "");
+		if(this.phone.contains(" ")) {
+			temp = temp.substring(0, this.phone.indexOf(" "));
+		}
+		return Integer.valueOf(temp);
+	}
 
 	@Override
 	public String toString() {
