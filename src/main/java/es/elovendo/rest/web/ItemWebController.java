@@ -304,6 +304,12 @@ public class ItemWebController {
 		} catch (ItemNotFoundException e) {
 			return "elovendo/error/error";
 		}
+		
+		model.addAttribute("images", item.getAllImages200h());
+		logger.error("images size " + item.getAllImages200h().size());
+		for (String s: item.getAllImages200h()) {
+			logger.error("image: " + s);
+		}
 
 		model.addAttribute("item", item);
 		model.addAttribute("votesPositive", voteService.getNumberVotesPositive(item.getUser().getUserId()));

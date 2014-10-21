@@ -2,7 +2,9 @@ package es.elovendo.model.item;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -215,6 +217,28 @@ public class Item {
 	@Transient
 	public String getMainImage200h() {
 		return this.mainImage.concat("-200h.jpg");
+	}
+	
+	@Transient
+	public List<String> getAllImages200h() {
+		List<String> images = new ArrayList<>();
+		
+		if (this.image1 != null) images.add(this.image1.concat("-200h.jpg"));
+		if (this.image2 != null) images.add(this.image2.concat("-200h.jpg"));
+		if (this.image3 != null) images.add(this.image3.concat("-200h.jpg"));
+		
+		return images;
+	}
+	
+	@Transient
+	public List<String> getAllImages() {
+		List<String> images = new ArrayList<>();
+		
+		if (this.image1 != null) images.add(this.image1.concat(".jpg"));
+		if (this.image2 != null) images.add(this.image2.concat(".jpg"));
+		if (this.image3 != null) images.add(this.image3.concat(".jpg"));
+		
+		return images;
 	}
 
 	public void setImage1(String image1) {

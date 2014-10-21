@@ -213,10 +213,11 @@ public class ItemServiceImpl implements ItemService {
 				itemForm.getLatitude(), itemForm.getLongitude());
 		
 		// Save new images (produce an unique name for an item)
-		saveMultiPartFileImage(item, mainImage);
-		saveMultiPartFileImage(item, image1);
-		saveMultiPartFileImage(item, image2);
-		saveMultiPartFileImage(item, image3);
+//		saveMultiPartFileImage(item, mainImage);
+//		saveMultiPartFileImage(item, image1);
+//		saveMultiPartFileImage(item, image2);
+//		saveMultiPartFileImage(item, image3);
+		item = saveMultiPartFileImage(item, mainImage, image1, image2, image3);
 		
 		// Randomize coordinates
 		Double[] latLng = randomizeCoordinates(itemForm.getLatitude(), itemForm.getLongitude());
@@ -274,10 +275,11 @@ public class ItemServiceImpl implements ItemService {
 		}
 		
 		// Save new images (produce an unique name for an item)
-		saveMultiPartFileImage(item, mainImage);
-		saveMultiPartFileImage(item, image1);
-		saveMultiPartFileImage(item, image2);
-		saveMultiPartFileImage(item, image3);
+//		item = saveMultiPartFileImage(item, mainImage);
+//		item = saveMultiPartFileImage(item, image1);
+//		item = saveMultiPartFileImage(item, image2);
+//		item = saveMultiPartFileImage(item, image3);
+		item = saveMultiPartFileImage(item, mainImage, image1, image2, image3);
 
 		item.setTitle(itemForm.getTitle());
 		item.setDescription(itemForm.getDescription());
@@ -496,7 +498,7 @@ public class ItemServiceImpl implements ItemService {
 	 * @param item
 	 * @param file
 	 */
-	private void saveMultiPartFileImage(Item item, MultipartFile file) {
+	private Item saveMultiPartFileImage(Item item, MultipartFile file) {
 		if (!file.isEmpty()) {
 			byte[] bytes = null;
 			try {
@@ -505,7 +507,33 @@ public class ItemServiceImpl implements ItemService {
 				logger.debug("Error getting bytes from image");
 			}
 			item.setMainImage(saveImage(item, bytes));
+			return item;
 		}
+		return item;
+	}
+	
+	private Item saveMultiPartFileImage(Item item, MultipartFile... files) {
+		int count = 0;
+		for (MultipartFile file : files) {
+			if (!file.isEmpty()) {
+				byte[] bytes = null;
+				try {
+					bytes = file.getBytes(); // Main image
+				} catch (IOException e) {
+					logger.debug("Error getting bytes from image");
+				}
+				switch (count) {
+					case 0: item.setMainImage(saveImage(item, bytes)); break;
+					case 1: item.setImage1(saveImage(item, bytes)); break;
+					case 2: item.setImage2(saveImage(item, bytes)); break;
+					case 3: item.setImage3(saveImage(item, bytes)); break;
+					default: break;
+				}
+				count++;
+			}
+		}
+		
+		return item;
 	}
 	
 	/**
