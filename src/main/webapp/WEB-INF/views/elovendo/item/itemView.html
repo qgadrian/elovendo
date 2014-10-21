@@ -81,16 +81,18 @@
 				<div class="row">
 					<div class="col-xs-12 col-md-12 itemViewThumb">
 						<div class="thumbnail">
-							<a th:href="@{'http://www.elovendo.com/' + ${item.mainImage}}"
-								data-lightbox="itemImage"> 
-								<img alt="Image" th:src="@{'http://www.elovendo.com/' + ${item.mainImage}}" />
-							</a>
-							<div th:each="image : ${images}">
-								<a th:href="@{'http://www.elovendo.com/' + ${image}}"
+							<div class="text-center">
+								<a th:href="@{'http://www.elovendo.com/' + ${item.mainImage}}"
 									data-lightbox="itemImage"> 
-									<img alt="Image" th:src="@{'http://www.elovendo.com/' + ${image}}" />
+									<img alt="Image" th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}" class="thumbnail"/>
 								</a>
-							</div> 
+								<div th:each="image : ${images}" class="mrimg">
+									<a th:href="@{'http://www.elovendo.com/' + ${#strings.replace(image, '-200h', '')}}"
+										data-lightbox="itemImage"> 
+										<img alt="Image" th:src="@{'http://www.elovendo.com/' + ${image}}" class="thumbnail"/>
+									</a>
+								</div>
+							</div>
 							<hr class="colorgraph" />
 							<div class="text-center">
 								<h3 th:if="${item.new}" style="display: inline;">

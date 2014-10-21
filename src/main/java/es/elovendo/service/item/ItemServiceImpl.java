@@ -213,10 +213,6 @@ public class ItemServiceImpl implements ItemService {
 				itemForm.getLatitude(), itemForm.getLongitude());
 		
 		// Save new images (produce an unique name for an item)
-//		saveMultiPartFileImage(item, mainImage);
-//		saveMultiPartFileImage(item, image1);
-//		saveMultiPartFileImage(item, image2);
-//		saveMultiPartFileImage(item, image3);
 		item = saveMultiPartFileImage(item, mainImage, image1, image2, image3);
 		
 		// Randomize coordinates
@@ -275,10 +271,6 @@ public class ItemServiceImpl implements ItemService {
 		}
 		
 		// Save new images (produce an unique name for an item)
-//		item = saveMultiPartFileImage(item, mainImage);
-//		item = saveMultiPartFileImage(item, image1);
-//		item = saveMultiPartFileImage(item, image2);
-//		item = saveMultiPartFileImage(item, image3);
 		item = saveMultiPartFileImage(item, mainImage, image1, image2, image3);
 
 		item.setTitle(itemForm.getTitle());
@@ -492,26 +484,13 @@ public class ItemServiceImpl implements ItemService {
 
 		return coords;
 	}
-	
+
 	/**
-	 * Gets @MultiPartFile data, saves it to a file and updates item information
+	 * Gets @MultiPartFile data from the image list, saves it to a file and updates item information
 	 * @param item
-	 * @param file
+	 * @param files
+	 * @return
 	 */
-	private Item saveMultiPartFileImage(Item item, MultipartFile file) {
-		if (!file.isEmpty()) {
-			byte[] bytes = null;
-			try {
-				bytes = file.getBytes(); // Main image
-			} catch (IOException e) {
-				logger.debug("Error getting bytes from image");
-			}
-			item.setMainImage(saveImage(item, bytes));
-			return item;
-		}
-		return item;
-	}
-	
 	private Item saveMultiPartFileImage(Item item, MultipartFile... files) {
 		int count = 0;
 		for (MultipartFile file : files) {
