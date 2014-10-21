@@ -550,7 +550,11 @@ public class ItemServiceImpl implements ItemService {
 				ImageIO.write(buffImg, "jpg", imgFile);
 
 				/* IMAGE RESIZED */
-				BufferedImage resizedImage = Scalr.resize(buffImg, 800);
+				BufferedImage resizedImage = buffImg;
+				if (resizedImage.getHeight() < 200 && resizedImage.getWidth() < 200) {
+					resizedImage = Scalr.resize(buffImg, 800);
+				}
+					
 				// Create file
 				File imgResizedFile = new File(folderPath.getAbsolutePath() + "/" + imageFileName + "-200h.jpg");
 				// Write image in file
@@ -561,8 +565,13 @@ public class ItemServiceImpl implements ItemService {
 				// item.setMainImage(IOUtil.calculateFileName(item) +"/"+
 				// imageFileName);
 
-				logger.warn("going to return " + IOUtil.calculateFileName(item) + "/" + imageFileName);
+//				logger.debug("Saving image with path " + IOUtil.calculateFileName(item) + "/" + imageFileName);
 				String absolutePath = IOUtil.calculateFileName(item) + "/" + imageFileName;
+				
+				// Remember to call Image.flush() on the src to free up native resources 
+				// and make it easier for the GC to collect the unused image.
+				resizedImage.flush();
+				
 				return absolutePath;
 
 			} catch (NullPointerException | IOException | IllegalArgumentException e) {
