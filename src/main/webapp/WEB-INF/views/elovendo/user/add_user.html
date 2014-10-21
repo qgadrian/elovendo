@@ -252,6 +252,26 @@
 
 
 <script type="text/javascript">
+
+	$(document).ready(function() {
+		console.log("phone valid? " + $('#phone').val());
+		
+		console.log("flag? " + $(".flag .es").prop('class'));
+		var els = document.getElementsByClassName('flag');
+		
+		console.log("size " + $.fn.intlTelInput.getCountryData().length);
+		
+		var isValid = intlTelInputUtils.isValidNumber($('#phone').val(), 34);
+		console.log("really valid? " + isValid);
+// 		var isValid = $('#phone').intlTelInput("isValidNumber");
+		
+		if (isValid) {
+			$("[name='whatssap']").bootstrapSwitch('disabled', false, true);
+		} else {
+			$("[name='whatssap']").bootstrapSwitch('disabled', true, true);
+		}
+	});
+	
 	$("[name='whatssap']").bootstrapSwitch({
 		checked: true,
 		disabled: true
@@ -268,7 +288,7 @@
 	$('#phone').intlTelInput({
 		 defaultCountry: "auto",
 		 numberType: intlTelInputUtils.numberType.MOBILE,
-		 preferredCountries: ["us", "gb", "es"]
+		 preferredCountries: ["us", "gb", "es", "fr", "in", "de"]
 	});
 	
 	$('#phone').on("change", function() {

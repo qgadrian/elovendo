@@ -208,21 +208,25 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="principalImage" class="col-sm-2 control-label">Imagen principal</label>
+				<label for="principalImage" class="col-sm-2 control-label" th:text="#{Item.add.images.title}">Images</label>
 				<div class="col-sm-5 col-lg-4">
 					<input id="principalImage" type="file" class="file" data-show-upload="false" 
 					name="mI" accept=".jpg, .jpeg"/>
 				</div>
-			</div>
-			<div class="form-group">
-				<label for="exampleInputFile" class="col-sm-2 control-label">Resto imágenes</label>
 				<div class="col-sm-5 col-lg-4">
 					<input id="more-img-1" type="file" class="file" data-show-upload="false" 
 					name="i1" accept=".jpg, .jpeg"/>
 				</div>
+			</div>
+			<div class="form-group">
+				<label for="exampleInputFile" class="col-sm-2 control-label"></label>
 				<div class="col-sm-5 col-lg-4">
 					<input id="more-img-2" type="file" class="file" data-show-upload="false" 
 					name="i2" accept=".jpg, .jpeg"/>
+				</div>
+				<div class="col-sm-5 col-lg-4">
+					<input id="more-img-3" type="file" class="file" data-show-upload="false" 
+					name="i3" accept=".jpg, .jpeg"/>
 				</div>
 			</div>
 <!-- 			<div class="form-group"> -->
@@ -234,10 +238,7 @@
 <!-- 			</div> -->
 			<div class="form-group">
 				<label for="exampleInputFile" class="col-sm-2 control-label">Resto imágenes</label>
-				<div class="col-sm-5 col-lg-4">
-					<input id="more-img-3" type="file" class="file" data-show-upload="false" 
-					name="i3" accept=".jpg, .jpeg"/>
-				</div>
+				
 			</div>
 			<div><h3>Localización</h3><hr class="hrStyle2" /></div>
 			<div class="bs-callout bs-callout-geo">
@@ -357,9 +358,11 @@
 	        	showRemove: true,
 	        	showUpload: false,
 	        	maxFileSize: 3000,
+	        	allowedFileExtensions: ['jpg', 'png'],
 	        	msgSizeTooLarge: "Sorry bro",
 	        	removeLabel: "Borrar",
-	        	browseLabel: "Buscar"
+	        	browseLabel: "Buscar",
+	        	initialCaption: "Image 2"
 			});
 	        
 	        $("#more-img-2").fileinput({
@@ -367,9 +370,11 @@
 	        	showRemove: true,
 	        	showUpload: false,
 	        	maxFileSize: 3000,
+	        	allowedFileExtensions: ['jpg', 'png'],
 	        	msgSizeTooLarge: "Sorry bro",
 	        	removeLabel: "Borrar",
-	        	browseLabel: "Buscar"
+	        	browseLabel: "Buscar",
+	        	initialCaption: "Image 3"
 			});
 	        
 	        $("#more-img-3").fileinput({
@@ -377,17 +382,36 @@
 	        	showRemove: true,
 	        	showUpload: false,
 	        	maxFileSize: 3000,
+	        	allowedFileExtensions: ['jpg', 'png'],
 	        	msgSizeTooLarge: "Sorry bro",
 	        	removeLabel: "Borrar",
-	        	browseLabel: "Buscar"
+	        	browseLabel: "Buscar",
+	        	initialCaption: "Image 4",
+	        	disabled: true
 			});
 	        
 	        $("#principalImage").fileinput({
 	        	maxFileSize: 3000,
-	        	msgSizeTooLarge: "Sorry bro",
+	        	allowedFileExtensions: ['jpg', 'png'],
+	        	msgInvalidFileType: "Dude, not a valid filetype",
+	        	msgInvalidFileExtension: "EI, not a valid dile extesion bro",
+	        	msgSizeTooLarge: "Sorry bro, too large",
+	        	msgLoading: "Looooooading",
 	        	removeLabel: "Borrar",
-	        	browseLabel: "Buscar"
+	        	browseLabel: "Buscar",
+	        	initialCaption: "Principal image"
 			});
+	        
+	        $('#more-img-1').fileinput('disable');
+	        $('#more-img-2').fileinput('disable');
+	        $('#more-img-3').fileinput('disable');
+	        
+	        $('#principalImage').on('fileloaded', function(event, file, previewId) {
+	            console.log("fileloaded");
+	            $('#more-img-1').fileinput('enable');
+	            $('#more-img-2').fileinput('enable');
+	            $('#more-img-3').fileinput('enable');
+	        });
         </script>
 
 		<script th:inline="javascript">
@@ -396,9 +420,7 @@
 		var h = /*[[${item.highlight}]]*/ false;
 		var a = /*[[${item.autoRenew}]]*/ false;
 		/*]]>*/
-		
-		console.log("lalalala " + f + " " + h + " " + a);
-		
+				
 		$("[name='featured']").bootstrapSwitch({
 			state: f
 		});

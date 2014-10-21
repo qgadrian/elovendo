@@ -259,6 +259,20 @@ public class ItemServiceImpl implements ItemService {
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 		}
 
+		// Set main image if the given is empty but there is other images sent
+		if (mainImage.isEmpty()) {
+			if (!image1.isEmpty()) {
+				mainImage = image1;
+				image1 = null;
+			} else if (!image2.isEmpty()) {
+				mainImage = image2;
+				image2 = null;
+			} else if (!image3.isEmpty()) {
+				mainImage = image3;
+				image3 = null;
+			}
+		}
+		
 		// Save new images (produce an unique name for an item)
 		saveMultiPartFileImage(item, mainImage);
 		saveMultiPartFileImage(item, image1);
