@@ -17,7 +17,7 @@
 <!-- ************************* -->
 
 <!-- Javascript -->
-<script src="/js/jquery-1.11.0.min.js"></script>
+<script src="/js/jquery-1.11.1.min.js"></script>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="/css/bootstrap.min.css"/>
 <!-- Latest compiled and minified JavaScript -->
@@ -48,10 +48,11 @@
 
 </head>
 <!-- <body class="homepage"> -->
-<body style="background-color:#FBFAF9;" onload="getLocation(); fillFilter(); popSub(); initAutoComplete()">
+<body style="background-color:#FBFAF9;" onload="fillFilter(); popSub(); initAutoComplete()">
 
 	<!-- Header -->
-	<div th:include="elovendo/header"></div>
+<!-- 	<div th:include="elovendo/header"></div> -->
+	<div th:replace="elovendo/header"></div>
 
 	<div class="container">
 		<div class="row">
@@ -445,7 +446,19 @@
 			
 			location.href = destUrl;
 			return false;
-		})
+		});
+		
+		// Get location
+		var lat = getURLParameter('lat');
+		var lng = getURLParameter('lng');
+		if (lat != null && lng != null) {
+			$('#lat').val(lat);
+			$('#lng').val(lng);
+		} else if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(getPosition);
+		}
+		console.log($('#lat').val());
+		console.log($('#lng').val());
 	});
 	
 	$('#category').change( function() {
@@ -523,19 +536,6 @@
 			$('#myModal').modal('hide');
 		});
 
-		function getLocation() {
-			var lat = getURLParameter('lat');
-			var lng = getURLParameter('lng');
-// 			console.log(lat);
-// 			console.log(lng);
-			if (lat != null && lng != null) {
-				document.getElementById('lat').value = lat;
-				document.getElementById('lng').value = lng;
-			} else if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(getPosition);
-			}
-		}
-
 		function fillFilter() {
 			var dis = getURLParameter('dis');
 			if (dis != null) document.getElementById('dis').value = dis;
@@ -543,11 +543,18 @@
 			if (min != null) document.getElementById('prizeMin').value = min;
 			var max = getURLParameter('max');
 			if (max != null) document.getElementById('prizeMax').value = max;
+// 			console.log("filled");
+// 			console.log($('#lat').val());
+// 			console.log($('#lng').val());
 		}
 
 		function getPosition(position) {
-			document.getElementById('lat').value = position.coords.latitude;
-			document.getElementById('lng').value = position.coords.longitude;
+// 			document.getElementById('lat').value = position.coords.latitude;
+// 			document.getElementById('lng').value = position.coords.longitude;
+
+// 			console.log("positioned");
+// 			console.log($('#lat').val());
+// 			console.log($('#lng').val());
 		}
 
 		$('a[data-toggle=modal], button[data-toggle=modal]').click(function() {
