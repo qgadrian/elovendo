@@ -74,21 +74,22 @@
 <!-- 						</div> -->
 <!-- 					</div> -->
 <!-- 				</form> -->
-						<form class="navbar-form navbar-left" role="search" method="GET" action="/bazaar/search" name="search" id="search">
+						<form class="navbar-form navbar-left" role="search" method="GET" action="/bazaar/search"
+						 name="search" id="searchNavbar">
 							<div class="input-group">
 								<input type="text" class="form-control input-sm" style="width: 200px;"
 									th:placeholder="#{Navbar.search.placeholder}" 
 									required="required" id="srch-term" name="title"/>
 								<div class="input-group-btn">
-									<select id="categoryIndex" name="category" class="btn btn-default input-sm" 
-									form="search" style="background-color:#FFF;">
+									<select id="categoryNavbar" name="category" class="btn btn-default input-sm" 
+									form="searchNavbar" style="background-color:#FFF;">
 										<option selected="selected" value="0" 
 											th:text="#{Form.category.select.default}">All categories</option>
 										<option th:each="category : ${categories}" 
 											th:value="${category.categoryId}" th:text="${category.categoryName}"> 
 										Category </option>
 									</select>
-									<button class="btn btn-default input-sm" type="submit">
+									<button class="btn btn-default input-sm" type="submit" id="navbarButton">
 										<i class="glyphicon glyphicon-search"></i>
 									</button>
 								</div>
@@ -198,6 +199,27 @@
 			} catch(err) {}
 		});
 	});
+	
+	// Workaround to be able to search from location at navbar
+	// Just insert new inputs with the values obtained from main
+	$('#navbarButton').on('click', function() {
+		var lat = $('#lat').val();
+		var lng = $('#lng').val();
+
+		$('<input>').attr({
+			type : 'hidden',
+			value : lat,
+			name : 'lat',
+			id: 'lat'
+		}).appendTo('#searchNavbar');
+		
+		$('<input>').attr({
+			type : 'hidden',
+			value : lng,
+			name : 'lng',
+			id: 'lng'
+		}).appendTo('#searchNavbar');
+	})
 	
 	</script>
 
