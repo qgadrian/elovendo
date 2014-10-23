@@ -127,11 +127,11 @@
 				</div>
 				<div class="form-group">
 					<div class="col-sm-8 col-sm-offset-2" th:classappend="${#fields.hasErrors('user.email')} ? 'has-error'">
-						<label for="email" class="col-sm-2 control-label" th:text="#{label.email}">Email Address</label> 
+						<label for="email" class="col-sm-2 control-label" th:text="#{User.add.label.email}">Email Address</label> 
 						<div class="col-sm-8">
-							<input th:unless="${#fields.hasErrors('user.email')}" class="form-control" 
-								type="email" id="email" th:title="#{email.invalid}" th:field="${user.email}"
-								placeholder="Correo electrónico" th:value="${user.email}" />
+							<input class="form-control" type="email" id="email" th:field="${user.email}" 
+								required="required" th:placeholder="#{User.add.placeholder.email}" 
+								th:value="${user.email}" />
 							<div th:if="${#fields.hasErrors('user.email')}" class="form-group has-error">
 								<small class="control-label" th:errors="${user.email}"
 									style="text-align: center !important">Input with error</small>

@@ -150,8 +150,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User addUser(UserForm userForm, MultipartFile userPic) throws LoginNotAvailableException,
-			EmailNotAvailableException, UserNotFoundException {
+	public User addUser(UserForm userForm, MultipartFile userPic) 
+			throws LoginNotAvailableException, EmailNotAvailableException {
 		
 		try { 
 			findUserByLogin(userForm.getLogin());
@@ -397,5 +397,17 @@ public class UserServiceImpl implements UserService {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/* Helpers */
+	
+	@Override
+	public boolean isLoginAvailable(String login) {
+		return userRepository.findByLogin(login) == null;
+	}
+
+	@Override
+	public boolean isEmailAvailable(String email) {
+		return userRepository.findByEmail(email) == null;
 	}
 }

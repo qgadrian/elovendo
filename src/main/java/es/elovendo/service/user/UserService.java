@@ -61,7 +61,7 @@ public interface UserService extends UserDetailsService {
     		throws LoginNotAvailableException, EmailNotAvailableException;
     
     public User addUser(UserForm userForm, MultipartFile userPic) 
-    		throws LoginNotAvailableException, EmailNotAvailableException, UserNotFoundException;
+    		throws LoginNotAvailableException, EmailNotAvailableException;
 
     /**
      * Finds a user by its id
@@ -139,4 +139,7 @@ public interface UserService extends UserDetailsService {
 
 	public int getVotesQueued(User user);
 	
+	/** Helpers **/
+	public boolean isLoginAvailable(String login);
+	public boolean isEmailAvailable(String email);
 }

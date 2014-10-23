@@ -260,16 +260,24 @@ public class UserWebController {
 			result.addError(new FieldError("user", "confirmPassword", 
 					messageSource.getMessage("Error.password.missmatch", null, locale)));
 		}
+		
+		// Validate login availability
+		if (!userService.isLoginAvailable(userForm.getLogin())) {
+			result.addError(new FieldError("user", "login", 
+					messageSource.getMessage("User.add.Error.available.login", null, locale)));
+		}
+		
+		// Validate email availability
+		if (!userService.isEmailAvailable(userForm.getEmail())) {
+			result.addError(new FieldError("user", "email", 
+					messageSource.getMessage("User.add.Error.available.email", null, locale)));
+		}
 
 		if (result.hasErrors()) {
-
 			return "elovendo/user/add_user";
-
 		} else {
-
 			userService.addUser(userForm, profilePic);
 			return "elovendo/user/registered_successful";
-
 		}
 	}
 
