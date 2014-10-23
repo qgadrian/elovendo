@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -393,6 +394,17 @@ public class ItemWebController {
 		SecurityContext context = SecurityContextHolder.getContext();
 		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
 			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		// Validate category and subCategory
+//		if (itemForm.getCategory() == 0) {
+//			result.addError(new FieldError("item", "category", 
+//					messageSource.getMessage("Item.add.Error.category", null, locale)));
+//		}
+		
+//		if (itemForm.getSubCategory() == 0) {
+//			result.addError(new FieldError("item", "subCategory", 
+//					messageSource.getMessage("Item.add.Error.subCategory", null, locale)));
+//		}
 
 		if (result.hasErrors()) {
 

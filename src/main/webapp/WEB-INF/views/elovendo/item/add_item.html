@@ -174,28 +174,31 @@
 <!-- 					</select> -->
 <!-- 				</div> -->
 <!-- 			</div> -->
-			<div class="form-group">
+			<div class="form-group" th:classappend="${#fields.hasErrors('item.category')} ? 'has-error'">
 				<label for="category" class="col-sm-2 control-label">Categoría</label>
 				<div class="col-sm-10">
 					<select id="category" class="form-control" name="category">
-					  <option th:each="category : ${categories}" 
-					          th:value="${category.categoryId}" 
-					          th:text="${category.categoryName}">Category</option>
+						<option selected="selected" value="0" th:text="#{Item.add.category.selectCategory}">Category</option>
+						<option th:each="category : ${categories}"
+							th:value="${category.categoryId}"
+							th:text="${category.categoryName}">Category</option>
 					</select>
+				<div th:if="${#fields.hasErrors('item.category')}" class="has-error">
+					<small class="control-label" th:errors="${item.category}"
+						style="text-align: center !important">Input with error</small>
 				</div>
+			</div>
 <!-- 					<select id="category" class="depdrop" depends="['category']" url="www.elovendo.com/bazaar/getsubs"> -->
 					
 <!-- 					</select> -->
 			</div>
-			<div class="form-group">
+			<div class="form-group" th:classappend="${#fields.hasErrors('item.subCategory')} ? 'has-error'">
 				<label for="subCategory" class="col-sm-2 control-label">SubCategoría</label>
 				<div class="col-sm-10">
-					<select th:unless="${#fields.hasErrors('item.subCategory')}" 
-						id="subCategory" class="form-control" name="subCategory"> </select>
-					<div th:if="${#fields.hasErrors('item.subCategory')}" class="form-group has-error">
-						<label class="control-label" for="prize"
-							th:errors="${item.subCategory}" style="text-align: center!important">Input with error</label> 
-						<select id="subCategory" class="form-control" name="subCategory"> </select>
+					<select id="subCategory" class="form-control" name="subCategory"> 
+					</select>
+					<div th:if="${#fields.hasErrors('item.subCategory')}" class="has-error">
+						<small class="control-label" th:errors="${item.subCategory}">Input with error</small>
 					</div>
 				</div>
 			</div>

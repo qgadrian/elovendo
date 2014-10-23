@@ -32,9 +32,11 @@ public class ItemForm {
 	
 	@NotNull
 	@Min(1)
-	private long subCategory;
-	
 	private long category;
+	
+	@NotNull
+	@Min(1)
+	private long subCategory;
 	
     @Pattern(regexp=Constant.YOUTUBE_URL_PATTERN)
 	private String youtubeVideo;

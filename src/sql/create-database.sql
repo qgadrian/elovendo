@@ -16,7 +16,7 @@ INSERT INTO userprofile VALUES (2, 'pepito', '$2a$10$FcKLRihUE28cXxqunl62s.dPGhL
 INSERT INTO category VALUES (1, 'Tecnología');
 INSERT INTO category VALUES (2, 'Deportes');
 INSERT INTO category VALUES (3, 'Hogar');
-INSERT INTO category VALUES (4, 'Coches');
+INSERT INTO category VALUES (4, 'Motor');
 INSERT INTO category VALUES (5, 'Mascotas');
 INSERT INTO category VALUES (6, 'Libros');
 INSERT INTO category VALUES (7, 'Moda');
@@ -44,6 +44,15 @@ INSERT INTO subcategory VALUES(13, 3, 'Electrodomésticos');
 INSERT INTO subcategory VALUES(14, 3, 'Muebles');
 INSERT INTO subcategory VALUES(15, 3, 'Jardín');
 INSERT INTO subcategory VALUES(16, 3, 'Otros');
+
+INSERT INTO subcategory VALUES(17, 4, 'Coches');
+INSERT INTO subcategory VALUES(18, 4, 'Motos');
+INSERT INTO subcategory VALUES(19, 4, 'Náutica');
+INSERT INTO subcategory VALUES(20, 4, 'Remolques');
+INSERT INTO subcategory VALUES(22, 4, 'Neumáticos');
+INSERT INTO subcategory VALUES(23, 4, 'Accesorios coches');
+INSERT INTO subcategory VALUES(24, 4, 'Accesorios motos');
+INSERT INTO subcategory VALUES(25, 4, 'Otros');
 
 
 -- ITEMS

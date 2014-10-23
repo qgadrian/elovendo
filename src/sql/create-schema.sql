@@ -87,7 +87,6 @@
             categoryid BIGINT NOT NULL,
             subcategoryname VARCHAR(20) NOT NULL,
             CONSTRAINT pk_subcategoryid PRIMARY KEY (subcategoryid),
-            CONSTRAINT u_subcategoryname UNIQUE(subcategoryname),
             CONSTRAINT fk_subcategory_categoryid FOREIGN KEY (categoryid) REFERENCES category(categoryid) ON UPDATE CASCADE ON DELETE CASCADE
     );
 
