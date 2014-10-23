@@ -544,6 +544,10 @@ public class ItemServiceImpl implements ItemService {
 
 				// Get buffered image
 				BufferedImage buffImg = ImageIO.read(new ByteArrayInputStream(bytes));
+				// Resize if image it's too big
+				if (buffImg.getHeight() > 1200 || buffImg.getWidth() > 1200) {
+					buffImg = Scalr.resize(buffImg, 1200);
+				}
 				// Create file
 				File imgFile = new File(folderPath.getAbsolutePath() + "/" + imageFileName + ".jpg");
 				// Write image in file
@@ -551,10 +555,10 @@ public class ItemServiceImpl implements ItemService {
 
 				/* IMAGE RESIZED */
 				BufferedImage resizedImage = buffImg;
-				if (resizedImage.getHeight() < 200 && resizedImage.getWidth() < 200) {
-					resizedImage = Scalr.resize(buffImg, 800);
+				// Do not resize if image it's small
+				if (!(resizedImage.getHeight() < 200 || resizedImage.getWidth() < 200)) {
+					resizedImage = Scalr.resize(buffImg, 320);
 				}
-					
 				// Create file
 				File imgResizedFile = new File(folderPath.getAbsolutePath() + "/" + imageFileName + "-200h.jpg");
 				// Write image in file
