@@ -257,10 +257,7 @@ public class UserWebController {
 		}
 		
 		// Validate phone number
-		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-		PhoneNumber phoneNumber = new PhoneNumber();
-		phoneNumber.setCountryCode(34).setNationalNumber(userForm.getPhoneNumber());
-		if (!phoneUtil.isValidNumber(phoneNumber)) {
+		if (!userForm.isValidPhoneNumber()) {
 			result.addError(new FieldError("user", "phone", messageSource.getMessage(
 					"Error.user.phone", null, locale)));
 		}

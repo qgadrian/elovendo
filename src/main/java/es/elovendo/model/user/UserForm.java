@@ -5,6 +5,9 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
+
 import es.elovendo.util.Constant;
 
 public class UserForm {
@@ -160,6 +163,16 @@ public class UserForm {
 			temp = temp.substring(0, this.phone.indexOf(" "));
 		}
 		return Integer.valueOf(temp);
+	}
+	
+	public boolean isValidPhoneNumber() {
+		// If no phone number provided, just ignore it
+		if (this.phone.isEmpty()) return true;
+		
+		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+		PhoneNumber phoneNumber = new PhoneNumber();
+		phoneNumber.setCountryCode(34).setNationalNumber(getPhoneNumber());
+		return phoneUtil.isValidNumber(phoneNumber);
 	}
 
 	@Override
