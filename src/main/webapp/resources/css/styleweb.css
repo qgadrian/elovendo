@@ -879,11 +879,10 @@ left: 35%;
 .falert {
 	position: fixed;
 	bottom: 85%;
-	right: 10%;
+	right: 2%;
 	margin-bottom: 0;
 	font-size: 1.2em;
 	padding: 1em 1.3em;
-	z-index: 2000;
 }
 
 /*********************************************************************************/
