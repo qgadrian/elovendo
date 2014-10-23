@@ -23,6 +23,9 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="/js/bootstrap.min.js"></script>
 
+<!-- Form jquery -->
+<script src="/js/jquery.form.min.js"></script>
+
 <!-- ************************* -->
 <!-- ********** Web ********** -->
 <!-- ************************* -->
@@ -535,26 +538,35 @@
 			document.getElementById('messageText').value = '';
 			$('#myModal').modal('hide');
 		});
+		
+		
+// 		$('#locform').ajaxForm(function() {
+// 			alert("Thank you for your comment!");
+// 			return true;
+// 		});
 
 		function fillFilter() {
 			var dis = getURLParameter('dis');
-			if (dis != null) document.getElementById('dis').value = dis;
+			if (dis != null)
+				document.getElementById('dis').value = dis;
 			var min = getURLParameter('min');
-			if (min != null) document.getElementById('prizeMin').value = min;
+			if (min != null)
+				document.getElementById('prizeMin').value = min;
 			var max = getURLParameter('max');
-			if (max != null) document.getElementById('prizeMax').value = max;
-// 			console.log("filled");
-// 			console.log($('#lat').val());
-// 			console.log($('#lng').val());
+			if (max != null)
+				document.getElementById('prizeMax').value = max;
+			// 			console.log("filled");
+			// 			console.log($('#lat').val());
+			// 			console.log($('#lng').val());
 		}
 
 		function getPosition(position) {
-// 			document.getElementById('lat').value = position.coords.latitude;
-// 			document.getElementById('lng').value = position.coords.longitude;
+			// 			document.getElementById('lat').value = position.coords.latitude;
+			// 			document.getElementById('lng').value = position.coords.longitude;
 
-// 			console.log("positioned");
-// 			console.log($('#lat').val());
-// 			console.log($('#lng').val());
+			// 			console.log("positioned");
+			// 			console.log($('#lat').val());
+			// 			console.log($('#lng').val());
 		}
 
 		$('a[data-toggle=modal], button[data-toggle=modal]').click(function() {
