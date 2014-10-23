@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,7 +43,6 @@ import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -55,10 +53,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
-import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
 import es.elovendo.model.item.Item;
 import es.elovendo.model.user.EditUserForm;
@@ -77,7 +71,6 @@ import es.elovendo.service.item.category.CategoryService;
 import es.elovendo.service.item.favorite.FavoriteService;
 import es.elovendo.service.purchase.PurchaseService;
 import es.elovendo.service.user.UserService;
-import es.elovendo.util.Constant;
 
 @Controller
 @SuppressWarnings("unused")

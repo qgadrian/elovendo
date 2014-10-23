@@ -33,9 +33,8 @@ import es.elovendo.rest.exception.LoginNotAvailableException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.rest.exception.VoteDuplicateException;
 import es.elovendo.service.item.ItemService;
-import es.elovendo.service.item.ItemServiceImpl;
 import es.elovendo.service.vote.VoteService;
-import es.elovendo.util.IOUtil;
+import es.elovendo.util.Constant;
 import es.elovendo.util.RoleEnum;
 
 /**
@@ -342,7 +341,8 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	/**
-	 * Gets {@link MultipartFile} image data, saves it to a file and updates {@link User} information with file path
+	 * Gets {@link MultipartFile} image data, saves it to a file and updates {@link User} information with file path.
+	 * If no image provided, just set the default one using {@link Constant}.AVATAR_DEFAULT
 	 * @param user
 	 * @param file
 	 */
@@ -355,6 +355,8 @@ public class UserServiceImpl implements UserService {
 				logger.debug("Error converting image");
 			}
 			user.setAvatar(saveUserImage(user, bytes));
+		} else {
+			user.setAvatar(Constant.AVATAR_DEFAULT);
 		}
 	}
 	
@@ -365,9 +367,10 @@ public class UserServiceImpl implements UserService {
 	 * @return File path for image bytes saved.
 	 */
 	private String saveUserImage(User user, byte[] profilePic) {
+
 		if (profilePic != null) try {
 			// Create folder (if not created) for /img/avatars/{userId}.jpg
-			File folderPath = new File(IOUtil.calculateAvatarFilePath());
+			File folderPath = new File(Constant.AVATAR_IMAGES_PATH);
 			folderPath.mkdirs();
 			// Get buffered image
 			BufferedImage buffImg = ImageIO.read(new ByteArrayInputStream(profilePic));
@@ -380,12 +383,13 @@ public class UserServiceImpl implements UserService {
 			/* IMAGE RESIZED */
 			BufferedImage resizedImage = Scalr.resize(buffImg, 500);
 			// Create file
-			File imgResizedFile = new File(IOUtil.calculateAvatarFilePath()+"/"+user.getUserId()+"-200h.jpg");
+			File imgResizedFile = new File(Constant.AVATAR_IMAGES_PATH + user.getUserId() + "-200h.jpg");
 			// Write image in file
 			ImageIO.write(resizedImage, "jpg", imgResizedFile);
 			
 			// Assign the avatar path to the user and save it
-			String urlImagePath = IOUtil.calculateAvatarFilePath() + "/" + user.getUserId();
+//			String urlImagePath = IOUtil.calculateAvatarFilePath() + "/" + user.getUserId();
+			String urlImagePath = Constant.AVATAR_IMAGES_PATH + user.getUserId();
 			return urlImagePath;
 			
 		} catch(NullPointerException e) { } catch (IOException e) {

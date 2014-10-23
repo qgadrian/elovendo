@@ -64,6 +64,8 @@ public class Constant {
 	 */
 	
 	public static final String RESOURCE_IMAGES_PATH = "file:/home/elovendo/elovendo/imgs/";
+	public static final String AVATAR_IMAGES_PATH = "imgs/avatars/";
+	public static final String AVATAR_DEFAULT = "images/profile/default";
 	
 	/**
 	 * VOTE
