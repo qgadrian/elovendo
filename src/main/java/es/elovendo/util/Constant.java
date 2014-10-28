@@ -15,6 +15,7 @@ public class Constant {
 	public static final int MAX_LAST_ITEMS = 5;
 	
 	/** Items per page **/
+	public static final int MAX_PAGE_SIZE = 50;
 	public static final int ITEMS_PER_PAGE = 15;
 	public static final String S_ITEMS_PER_PAGE = "15";
 	

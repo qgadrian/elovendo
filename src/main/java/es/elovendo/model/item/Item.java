@@ -29,7 +29,8 @@ import es.elovendo.model.item.category.subcategory.SubCategory;
 import es.elovendo.model.user.User;
 import es.elovendo.util.Constant;
 import es.elovendo.util.LocaleHelper;
-import es.elovendo.util.currency.CurrencyConverter;
+import es.elovendo.util.currency.CurrencyLocaler;
+import es.elovendo.util.currency.NoFixLocaleFoundException;
 
 /**
  * Created by @adrian on 17/06/14. All rights reserved.
@@ -68,10 +69,6 @@ public class Item {
 	@Column(columnDefinition = "DATETIME", name = "endDate")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar endDate;
-
-	// @ManyToOne(optional = false, fetch=FetchType.LAZY)
-	// @JoinColumn(name = "provinceId")
-	// private Province province;
 
 	private String mainImage;
 
@@ -253,47 +250,62 @@ public class Item {
 	}
 	
 	@Transient
+	public boolean isOtherCurrency(Locale locale) {
+		// Workaround for some language locale's without Country specified
+		if (locale.getISO3Country().isEmpty()) locale = new Locale(locale.toString(), locale.toString());
+		
+		try {
+			Currency currency = Currency.getInstance(this.currency);
+			Currency localeCurrency = Currency.getInstance(locale);
+			return !currency.getCurrencyCode().equalsIgnoreCase(localeCurrency.getCurrencyCode());
+		} catch (IllegalArgumentException e) {
+			LocaleHelper localeHelper = LocaleHelper.getInstance();
+			try {
+				locale = localeHelper.getFixedLocale(locale);
+				Currency currency = Currency.getInstance(this.currency);
+				Currency localeCurrency = Currency.getInstance(locale);
+				return !currency.getCurrencyCode().equalsIgnoreCase(localeCurrency.getCurrencyCode());
+			} catch (NoFixLocaleFoundException e1) {
+				return true;
+			}
+		}
+	}
+	
+	@Transient
 	public String getCurrencyPrize(Locale locale) {
 		// Workaround for some language locale's without Country specified
 		if (locale.getISO3Country().isEmpty()) locale = new Locale(locale.toString(), locale.toString());
 		
-		// Try to set locale Currency with the workaround
-		Currency localeCurrency = null;
 		try {
-			localeCurrency = Currency.getInstance(locale);
-		} catch (IllegalArgumentException | NullPointerException e) {
-			System.out.println("~~~~~ Locale " + locale + " needs to be fixed in proper to get currency");
-			// Fix locale without country specified
-			LocaleHelper localeHelper = LocaleHelper.getInstance();
-			locale = localeHelper.getFixedLocale(locale);
-
-			System.out.println("~~~~~ FIXED SESSION LOCALE " + locale);
-			System.out.println("~~~~~ FIXED SESSION country " + locale.getCountry());
-			System.out.println("~~~~~ FIXED SESSION ISO3 " + locale.getISO3Country());
+			CurrencyLocaler localer = CurrencyLocaler.getInstance();
+			Currency currency = Currency.getInstance(this.currency);
+			return localer.getFormattedCurrency(prize, locale, currency);
 			
-			localeCurrency = Currency.getInstance(locale);
+		} catch (Exception e) {
+			LocaleHelper localeHelper = LocaleHelper.getInstance();
+			try {
+				locale = localeHelper.getFixedLocale(locale);
+				CurrencyLocaler localer = CurrencyLocaler.getInstance();
+				Currency currency = Currency.getInstance(this.currency);
+				return localer.getFormattedCurrency(prize, locale, currency);
+			} catch (NoFixLocaleFoundException e1) {
+				return this.prize.toString();
+			}
 		}
+	}
+	
+	@Transient
+	public String getExchangeCurrencyPrize(Locale locale) {
+		// Workaround for some language locale's without Country specified
+		if (locale.getISO3Country().isEmpty()) locale = new Locale(locale.toString(), locale.toString());
 		
 		try {
+			// Try to set locale Currency with the workaround
 			Currency fromCurrency = Currency.getInstance(this.currency);
-			Currency toCurrency = Currency.getInstance(localeCurrency.getCurrencyCode());
-
-			// Exchange from item currency to locale currency 
-			if (!fromCurrency.getCurrencyCode().equalsIgnoreCase(toCurrency.getCurrencyCode())) {
-				CurrencyConverter converter = CurrencyConverter.getInstance();
-				BigDecimal exchanged = converter.convert(this.prize, fromCurrency, toCurrency);
-				// Format using localeCurrency
-				NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
-				numberFormat.setCurrency(localeCurrency);
-				return numberFormat.format(exchanged);
-			}
-			// If item's currency and locale currency is the same, just format the prize
-			else {
-				// Format using fromCurrency (actual currency)
-				NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
-				numberFormat.setCurrency(fromCurrency);
-				return numberFormat.format(this.prize);
-			}
+			CurrencyLocaler localer = CurrencyLocaler.getInstance();
+			Currency toCurrency = localer.getCurrencyLocaled(locale);
+			return localer.getFormattedCurrency(prize, locale, fromCurrency, toCurrency);
+			
 		} catch (Exception e) {
 			System.out.println("WARN!!! WARN!!! WARN!!! WARN!!! WARN!!!");
 			System.out.println("WARN!!! WARN!!! WARN!!! WARN!!! WARN!!!");

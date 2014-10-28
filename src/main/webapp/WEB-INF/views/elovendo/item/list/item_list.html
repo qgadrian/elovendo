@@ -48,7 +48,7 @@
 <script src="/js/money.min.js"></script>
 
 <!-- Google autocomplete  -->
-<!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;libraries=places"></script> -->
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;libraries=places"></script>
 
 </head>
 <!-- <body class="homepage"> -->
@@ -284,12 +284,14 @@
 								<div class="row">
 									<div class="col-xs-10 col-md-12 col-lg-12" style="margin-bottom: 10px;">
 										<h2 style="display: inline; margin-left: 10px;">
-<!-- 											<span class="label label-or prizeLabel"  -->
-<!-- 											th:text="${#numbers.formatDecimal(item.prize, 0, 'COMMA', 0, 'POINT')} + ${item.getCurrencySymbol(10)}" -->
-<!-- 											th:attr="data-prize=${item.prize}, data-currency=${item.currency}"></span> -->
 											<span class="label label-or prizeLabel" 
 											th:text="${item.getCurrencyPrize(#locale)}"
-											th:attr="data-prize=${item.prize}, data-currency=${item.currency}"></span>
+											th:attr="data-prize=${item.prize}, data-currency=${item.currency}"
+											th:title="${item.isOtherCurrency(#locale)} ? #{Item.pop.about} + ' ' + ${item.getExchangeCurrencyPrize(#locale)}"></span>
+<!-- 											<span class="label label-or prizeLabel"  -->
+<!-- 											th:text="${item.getExchangeCurrencyPrize(#locale)}" -->
+<!-- 											th:attr="data-prize=${item.prize}, data-currency=${item.currency}" -->
+<!-- 											th:title="#{Item.pop.about} + ' ' + ${item.getExchangeCurrencyPrize(#locale)}"></span> -->
 										</h2>
 										<h4 th:if="${item.new}" style="display: inline; ">
 											<span class="label label-danger">
@@ -580,6 +582,10 @@
 		$('a[data-toggle=modal], button[data-toggle=modal]').click(function() {
 			var user = $(this).data('user');
 			document.getElementById('receiver').value = user;
+		});
+		
+		$(function() {
+			$('span[title]').tooltip();
 		});
 	</script>
 

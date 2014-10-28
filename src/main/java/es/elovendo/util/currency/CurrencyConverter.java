@@ -37,11 +37,8 @@ public class CurrencyConverter {
 	public static CurrencyConverter getInstance() throws FileNotFoundException, IOException, ParseException {
 		if (currencyConverter == null) {
 			currencyConverter = new CurrencyConverter();
-			
 			parser = new JSONParser();
 			jsonRates = (JSONObject) ((JSONObject) parser.parse(new FileReader(JSON_RATE_FILE))).get(JSON_RATES);
-			
-			return currencyConverter;
 		}
 		return currencyConverter;
 	}

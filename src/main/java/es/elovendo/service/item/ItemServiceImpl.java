@@ -358,6 +358,9 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public Page<Item> getItemsByParams(String title, String name, double dis, double lat, double lng,
 			int prizeMin, int prizeMax, int page, int size) {
+		
+		// Protect page size
+		if (size > Constant.MAX_PAGE_SIZE) size = Constant.MAX_PAGE_SIZE;
 
 		// Page Request
 		PageRequest pageRequest = new PageRequest(page, size);

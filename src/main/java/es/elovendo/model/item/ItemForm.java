@@ -25,8 +25,7 @@ public class ItemForm {
 	@Length(max = 1000)
 	private String description;
 	
-	@NotNull 
-	@NumberFormat(style = Style.NUMBER) 
+	@NotNull  
 	@Min(0)
 	private BigDecimal prize;
 	

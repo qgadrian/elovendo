@@ -121,8 +121,8 @@ function getCountryCurrency(callback) {
 //	console.log("calling currency");
 	$.getJSON("http://ipinfo.io/json", function(json) {
 		console.log("my country is " + json.country);
-//		callback(json.country);
-		callback("GB");
+		callback(json.country);
+//		callback("GB");
 	});
 }
 

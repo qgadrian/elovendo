@@ -4,6 +4,8 @@ import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
+import es.elovendo.util.currency.NoFixLocaleFoundException;
+
 public class LocaleHelper {
 
 	Logger logger = Logger.getLogger(LocaleHelper.class);
@@ -22,8 +24,9 @@ public class LocaleHelper {
 	 * Get Locale object, with all attributes
 	 * @param locale
 	 * @return
+	 * @throws NoFixLocaleFoundException If no matching Locale found 
 	 */
-	public Locale getFixedLocale(Locale locale) {
+	public Locale getFixedLocale(Locale locale) throws NoFixLocaleFoundException {
 		Locale[] locales = Locale.getAvailableLocales();
 		Locale proLocale = null;
 		
@@ -39,7 +42,8 @@ public class LocaleHelper {
 		}
 
 		logger.warn("Fixing locale: nothing found");
-		return proLocale == null ? null : proLocale;
+		if (proLocale != null) return proLocale;
+		else throw new NoFixLocaleFoundException("No locale found for " + locale);
 	}
 
 }

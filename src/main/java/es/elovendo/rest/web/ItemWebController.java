@@ -19,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -163,7 +162,8 @@ public class ItemWebController {
 	 */
 
 	@RequestMapping(value = "category/{categoryName}", method = RequestMethod.GET)
-	public String itemListByCategoryPage(Model model, @PathVariable("categoryName") String categoryName,
+	public String itemListByCategoryPage(Model model, Locale locale, 
+			@PathVariable("categoryName") String categoryName,
 			@RequestParam(value = "title", required = false, defaultValue = "") String title,
 			@RequestParam(value = "dis", required = false, defaultValue = "0") double dis,
 			@RequestParam(value = "lat", required = false, defaultValue = "0") double lat,
@@ -386,10 +386,10 @@ public class ItemWebController {
 	@RequestMapping(value = "add/item", method = RequestMethod.POST)
 	public String processAddItemWeb(
 			@Valid @ModelAttribute(value = "item") ItemForm itemForm, BindingResult result,
-			@RequestParam("mI") MultipartFile mainImage,
-			@RequestParam("i1") MultipartFile image1, 
-			@RequestParam("i2") MultipartFile image2,
-			@RequestParam("i3") MultipartFile image3, 
+			@RequestParam(value="mI", required=false) MultipartFile mainImage,
+			@RequestParam(value="i1", required=false) MultipartFile image1, 
+			@RequestParam(value="i2", required=false) MultipartFile image2,
+			@RequestParam(value="i3", required=false) MultipartFile image3, 
 			Model model, Locale locale) throws InvalidItemNameMinLenghtException,
 			UserNotFoundException, SubCategoryNotFoundException, IOException, InsufficientPointsException {
 
