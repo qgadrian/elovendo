@@ -31,6 +31,9 @@ public class ItemForm {
 	private BigDecimal prize;
 	
 	@NotNull
+	private String currency;
+	
+	@NotNull
 	@Min(1)
 	private long category;
 	
@@ -53,14 +56,14 @@ public class ItemForm {
     
     public ItemForm() {}
 	
-	public ItemForm(long itemId, User user, String title, String description, BigDecimal prize,
-			long subCategory, long category, String youtubeVideo, double latitude,
-			double longitude, boolean featured, boolean highlight,
-			boolean autoRenew) {
+	public ItemForm(long itemId, User user, String title, String description, String currency, BigDecimal prize,
+			long subCategory, long category, String youtubeVideo, double latitude, double longitude, boolean featured,
+			boolean highlight, boolean autoRenew) {
 		this.itemId = itemId;
 		this.user = user;
 		this.title = title;
 		this.description = description;
+		this.currency = currency;
 		this.prize = prize;
 		this.subCategory = subCategory;
 		this.category = category;
@@ -77,6 +80,7 @@ public class ItemForm {
 		this.user = item.getUser();
 		this.title = item.getTitle();
 		this.description = item.getDescription();
+		this.currency = item.getCurrency();
 		this.prize = item.getPrize();
 		this.subCategory = item.getSubCategory().getId();
 		this.category = item.getSubCategory().getCategory().getCategoryId();
@@ -137,6 +141,14 @@ public class ItemForm {
 
 	public void setPrize(BigDecimal prize) {
 		this.prize = prize;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 
 	public void setSubCategory(long subCategoryId) {

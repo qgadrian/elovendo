@@ -213,7 +213,8 @@ public class ItemWebController {
 	 */
 
 	@RequestMapping(value = "sub/{subcategoryname}", method = RequestMethod.GET)
-	public String itemListPage(Model model, @PathVariable("subcategoryname") String subCategoryName,
+	public String itemListPage(Model model, Locale locale, 
+			@PathVariable("subcategoryname") String subCategoryName,
 			@RequestParam(value = "title", required = false, defaultValue = "") String title,
 			@RequestParam(value = "dis", required = false, defaultValue = "0") double dis,
 			@RequestParam(value = "lat", required = false, defaultValue = "0") double lat,
@@ -226,6 +227,8 @@ public class ItemWebController {
 
 		model.addAttribute("featuredItems",
 				itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, subCategoryName));
+		
+		logger.error("LOCALE CODE: " + locale.getISO3Country());
 		
 		String urlLocation = "sub/" + subCategoryName;
 		model.addAttribute("url", urlLocation);
@@ -411,6 +414,8 @@ public class ItemWebController {
 			@SuppressWarnings("unchecked")
 			List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
 			model.addAttribute("categories", categories);
+			
+//			model.addAttribute("categoryId", itemForm.getCategory());
 			
 			model.addAttribute("user", user);
 

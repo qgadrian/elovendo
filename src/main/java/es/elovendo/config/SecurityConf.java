@@ -166,19 +166,3 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 //    }
 
 }
-
-
-//@Autowired
-//private DataSource dataSource;
-//
-//@Autowired
-//public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//    auth
-////            .inMemoryAuthentication()
-////            .withUser("user").password("password").roles("USER");
-//    .jdbcAuthentication()
-//    	.dataSource(dataSource)
-//    	.withDefaultSchema()
-//    	.usersByUsernameQuery(getUserQuery());
-//    	
-//}

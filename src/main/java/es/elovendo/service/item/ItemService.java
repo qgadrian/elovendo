@@ -53,10 +53,11 @@ public interface ItemService {
 	 * @throws SubCategoryNotFoundException
 	 * @throws ProvinceNotFoundException
 	 */
-	public Item addItem(String userName, long subCategoryId, String title, String description, double prize,
-			byte[] mainImage, byte[] image1, byte[] image2, byte[] image3, String youtubeVideo, boolean featured,
-			boolean highlight, boolean autoRenew, String latitude, String longitude) throws InvalidItemNameMinLenghtException,
-			UserNotFoundException, SubCategoryNotFoundException, ProvinceNotFoundException;
+	public Item addItem(String userName, long subCategoryId, String title, String description, String currency,
+			double prize, byte[] mainImage, byte[] image1, byte[] image2, byte[] image3, String youtubeVideo,
+			boolean featured, boolean highlight, boolean autoRenew, String latitude, String longitude)
+			throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException,
+			ProvinceNotFoundException;
 
 
 	/**

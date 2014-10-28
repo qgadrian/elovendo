@@ -58,10 +58,10 @@ public class ItemServiceImpl implements ItemService {
 	CategoryService categoryService;
 
 	@Override
-	public Item addItem(String userName, long subCategoryId, String title, String description, double prize,
-			byte[] mainImage, byte[] image1, byte[] image2, byte[] image3, String youtubeVideo, boolean featured,
-			boolean highlight, boolean autoRenew, String _latitude, String _longitude) throws InvalidItemNameMinLenghtException,
-			UserNotFoundException, SubCategoryNotFoundException {
+	public Item addItem(String userName, long subCategoryId, String title, String description, String currency,
+			double prize, byte[] mainImage, byte[] image1, byte[] image2, byte[] image3, String youtubeVideo,
+			boolean featured, boolean highlight, boolean autoRenew, String _latitude, String _longitude)
+			throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException {
 
 		User user = userService.findUserByLogin(userName);
 		// SubCategory subCategory =
@@ -96,8 +96,8 @@ public class ItemServiceImpl implements ItemService {
 			longitude = longitude - (rangeMin + (rangeMax - rangeMin) * random.nextDouble());
 
 		// create item
-		Item item = new Item(user, subCategory, title, description, new BigDecimal(prize), null, null, null, null,
-				youtubeVideo, featured, highlight, autoRenew, latitude, longitude);
+		Item item = new Item(user, subCategory, title, description, currency, new BigDecimal(prize), null, null, null,
+				null, youtubeVideo, featured, highlight, autoRenew, latitude, longitude);
 
 		// Produce an unique name for an item
 		if (mainImage != null)
@@ -171,7 +171,7 @@ public class ItemServiceImpl implements ItemService {
 	public Item addItem(ItemForm itemForm, User user, MultipartFile mainImage, 
 			MultipartFile image1, MultipartFile image2, MultipartFile image3) 
 					throws SubCategoryNotFoundException, InsufficientPointsException {
-		
+				
 		SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(itemForm.getSubCategory());
 		
 		// Check if user's points are enough to purchase premium options selected
@@ -208,9 +208,9 @@ public class ItemServiceImpl implements ItemService {
 			itemForm.setYoutubeVideo(wellYoutubeVideo);
 		}
 		
-		Item item = new Item(user, subCategory, itemForm.getTitle(), itemForm.getDescription(), itemForm.getPrize(),
-				itemForm.getYoutubeVideo(), itemForm.isFeatured(), itemForm.isHighlight(), itemForm.isAutoRenew(),
-				itemForm.getLatitude(), itemForm.getLongitude());
+		Item item = new Item(user, subCategory, itemForm.getTitle(), itemForm.getDescription(), itemForm.getCurrency(),
+				itemForm.getPrize(), itemForm.getYoutubeVideo(), itemForm.isFeatured(), itemForm.isHighlight(),
+				itemForm.isAutoRenew(), itemForm.getLatitude(), itemForm.getLongitude());
 		
 		// Save new images (produce an unique name for an item)
 		item = saveMultiPartFileImage(item, mainImage, image1, image2, image3);

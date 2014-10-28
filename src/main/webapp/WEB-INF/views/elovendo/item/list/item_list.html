@@ -45,9 +45,10 @@
 <script src="/js/filter.js"></script>
 <script src="/js/bootstrap-slider.js"></script>
 <script src="/js/geo.js"></script>
+<script src="/js/money.min.js"></script>
 
 <!-- Google autocomplete  -->
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;libraries=places"></script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;libraries=places"></script> -->
 
 </head>
 <!-- <body class="homepage"> -->
@@ -64,7 +65,7 @@
 				<!-- title -->
 				<div class="row">
 						<div class="col-xs-12">
-							<h1 style="margin-top: 0px;"><small>Filtrar</small></h1>
+							<h1 style="margin-top: 0px;"><small th:text="#{Item.list.filter.title}">Filter</small></h1>
 							<hr class="hrStyle"/>
 						</div>
 				</div>
@@ -73,17 +74,18 @@
 						<div class="form-group" style="width: 100%!imporant;">
 							
 							<form id="locform" class="form-inline" name="locationForm" th:action="@{'/bazaar/' + ${url}}" >
-								<label for="autocomplete">Buscar desde...</label>
+								<label for="autocomplete" th:text="#{Item.list.filter.searchFrom}">Search from</label>
 								<div class="row">
 									<div class="col-lg-12">
 										<div class="input-group" 
 												style="width: 100%;">
 											<input class="form-control" id="autocomplete"
-												placeholder="Lugar desde donde buscar..." type="text"> 
+												th:placeholder="#{Item.list.filter.searchPlace}" type="text"> 
 											<input type="hidden" id="lat" name="lat" value="0" /> 
 											<input type="hidden" id="lng" name="lng" value="0" /> 
 											<span class="input-group-btn">
-												<button type="submit" class="btn btn-default">Buscar</button>
+												<button type="submit" class="btn btn-default"
+													th:text="#{Item.list.filter.search}">Search</button>
 											</span>
 										</div>
 									</div>
@@ -91,12 +93,13 @@
 	
 								<div class="row">
 									<div class="col-lg-12">
-									<label for="dis" style="margin-top: 15px;">Radio de distancia</label><br/>
+									<label for="dis" style="margin-top: 15px;" th:text="#{Item.list.filter.searchRadius}">Radius</label><br/>
 										<div class="input-group" style="width: 100%;">
 											<input type="number" min="0" class="form-control" id="dis"
 													placeholder="Hasta..." name="dis" step="0.01"/>
 											<div class="input-group-btn">
-												<button type="submit" class="btn btn-default" tabindex="-1">Buscar</button>
+												<button type="submit" class="btn btn-default" tabindex="-1"
+												th:text="#{Item.list.filter.search}">Search</button>
 												<button type="button"
 													class="btn btn-default dropdown-toggle"
 													data-toggle="dropdown" tabindex="-1">
@@ -237,7 +240,7 @@
 										<div class="row userInfo">
 											<div class="col-xs-4 col-md-4 col-lg-4 userPicMin" style="width: 80px; margin-right: 10px;">
 												<img data-src="holder.js/50x50" alt="Profile pic"
-													th:src="@{'http://www.elovendo.com/' + ${item.user.avatar}}"/>
+													th:src="@{'http://www.elovendo.com/' + ${item.user.avatar200h}}"/>
 											</div>
 											<div class="col-xs-12 col-md-8 col-lg-8">
 												<div class="row">
@@ -281,8 +284,12 @@
 								<div class="row">
 									<div class="col-xs-10 col-md-12 col-lg-12" style="margin-bottom: 10px;">
 										<h2 style="display: inline; margin-left: 10px;">
-											<span class="label label-or" 
-											th:text="${#numbers.formatDecimal(item.prize, 0, 'COMMA', 0, 'POINT')} + ' €'"></span>
+<!-- 											<span class="label label-or prizeLabel"  -->
+<!-- 											th:text="${#numbers.formatDecimal(item.prize, 0, 'COMMA', 0, 'POINT')} + ${item.getCurrencySymbol(10)}" -->
+<!-- 											th:attr="data-prize=${item.prize}, data-currency=${item.currency}"></span> -->
+											<span class="label label-or prizeLabel" 
+											th:text="${item.getCurrencyPrize(#locale)}"
+											th:attr="data-prize=${item.prize}, data-currency=${item.currency}"></span>
 										</h2>
 										<h4 th:if="${item.new}" style="display: inline; ">
 											<span class="label label-danger">
@@ -421,6 +428,7 @@
 	/*]]>*/
 	
 	$(document).ready( function() {
+		
 		$('#category').val(cat);
 		$('#subCategory').val(sCat);
 		

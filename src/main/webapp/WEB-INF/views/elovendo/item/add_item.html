@@ -46,6 +46,10 @@
 <link href="/css/bootstrap-switch.css" rel="stylesheet"/>
 <script src="/js/bootstrap-switch.js"></script>
 
+<!-- Curry -->
+<script src="/js/curry.min.js"></script>
+<script src="/js/money.min.js"></script>
+
 <!-- Markdown text -->
 <script src="/js/richtext/wysihtml5-0.3.0.min.js"></script> <!-- Library -->
 <script src="/js/richtext/advanced.js"></script> <!-- wysihtml5 parser rules -->
@@ -89,7 +93,7 @@
 
 	<div class="container">
 		<div>
-			<h3>Información del anuncio</h3>
+			<h3 th:text=#{Item.add.section.info}>Information</h3>
 			<hr class="hrStyle2" />
 		</div>
 		
@@ -110,10 +114,10 @@
 		</div>
 		
 		<form class="form-horizontal" role="form" th:action="@{/bazaar/add/item}" method="post" enctype="multipart/form-data" >
-			<div class="form-group">
-				<label for="title" class="col-sm-2 control-label">Title</label> 
+			<div class="form-group" th:classappend="${#fields.hasErrors('item.title')} ? 'has-error'">
+				<label for="title" class="col-sm-2 control-label" th:text=#{Item.add.label.title}>Title</label> 
 				<div class="col-sm-10">
-					<input th:unless="${#fields.hasErrors('item.title')}" type="text"
+					<input type="text"
 						class="form-control" id="title" name="" placeholder="Enter title"
 						th:field="${item.title}" required="required" pattern=".{5,40}"
 						th:title="#{Length.item.title}" />
@@ -121,15 +125,13 @@
 						class="form-group has-error">
 						<label class="control-label" for="title"
 							th:errors="${item.title}" style="text-align: center!important">Input with error</label> 
-							<input class="form-control" type="text" class="form-control" 
-							id="title" name="" placeholder="Enter title" th:field="${item.title}" 
-							required="required" pattern=".{5,40}" th:title="#{Length.item.title}" />
 					</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="hero-unit" >
-					<label for="title" class="col-sm-2 control-label" style="margin-top:40px;">Description</label> 
+					<label for="title" class="col-sm-2 control-label" style="margin-top:40px;"
+					th:text=#{Item.add.label.description}>Description</label> 
 					<div class="col-sm-10">
 						<!-- FIXME -->
 						<!-- Pasting formatted HTML when creating item makes show formatted everywhere -->
@@ -150,38 +152,46 @@
 					</div>
 				</div>
 			</div>
-			<div class="form-group">
-				<label for="title" class="col-sm-2 control-label">Prize</label> 
+<!-- 			<div class="form-group" th:classappend="${#fields.hasErrors('item.prize')} ? 'has-error'"> -->
+<!-- 				<label for="title" class="col-sm-2 control-label">Prize</label>  -->
+<!-- 				<div class="col-sm-10"> -->
+<!-- 					<input type="number" class="form-control" id="prize" min="0"  -->
+<!-- 						placeholder="Enter prize" th:field="${item.prize}" required="required"/> -->
+<!-- 					<div th:if="${#fields.hasErrors('item.prize')}" -->
+<!-- 						class="form-group has-error"> -->
+<!-- 						<label class="control-label" for="prize" -->
+<!-- 							th:errors="${item.prize}" style="text-align: center!important">Input with error</label>  -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+			<div class="form-group" th:classappend="${#fields.hasErrors('item.prize')} ? 'has-error'">
+				<label for="title" class="col-sm-2 control-label" th:text=#{Item.add.label.prize}>Prize</label> 
 				<div class="col-sm-10">
-					<input th:unless="${#fields.hasErrors('item.prize')}" type="number" class="form-control" 
-						id="prize" min="0" placeholder="Enter prize" th:field="${item.prize}" required="required"/>
+					<div class="input-group">
+						<select class="selectpicker form-control" id="currelo" name="currency">
+							<option value="USD">USD</option>
+							<option value="GBP">GBP</option>
+							<option value="EUR">EUR</option>
+						</select>
+						<input type="number" class="form-control" id="prize" min="0" 
+							placeholder="Enter prize" th:field="${item.prize}" required="required"/>
+					</div>
 					<div th:if="${#fields.hasErrors('item.prize')}"
 						class="form-group has-error">
 						<label class="control-label" for="prize"
 							th:errors="${item.prize}" style="text-align: center!important">Input with error</label> 
-							<input type="number" class="form-control" id="prize" min="0" 
-								placeholder="Enter prize" th:field="${item.prize}" required="required" />
 					</div>
 				</div>
 			</div>
-<!-- 			<div class="form-group"> -->
-<!-- 				<label for="province" class="col-sm-2 control-label">Provincia</label> -->
-<!-- 				<div class="col-sm-10"> -->
-<!-- 					<select class="form-control" th:value="${provinceName}" name="provinceName"> -->
-<!-- 					  <option th:each="province : ${provinces}"  -->
-<!-- 					          th:value="${province.provinceName}"  -->
-<!-- 					          th:text="${province.provinceName}">Province</option> -->
-<!-- 					</select> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
 			<div class="form-group" th:classappend="${#fields.hasErrors('item.category')} ? 'has-error'">
-				<label for="category" class="col-sm-2 control-label">Categoría</label>
+				<label for="category" class="col-sm-2 control-label" th:text=#{Item.add.label.category}>Categoría</label>
 				<div class="col-sm-10">
 					<select id="category" class="form-control" name="category">
 						<option selected="selected" value="0" th:text="#{Item.add.category.selectCategory}">Category</option>
 						<option th:each="category : ${categories}"
 							th:value="${category.categoryId}"
 							th:text="${category.categoryName}">Category</option>
+<!-- 							th:selected="${categoryId}" -->
 					</select>
 				<div th:if="${#fields.hasErrors('item.category')}" class="has-error">
 					<small class="control-label" th:errors="${item.category}"
@@ -193,7 +203,8 @@
 <!-- 					</select> -->
 			</div>
 			<div class="form-group" th:classappend="${#fields.hasErrors('item.subCategory')} ? 'has-error'">
-				<label for="subCategory" class="col-sm-2 control-label">SubCategoría</label>
+				<label for="subCategory" class="col-sm-2 control-label"
+					th:text=#{Item.add.label.subCategory}>SubCategory</label>
 				<div class="col-sm-10">
 					<select id="subCategory" class="form-control" name="subCategory"> 
 					</select>
@@ -203,7 +214,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="title" class="col-sm-2 control-label">Youtube video</label> 
+				<label for="title" class="col-sm-2 control-label" th:text=#{Item.add.label.youtube}>Youtube video</label> 
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="ytAddress" min="0" name="ytAddress"
 					placeholder="Youtube address" th:field="${item.youtubeVideo}" 
@@ -211,7 +222,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="principalImage" class="col-sm-2 control-label" th:text="#{Item.add.images.title}">Images</label>
+				<label for="principalImage" class="col-sm-2 control-label" th:text=#{Item.add.label.images}>Images</label>
 				<div class="col-sm-5 col-lg-4">
 					<input id="principalImage" type="file" class="file" data-show-upload="false" 
 					name="mI" accept=".jpg, .jpeg"/>
@@ -243,7 +254,7 @@
 <!-- 				<label for="exampleInputFile" class="col-sm-2 control-label">Resto imágenes</label> -->
 				
 <!-- 			</div> -->
-			<div><h3>Localización</h3><hr class="hrStyle2" /></div>
+			<div><h3 th:text=#{Item.add.section.location}>Location</h3><hr class="hrStyle2" /></div>
 			<div class="bs-callout bs-callout-geo">
 				<h4><strong>Geolocaliza</strong> tu anuncio</h4>
 				<p style="width: 80%;">Indica donde se encuentra tu artículo, puedes hacer un click en un punto exacto,
@@ -276,7 +287,7 @@
 <!-- 			<div class="row"> -->
 				<div id="map_canvas" style="width:100%; height:500px; display: block"></div>
 <!-- 			</div> -->
-			<div><h3>Opciones para tu anuncio</h3><hr class="hrStyle2" /></div>
+			<div><h3 th:text=#{Item.add.section.options}>Options</h3><hr class="hrStyle2" /></div>
 			<div class="bs-callout bs-callout-info">
 				<h4>¿Mostrar anuncio en la <strong>barra de patrocinados</strong>?</h4>
 				<p>Tus anuncios se mostrarán en cualquier página, siendo exclusivos para su categoría. </p>
@@ -341,6 +352,42 @@
 		</form>
 		
 	</div>
+	
+	<script type="text/javascript">
+	$(document).ready(function() {
+		getCountryCurrency(setCurrelo);
+		
+		var prev;
+		$(function() {
+		    $("#currelo").focus( function () {
+		        // Store the current value on focus and on change
+		        prev = $(this).val();
+// 		        console.log("changed prev to " + prev);
+		    }).change(function() {
+		    	var selected = $(this).find(':selected'); // get selected currency
+	            currency = selected.val();
+// 		    	console.log("chaging from " + prev + " to " + currency);
+		    	
+		    	var prize = $('#prize').val();
+		    	if (prize > 0) {
+		    		fx.base = "USD";
+			    	fx.rates = {
+			    		"EUR" : 0.745101, // eg. 1 USD === 0.745101 EUR
+			    		"GBP" : 0.647710,
+			    		"HKD" : 7.781919,
+			    		"USD" : 1, // always include the base rate (1:1)
+				    	};
+// 		    		console.log("prize " + prize);
+			    	var p = fx.convert(prize, {from: prev, to: currency}).toFixed(2);
+			    	$('#prize').val(p);
+			    	
+			    	prev = currency;
+// 			    	console.log("updated prev to " + prev);
+		    	}
+		    });
+		});
+	});
+	</script>
 	
         <script type="text/javascript">
             $('.textarea').wysihtml5({

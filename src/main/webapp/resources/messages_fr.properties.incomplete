@@ -1,0 +1,32 @@
+#############
+# Points page
+#############
+
+points.title=Comprar puntos
+points.buy=Comprar
+
+#########################
+# Buttons
+#########################
+sell.button=Crea tu anuncio
+
+#########################
+# Item list form
+#########################
+Form.category.select.default=Todas las categorías
+Form.subCategory.select.default=Todas las subcategorías
+#Filter
+Item.list.filter.title=Frrrrrrrrr
+Item.list.filter.searchFrom=Buscar desde...
+Item.list.filter.searchPlace=Lugar desde donde buscar...
+Item.list.filter.search=Buscar
+Item.list.filter.searchRadius=Radio de distancia
+
+#########################
+# User registration form
+#########################
+#login stuff
+label.user=Login
+required.login=Login is required
+login.invalid=Tu nombre de usuario debe tener entre 2 y 20 caracteres (ñ no incluída)
+password.invalid=El password debe ser mayor de 8 caracteres y contener al menos un número o letra

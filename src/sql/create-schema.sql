@@ -21,16 +21,6 @@
 	DROP TABLE IF EXISTS role CASCADE;
 	--SET FOREIGN_KEY_CHECKS = 1;
 
----
-
--- PROVINCE
---CREATE TABLE province (
-	--provinceId BIGINT NOT NULL AUTO_INCREMENT,
-	--provinceName VARCHAR(20),
-	--CONSTRAINT pk_provinceId PRIMARY KEY (provinceId),
-	--CONSTRAINT province_u_provinceName UNIQUE(provinceName)
---);
-
 -- ROLE
 
 	CREATE TABLE role (
@@ -98,6 +88,7 @@
     	    subcategoryid BIGINT NOT NULL,
     	    title VARCHAR(90) NOT NULL,
     	    description TEXT NOT NULL,
+    	    currency VARCHAR(10) NOT NULL,
     	    prize DECIMAL(6,2) NOT NULL,
     	    startdate DATETIME NOT NULL,
     	    endDate DATETIME NOT NULL,

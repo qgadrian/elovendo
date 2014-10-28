@@ -27,18 +27,6 @@ Item.list.filter.searchRadius=Radio de distancia
 Item.add.images.title=Imágenes
 Item.add.category.selectCategory=Selecciona la categoría
 Item.add.category.selectSubCategory=Selecciona la subcategoría
-#Sections
-Item.add.section.info=Información de tu anuncio
-Item.add.section.location=Localización
-Item.add.section.options=Opciones para tu anuncio
-#Label
-Item.add.label.title=Título
-Item.add.label.description=Descripción
-Item.add.label.prize=Precio
-Item.add.label.category=Categoría
-Item.add.label.subCategory=SubCategoría
-Item.add.label.youtube=Vídeo
-Item.add.label.images=Imágenes
 
 # Error
 Min.item.subCategory=Debes seleccionar una subcategoría
@@ -61,9 +49,9 @@ points.desc1=Instantáneo *
 points.desc2=No caducan
 
 #########################
-# Header
+# Buttons
 #########################
-Header.button.sell=Crea tu anuncio
+sell.button=Crea tu anuncio
 
 #########################
 # Messaging

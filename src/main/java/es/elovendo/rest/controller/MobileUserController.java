@@ -147,6 +147,7 @@ public class MobileUserController {
 			@RequestParam(value="autoRenew", required=false, defaultValue="false") boolean autoRenew,
 			@RequestParam(value="lat", required=true) String latitude,
 			@RequestParam(value="lng", required=true) String longitude,
+			@RequestParam(value="currency", required=true) String currency,
 			@RequestParam(value="prize", required=true) double prize,
 			@RequestParam(value="image") MultipartFile file)
 			throws InvalidItemNameMinLenghtException, ProvinceNotFoundException, UserNotFoundException, 
@@ -162,7 +163,7 @@ public class MobileUserController {
 			System.out.println("Error converting to bytes image file");
 		}
 		
-		return (itemService.addItem(userName, subCategoryId, title, description, prize, 
+		return (itemService.addItem(userName, subCategoryId, title, description, currency, prize, 
 				imgBytes, null, null, null, "", featured, highlight, autoRenew, latitude, longitude) != null); 
 	}
 

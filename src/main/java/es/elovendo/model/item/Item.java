@@ -2,9 +2,12 @@ package es.elovendo.model.item;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +28,8 @@ import org.joda.time.Days;
 import es.elovendo.model.item.category.subcategory.SubCategory;
 import es.elovendo.model.user.User;
 import es.elovendo.util.Constant;
+import es.elovendo.util.LocaleHelper;
+import es.elovendo.util.currency.CurrencyConverter;
 
 /**
  * Created by @adrian on 17/06/14. All rights reserved.
@@ -53,6 +58,7 @@ public class Item {
 	// @Length(max = 1000)
 	private String description;
 
+	private String currency;
 	private BigDecimal prize;
 
 	@Column(columnDefinition = "DATETIME", name = "startdate")
@@ -71,6 +77,8 @@ public class Item {
 
 	@Transient
 	private String distance;
+	@Transient
+	private String currencySymbol;
 
 	private String image1;
 	private String image2;
@@ -100,14 +108,15 @@ public class Item {
 	public Item() {
 	}
 
-	public Item(User user, SubCategory subCategory, String title, String description, BigDecimal prize,
-			String mainImage, String image1, String image2, String image3, String youtubeVideo, boolean featured,
-			boolean highlight, boolean autoRenew, double latitude, double longitude) {
+	public Item(User user, SubCategory subCategory, String title, String description, String currency,
+			BigDecimal prize, String mainImage, String image1, String image2, String image3, String youtubeVideo,
+			boolean featured, boolean highlight, boolean autoRenew, double latitude, double longitude) {
 
 		this.user = user;
 		this.subCategory = subCategory;
 		this.title = title;
 		this.description = description;
+		this.currency = currency;
 		this.prize = prize;
 		this.startDate = Calendar.getInstance();
 		this.mainImage = mainImage;
@@ -133,14 +142,15 @@ public class Item {
 		this.radLng = Math.toRadians(longitude);
 	}
 
-	public Item(User user, SubCategory subCategory, String title, String description, BigDecimal prize,
-			String youtubeVideo, boolean featured, boolean highlight, boolean autoRenew, 
+	public Item(User user, SubCategory subCategory, String title, String description, String currency,
+			BigDecimal prize, String youtubeVideo, boolean featured, boolean highlight, boolean autoRenew,
 			double latitude, double longitude) {
 
 		this.user = user;
 		this.subCategory = subCategory;
 		this.title = title;
 		this.description = description;
+		this.currency = currency;
 		this.prize = prize;
 		this.startDate = Calendar.getInstance();
 		this.youtubeVideo = youtubeVideo;
@@ -168,6 +178,7 @@ public class Item {
 		this.subCategory = item.getSubCategory();
 		this.title = item.getTitle();
 		this.description = item.getDescription();
+		this.currency = item.getCurrency();
 		this.prize = item.getPrize();
 
 		this.startDate = item.startDate;
@@ -240,6 +251,68 @@ public class Item {
 		
 		return images;
 	}
+	
+	@Transient
+	public String getCurrencyPrize(Locale locale) {
+		// Workaround for some language locale's without Country specified
+		if (locale.getISO3Country().isEmpty()) locale = new Locale(locale.toString(), locale.toString());
+		
+		// Try to set locale Currency with the workaround
+		Currency localeCurrency = null;
+		try {
+			localeCurrency = Currency.getInstance(locale);
+		} catch (IllegalArgumentException | NullPointerException e) {
+			System.out.println("~~~~~ Locale " + locale + " needs to be fixed in proper to get currency");
+			// Fix locale without country specified
+			LocaleHelper localeHelper = LocaleHelper.getInstance();
+			locale = localeHelper.getFixedLocale(locale);
+
+			System.out.println("~~~~~ FIXED SESSION LOCALE " + locale);
+			System.out.println("~~~~~ FIXED SESSION country " + locale.getCountry());
+			System.out.println("~~~~~ FIXED SESSION ISO3 " + locale.getISO3Country());
+			
+			localeCurrency = Currency.getInstance(locale);
+		}
+		
+		try {
+			Currency fromCurrency = Currency.getInstance(this.currency);
+			Currency toCurrency = Currency.getInstance(localeCurrency.getCurrencyCode());
+
+			// Exchange from item currency to locale currency 
+			if (!fromCurrency.getCurrencyCode().equalsIgnoreCase(toCurrency.getCurrencyCode())) {
+				CurrencyConverter converter = CurrencyConverter.getInstance();
+				BigDecimal exchanged = converter.convert(this.prize, fromCurrency, toCurrency);
+				// Format using localeCurrency
+				NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+				numberFormat.setCurrency(localeCurrency);
+				return numberFormat.format(exchanged);
+			}
+			// If item's currency and locale currency is the same, just format the prize
+			else {
+				// Format using fromCurrency (actual currency)
+				NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+				numberFormat.setCurrency(fromCurrency);
+				return numberFormat.format(this.prize);
+			}
+		} catch (Exception e) {
+			System.out.println("WARN!!! WARN!!! WARN!!! WARN!!! WARN!!!");
+			System.out.println("WARN!!! WARN!!! WARN!!! WARN!!! WARN!!!");
+			System.out.println("WARN!!! WARN!!! WARN!!! WARN!!! WARN!!!");
+			System.out.println("Locale/Currency not supported/Whatever ERROR");
+			System.out.println("Will now enter in a 'safe print mode'");
+			System.out.println("Should print: Item currency, Item currency symbol, and prize formatted");
+			System.out.println(e.getMessage());
+			
+			Currency currency = Currency.getInstance(this.currency);
+			System.out.println("Item currency " + currency.getCurrencyCode());
+			System.out.println("Item currency symbol with locale " + currency.getSymbol(locale));
+			NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+			numberFormat.setCurrency(currency);
+			System.out.println("Return prize formatted " + numberFormat.format(this.prize));
+			
+			return numberFormat.format(this.prize);
+		}
+	}
 
 	public void setImage1(String image1) {
 		this.image1 = image1;
@@ -295,6 +368,14 @@ public class Item {
 
 	public void setPrize(BigDecimal prize) {
 		this.prize = prize;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 
 	public Calendar getStartDate() {
