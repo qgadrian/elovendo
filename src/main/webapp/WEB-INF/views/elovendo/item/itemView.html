@@ -24,6 +24,7 @@
 <script src="/js/filter.js"></script>
 
 <link rel="stylesheet" href="/css/styleweb.css" />
+<link rel="stylesheet" href="/css/styleItem.css" />
 <link rel="stylesheet" href="/css/bootstrap-extra.css" />
 <!--  For share buttons -->
 <link rel="stylesheet" href="/css/sharingStyle.css" />
@@ -49,32 +50,34 @@
 	<div th:replace="elovendo/header"></div>
 
 	<div class="container">
-		<div class='tabs-x tabs-above board'>
+	<div class="tabbable-panel">
+	<div class="tabbable-line">
+<!-- 		<div class='tabs-x tabs-above board'> -->
 			<ul id="myTab-1" class="nav nav-tabs" role="tablist">
 				<li class="active"><a href="#itemContent" role="tab"
-					data-toggle="tab" title="Anuncio"> <span
-						class="round-tabs green"> <i
-							class="glyphicon glyphicon-tag"></i>
+					data-toggle="tab" title="Anuncio" class="text-center"> <span
+						><i
+							class="glyphicon glyphicon-tag"></i> Anuncio
 					</span>
 				</a></li>
 				<li><a href="#geolocationContent" role="tab-kv"
-					data-toggle="tab" title="Localización"> <span
-						class="round-tabs yellow"> <i
-							class="glyphicon glyphicon-map-marker"></i>
+					data-toggle="tab" title="Localización" class="text-center"> <span
+						> <i
+							class="glyphicon glyphicon-map-marker"></i> Localización
 					</span>
 				</a></li>
 				<li><a href="#userContent" role="tab-kv" data-toggle="tab"
-					title="Vendedor"> <span class="round-tabs blue"> <i
-							class="glyphicon glyphicon-user"></i>
+					title="Vendedor" class="text-center"> <span > <i
+							class="glyphicon glyphicon-user"></i> Vendedor
 					</span>
 				</a></li>
 				<li><a href="#videoContent" role="tab-kv" data-toggle="tab"
-					title="Vídeo"> <span class="round-tabs red"> <i
-							class="glyphicon glyphicon-play-circle"></i>
+					title="Vídeo" class="text-center"> <span > <i
+							class="glyphicon glyphicon-play-circle"></i> Vídeo
 					</span>
 				</a></li>
 			</ul>
-		</div>
+<!-- 		</div> -->
 		<!-- Item -->
 		<div id="tabContent" class="tab-content">
 			<div class="tab-pane fade in active" id="itemContent">
@@ -312,6 +315,8 @@
 			</div>
 		</div>
 	</div>
+	</div>
+	</div>
 
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
@@ -534,10 +539,10 @@
 			$(window).resize(adjustModalMaxHeightAndPosition).trigger("resize");
 		}
 
-		$(function() {
-			$('a[title]').tooltip();
-			$('h3[title]').tooltip();
-		});
+// 		$(function() {
+// 			$('a[title]').tooltip();
+// 			$('h3[title]').tooltip();
+// 		});
 	</script>
 
 </body>
