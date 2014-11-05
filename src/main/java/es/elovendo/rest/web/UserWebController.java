@@ -242,23 +242,35 @@ public class UserWebController {
 //			result.addError(new FieldError("registrationform", "profilePic", messageSource.getMessage(
 //					"Error.password.missmatch", null, locale)));
 //		}
+		
+		// Validate password not empty (because of regex pattern)
+		if (userForm.hasEmptyPassword()) {
+			result.addError(new FieldError("user", "password", 
+					messageSource.getMessage("User.add.Error.password.empty", null, locale)));
+		}
+		
+		// Validate confirmPassword not empty (because of regex pattern)
+		if (userForm.hasEmptyConfirmPassword()) {
+			result.addError(new FieldError("user", "confirmPassword", 
+					messageSource.getMessage("User.add.Error.password.empty", null, locale)));
+		}
 
 		// Validate email address
 		if (!EmailValidator.getInstance().isValid(userForm.getEmail())) {
 			result.addError(new FieldError("user", "email", messageSource.getMessage(
-					"Error.user.email", null, locale)));
+					"User.add.Error.user.email", null, locale)));
 		}
 		
 		// Validate phone number
 		if (!userForm.isValidPhoneNumber()) {
 			result.addError(new FieldError("user", "phone", messageSource.getMessage(
-					"Error.user.phone", null, locale)));
+					"User.add.Error.user.phone", null, locale)));
 		}
 		
 		// Validate that confirm password matches
-		if (!userForm.getPassword().isEmpty() && !userForm.getPassword().equals(userForm.getConfirmPassword())) {
+		if (!userForm.isPasswordMatch()) {
 			result.addError(new FieldError("user", "confirmPassword", 
-					messageSource.getMessage("Error.password.missmatch", null, locale)));
+					messageSource.getMessage("User.add.Error.password.missmatch", null, locale)));
 		}
 		
 		// Validate login availability

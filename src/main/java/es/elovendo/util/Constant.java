@@ -59,7 +59,7 @@ public class Constant {
 	// Strong password
 //	public static final String PASSWORD_PATTERN = "^$|(?=^.{8,255}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
 	// Weak password
-	public static final String PASSWORD_PATTERN = "[0-9a-zA-Z$@$!%*#?&]{8,}$";
+	public static final String PASSWORD_PATTERN = "^$|[0-9a-zA-Z$@$!%*#?&]{8,}$";
 	public static final String YOUTUBE_URL_PATTERN = "^$|((http|https)\\:\\/\\/)?(www\\.)?(youtube\\.com|youtu\\.?be)\\/.+$";
 	
 	/**

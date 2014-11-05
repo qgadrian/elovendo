@@ -35,7 +35,7 @@
 	CREATE TABLE userprofile (
 		  userid BIGINT NOT NULL AUTO_INCREMENT,
 		  login VARCHAR(50) NOT NULL,
-		  password VARCHAR(255),
+		  password VARCHAR(255) NOT NULL,
 		  socialCompositeKey VARCHAR(255),
 		  firstname VARCHAR(20) NOT NULL,
 		  lastname VARCHAR(20) NOT NULL,

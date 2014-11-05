@@ -138,6 +138,30 @@ public class UserForm {
 		this.avatar = avatar;
 	}
 	
+	/**
+	 * Password is empty
+	 * @return True if password is empty
+	 */
+	public boolean hasEmptyPassword() {
+		return this.password.isEmpty();
+	}
+	
+	/**
+	 * Password is empty
+	 * @return True if password is empty
+	 */
+	public boolean hasEmptyConfirmPassword() {
+		return this.confirmPassword.isEmpty();
+	}
+	
+	/**
+	 * Password and confirmPassword match
+	 * @return True if password and confirmPassword are equal
+	 */
+	public boolean isPasswordMatch() {
+		return this.password.equals(this.confirmPassword);
+	}
+	
 	/* Helper methods */
 	
 	/**
