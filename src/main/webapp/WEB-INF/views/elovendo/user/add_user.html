@@ -82,7 +82,7 @@
 							<input type="text" class="form-control" id="username" name="username" 
 								th:title="#{login.invalid}" placeholder="Nombre de usuario" 
 								th:field="${user.login}" required="required"
-								pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$"/>
+								pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,23}$"/>
 							<div th:if="${#fields.hasErrors('user.login')}" class="form-group has-error">
 								<small class="control-label" th:errors="${user.login}"
 									style="text-align: center !important">Input with error</small>
@@ -103,7 +103,7 @@
 						<div class="col-sm-8">
 							<input class="form-control" id="password" name="password" type="password" 
 								placeholder="Contraseña" th:title="#{Pattern.user.password}"
-								pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
+								pattern="[0-9a-zA-Z$@$!%*#?&]{8,}$" />
 							<div th:if="${#fields.hasErrors('user.password')}" class="form-group has-error">
 								<small class="control-label" th:errors="${user.password}"
 									style="text-align: center !important">Input with error</small>
@@ -117,7 +117,7 @@
 						<div class="col-sm-8">
 							<input class="form-control" id="confirmPassword" name="confirmPassword" type="password" 
 								placeholder="Contraseña" th:title="#{password.invalid}"
-								pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
+								pattern="[0-9a-zA-Z$@$!%*#?&]{8,}$" />
 							<div th:if="${#fields.hasErrors('user.confirmPassword')}" class="form-group has-error">
 								<small class="control-label" th:errors="${user.confirmPassword}"
 									style="text-align: center !important">Input with error</small>

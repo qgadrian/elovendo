@@ -34,7 +34,7 @@
 --TODO: save register date to see how long is member
 	CREATE TABLE userprofile (
 		  userid BIGINT NOT NULL AUTO_INCREMENT,
-		  login VARCHAR(23) NOT NULL,
+		  login VARCHAR(50) NOT NULL,
 		  password VARCHAR(255),
 		  socialCompositeKey VARCHAR(255),
 		  firstname VARCHAR(20) NOT NULL,
@@ -89,7 +89,7 @@
     	    title VARCHAR(90) NOT NULL,
     	    description TEXT NOT NULL,
     	    currency VARCHAR(10) NOT NULL,
-    	    prize DECIMAL(6,2) NOT NULL,
+    	    prize DECIMAL(9,2) NOT NULL,
     	    startdate DATETIME NOT NULL,
     	    endDate DATETIME NOT NULL,
     	    mainImage VARCHAR(255),

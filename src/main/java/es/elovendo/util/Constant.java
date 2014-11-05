@@ -56,8 +56,10 @@ public class Constant {
 	 */
 	public static final String LOGIN_PATTERN = "^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$";
 	public static final String EMAIL_PATTERN="/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$/";
-	public static final String PASSWORD_PATTERN = "^$|(?=^.{8,255}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
-//	public static final String YOUTUBE_URL_PATTERN = "^$|((http|https)\\:\\/\\/)?(www\\.)?(youtube\\.com/embed/|youtu\\.?be/embed/)\\/.+$";
+	// Strong password
+//	public static final String PASSWORD_PATTERN = "^$|(?=^.{8,255}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
+	// Weak password
+	public static final String PASSWORD_PATTERN = "[0-9a-zA-Z$@$!%*#?&]{8,}$";
 	public static final String YOUTUBE_URL_PATTERN = "^$|((http|https)\\:\\/\\/)?(www\\.)?(youtube\\.com|youtu\\.?be)\\/.+$";
 	
 	/**
