@@ -24,6 +24,8 @@
 <link href="/css/bootstrap-tabs-x.css" media="all" rel="stylesheet" type="text/css" />
 <script src="/js/bootstrap-tabs-x.js" type="text/javascript"></script>
 
+<link rel="stylesheet" href="/css/styleItem.css" />
+
 <title>User profile</title>
 
 </head>
@@ -32,31 +34,31 @@
 	<div th:replace="elovendo/header"></div>
 	
 	<div class="container profileStyle">
-		<div class='tabs-x tabs-above board'>
+		<div class="tabbable-panel">
+		<div class="tabbable-line">
 			<ul id="profileTab" class="nav nav-tabs" role="tablist">
 				<li class="active">
-					<a href="#profileContent" role="tab" data-toggle="tab" title="Perfil">
+					<a href="#profileContent" role="tab" data-toggle="tab" title="Perfil" class="text-center">
 						<span class="round-tabs lblue"> 
-							<i class="glyphicon glyphicon-user"></i>
+							<i class="glyphicon glyphicon-user"></i> Profile
 						</span>
 					</a>
 				</li>
 				<li>
-					<a href="#itemsContent" role="tab" data-toggle="tab" title="Anuncios">
+					<a href="#itemsContent" role="tab" data-toggle="tab" title="Anuncios" class="text-center">
 						<span class="round-tabs violet"> 
-							<i class="glyphicon glyphicon-th-list"></i>
+							<i class="glyphicon glyphicon-th-list"></i> Items
 						</span>
 					</a>
 				</li>
 				<li>
-					<a href="#votesContent" role="tab" data-toggle="tab" title="Votos">
+					<a href="#votesContent" role="tab" data-toggle="tab" title="Votos" class="text-center">
 						<span class="round-tabs blue"> 
-							<i class="glyphicon glyphicon-stats"></i>
+							<i class="glyphicon glyphicon-stats"></i> Votes
 						</span>
 					</a>
 				</li>
 			</ul>
-		</div>
 
 		<!--  user -->
 		<div id="tabContent" class="tab-content">
@@ -153,7 +155,8 @@
 			</div>
 			
 		</div>
-		
+		</div>
+		</div>
 	</div>
 
 </body>
