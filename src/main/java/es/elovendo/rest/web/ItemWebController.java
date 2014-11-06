@@ -541,7 +541,7 @@ public class ItemWebController {
 	 */
 
 	@RequestMapping(value = "item/fav", method = RequestMethod.POST)
-	public @ResponseBody boolean toggleItemFavorite(
+	public @ResponseBody boolean setItemFavorite(
 			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException {
 		User user = null;
 		SecurityContext context = SecurityContextHolder.getContext();
@@ -551,6 +551,19 @@ public class ItemWebController {
 		if (user == null) return false;
 
 		return favoriteService.setFavorite(user, itemId) != null;
+	}
+	
+	@RequestMapping(value = "item/unfav", method = RequestMethod.POST)
+	public @ResponseBody boolean unsetItemFavorite(
+			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException {
+		User user = null;
+		SecurityContext context = SecurityContextHolder.getContext();
+		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (user == null) return false;
+		favoriteService.unsetFavorite(user, itemId);
+		return true;
 	}
 
 }

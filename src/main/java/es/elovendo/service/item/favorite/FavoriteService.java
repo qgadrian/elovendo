@@ -11,7 +11,23 @@ public interface FavoriteService {
 	
 	public boolean toggleFavorite(User user, Long itemId) throws ItemNotFoundException;
 	
+	/**
+	 * Sets an item as favorite for the given user
+	 * @param user
+	 * @param itemId
+	 * @return
+	 * @throws ItemNotFoundException
+	 */
 	public Favorite setFavorite(User user, Long itemId) throws ItemNotFoundException;
+	
+	/**
+	 * Removes as favorite an item for the given user favorite's list
+	 * @param user
+	 * @param itemId
+	 * @return
+	 * @throws ItemNotFoundException
+	 */
+	public void unsetFavorite(User user, Long itemId) throws ItemNotFoundException;
 	
 	/**
 	 * Returns {@link Constant}.MAX_LAST_FAVORITES items from the given user 

@@ -153,7 +153,7 @@
 <!-- 							</table> -->
 <!-- 						</div> -->
 						<div class="list-group">
-							<a th:each="item : ${lastFavs}" class="list-group-item" 
+							<a th:each="item : ${lastFavs}" class="list-group-item" th:classappend="'fav' + ${item.itemId}"
 								th:href="@{'/bazaar/item/' + ${item.itemId}}">
 								<h4 class="list-group-item-heading" th:text="${item.title}">Title</h4>
 								<p th:if="${#strings.length(item.plainDescription)} &gt; 59"
@@ -283,8 +283,122 @@
 			<div class="tab-pane fade" id="favoriteContent">
 				<div class="container">
 					<div class="row">
-						<div class="col-xs-12 col-md-12" >
-							<p>asdsasda</p>
+						<div class="col-xs-10 col-xs-offset-1">
+							<div class="row" th:each="item : ${lastFavs}">
+								<div class="col-xs-12 col-md-12 col-lg-12 itemList">
+									<a th:href="@{'/bazaar/item/' + ${item.itemId}}" th:class="'fav' + ${item.itemId}">
+										<div th:class="${item.highlight}? 'thumbnail featuredThumbnail pop' : 'thumbnail'">
+											<div class="row">
+												<div class="col-xs-5 col-md-4 col-lg-4">
+													<div class="thumbnail pull-left itemList"
+														style="min-height: 180px; max-height: 180px; width: 220px; max-width: 100%;">
+														<img data-src="holder.js/300x300" alt="Image"
+															class="img-responsive center-block"
+															th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}" />
+													</div>
+												</div>
+												<div class="col-xs-7 col-md-8 col-lg-8">
+													<!-- favorite -->
+													<div class="btn-group pull-right" data-toggle="buttons"
+														th:onclick="'rmClick(' + ${item.itemId} + ', this)'">
+														<label class="btn btn-danger btn-m"
+															style="padding: 6px 12px 5px 10px;"> <i
+															th:id="'i'+${item.itemId}"
+															class="glyphicon glyphicon-trash"> Remove</i>
+														</label>
+													</div>
+													<!--  User info -->
+													<div class="row userInfo">
+														<div class="col-xs-4 col-md-4 col-lg-4 userPicMin"
+															style="width: 80px; margin-right: 10px;">
+															<img data-src="holder.js/50x50" alt="Profile pic"
+																th:src="@{'http://www.elovendo.com/' + ${item.user.avatar200h}}" />
+														</div>
+														<div class="col-xs-12 col-md-8 col-lg-8">
+															<div class="row">
+																<p class="pull-left">
+																	Lo vende <span th:text="${item.user.login}">user</span>
+																	en <span th:text="${item.subCategory.subCategoryName}"></span>
+																</p>
+															</div>
+															<div class="row">
+																<p class="pull-left">
+																	<span
+																		th:text="${#calendars.format(item.startDate, 'dd MMMM yyyy')}">
+																		fecha</span> a las <span
+																		th:text="${#calendars.format(item.startDate, 'HH:mm')}">
+																		hora</span>
+																</p>
+															</div>
+														</div>
+													</div>
+													<!--  Caption -->
+													<div class="caption">
+														<div class="row">
+															<div class="col-xs-12 col-md-12 col-lg-12">
+																<h3 th:text="${item.title}">Title</h3>
+															</div>
+														</div>
+														<!--  Item info -->
+														<div class="row">
+															<div class="col-xs-12 col-md-12 col-lg-12 itemDesc">
+																<p
+																	th:if="${#strings.length(item.plainDescription)} &gt; 99"
+																	th:utext="${#strings.substring(item.plainDescription, 0, 100)} + '(...)'">
+																	Description</p>
+																<p
+																	th:if="${#strings.length(item.plainDescription)} &lt; 100"
+																	th:utext="${item.plainDescription}">Description</p>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-xs-10 col-md-12 col-lg-12"
+													style="margin-bottom: 10px;">
+													<h2 style="display: inline; margin-left: 10px;">
+														<span class="label label-or prizeLabel"
+															th:text="${item.getCurrencyPrize(#locale)}"
+															th:attr="data-prize=${item.prize}, data-currency=${item.currency}"
+															th:title="${item.isOtherCurrency(#locale)} ? #{Item.pop.about} + ' ' + ${item.getExchangeCurrencyPrize(#locale)}"></span>
+													</h2>
+													<h4 th:if="${item.new}" style="display: inline;">
+														<span class="label label-danger"> <i
+															class="glyphicon glyphicon-fire"></i> Nuevo
+														</span>
+													</h4>
+													<h4 th:if="${item.user.whatssapUser}"
+														style="display: inline;">
+														<span class="label label-success"> <i
+															class="glyphicon glyphicon-phone"></i> Whatssap
+														</span>
+													</h4>
+													<h4 th:if="${item.user.userValue} &gt; 70"
+														style="display: inline;" onmouseover="mouseHover()">
+														<span class="label label-rep"> <i
+															class="glyphicon glyphicon-thumbs-up"></i> Reputado
+														</span>
+													</h4>
+													<h4 style="display: inline;">
+														<span class="label label-dis"> <i
+															class="glyphicon glyphicon-globe"></i> <span
+															th:text="${'A ' + item.distance + ' KM'}"></span>
+														</span>
+													</h4>
+													<div class="btn btn-primary pull-right messButit"
+														style="margin-right: 4px;"
+														th:attr="data-user=${item.user.login}" data-toggle="modal"
+														data-target="#myModal">
+														<i class="glyphicon glyphicon-send"
+															style="margin-right: 4px;"></i> Mensaje
+													</div>
+												</div>
+											</div>
+										</div>
+									</a>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -360,7 +474,35 @@
   </div>
 </div>
 
-<script type="text/javascript">
+<script th:inline="javascript">
+
+/*<![CDATA[*/
+var okrm = /*[[#{Alert.itemList.favorite.remove.ok}]]*/ 'Added to favorite';
+var frm = /*[[#{Alert.itemList.favorite.remove.error}]]*/ 'Error adding to favorite. Please try again.';
+/*]]>*/
+
+function rmClick(value, d) {
+	var f = value;
+	var cv = $("meta[name='_csrf']").attr("content");
+	var cn = $("meta[name='_csrf_header']").attr("content");
+	var e = "/bazaar/item/unfav";
+	
+	$.ajax({
+		  type: "POST",
+		  beforeSend: function (request) { request.setRequestHeader(cn, cv); },
+		  url: e,
+		  data: {id: f},
+		  success: function(data) {
+				$('#favMes').text(okrm);
+				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				$('.fav' + value).remove();
+			},
+			error : function() {
+				$('#favMes').text(frm);
+				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+			}
+		});
+	}
 	
 $('a[data-toggle=modal], button[data-toggle=modal]').click(function () {
     var itemId = $(this).data('item');

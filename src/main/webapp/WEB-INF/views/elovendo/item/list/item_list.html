@@ -34,9 +34,9 @@
 <link rel="stylesheet" type="text/css" href="/css/styleweb.css"/>
 <link rel="stylesheet" type="text/css" href="/css/bootstrap-extra.css"/>
 <link rel="stylesheet" type="text/css" href="/css/bootstrap-slider.css"/>
+
 <!-- Form -->
-<!-- <link rel="stylesheet" href="/css/pagination.css" /> -->
-<!-- <link rel="stylesheet" href="/css/styleList.css" /> -->
+<link rel="stylesheet" href="/css/listStyle.css" />
 
 <!-- Styles -->
 <link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
@@ -189,7 +189,7 @@
 									<img data-src="holder.js/300x300" alt="..." 
 									th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}"/>
 <!-- 								</a> -->
-<hr />
+								<hr />
 								<div class="caption">
 									<h4 th:text="${item.title}">Title</h4>
 									<p th:if="${#strings.length(item.plainDescription)} &gt; 99" 
@@ -210,6 +210,58 @@
 					</div>
 				</div>
 			</div>
+			<!-- STUFF 2 -->
+			<div class="col-xs-8 col-md-8 col-lg-8">
+				<div class="row" th:each="item : ${itemsList}">
+					<div class="col-xs-12 col-md-12 col-lg-12 itemList">
+						<ul class="event-list">
+							<li>
+<!-- 								<a th:href="@{'/bazaar/item/' + ${item.itemId}}"> -->
+									<img data-src="holder.js/300x300" alt="Image"
+										th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}"/>
+									<div class="info">
+										<h2 class="title" th:text="${item.title}">Title</h2>
+										<p class="desc" th:text="${item.description}">Descripcion</p>
+										<ul>
+											<li style="width:auto;">
+												<a href="#website"><span class="fa fa-globe"></span> Ver anuncio</a>
+											</li>
+											<li style="width:auto;">
+												<span class="fa fa-money"></span> $39.99</li>
+											<li th:if="${item.new}" style="width:auto;">
+												<span class="label label-danger">
+												<i class="glyphicon glyphicon-fire"></i> Nuevo</span>
+											</li>
+											<li th:if="${item.user.whatssapUser}" style="width:auto;">
+												<span class="label label-success">
+												<i class="glyphicon glyphicon-phone"></i> Whatssap</span>
+											</li>
+											<li th:if="${item.user.userValue} &gt; 70" style="width:auto;" >
+												<span class="label label-rep">
+												<i class="glyphicon glyphicon-thumbs-up"></i> Reputado</span>
+											</li>
+											<li style="width:auto;" >
+												<span class="label label-dis">
+													<i class="glyphicon glyphicon-globe"></i>
+													<span th:text="${'A ' + item.distance + ' KM'}"></span>
+												</span>
+											</li>
+										</ul>
+									</div>
+									<div class="social">
+										<ul>
+											<li class="facebook" style="width:33%;"><a href="#facebook"><span class="fa fa-facebook"></span></a></li>
+											<li class="twitter" style="width:34%;"><a href="#twitter"><span class="fa fa-twitter"></span></a></li>
+											<li class="google-plus" style="width:33%;"><a href="#google-plus"><span class="fa fa-google-plus"></span></a></li>
+										</ul>
+									</div>
+<!-- 								</a> -->
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
 			<!-- STUFF LIST -->
 			<div class="col-xs-8 col-md-8 col-lg-8">
 				<div class="row" th:each="item : ${itemsList}">
@@ -247,7 +299,8 @@
 	<!-- 												<div class="col-xs-12 col-md-12"> -->
 														<p class="pull-left">Lo vende <span th:text="${item.user.login}">user</span>
 														en <span th:text="${item.subCategory.subCategoryName}"></span></p>
-	<!-- 												</div> -->
+												</div>
+												<div class="row">
 	<!-- 												<div class="col-xs-12 col-md-12"> -->
 														<p class="pull-left">
 															<span
@@ -311,23 +364,16 @@
 											<span th:text="${'A ' + item.distance + ' KM'}"></span>
 										</span>
 										</h4>
-										<div class="btn-group pull-right" style="margin-right: 10px;">
-	
+										<div class="btn btn-primary pull-right messButit" style="margin-right: 4px;"
+											th:attr="data-user=${item.user.login}" data-toggle="modal"
+											data-target="#myModal">
+											<i class="glyphicon glyphicon-send"
+												style="margin-right: 4px;"></i> Mensaje
 										</div>
-<!-- 										<div class="btn btn-primary pull-right" th:attr="data-user=${item.user.login}" data-toggle="modal" -->
-<!-- 							data-target="#myModal"> -->
-<!-- 	  										<i class="glyphicon glyphicon-send" style="margin-right: 4px;"></i> Mensaje -->
-<!-- 	  									</div> -->
 									</div>
 								</div>
 							</div>
 						</a>
-						<button class="btn btn-primary itemElement" role="button"
-							th:attr="data-user=${item.user.login}" data-toggle="modal"
-							data-target="#myModal">
-							<i class="glyphicon glyphicon-send" style="margin-right: 4px;"></i> Mensaje
-						</button>
-						
 					</div>
 				</div>
 			</div>
@@ -494,6 +540,10 @@
 			var select = $('#category').find(":selected").text();
 			location.href = "/bazaar/category/" + select + getUrlParams();
 		}
+	});
+	
+	$('.messButit').on('click', function(e) {
+		e.preventDefault();
 	});
 	
 	function favClick(value, d) {

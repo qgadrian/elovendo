@@ -46,17 +46,15 @@ public class FavoriteServiceImpl implements FavoriteService {
 		return favRepository.save(favorite);
 	}
 
-//	@Override
-//	public boolean removeFavorite(User user, Long itemId) throws ItemNotFoundException {
-//		Item item = getItem(itemId);
-//		FavoriteKey favKey = new FavoriteKey(user, item);
-//		
-//		if (favRepository.findOne(favKey) == null) return false;
-//		else {
-//			favRepository.delete(favKey);
-//			return true;
-//		}
-//	}
+	@Override
+	public void unsetFavorite(User user, Long itemId) throws ItemNotFoundException {
+		Item item = getItem(itemId);
+		FavoriteKey favKey = new FavoriteKey(user, item);
+		
+		if (!favRepository.exists(favKey)) throw new ItemNotFoundException(itemId);
+		
+		favRepository.delete(favKey);
+	}
 //
 //	@Override
 //	public boolean isFavorite(User user, Long itemId) throws ItemNotFoundException {
