@@ -171,7 +171,7 @@ public class UserServiceImpl implements UserService {
 		if (password != null) userForm.setPassword(encoder.encode(password));
 		
 		User user = new User(userForm.getLogin(), userForm.getPassword(), null, userForm.getFirstName(),
-				userForm.getLastName(), userForm.getAddress(), userForm.getPhone(), userForm.isWhatssapUser(),
+				userForm.getLastName(), userForm.getAddress(), userForm.getPhone(), userForm.isWhatssap(),
 				userForm.getEmail(), null, role, null);
 		
 		user = userRepository.save(user);

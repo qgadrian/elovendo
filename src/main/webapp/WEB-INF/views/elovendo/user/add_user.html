@@ -251,7 +251,11 @@
 </div><!-- /.modal -->
 
 
-<script type="text/javascript">
+<script th:inline="javascript">
+
+	/*<![CDATA[*/
+	var w = /*[[${isWhatssap}]]*/ false;
+	/*]]>*/
 
 	$(document).ready(function() {
 		console.log("phone valid? " + $('#phone').val());
@@ -261,15 +265,26 @@
 		
 		console.log("size " + $.fn.intlTelInput.getCountryData().length);
 		
-		var isValid = intlTelInputUtils.isValidNumber($('#phone').val(), 34);
-		console.log("really valid? " + isValid);
+// 		var isValid = intlTelInputUtils.isValidNumber($('#phone').val(), 34);
 // 		var isValid = $('#phone').intlTelInput("isValidNumber");
-		
-		if (isValid) {
-			$("[name='whatssap']").bootstrapSwitch('disabled', false, true);
-		} else {
+		try {
+			console.log("phone is? " + $('#phone').val());
+			var iv = $('#phone').val() != "";
+			console.log("really valid? " + iv);
+			console.log("cause is? " + $('#phone').val());
+			
+			if (iv) {
+				$("[name='whatssap']").bootstrapSwitch('disabled', false, true);
+			} else {
+				$("[name='whatssap']").bootstrapSwitch('disabled', true, true);
+			}
+		} catch (err) {
+			console.log("error reading phone value valid");
 			$("[name='whatssap']").bootstrapSwitch('disabled', true, true);
 		}
+
+		if (w != null) $("[name='whatssap']").bootstrapSwitch('state', w, true);
+
 	});
 	
 	$("[name='whatssap']").bootstrapSwitch({

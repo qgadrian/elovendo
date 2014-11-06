@@ -286,6 +286,7 @@ public class UserWebController {
 		}
 
 		if (result.hasErrors()) {
+			model.addAttribute("isWhatssap", userForm.isWhatssap());
 			return "elovendo/user/add_user";
 		} else {
 			userService.addUser(userForm, profilePic);

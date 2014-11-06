@@ -25,7 +25,7 @@ public class UserForm {
 	String lastName;
 	String address;
 	String phone;
-	boolean whatssapUser;
+	boolean whatssap = false;
 
 	// Will use a well-tested method instead rely on a string pattern
 	// EmailValidator.getInstance().isValid(String email);
@@ -36,14 +36,14 @@ public class UserForm {
 	public UserForm() {}
 
 	public UserForm(String login, String password, String confirmPassword, String firstName, String lastName, 
-			String address, String phone, boolean whatssapUser, String email) {
+			String address, String phone, boolean whatssap, String email) {
 		this.login = login;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
 		this.phone = phone;
-		this.whatssapUser = whatssapUser;
+		this.whatssap = whatssap;
 		this.email = email;
 	}
 	
@@ -54,7 +54,7 @@ public class UserForm {
 		this.lastName = user.getLastName();
 		this.address = user.getAddress();
 		this.phone = user.getPhone();
-		this.whatssapUser = user.isWhatssapUser();
+		this.whatssap = user.isWhatssapUser();
 		this.email = user.getEmail();
 	}
 
@@ -114,12 +114,12 @@ public class UserForm {
 		this.phone = phone;
 	}
 
-	public boolean isWhatssapUser() {
-		return whatssapUser;
+	public boolean isWhatssap() {
+		return whatssap;
 	}
 
-	public void setWhatssapUser(boolean whatssapUser) {
-		this.whatssapUser = whatssapUser;
+	public void setWhatssap(boolean whatssap) {
+		this.whatssap = whatssap;
 	}
 
 	public String getEmail() {
@@ -202,7 +202,7 @@ public class UserForm {
 	@Override
 	public String toString() {
 		return "UserForm [login=" + login + ", password=" + password + ", firstName=" + firstName + ", lastName="
-				+ lastName + ", address=" + address + ", phone=" + phone + ", whatssapUser=" + whatssapUser
+				+ lastName + ", address=" + address + ", phone=" + phone + ", whatssapUser=" + whatssap
 				+ ", email=" + email + ", avatar=" + avatar + "]";
 	}
 
