@@ -201,7 +201,10 @@
 														</p>
 													</div>
 													<div th:unless="${item.autoRenew}" class="row">
-														No tiene activada la renovación automática
+														<strong>No tiene activada la renovación automática</strong>
+													</div>
+													<div th:if="${item.autoRenew}" class="row">
+														Este anuncio se renovará automáticamente
 													</div>
 												</div>
 											</div>

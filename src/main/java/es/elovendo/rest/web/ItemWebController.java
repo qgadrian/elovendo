@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -492,6 +493,10 @@ public class ItemWebController {
 			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		if (result.hasErrors()) {
+			for (FieldError fe : result.getFieldErrors()) {
+				logger.debug("Edit " + itemId + " error: " + fe.toString());
+			}
+			
 			model.addAttribute("user", user);
 			model.addAttribute("item", itemForm);
 
@@ -503,7 +508,8 @@ public class ItemWebController {
 
 			return "elovendo/item/edit/edit_item";
 		}
-		else { 
+		else {
+			logger.debug("Item " + itemId + "succesfully edited");
 			itemForm.setUser(user);
 			itemForm.setItemId(itemId);
 			
