@@ -16,13 +16,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
-import org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
 import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 import org.springframework.security.web.session.ConcurrentSessionFilter;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import es.elovendo.rest.handler.UserLogoutSuccessHandler;
 import es.elovendo.util.ApiRequestMatcher;
@@ -78,6 +76,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             	.antMatchers("/items/item/**").authenticated()
             	.antMatchers("/site/delete/**").authenticated()
             	.antMatchers("/logout").authenticated()
+            	.antMatchers("/elovendo/messages/public/send").anonymous()
             	.antMatchers("/elovendo/messages/**").authenticated()
                 .and()
             .formLogin()

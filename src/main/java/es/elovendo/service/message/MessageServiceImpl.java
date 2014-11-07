@@ -83,12 +83,24 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
+	@Deprecated
 	public Message sendMessage(User sender, String _receiver, String messageText, long ipAddress)
 			throws MessageThreadAlreadyExistsException, UserNotFoundException, MessageTextTooLongException {
 		if (messageText.length() > 500)
 			throw new MessageTextTooLongException(sender.getUserId());
 		
 		User receiver = userService.findUserByLogin(_receiver);
+
+		return sendMessage(sender, receiver, messageText, ipAddress);
+	}
+	
+	@Override
+	public Message sendMessage(User sender, Long receiverId, String messageText, long ipAddress)
+			throws MessageThreadAlreadyExistsException, UserNotFoundException, MessageTextTooLongException {
+		if (messageText.length() > 500)
+			throw new MessageTextTooLongException(sender.getUserId());
+		
+		User receiver = userService.findUserById(receiverId);
 
 		return sendMessage(sender, receiver, messageText, ipAddress);
 	}

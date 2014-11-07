@@ -202,7 +202,7 @@
 							</div>
 						</a>
 						<button class="btn btn-primary indexMsg" role="button"
-							th:attr="data-user=${item.user.login}" data-toggle="modal"
+							th:attr="data-user=${item.user.userId}" data-toggle="modal"
 							data-target="#myModal">
 							<i class="glyphicon glyphicon-send" style="margin-right: 4px;"></i>
 							Mensaje
@@ -210,58 +210,6 @@
 					</div>
 				</div>
 			</div>
-			<!-- STUFF 2 -->
-			<div class="col-xs-8 col-md-8 col-lg-8">
-				<div class="row" th:each="item : ${itemsList}">
-					<div class="col-xs-12 col-md-12 col-lg-12 itemList">
-						<ul class="event-list">
-							<li>
-<!-- 								<a th:href="@{'/bazaar/item/' + ${item.itemId}}"> -->
-									<img data-src="holder.js/300x300" alt="Image"
-										th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}"/>
-									<div class="info">
-										<h2 class="title" th:text="${item.title}">Title</h2>
-										<p class="desc" th:text="${item.description}">Descripcion</p>
-										<ul>
-											<li style="width:auto;">
-												<a href="#website"><span class="fa fa-globe"></span> Ver anuncio</a>
-											</li>
-											<li style="width:auto;">
-												<span class="fa fa-money"></span> $39.99</li>
-											<li th:if="${item.new}" style="width:auto;">
-												<span class="label label-danger">
-												<i class="glyphicon glyphicon-fire"></i> Nuevo</span>
-											</li>
-											<li th:if="${item.user.whatssapUser}" style="width:auto;">
-												<span class="label label-success">
-												<i class="glyphicon glyphicon-phone"></i> Whatssap</span>
-											</li>
-											<li th:if="${item.user.userValue} &gt; 70" style="width:auto;" >
-												<span class="label label-rep">
-												<i class="glyphicon glyphicon-thumbs-up"></i> Reputado</span>
-											</li>
-											<li style="width:auto;" >
-												<span class="label label-dis">
-													<i class="glyphicon glyphicon-globe"></i>
-													<span th:text="${'A ' + item.distance + ' KM'}"></span>
-												</span>
-											</li>
-										</ul>
-									</div>
-									<div class="social">
-										<ul>
-											<li class="facebook" style="width:33%;"><a href="#facebook"><span class="fa fa-facebook"></span></a></li>
-											<li class="twitter" style="width:34%;"><a href="#twitter"><span class="fa fa-twitter"></span></a></li>
-											<li class="google-plus" style="width:33%;"><a href="#google-plus"><span class="fa fa-google-plus"></span></a></li>
-										</ul>
-									</div>
-<!-- 								</a> -->
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			
 			<!-- STUFF LIST -->
 			<div class="col-xs-8 col-md-8 col-lg-8">
 				<div class="row" th:each="item : ${itemsList}">
@@ -335,8 +283,8 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-xs-10 col-md-12 col-lg-12" style="margin-bottom: 10px;">
-										<h2 style="display: inline; margin-left: 10px;">
+									<div class="col-xs-10 col-md-12 col-lg-12">
+										<h3 style="display: inline; margin-left: 10px;">
 											<span class="label label-or prizeLabel" 
 											th:text="${item.getCurrencyPrize(#locale)}"
 											th:attr="data-prize=${item.prize}, data-currency=${item.currency}"
@@ -345,7 +293,7 @@
 <!-- 											th:text="${item.getExchangeCurrencyPrize(#locale)}" -->
 <!-- 											th:attr="data-prize=${item.prize}, data-currency=${item.currency}" -->
 <!-- 											th:title="#{Item.pop.about} + ' ' + ${item.getExchangeCurrencyPrize(#locale)}"></span> -->
-										</h2>
+										</h3>
 										<h4 th:if="${item.new}" style="display: inline; ">
 											<span class="label label-danger">
 											<i class="glyphicon glyphicon-fire"></i> Nuevo</span>
@@ -364,12 +312,11 @@
 											<span th:text="${'A ' + item.distance + ' KM'}"></span>
 										</span>
 										</h4>
-										<div class="btn btn-primary pull-right messButit" style="margin-right: 4px;"
-											th:attr="data-user=${item.user.login}" data-toggle="modal"
+										<button class="btn btn-primary pull-right messButit"
+											th:attr="data-user=${item.user.userId}" data-toggle="modal"
 											data-target="#myModal">
-											<i class="glyphicon glyphicon-send"
-												style="margin-right: 4px;"></i> Mensaje
-										</div>
+											<i class="glyphicon glyphicon-send" style="margin-right: 4px;"></i> Mensaje
+										</button>
 									</div>
 								</div>
 							</div>
@@ -418,7 +365,7 @@
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg">
+		<div th:if="${#httpServletRequest.remoteUser} == null" class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
@@ -428,21 +375,18 @@
 						SÓLO si estás funciona logueado! -</h4>
 				</div>
 				<div class="modal-body">
-					<form id="messageForm" name="messageForm" role="form"
-						th:action="@{/elovendo/messages/send}" method="post"
+					<form id="publicMessageForm" name="messageForm" role="form"
+						th:action="@{/elovendo/messages/public/send}" method="post"
 						accept-charset="UTF-8">
-						<!-- If not loggued ask for email -->
-						<div th:if="${#httpServletRequest.remoteUser == null}">
-							<div class="form-group">
-								<label for="exampleInputEmail1">Email</label> <input
-									type="email" class="form-control" id="anomEmail"
-									placeholder="Tu email..." />
-							</div>
-							<div class="form-group">
-								<label for="exampleInputEmail1">Nombre</label> <input
-									type="text" class="form-control" id="exampleInputEmail1"
-									name="receiver" placeholder="Tu nombre..." />
-							</div>
+						<div class="form-group">
+							<label for="exampleInputEmail1">Email</label> <input
+								type="email" name="email" class="form-control" id="anomEmail"
+								placeholder="Tu email..." />
+						</div>
+						<div class="form-group">
+							<label for="sender">Nombre</label> <input
+								type="text" class="form-control" id="exampleInputEmail1"
+								name="sender" placeholder="Tu nombre..." />
 						</div>
 						<input type="hidden" id="receiver" name="receiver" />
 						<div class="form-group">
@@ -459,7 +403,40 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default"
 								data-dismiss="modal" >Cancelar</button>
-							<button type="submit" class="btn btn-primary">Enviar</button>
+							<button type="submit" class="btn btn-primary" onclick="hpd('b')">Enviar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div th:unless="${#httpServletRequest.remoteUser} == null" class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Enviar mensaje</h4>
+				</div>
+				<div class="modal-body">
+					<form id="messageForm" name="messageForm" role="form"
+						th:action="@{/elovendo/messages/send}" method="post"
+						accept-charset="UTF-8">
+						<input type="hidden" id="receiver" name="receiver" />
+						<div class="form-group">
+							<label for="exampleInputPassword1">Mensaje</label>
+							<textarea id="messageText" class="form-control textarea"
+								rows="10" name="messageText" required="required"
+								placeholder="Tu mensaje..." maxlength="1000"></textarea>
+						</div>
+						<div class="checkbox">
+							<label> <input type="checkbox" /> Acepto las condiciones
+								de uso
+							</label>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal" >Cancelar</button>
+							<button type="submit" class="btn btn-primary" onclick="hpd('l')">Enviar</button>
 						</div>
 					</form>
 				</div>
@@ -553,26 +530,27 @@
 		var e = "/bazaar/item/fav";
 		
 		$.ajax({
-			  type: "POST",
-			  beforeSend: function (request) { request.setRequestHeader(cn, cv); },
-			  url: e,
-			  data: {id: f},
-			  success: function(data) {
-					$('#favMes').text(okm);
-					$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
-				},
-				error : function() {
-					$('#favMes').text(fm);
-					$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
-				}
-			});
+			type: "POST",
+			beforeSend: function (request) { request.setRequestHeader(cn, cv); },
+			url: e,
+			data: {id: f},
+			success: function(data) {
+				$('#favMes').text(okm);
+				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+			},
+			error : function() {
+				$('#favMes').text(fm);
+				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+			}
+		});
+	}
+
+		var sendMessageUrl;
+		
+		function hpd(t) {
+			if (t == 'b') sendMessageUrl = "/elovendo/messages/public/send";
+			else sendMessageUrl = "/elovendo/messages/send";
 		}
-
-		var sendMessageUrl = "/elovendo/messages/send";
-
-// 		function mouseHover() {
-// 			console.log("rep hover");
-// 		}
 
 		$('#myModal').on('hidden', function() {
 			$('#messageText').value = '';

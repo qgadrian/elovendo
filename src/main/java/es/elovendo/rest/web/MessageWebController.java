@@ -36,8 +36,10 @@ import es.elovendo.rest.exception.MessageThreadAlreadyExistsException;
 import es.elovendo.rest.exception.MessageThreadNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.service.message.MessageService;
+import es.elovendo.service.user.UserService;
 import es.elovendo.util.IOUtil;
 import es.elovendo.util.PageWrapper;
+import es.elovendo.util.mail.MailSender;
 
 @Controller
 @RequestMapping(value = "/elovendo/messages")
@@ -47,6 +49,8 @@ public class MessageWebController {
 	
 	@Autowired
 	private MessageService messageService;
+	@Autowired
+	private UserService userService;
 
 	/* CONVERSATION LIST */
 	
@@ -159,10 +163,22 @@ public class MessageWebController {
 		
 	}
 	
+	/**
+	 * Send a intern message to the user. ReceiverId or MessageThreadId can be null, but not both of them.
+	 * @param receiver Can be empty. Receivers user Id.
+	 * @param messageThreadId Message thread, if the conversation previously exists. Can be empty.
+	 * @param messageText Message text, required.
+	 * @param model
+	 * @param request
+	 * @throws MessageThreadAlreadyExistsException
+	 * @throws UserNotFoundException
+	 * @throws InvalidMessageThreadException
+	 * @throws MessageThreadNotFoundException
+	 * @throws MessageTextTooLongException
+	 */
 	@RequestMapping(value = "/send", method = RequestMethod.POST)
-//	public String itemListPage(@ModelAttribute(value = "receiver") String receiver,
-	public @ResponseBody void itemListPage(
-			@RequestParam(value = "receiver", required=false, defaultValue="") String receiver,
+	public @ResponseBody void sendMessage(
+			@RequestParam(value = "receiver", required=false, defaultValue="") Long receiver,
 			@RequestParam(value = "m", required=false, defaultValue="") String messageThreadId,
 			@RequestParam(value = "messageText", required=true) String messageText,
 			Model model, HttpServletRequest request) 
@@ -183,6 +199,24 @@ public class MessageWebController {
 		}
 		else
 			messageService.sendMessage(user, receiver, messageText, remoteIpAddress);
+//			messageService.sendMessage(user, receiver, messageText, remoteIpAddress);
+	}
+	
+	@RequestMapping(value = "/public/send", method = RequestMethod.POST)
+	public @ResponseBody void sendPublicMessage(
+			@RequestParam(value = "receiver", required=true) Long receiverId,
+			@RequestParam(value = "sender", required=true) String sender,
+			@RequestParam(value = "email", required=true) String email,
+			@RequestParam(value = "messageText", required=true) String messageText,
+			Model model, HttpServletRequest request) throws UserNotFoundException {
+
+		long remoteIpAddress = IOUtil.Dot2LongIP(request.getRemoteAddr());
+		
+		User receiver = userService.findUserById(receiverId);
+		String receiverEmail = receiver.getEmail();
+		
+		MailSender mailSender = MailSender.getInstance();
+		mailSender.sendMail(sender, receiverEmail, "Testing", messageText);
 	}
 	
 	@RequestMapping(value="/getUnread", method = RequestMethod.GET)

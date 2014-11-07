@@ -22,8 +22,12 @@ public interface MessageService {
 	
 	public Message sendMessage(User sender, User receiver, String messageText, long ipAddress) 
 			throws MessageThreadAlreadyExistsException, UserNotFoundException;
-	
+
+	@Deprecated
 	public Message sendMessage(User sender, String receiver, String messageText, long ipAddress) 
+			throws MessageThreadAlreadyExistsException, UserNotFoundException, MessageTextTooLongException;
+	
+	public Message sendMessage(User sender, Long receiverId, String messageText, long ipAddress) 
 			throws MessageThreadAlreadyExistsException, UserNotFoundException, MessageTextTooLongException;
 	
 	public Message sendMessage(User sender, long messageThreadId, String messageText, long ipAddress) 
