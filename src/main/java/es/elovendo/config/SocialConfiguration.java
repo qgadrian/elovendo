@@ -1,5 +1,4 @@
-package es.elovendo.config;
-//package es.telocompro.config;
+//package es.elovendo.config;
 //
 //import java.util.List;
 //

@@ -17,19 +17,28 @@ import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionData;
+import org.springframework.social.connect.ConnectionKey;
+import org.springframework.social.connect.web.ProviderSignInUtils;
+import org.springframework.social.facebook.api.Facebook;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.WebRequest;
 
 import es.elovendo.model.item.category.Category;
 import es.elovendo.model.item.category.subcategory.SubCategory;
 import es.elovendo.model.user.User;
+import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.service.item.ItemService;
 import es.elovendo.service.item.category.CategoryService;
 import es.elovendo.service.user.UserService;
@@ -47,19 +56,10 @@ public class MainController implements ErrorController {
     private ItemService itemService;
     @Autowired
     private UserService userService;
-
     @Autowired
     private CategoryService categoryService;
     
-    //TODO: Testing
     static Logger logger = Logger.getLogger(MainController.class.getName());
-    
-    // TODO: delte this shit
-	@RequestMapping(value="/text")
-    public String textPage() {
-		
-		return "/elovendo/text";
-    }
 	
 	/**
 	 * 
@@ -122,47 +122,47 @@ public class MainController implements ErrorController {
     	return "";
     }
     
-//    @RequestMapping(value="/signup")
-//    public String signupRedirect(WebRequest request) throws UserNotFoundException {
-//    	
-//    	User user = null;
-//		SecurityContext context = SecurityContextHolder.getContext();
-//		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-//			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//    	
-//    	ProviderSignInUtils providerSignInUtils = new ProviderSignInUtils();
-//		Connection<?> connection = providerSignInUtils.getConnectionFromSession(request);
-////		UserProfile socialMediaProfile = connection.fetchUserProfile();
-//		
-//		try {
-//			
-//			ConnectionKey connectionKey = connection.getKey();
-//			String compositeKey = connectionKey.getProviderUserId() + connectionKey.getProviderId();
-//			User socialUser = userService.findUserBySocialUserKey(compositeKey);
-//			
-//			if (socialUser != null) {
-//				Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-//				SecurityContextHolder.getContext().setAuthentication(authentication);
-//			}
-//			
-//			return "redirect:/site/profile";
-//		} catch(UserNotFoundException e) {
-//			
-//			if (connection != null && connection.test()) {
-//				
-//				if (connection.getApi() instanceof Facebook) {
-////					Facebook facebook = (Facebook) connection.getApi();
-////					FacebookProfile facebookProfile = facebook.userOperations().getUserProfile();
-//					ConnectionData data = connection.createData();
-//					user.setSocialCompositeKey(data.getProviderUserId() + data.getProviderId());
-//				}
-//				
-//				userService.updateUser(user);
-//			}
-//			
-//			return "redirect:/index";
-//		}
-//    }
+    @RequestMapping(value="/signup")
+    public String signupRedirect(WebRequest request) throws UserNotFoundException {
+    	
+    	User user = null;
+		SecurityContext context = SecurityContextHolder.getContext();
+		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	
+    	ProviderSignInUtils providerSignInUtils = new ProviderSignInUtils();
+		Connection<?> connection = providerSignInUtils.getConnectionFromSession(request);
+//		UserProfile socialMediaProfile = connection.fetchUserProfile();
+		
+		try {
+			
+			ConnectionKey connectionKey = connection.getKey();
+			String compositeKey = connectionKey.getProviderUserId() + connectionKey.getProviderId();
+			User socialUser = userService.findUserBySocialUserKey(compositeKey);
+			
+			if (socialUser != null) {
+				Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+			}
+			
+			return "redirect:/site/profile";
+		} catch(UserNotFoundException e) {
+			
+			if (connection != null && connection.test()) {
+				
+				if (connection.getApi() instanceof Facebook) {
+//					Facebook facebook = (Facebook) connection.getApi();
+//					FacebookProfile facebookProfile = facebook.userOperations().getUserProfile();
+					ConnectionData data = connection.createData();
+					user.setSocialCompositeKey(data.getProviderUserId() + data.getProviderId());
+				}
+				
+				userService.updateUser(user);
+			}
+			
+			return "redirect:/index";
+		}
+    }
     
     /** 
      * 

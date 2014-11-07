@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
 import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 import org.springframework.security.web.session.ConcurrentSessionFilter;
+import org.springframework.social.security.SocialUserDetailsService;
 
 import es.elovendo.rest.handler.UserLogoutSuccessHandler;
 import es.elovendo.util.ApiRequestMatcher;
