@@ -7,6 +7,26 @@
 <!-- default header name is X-CSRF-TOKEN -->
 <meta name="_csrf_header" th:content="${_csrf.headerName}" />
 
+<!-- for Google -->
+<meta name="description" th:content="${item.plainDescription}" />
+<!-- <meta name="keywords" content="" /> -->
+<meta name="author" content="Elovendo" />
+<meta name="copyright" content="2014" />
+<meta name="application-name" content="Elovendo" />
+
+<!-- for Facebook -->          
+<meta property="og:title" th:content="${item.title}" />
+<meta property="og:type" content="article" />
+<!-- <meta property="og:image" content="" /> -->
+<!-- <meta property="og:url" content="" /> -->
+<meta property="og:description" th:content="${item.plainDescription}" />
+
+<!-- for Twitter -->          
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" th:content="${item.title}" />
+<meta name="twitter:description" th:content="${item.plainDescription}" />
+<!-- <meta name="twitter:image" content="" /> -->
+
 <!-- ************************* -->
 <!-- ******* Bootstrap ******* -->
 <!-- ************************* -->
@@ -28,8 +48,8 @@
 <link rel="stylesheet" href="/css/bootstrap-extra.css" />
 <!--  For share buttons -->
 <link rel="stylesheet" href="/css/sharingStyle.css" />
-<link rel="stylesheet" type="text/css"
-	href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<!-- <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" rel="stylesheet"> -->
 
 <!-- Tabs x -->
 <link href="/css/bootstrap-tabs-x.css" media="all" rel="stylesheet"
@@ -42,7 +62,7 @@
 <script src="/js/lightbox.js"></script>
 <link href="/css/lightbox.css" rel="stylesheet" />
 
-<title>Item</title>
+<title th:text="${item.title}">Item</title>
 </head>
 <body style="background-color: #FBFAF9;">
 
@@ -149,26 +169,19 @@
 										<div class="text-center">
 											<div class="btn-group">
 												<button class="btn btn-default btn-lg disabled">Compartir:</button>
-												<a class="btn btn-default btn-lg" target="_blank"
-													title="Like On Facebook"
-													href="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Felovendo.com/elovendo/index.html">
-													<i class="fa fa-thumbs-o-up fa-lg fb"></i>
-												</a> <a class="btn btn-default btn-lg google-plus-one"
-													target="_blank" title="+1 On Google"
-													href="https://apis.google.com/_/+1/fastbutton?usegapi=1&amp;size=large&amp;hl=en&amp;url=http%3A%2F%2Feveloendo.com/elovendo/index.html">
-													<i class="fa fa-google-plus fa-2x google"></i> <span
-													class="google">1</span>
-												</a> <a class="btn btn-default btn-lg" target="_blank"
-													title="On Facebook"
-													href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Felovendo.com/elovendo/index.html">
+												<a class="btn btn-default btn-lg" target="_blank" title="On Facebook"
+													data-title="Article Title"
+													 th:onclick="'window.open(&quot;http://www.facebook.com/sharer.php?u=http://www.elovendo.com/bazaar/item/' + ${item.itemId} + '&quot;, &quot;newwindow&quot;, &quot;width=500, height=300&quot;); return false;'">
 													<i class="fa fa-facebook fa-lg fb"></i>
-												</a> <a class="btn btn-default btn-lg" target="_blank"
+												</a> 
+												<a class="btn btn-default btn-lg" target="_blank"
 													title="On Twitter"
-													href="http://twitter.com/share?url=http%3A%2F%2Felovendo.com/elovendo/index.html">
+													th:onclick="'window.open(&quot;http://twitter.com/share?url=http://www.elovendo.com/bazaar/item/' + ${item.itemId} + '&text=' + #{Item.view.Share.twitter.text} + '&quot;, &quot;newwindow&quot;, &quot;width=500, height=300&quot;); return false;'">
 													<i class="fa fa-twitter fa-lg tw"></i>
-												</a> <a class="btn btn-default btn-lg" target="_blank"
+												</a> 
+												<a class="btn btn-default btn-lg" target="_blank"
 													title="On Google Plus"
-													href="https://plusone.google.com/_/+1/confirm?hl=en&amp;url=http%3A%2F%2Felovendo.com/elovendo/index.html">
+													th:onclick="'window.open(&quot;https://plusone.google.com/_/+1/confirm?hl=en&amp;url=http://www.elovendo.com/bazaar/item/' + ${item.itemId} + '&quot;, &quot;newwindow&quot;, &quot;width=500, height=300&quot;); return false;'">
 													<i class="fa fa-google-plus fa-lg google"></i>
 												</a>
 											</div>
