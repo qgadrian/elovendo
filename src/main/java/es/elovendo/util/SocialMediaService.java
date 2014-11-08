@@ -6,5 +6,6 @@ package es.elovendo.util;
  */
 public enum SocialMediaService {
     FACEBOOK,
+    GOOGLE,
     TWITTER
 }

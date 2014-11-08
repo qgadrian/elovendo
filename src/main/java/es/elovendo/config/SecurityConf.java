@@ -102,7 +102,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             		.sessionManagement()
             			.sessionAuthenticationStrategy(compositeSessionAuthenticationStrategy)
             .and()
-            	.apply(new SpringSocialConfigurer());
+            	.apply(new SpringSocialConfigurer().postLoginUrl("/").alwaysUsePostLoginUrl(true));
 //            	.and()
 //            .sessionManagement()
 //            .maximumSessions(5);

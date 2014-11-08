@@ -18,8 +18,8 @@ import es.elovendo.rest.exception.LoginNotAvailableException;
 import es.elovendo.rest.exception.ProvinceNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.rest.exception.VoteDuplicateException;
-import es.elovendo.service.exception.NotFacebookProviderException;
 import es.elovendo.service.exception.social.NoEmailProvidedException;
+import es.elovendo.service.exception.social.NotKnownProviderException;
 
 /**
  * Created by @adrian on 17/06/14.
@@ -67,7 +67,7 @@ public interface UserService extends UserDetailsService {
     		throws LoginNotAvailableException, EmailNotAvailableException;
     
     /* Add a social user */
-    public User addSocialUser(Connection<?> connection) throws NotFacebookProviderException, NoEmailProvidedException;
+    public User addSocialUser(Connection<?> connection) throws NotKnownProviderException, NoEmailProvidedException;
 
     /**
      * Finds a user by its id

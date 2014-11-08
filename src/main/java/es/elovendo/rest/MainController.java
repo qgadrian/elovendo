@@ -34,8 +34,8 @@ import es.elovendo.model.item.category.Category;
 import es.elovendo.model.item.category.subcategory.SubCategory;
 import es.elovendo.model.user.User;
 import es.elovendo.rest.exception.UserNotFoundException;
-import es.elovendo.service.exception.NotFacebookProviderException;
 import es.elovendo.service.exception.social.NoEmailProvidedException;
+import es.elovendo.service.exception.social.NotKnownProviderException;
 import es.elovendo.service.item.ItemService;
 import es.elovendo.service.item.category.CategoryService;
 import es.elovendo.service.user.UserService;
@@ -121,8 +121,8 @@ public class MainController implements ErrorController {
     	return "";
     }
     
-    @RequestMapping(value="/signup")
-    public String signupRedirect(WebRequest request) throws UserNotFoundException, NotFacebookProviderException {
+    @RequestMapping(value={"/signup", "/signin"})
+    public String signupRedirect(WebRequest request) throws UserNotFoundException, NotKnownProviderException {
     	
 //    	User user = null;
 //		SecurityContext context = SecurityContextHolder.getContext();
@@ -132,6 +132,8 @@ public class MainController implements ErrorController {
     	ProviderSignInUtils providerSignInUtils = new ProviderSignInUtils();
 		Connection<?> connection = providerSignInUtils.getConnectionFromSession(request);
 //		UserProfile socialMediaProfile = connection.fetchUserProfile();
+		
+		logger.error("received login " + connection.getProfileUrl());
 		
 		try {
 			

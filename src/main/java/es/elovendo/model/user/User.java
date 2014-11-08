@@ -238,7 +238,14 @@ public class User implements UserDetails, Principal {
 	
 	@Transient
 	public String getLargeSocialAvatar() {
-		return this.avatar.concat("?type=large");
+		switch(signInProvider) {
+			case GOOGLE: return this.avatar.replace("?sz=50", "?sz=150");
+			case TWITTER: break;
+			case FACEBOOK: return this.avatar.concat("?type=large");
+			default: break;
+		}
+		
+		return "";
 	}
 
 	public int getUserValue() {

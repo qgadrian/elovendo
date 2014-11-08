@@ -17,6 +17,9 @@ import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.FacebookProfile;
+import org.springframework.social.google.api.Google;
+import org.springframework.social.google.api.plus.Person;
+import org.springframework.social.google.api.plus.PlusOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,8 +39,8 @@ import es.elovendo.rest.exception.ItemNotFoundException;
 import es.elovendo.rest.exception.LoginNotAvailableException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.rest.exception.VoteDuplicateException;
-import es.elovendo.service.exception.NotFacebookProviderException;
 import es.elovendo.service.exception.social.NoEmailProvidedException;
+import es.elovendo.service.exception.social.NotKnownProviderException;
 import es.elovendo.service.item.ItemService;
 import es.elovendo.service.vote.VoteService;
 import es.elovendo.util.Constant;
@@ -163,7 +166,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public User addSocialUser(Connection<?> connection) throws NotFacebookProviderException, NoEmailProvidedException {
+	public User addSocialUser(Connection<?> connection) throws NotKnownProviderException, NoEmailProvidedException {
 		
 		if (connection.getApi() instanceof Facebook) {
 			Facebook facebook = (Facebook) connection.getApi();
@@ -185,7 +188,29 @@ public class UserServiceImpl implements UserService {
 					role);
 
 			return userRepository.save(user);
-		} else throw new NotFacebookProviderException("Not a facebook social user");
+		} else if (connection.getApi() instanceof Google) {
+			Google google = (Google) connection.getApi();
+			Person gplus = google.plusOperations().getGoogleProfile();
+			
+			// Check if user allowed email access
+			if (gplus.getAccountEmail().isEmpty()) throw new NoEmailProvidedException();
+
+			ConnectionData data = connection.createData();
+			
+			Role role = roleRepository.findByRoleName(RoleEnum.ROLE_USER);
+			
+			String compositeKey = data.getProviderUserId() + data.getProviderId();
+			User user = new User(gplus.getGivenName(), data.getAccessToken(), compositeKey, gplus.getGivenName(),
+					gplus.getFamilyName(), gplus.getAccountEmail(), data.getImageUrl(), SocialMediaService.GOOGLE,
+					role);
+			
+			return userRepository.save(user);
+		}
+		
+		else {
+			logger.warn("Received an auth singup from unknown provider");
+			throw new NotKnownProviderException();
+		}
 	}
 	
 	@Override
