@@ -1,10 +1,8 @@
 package es.elovendo.rest;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,10 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.social.connect.Connection;
-import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.connect.ConnectionKey;
 import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.social.facebook.api.Facebook;
@@ -39,6 +34,8 @@ import es.elovendo.model.item.category.Category;
 import es.elovendo.model.item.category.subcategory.SubCategory;
 import es.elovendo.model.user.User;
 import es.elovendo.rest.exception.UserNotFoundException;
+import es.elovendo.service.exception.NotFacebookProviderException;
+import es.elovendo.service.exception.social.NoEmailProvidedException;
 import es.elovendo.service.item.ItemService;
 import es.elovendo.service.item.category.CategoryService;
 import es.elovendo.service.user.UserService;
@@ -58,6 +55,8 @@ public class MainController implements ErrorController {
     private UserService userService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private Facebook facebook;
     
     static Logger logger = Logger.getLogger(MainController.class.getName());
 	
@@ -123,12 +122,12 @@ public class MainController implements ErrorController {
     }
     
     @RequestMapping(value="/signup")
-    public String signupRedirect(WebRequest request) throws UserNotFoundException {
+    public String signupRedirect(WebRequest request) throws UserNotFoundException, NotFacebookProviderException {
     	
-    	User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//    	User user = null;
+//		SecurityContext context = SecurityContextHolder.getContext();
+//		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
+//			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	
     	ProviderSignInUtils providerSignInUtils = new ProviderSignInUtils();
 		Connection<?> connection = providerSignInUtils.getConnectionFromSession(request);
@@ -139,25 +138,25 @@ public class MainController implements ErrorController {
 			ConnectionKey connectionKey = connection.getKey();
 			String compositeKey = connectionKey.getProviderUserId() + connectionKey.getProviderId();
 			User socialUser = userService.findUserBySocialUserKey(compositeKey);
-			
 			if (socialUser != null) {
-				Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+				Authentication authentication = new UsernamePasswordAuthenticationToken(socialUser, null,
+						socialUser.getAuthorities());
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 			}
 			
-			return "redirect:/site/profile";
+			return "redirect:/index";
+		// Catch if user doesn't exists and register a new one
 		} catch(UserNotFoundException e) {
 			
-			if (connection != null && connection.test()) {
-				
-				if (connection.getApi() instanceof Facebook) {
-//					Facebook facebook = (Facebook) connection.getApi();
-//					FacebookProfile facebookProfile = facebook.userOperations().getUserProfile();
-					ConnectionData data = connection.createData();
-					user.setSocialCompositeKey(data.getProviderUserId() + data.getProviderId());
+			try {
+				if (connection != null && connection.test()) {
+					User socialUser = userService.addSocialUser(connection);
+					Authentication authentication = new UsernamePasswordAuthenticationToken(socialUser, null,
+							socialUser.getAuthorities());
+					SecurityContextHolder.getContext().setAuthentication(authentication);
 				}
-				
-				userService.updateUser(user);
+			} catch (NoEmailProvidedException err) {
+				logger.info("Social user not allowed email access");
 			}
 			
 			return "redirect:/index";
@@ -180,10 +179,15 @@ public class MainController implements ErrorController {
     	SecurityContext context = SecurityContextHolder.getContext();
     	if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken)) {
     		user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    		session.setAttribute("userProfilePicMin", user.getAvatar200h());
     		session.setAttribute("userName", user.getLogin());
+    		session.setAttribute("socialUser", user.isSocialUser());
+    		if (user.isSocialUser()) {
+    			session.setAttribute("socialAvatar", user.getSocialAvatar());
+    			session.setAttribute("largeSocialAvatar", user.getLargeSocialAvatar());
+    		}
+    		else session.setAttribute("userProfilePicMin", user.getAvatar200h());
     	}
-    	model.addAttribute("user", user);
+//    	model.addAttribute("user", user);
     	
     	@SuppressWarnings("unchecked")
 		List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());

@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.session.SessionFixationPr
 import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.social.security.SocialUserDetailsService;
+import org.springframework.social.security.SpringSocialConfigurer;
 
 import es.elovendo.rest.handler.UserLogoutSuccessHandler;
 import es.elovendo.util.ApiRequestMatcher;
@@ -99,9 +100,9 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             	.rememberMe()
             .and()
             		.sessionManagement()
-            			.sessionAuthenticationStrategy(compositeSessionAuthenticationStrategy);
-//            .and()
-//            	.apply(new SpringSocialConfigurer());
+            			.sessionAuthenticationStrategy(compositeSessionAuthenticationStrategy)
+            .and()
+            	.apply(new SpringSocialConfigurer());
 //            	.and()
 //            .sessionManagement()
 //            .maximumSessions(5);
@@ -160,9 +161,19 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 //    	return db;
 //    }
     
+    @Bean
+    public SocialUserDetailsService socialUserDetailsService(UserDetailsService userDetailsService) {
+        return new SimpleSocialUserDetailsService(userDetailsService);
+    }
+    
 //    @Bean
-//    public SocialUserDetailsService socialUserDetailsService() {
-//        return new SimpleSocialUserDetailsService();
+//    public ProviderSignInController providerSignInController(
+//                ConnectionFactoryLocator connectionFactoryLocator,
+//                UsersConnectionRepository usersConnectionRepository) {
+//        return new ProviderSignInController(
+//            connectionFactoryLocator,
+//            usersConnectionRepository,
+//            new SimpleSignInAdapter(new HttpSessionRequestCache()));
 //    }
 
 }

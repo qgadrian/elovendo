@@ -2,6 +2,8 @@ package es.elovendo.util;
 
 public class Constant {
 	
+	public static final String ROLE_USER = "ROLE_USER";
+	
 	public static final int MIN_ITEM_TITLE_LENGHT = 4;
 	
 	public static final int DEFAULT_USER_VALUE = 70;

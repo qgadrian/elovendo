@@ -3,6 +3,7 @@ package es.elovendo.service.user;
 import java.io.IOException;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.social.connect.Connection;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.elovendo.model.user.EditUserForm;
@@ -17,6 +18,8 @@ import es.elovendo.rest.exception.LoginNotAvailableException;
 import es.elovendo.rest.exception.ProvinceNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.rest.exception.VoteDuplicateException;
+import es.elovendo.service.exception.NotFacebookProviderException;
+import es.elovendo.service.exception.social.NoEmailProvidedException;
 
 /**
  * Created by @adrian on 17/06/14.
@@ -62,6 +65,9 @@ public interface UserService extends UserDetailsService {
     
     public User addUser(UserForm userForm, MultipartFile userPic) 
     		throws LoginNotAvailableException, EmailNotAvailableException;
+    
+    /* Add a social user */
+    public User addSocialUser(Connection<?> connection) throws NotFacebookProviderException, NoEmailProvidedException;
 
     /**
      * Finds a user by its id

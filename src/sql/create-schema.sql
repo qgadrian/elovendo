@@ -19,7 +19,7 @@
 	DROP TABLE IF EXISTS persistent_logins;
 	DROP TABLE IF EXISTS userprofile CASCADE;
 	DROP TABLE IF EXISTS role CASCADE;
-	--SET FOREIGN_KEY_CHECKS = 1;
+	--   SET FOREIGN_KEY_CHECKS = 1;
 
 -- ROLE
 
@@ -37,8 +37,8 @@
 		  login VARCHAR(50) NOT NULL,
 		  password VARCHAR(255) NOT NULL,
 		  socialCompositeKey VARCHAR(255),
-		  firstname VARCHAR(20) NOT NULL,
-		  lastname VARCHAR(20) NOT NULL,
+		  firstname VARCHAR(100),
+		  lastname VARCHAR(100),
 		  address VARCHAR(100),
 		  phone VARCHAR(20),
 		  whatssap TINYINT(1),
@@ -51,7 +51,6 @@
 		  enabled BOOLEAN NOT NULL,
 		  sign_in_provider VARCHAR(20),
 		  CONSTRAINT pk_userid PRIMARY KEY (userid),
-		  CONSTRAINT u_login UNIQUE(login),
 		  CONSTRAINT u_email UNIQUE(email),
 		  CONSTRAINT fk_user_roleid FOREIGN KEY (roleid) REFERENCES role(roleid) ON UPDATE CASCADE ON DELETE CASCADE,
 		  CONSTRAINT check_votespositive CHECK (votespositive > 0),

@@ -264,9 +264,10 @@
 								</div>
 								<div class="col-xs-12 col-sm-4 text-center">
 									<figure>
-										<img
-											th:src="@{'http://www.elovendo.com/' + ${item.user.avatar}}"
-											alt="" class="profilePic">
+										<img th:unless="${session.socialUser}" alt="" class="profilePic"
+											th:src="@{'http://www.elovendo.com/' + ${item.user.avatar}}">
+										<img th:if="${session.socialUser}" alt="" class="profilePic"
+											th:src="${session.largeSocialAvatar}">
 									</figure>
 								</div>
 							</div>
@@ -307,11 +308,6 @@
 											data-toggle="dropdown">
 											<span class="fa fa-gear"></span> Opciones <span class="caret"></span>
 										</button>
-										<!-- 											<button type="button" class="btn btn-primary dropdown-toggle" -->
-										<!-- 												data-toggle="dropdown"> -->
-										<!-- 												<span class="caret"></span> <span class="sr-only">Toggle -->
-										<!-- 													Dropdown</span> -->
-										<!-- 											</button> -->
 										<ul class="dropdown-menu text-left" role="menu">
 											<li><a href="#"><span
 													class="fa fa-envelope pull-right"></span> Enviar email </a></li>

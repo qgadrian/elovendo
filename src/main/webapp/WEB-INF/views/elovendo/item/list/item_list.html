@@ -55,8 +55,8 @@
 <body style="background-color:#FBFAF9;" onload="fillFilter(); popSub(); initAutoComplete()">
 
 	<!-- Header -->
-<!-- 	<div th:include="elovendo/header"></div> -->
-	<div th:replace="elovendo/header"></div>
+	<header th:include="elovendo/header"></header>
+<!-- 	<div th:replace="elovendo/header"></div> -->
 
 	<div class="container">
 		<div class="row">
@@ -239,8 +239,10 @@
 										<!--  User info -->
 										<div class="row userInfo">
 											<div class="col-xs-4 col-md-4 col-lg-4 userPicMin" style="width: 80px; margin-right: 10px;">
-												<img data-src="holder.js/50x50" alt="Profile pic"
+												<img th:unless="${session.socialUser}" data-src="holder.js/50x50" alt="Profile pic"
 													th:src="@{'http://www.elovendo.com/' + ${item.user.avatar200h}}"/>
+												<img th:if="${session.socialUser}" data-src="holder.js/50x50" alt="Profile pic"
+													th:src="${session.largeSocialAvatar}"/>
 											</div>
 											<div class="col-xs-12 col-md-8 col-lg-8">
 												<div class="row">

@@ -13,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionData;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.FacebookProfile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,10 +36,13 @@ import es.elovendo.rest.exception.ItemNotFoundException;
 import es.elovendo.rest.exception.LoginNotAvailableException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.rest.exception.VoteDuplicateException;
+import es.elovendo.service.exception.NotFacebookProviderException;
+import es.elovendo.service.exception.social.NoEmailProvidedException;
 import es.elovendo.service.item.ItemService;
 import es.elovendo.service.vote.VoteService;
 import es.elovendo.util.Constant;
 import es.elovendo.util.RoleEnum;
+import es.elovendo.util.SocialMediaService;
 
 /**
  * Created by @adrian on 17/06/14. All rights reserved.
@@ -124,26 +131,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User addUser(User user, byte[] profilePicBytes) throws LoginNotAvailableException, EmailNotAvailableException {
 		
-//		String login = user.getLogin();
-//		
-//		if (provinceName == null)
-//			throw new ProvinceNotFoundException("empty province");
-//		Province province = provinceService.findProvinceByName(provinceName);
-//		
-//		System.out.println("searched for " + login + " as login and province " + provinceName + "!");
-//		
-//		if (findUserByLogin(login) != null ) 
-//			throw new LoginNotAvailableException(login);
-//		if (province == null ) 
-//			throw new ProvinceNotFoundException(provinceName);
-//		
-//		Role role = roleRepository.findByRoleName(RoleEnum.ROLE_USER);
-//		
-//		user.setRole(role);
-//		user.setProvince(province);
-//		
-//		return userRepository.save(user);
-		
 		return addUser(user.getLogin(), user.getPassword(), user.getSocialCompositeKey(),
 				user.getFirstName(), user.getLastName(), user.getAddress(), user.getPhone(), 
 				user.isWhatssapUser(), user.getEmail(), profilePicBytes);
@@ -152,11 +139,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User addUser(UserForm userForm, MultipartFile userPic) 
 			throws LoginNotAvailableException, EmailNotAvailableException {
-		
-		try { 
-			findUserByLogin(userForm.getLogin());
-			throw new LoginNotAvailableException(userForm.getLogin());
-		} catch (UserNotFoundException e) {}
 		
 		try {
 			findUserByEmail(userForm.getEmail());
@@ -178,6 +160,32 @@ public class UserServiceImpl implements UserService {
 		saveMultiPartFileImage(user, userPic);
 		
 		return user;
+	}
+	
+	@Override
+	public User addSocialUser(Connection<?> connection) throws NotFacebookProviderException, NoEmailProvidedException {
+		
+		if (connection.getApi() instanceof Facebook) {
+			Facebook facebook = (Facebook) connection.getApi();
+			FacebookProfile fbData = facebook.userOperations().getUserProfile();
+			
+			// Check if user allowed email access
+			if (fbData.getEmail().isEmpty()) throw new NoEmailProvidedException();
+			
+			ConnectionData data = connection.createData();
+			
+			logger.error("provider and provid " + data.getProviderUserId() + " / " + data.getProviderId());
+			logger.error("fb data " + fbData.getEmail());
+			
+			Role role = roleRepository.findByRoleName(RoleEnum.ROLE_USER);
+
+			String compositeKey = data.getProviderUserId() + data.getProviderId();
+			User user = new User(fbData.getUsername(), data.getAccessToken(), compositeKey, fbData.getFirstName(),
+					fbData.getLastName(), fbData.getEmail(), data.getImageUrl(), SocialMediaService.FACEBOOK,
+					role);
+
+			return userRepository.save(user);
+		} else throw new NotFacebookProviderException("Not a facebook social user");
 	}
 	
 	@Override
@@ -249,7 +257,7 @@ public class UserServiceImpl implements UserService {
 	// TODO Dummy role added temporarily until next example
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByLogin(username);
+		User user = userRepository.findByEmail(username);
 		
 		if (user == null) 
 			throw new UsernameNotFoundException("Username not found => " 

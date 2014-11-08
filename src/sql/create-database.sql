@@ -8,8 +8,8 @@ INSERT INTO role VALUES (1, 'ROLE_USER');
 
 -- USER
 -- avatar uservalue, points, registerDate, roleid, you're welcome
-INSERT INTO userprofile VALUES (1, 'frostering', '$2a$10$FcKLRihUE28cXxqunl62s.dPGhL8wvxWUqt2b3.ecMqzI/EAASXLS', NULL, 'Charlie', 'Harper', 'charlie address', '99', TRUE, 'frostering@elovendo.es', 'imgs/avatars/2', 0, 0, NOW(), 1, true, NULL);
-INSERT INTO userprofile VALUES (2, 'pepito', '$2a$10$FcKLRihUE28cXxqunl62s.dPGhL8wvxWUqt2b3.ecMqzI/EAASXLS', NULL, 'Pepe', 'Gotera', 'charlie address', '66', FALSE, 'pepito@elovendo.es', 'imgs/avatars/2', 0, 0, NOW(), 1, true, NULL);
+--INSERT INTO userprofile VALUES (1, 'frostering', '$2a$10$FcKLRihUE28cXxqunl62s.dPGhL8wvxWUqt2b3.ecMqzI/EAASXLS', NULL, 'Charlie', 'Harper', 'charlie address', '99', TRUE, 'frostering@elovendo.es', 'imgs/avatars/2', 0, 0, NOW(), 1, true, NULL);
+--INSERT INTO userprofile VALUES (2, 'pepito', '$2a$10$FcKLRihUE28cXxqunl62s.dPGhL8wvxWUqt2b3.ecMqzI/EAASXLS', NULL, 'Pepe', 'Gotera', 'charlie address', '66', FALSE, 'pepito@elovendo.es', 'imgs/avatars/2', 0, 0, NOW(), 1, true, NULL);
 
 -- CATEGORY
 

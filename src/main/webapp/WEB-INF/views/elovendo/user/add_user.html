@@ -64,6 +64,11 @@
 			y enviar una <a href="#" class="alert-link">solicitud de 
 			transferencia</a> para mantener tus votos en Elovendo.</div>
 		</div>
+		<div class="row">
+				<a th:href="@{/auth/facebook(scope='email')}" class="btn btn-lg btn-block">
+	      			<i class="fa fa-facebook"></i> Registrarse usando tu cuenta de Facebook
+	      		</a>
+		</div>
 		<div class="row text-center">
 			<form class="form-horizontal" role="form" id="registrationform" th:action="@{/site/register}" 
 				method="post" enctype="multipart/form-data" accept-charset="UTF-8" >

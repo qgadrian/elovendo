@@ -42,13 +42,8 @@ public class User implements UserDetails, Principal {
 
 	private String socialCompositeKey;
 
-	// @NotNull
-	// @Pattern(regexp=Constant.LOGIN_PATTERN)
 	private String login;
 
-	// @Column(name = "password")
-	// // @Length(min = 8, max = 255)
-	// @Pattern(regexp=Constant.PASSWORD_PATTERN)
 	private String password;
 
 	@Column(name = "firstname")
@@ -77,10 +72,6 @@ public class User implements UserDetails, Principal {
 	@JoinColumn(name = "roleid")
 	private Role role;
 
-	// @ManyToOne(optional = false, fetch=FetchType.LAZY)
-	// @JoinColumn(name = "provinceId")
-	// private Province province;
-
 	private boolean enabled;
 
 	@Enumerated(EnumType.STRING)
@@ -91,8 +82,7 @@ public class User implements UserDetails, Principal {
 	// private Collection<? extends GrantedAuthority> authorities = new
 	// ArrayList<>();
 
-	public User() {
-	}
+	public User() { }
 
 	public User(String login, String password, String socialCompositeKey, String firstName, String lastName,
 			String address, String phone, boolean whatssapUser, String email, String avatar, Role role,
@@ -106,7 +96,23 @@ public class User implements UserDetails, Principal {
 		this.phone = phone;
 		this.whatssapUser = whatssapUser;
 		this.email = email;
-		// this.province = province;
+		this.avatar = avatar;
+		this.role = role;
+		this.signInProvider = signInProvider;
+		this.userValue = Constant.DEFAULT_USER_VALUE;
+		this.points = Constant.INITIAL_POINTS;
+		this.enabled = true;
+		this.registerDate = Calendar.getInstance();
+	}
+	
+	public User(String login, String password, String socialCompositeKey, String firstName, String lastName,
+			String email, String avatar, SocialMediaService signInProvider, Role role) {
+		this.login = login;
+		this.password = password;
+		this.socialCompositeKey = socialCompositeKey;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
 		this.avatar = avatar;
 		this.role = role;
 		this.signInProvider = signInProvider;
@@ -215,14 +221,25 @@ public class User implements UserDetails, Principal {
 	public void setSignInProvider(SocialMediaService signInProvider) {
 		this.signInProvider = signInProvider;
 	}
-
-	// public Province getProvince() {
-	// return province;
-	// }
-	//
-	// public void setProvince(Province province) {
-	// this.province = province;
-	// }
+	
+	@Transient
+	public boolean isSocialUser() {
+		return !this.socialCompositeKey.isEmpty();
+	}
+	
+	/**
+	 * Get the user picture value
+	 * @return
+	 */
+	@Transient
+	public String getSocialAvatar() {
+		return this.avatar;
+	}
+	
+	@Transient
+	public String getLargeSocialAvatar() {
+		return this.avatar.concat("?type=large");
+	}
 
 	public int getUserValue() {
 		return userValue;
