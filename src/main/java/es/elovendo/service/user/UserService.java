@@ -146,6 +146,5 @@ public interface UserService extends UserDetailsService {
 	public int getVotesQueued(User user);
 	
 	/** Helpers **/
-	public boolean isLoginAvailable(String login);
 	public boolean isEmailAvailable(String email);
 }

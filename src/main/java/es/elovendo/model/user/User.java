@@ -224,7 +224,7 @@ public class User implements UserDetails, Principal {
 	
 	@Transient
 	public boolean isSocialUser() {
-		return !this.socialCompositeKey.isEmpty();
+		return this.socialCompositeKey != null && !this.socialCompositeKey.isEmpty();
 	}
 	
 	/**

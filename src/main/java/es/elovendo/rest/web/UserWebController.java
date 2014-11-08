@@ -273,12 +273,6 @@ public class UserWebController {
 					messageSource.getMessage("User.add.Error.password.missmatch", null, locale)));
 		}
 		
-		// Validate login availability
-		if (!userService.isLoginAvailable(userForm.getLogin())) {
-			result.addError(new FieldError("user", "login", 
-					messageSource.getMessage("User.add.Error.available.login", null, locale)));
-		}
-		
 		// Validate email availability
 		if (!userService.isEmailAvailable(userForm.getEmail())) {
 			result.addError(new FieldError("user", "email", 

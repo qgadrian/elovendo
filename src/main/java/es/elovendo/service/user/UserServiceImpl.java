@@ -19,7 +19,6 @@ import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.FacebookProfile;
 import org.springframework.social.google.api.Google;
 import org.springframework.social.google.api.plus.Person;
-import org.springframework.social.google.api.plus.PlusOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -434,11 +433,6 @@ public class UserServiceImpl implements UserService {
 
 	/* Helpers */
 	
-	@Override
-	public boolean isLoginAvailable(String login) {
-		return userRepository.findByLogin(login) == null;
-	}
-
 	@Override
 	public boolean isEmailAvailable(String email) {
 		return userRepository.findByEmail(email) == null;
