@@ -31,6 +31,9 @@
 
 <script src="/js/filter.js" type="text/javascript"></script>
 
+<link rel="stylesheet" type="text/css" href="/css/bootstrap-social.css" media="screen" />
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+
 <!-- File input -->
 <link href="/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
 <script src="/js/fileinput.min.js" type="text/javascript"></script>
@@ -65,9 +68,16 @@
 			transferencia</a> para mantener tus votos en Elovendo.</div>
 		</div>
 		<div class="row">
-				<a th:href="@{/auth/facebook(scope='email')}" class="btn btn-lg btn-block">
-	      			<i class="fa fa-facebook"></i> Registrarse usando tu cuenta de Facebook
-	      		</a>
+			<div class="col-xs-6 col-xs-offset-3 text-center">
+				<a th:href="@{/auth/facebook(scope='email')}"
+					class="btn btn-lg btn-block btn-social btn-facebook"> <i class="fa fa-facebook"></i>
+					Registrarse usando tu cuenta de Facebook
+				</a>
+				<a th:href="@{/auth/google(scope='email')}"
+					class="btn btn-lg btn-block btn-social btn-google-plus"> <i class="fa fa-google"></i> 
+					Registrarse usando tu cuenta de Google
+				</a>
+			</div>
 		</div>
 		<div class="row text-center">
 			<form class="form-horizontal" role="form" id="registrationform" th:action="@{/site/register}" 
