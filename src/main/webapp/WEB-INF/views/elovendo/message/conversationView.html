@@ -42,9 +42,10 @@
 							<!-- 	style="width: 32px; height: 32px;" -->
 							<!-- 	th:src="@{'http://83.165.60.132:8080/' + ${message.sender.avatar200h}}" /> -->
 							<!-- 	</a> -->
-							<div th:if="${message.sender.login == user.login}">
+							<div th:if="${message.sender.email == user.email}">
 								<div class="pull-right userPicChat" style="margin-left: 15px"> 
-									<img alt="Generic placeholder image" th:src="@{'http://www.elovendo.com/' + ${message.sender.avatar}}">
+									<img th:unless="${message.sender.socialUser}" alt="User Image" th:src="@{'http://www.elovendo.com/' + ${message.sender.avatar}}">
+									<img th:if="${message.sender.socialUser}" alt="User Image" th:src="${message.sender.largeSocialAvatar}">
 								</div>
 								<div class="pull-right media-body chat-pop chatcurr">
 									<h4 class="media-heading">
@@ -62,9 +63,10 @@
 									<p class="pull-left mesText" th:text="${message.messageText}"></p>
 								</div>
 							</div>
-							<div th:unless="${message.sender.login == user.login}">
+							<div th:unless="${message.sender.email == user.email}">
 								<div class="pull-left userPicChat" style="margin-right: 15px"> 
-									<img alt="Generic placeholder image" th:src="@{'http://www.elovendo.com/' + ${message.sender.avatar}}">
+									<img th:unless="${message.sender.socialUser}" alt="User image" th:src="@{'http://www.elovendo.com/' + ${message.sender.avatar}}">
+									<img th:if="${message.sender.socialUser}" alt="User Image" th:src="${message.sender.largeSocialAvatar}">
 								</div>
 								<div class="media-body chat-pop">
 									<h4 class="media-heading">
@@ -183,8 +185,8 @@
 			id.style.marginLeft = "15px";
 
 			var im = document.createElement('img');
-			var ua = /*[[${userAvatar}]]*/'usera';
-			im.src = "http://www.elovendo.com/" + ua;
+			var ua = /*[[${userAvatar}]]*/ '';
+			im.src = ua;
 			id.appendChild(im);
 
 			fd.appendChild(id);

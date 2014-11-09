@@ -44,7 +44,7 @@ public interface MessageService {
 	
 	public int getUnreadMessages(User user);
 	
-	public int getUnreadMessages(String userName) throws UserNotFoundException;
+	public int getUnreadMessages(long userId);
 	
 	public MessageState getMessageState(Long messageId, User user);
 

@@ -175,9 +175,8 @@ public class MessageServiceImpl implements MessageService {
 	}
 	
 	@Override
-	public int getUnreadMessages(String userName) throws UserNotFoundException {
-		User user = userService.findUserByLogin(userName);
-		return messageStateRepository.getNumberOfMessagesUnread(user.getUserId());
+	public int getUnreadMessages(long userId) {
+		return messageStateRepository.getNumberOfMessagesUnread(userId);
 	}
 
 	@Override

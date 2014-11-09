@@ -77,7 +77,7 @@ public class MessageWebController {
 			String p2 = messageThread.getParticipant2().getLogin();
 			
 			String lastMessage = messageService.getLastMessage(messageThread.getMessageThreadId());
-			int unreadMessages = messageService.getUnreadMessages(user.getLogin());
+			int unreadMessages = messageService.getUnreadMessages(user);
 			
 			partner = p1.equals(user.getLogin()) ? p2 : p1;
 			
@@ -87,7 +87,7 @@ public class MessageWebController {
 				thread.setUnreadMessages(unreadMessages);
 			}
 			
-		} catch (NullPointerException | UserNotFoundException | NoSuchElementException e) {
+		} catch (NullPointerException | NoSuchElementException e) {
 			logger.debug("Exception at messages inbox");
 		}
 
@@ -121,7 +121,8 @@ public class MessageWebController {
 		model.addAttribute("messageThreadId", messageThreadId);
 		
 		model.addAttribute("user", user);
-		model.addAttribute("userAvatar", user.getAvatar200h());
+		if (user.isSocialUser()) model.addAttribute("userAvatar", user.getLargeSocialAvatar());
+		else model.addAttribute("userAvatar", "http://www.elovendo.com/" + user.getAvatar200h());
 		
 		return "elovendo/message/conversationView";
 		
