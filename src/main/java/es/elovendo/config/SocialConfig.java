@@ -9,7 +9,6 @@ import org.springframework.social.config.annotation.SocialConfigurer;
 import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.google.connect.GoogleConnectionFactory;
-import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 
 @Configuration
 @EnableSocial

@@ -114,58 +114,6 @@ public class ItemServiceImpl implements ItemService {
 		// update the item with the image path (if processed OK)
 		return item;
 	}
-//
-//	@Override
-//	public Item addItem(Item item, long subCategoryId, byte[] mainImage, byte[] image1, byte[] image2, byte[] image3,
-//			boolean featured, boolean highlight) throws InvalidItemNameMinLenghtException, UserNotFoundException,
-//			SubCategoryNotFoundException, ProvinceNotFoundException {
-//
-//		// FIXME: Check if user is loggued, apply security permissions
-//		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//
-//		item.setUser(user);
-//
-//		// SubCategory subCategory =
-//		// categoryService.getSubCategoryByName(subCategoryName);
-//		SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(subCategoryId);
-//		// Province province = provinceService.findProvinceByName(provinceName);
-//
-//		// Validation
-//		if (item.getTitle().length() < MIN_ITEM_TITLE_LENGHT)
-//			throw new InvalidItemNameMinLenghtException(item.getTitle());
-//		if (user == null)
-//			throw new UserNotFoundException(item.getUser().getLogin());
-//		if (subCategory == null)
-//			throw new SubCategoryNotFoundException(subCategoryId);
-//		// if (province == null) throw new
-//		// ProvinceNotFoundException(provinceName);
-//
-//		item.setSubCategory(subCategory);
-//		// item.setProvince(province);
-//		item.setFeatured(featured);
-//		item.setHighlight(highlight);
-//
-//		Calendar endDate = Calendar.getInstance();
-//		endDate.add(Calendar.DATE, Constant.ITEM_DEFAULT_DURATION);
-//		item.setEndDate(endDate);
-//		item.setStartDate(Calendar.getInstance());
-//
-//		// Produce an unique name for an item
-//		if (mainImage != null)
-//			item.setMainImage(saveImage(item, mainImage));
-//		if (image1 != null)
-//			item.setImage1(saveImage(item, image1));
-//		if (image2 != null)
-//			item.setImage2(saveImage(item, image2));
-//		if (image3 != null)
-//			item.setImage3(saveImage(item, image3));
-//
-//		// SAVE ITEM
-//		item = itemRepository.save(item);
-//		// update the item with the image path (if processed OK)
-//		return item;
-//
-//	}
 
 	@Override
 	public Item addItem(ItemForm itemForm, User user, MultipartFile mainImage, 
@@ -497,7 +445,7 @@ public class ItemServiceImpl implements ItemService {
 	private Item saveMultiPartFileImage(Item item, MultipartFile... files) {
 		int count = 0;
 		for (MultipartFile file : files) {
-			if (!file.isEmpty()) {
+			if (file != null && !file.isEmpty()) {
 				byte[] bytes = null;
 				try {
 					bytes = file.getBytes(); // Main image
@@ -514,6 +462,9 @@ public class ItemServiceImpl implements ItemService {
 				count++;
 			}
 		}
+		
+		// Check if no image where provided, and set a default one
+		if (count == 0) item.setMainImage(Constant.ITEM_IMG_DEFAULT);
 		
 		return item;
 	}
