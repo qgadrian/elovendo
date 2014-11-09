@@ -2,8 +2,10 @@ function setRad(dis) {
 //	console.log("ok");
 	document.getElementById('dis').value = dis;
 	
+	var b = 'title';
 	var mi = getURLParameter('min');
 	var ma = getURLParameter('max');
+	var t = getURLParameter(b);
 	
 	if (mi != null) {
 		$('<input>').attr({
@@ -19,6 +21,15 @@ function setRad(dis) {
 			value : ma,
 			name : 'max',
 			id: 'max'
+		}).appendTo('#locform');
+	}
+	
+	if (t != null) {
+		$('<input>').attr({
+			type : 'hidden',
+			value : t,
+			name : b,
+			id: b
 		}).appendTo('#locform');
 	}
 	

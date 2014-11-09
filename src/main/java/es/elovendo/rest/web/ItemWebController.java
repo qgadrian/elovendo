@@ -73,7 +73,7 @@ public class ItemWebController {
 	 */
 	@RequestMapping(value = "search", method = RequestMethod.GET)
 	public String itemListByTitleSearchPage(Model model,
-			@RequestParam(value = "category", required = false, defaultValue = "") long categoryId,
+			@RequestParam(value = "category", required = false, defaultValue = "0") long categoryId,
 			@RequestParam("title") String title,
 			@RequestParam(value = "dis", required = false, defaultValue = "0") double dis,
 			@RequestParam(value = "lat", required = false, defaultValue = "0") double lat,
@@ -86,6 +86,9 @@ public class ItemWebController {
 
 		model.addAttribute("featuredItems", itemService
 				.getRandomFeaturedItemsFromCategoryId(Constant.MAX_RANDOM_ITEMS, categoryId));
+		
+		String urlLocation = "search";
+		model.addAttribute("url", urlLocation);
 
 		@SuppressWarnings("unchecked")
 		List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
