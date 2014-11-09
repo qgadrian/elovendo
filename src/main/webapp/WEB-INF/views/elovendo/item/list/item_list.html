@@ -239,10 +239,10 @@
 										<!--  User info -->
 										<div class="row userInfo">
 											<div class="col-xs-4 col-md-4 col-lg-4 userPicMin" style="width: 80px; margin-right: 10px;">
-												<img th:unless="${session.socialUser}" data-src="holder.js/50x50" alt="Profile pic"
+												<img th:unless="${item.user.socialUser}" data-src="holder.js/50x50" alt="Profile pic"
 													th:src="@{'http://www.elovendo.com/' + ${item.user.avatar200h}}"/>
-												<img th:if="${session.socialUser}" data-src="holder.js/50x50" alt="Profile pic"
-													th:src="${session.largeSocialAvatar}"/>
+												<img th:if="${item.user.socialUser}" data-src="holder.js/50x50" alt="Profile pic"
+													th:src="${item.user.largeSocialAvatar}"/>
 											</div>
 											<div class="col-xs-12 col-md-8 col-lg-8">
 												<div class="row">

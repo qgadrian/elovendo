@@ -264,10 +264,10 @@
 								</div>
 								<div class="col-xs-12 col-sm-4 text-center">
 									<figure>
-										<img th:unless="${session.socialUser}" alt="" class="profilePic"
+										<img th:unless="${item.user.socialUser}" alt="" class="profilePic"
 											th:src="@{'http://www.elovendo.com/' + ${item.user.avatar}}">
-										<img th:if="${session.socialUser}" alt="" class="profilePic"
-											th:src="${session.largeSocialAvatar}">
+										<img th:if="${item.user.socialUser}" alt="" class="profilePic"
+											th:src="${item.user.largeSocialAvatar}">
 									</figure>
 								</div>
 							</div>
