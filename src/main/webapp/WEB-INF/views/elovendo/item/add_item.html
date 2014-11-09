@@ -163,20 +163,30 @@
 			<div class="form-group" th:classappend="${#fields.hasErrors('item.prize')} ? 'has-error'">
 				<label for="title" class="col-sm-2 control-label" th:text=#{Item.add.label.prize}>Prize</label> 
 				<div class="col-sm-10">
-					<div class="input-group">
-						<select class="selectpicker form-control" id="currelo" name="currency">
-							<option value="USD">USD</option>
-							<option value="GBP">GBP</option>
-							<option value="EUR">EUR</option>
-						</select>
-						<input type="number" class="form-control" id="prize" min="0" 
-							placeholder="Enter prize" th:field="${item.prize}" required="required"/>
-					</div>
-					<div th:if="${#fields.hasErrors('item.prize')}"
-						class="form-group has-error">
-						<small class="control-label" th:errors="${item.prize}" 
-							style="text-align: center!important">Input with error</small> 
-					</div>
+<!-- 					<div class="input-group"> -->
+<!-- 						<select class="selectpicker form-control" id="currelo" name="currency"> -->
+<!-- 							<option value="USD">USD</option> -->
+<!-- 							<option value="GBP">GBP</option> -->
+<!-- 							<option value="EUR">EUR</option> -->
+<!-- 						</select> -->
+<!-- 						<input type="number" class="form-control" id="prize" min="0"  -->
+<!-- 							placeholder="Enter prize" th:field="${item.prize}" required="required"/> -->
+<!-- 					</div> -->
+<!-- 					<div th:if="${#fields.hasErrors('item.prize')}" -->
+<!-- 						class="form-group has-error"> -->
+<!-- 						<small class="control-label" th:errors="${item.prize}"  -->
+<!-- 							style="text-align: center!important">Input with error</small>  -->
+<!-- 					</div> -->
+
+							<div class="input-group" style="display: flex!important;">
+									<select class="selectpicker form-control" id="currelo" name="currency" style="width: 10%!important;">
+										<option value="USD">USD</option>
+										<option value="GBP">GBP</option>
+										<option value="EUR">EUR</option>
+									</select>
+								<input type="number" class="form-control" id="prize" min="0"
+ 									placeholder="Enter prize" th:field="${item.prize}" required="required"/>
+							</div>
 				</div>
 			</div>
 			<div class="form-group" th:classappend="${#fields.hasErrors('item.category')} ? 'has-error'">
