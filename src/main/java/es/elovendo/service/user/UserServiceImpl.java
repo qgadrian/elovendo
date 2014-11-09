@@ -38,6 +38,7 @@ import es.elovendo.rest.exception.ItemNotFoundException;
 import es.elovendo.rest.exception.LoginNotAvailableException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.rest.exception.VoteDuplicateException;
+import es.elovendo.service.exception.EmailNotFoundException;
 import es.elovendo.service.exception.social.NoEmailProvidedException;
 import es.elovendo.service.exception.social.NotKnownProviderException;
 import es.elovendo.service.item.ItemService;
@@ -372,6 +373,13 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 	
+	@Override
+	public String getUserEmailFromUserId(long userId) throws EmailNotFoundException {
+		String email = userRepository.findEmailByUserId(userId);
+		if (email == null) throw new EmailNotFoundException("Email not found for user " + userId);
+		return email;
+	}
+
 	/**
 	 * Gets {@link MultipartFile} image data, saves it to a file and updates {@link User} information with file path.
 	 * If no image provided, just set the default one using {@link Constant}.AVATAR_DEFAULT

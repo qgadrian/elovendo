@@ -35,6 +35,7 @@ import es.elovendo.rest.exception.MessageTextTooLongException;
 import es.elovendo.rest.exception.MessageThreadAlreadyExistsException;
 import es.elovendo.rest.exception.MessageThreadNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
+import es.elovendo.service.exception.EmailNotFoundException;
 import es.elovendo.service.message.MessageService;
 import es.elovendo.service.user.UserService;
 import es.elovendo.util.IOUtil;
@@ -205,18 +206,17 @@ public class MessageWebController {
 	@RequestMapping(value = "/public/send", method = RequestMethod.POST)
 	public @ResponseBody void sendPublicMessage(
 			@RequestParam(value = "receiver", required=true) Long receiverId,
-			@RequestParam(value = "sender", required=true) String sender,
-			@RequestParam(value = "email", required=true) String email,
+			@RequestParam(value = "sender", required=true) String senderName,
+			@RequestParam(value = "email", required=true) String senderEmail,
 			@RequestParam(value = "messageText", required=true) String messageText,
-			Model model, HttpServletRequest request) throws UserNotFoundException {
+			Model model, HttpServletRequest request) throws EmailNotFoundException {
 
-		long remoteIpAddress = IOUtil.Dot2LongIP(request.getRemoteAddr());
-		
-		User receiver = userService.findUserById(receiverId);
-		String receiverEmail = receiver.getEmail();
+//		long remoteIpAddress = IOUtil.Dot2LongIP(request.getRemoteAddr());
+
+		String receiverEmail = userService.getUserEmailFromUserId(receiverId);
 		
 		MailSender mailSender = MailSender.getInstance();
-		mailSender.sendMail(sender, receiverEmail, "Testing", messageText);
+		mailSender.sendMail(senderName, senderEmail, receiverEmail, "Testing", messageText);
 	}
 	
 	@RequestMapping(value="/getUnread", method = RequestMethod.GET)

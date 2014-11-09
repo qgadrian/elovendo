@@ -18,6 +18,7 @@ import es.elovendo.rest.exception.LoginNotAvailableException;
 import es.elovendo.rest.exception.ProvinceNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.rest.exception.VoteDuplicateException;
+import es.elovendo.service.exception.EmailNotFoundException;
 import es.elovendo.service.exception.social.NoEmailProvidedException;
 import es.elovendo.service.exception.social.NotKnownProviderException;
 
@@ -68,6 +69,14 @@ public interface UserService extends UserDetailsService {
     
     /* Add a social user */
     public User addSocialUser(Connection<?> connection) throws NotKnownProviderException, NoEmailProvidedException;
+    
+    /**
+     * Get ONLY an email from the given user
+     * @param userId
+     * @return User's email
+     * @throws EmailNotFoundException 
+     */
+    public String getUserEmailFromUserId(long userId) throws EmailNotFoundException;
 
     /**
      * Finds a user by its id

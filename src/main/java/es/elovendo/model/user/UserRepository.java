@@ -20,4 +20,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.socialCompositeKey = :compKey")
     User findUserBySocialUserKey(@Param("compKey") String compositeKey);
 
+    @Query("SELECT email FROM User WHERE userid = :userId")
+    String findEmailByUserId(@Param("userId") long userId);
 }

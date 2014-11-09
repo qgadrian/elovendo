@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -13,7 +12,7 @@ import javax.mail.internet.MimeMessage;
 import org.apache.log4j.Logger;
 
 public class MailSender {
-	
+
 	private static Logger logger = null;
 
 	private static MailSender mailSender = null;
@@ -26,51 +25,42 @@ public class MailSender {
 		return mailSender;
 	}
 
-	public void sendMail(String from, String to, String subject, String text) {
+	public void sendMail(String senderName, String senderEmail, String to, String subject, String text) {
 
-		logger.warn("Sending from " + from + " to " + to);
+		logger.warn("Sending from " + senderName + " to " + to);
 		logger.warn("Subject: " + subject + " msg: " + text);
 
-		String para = to;
-		 
-	      // La dirección de la cuenta de envío (from)
-	      String de = from;
-	 
-	      // El servidor (host). En este caso usamos localhost
-	      String host = "localhost";
-	 
-	      // Obtenemos las propiedades del sistema
-	      Properties propiedades = System.getProperties();
-	 
-	      // Configuramos el servidor de correo
-	      propiedades.setProperty("mail.smtp.host", host);
-	 
-	      // Obtenemos la sesión por defecto
-	      Session sesion = Session.getDefaultInstance(propiedades);
-	 
-	      try{
-	         // Creamos un objeto mensaje tipo MimeMessage por defecto.
-	         MimeMessage mensaje = new MimeMessage(sesion);
-	 
-	         // Asignamos el “de o from” al header del correo.
-	         mensaje.setFrom(new InternetAddress(de));
-	 
-	         // Asignamos el “para o to” al header del correo.
-	         mensaje.addRecipient(Message.RecipientType.TO,
-	                                  new InternetAddress(para));
-	 
-	         // Asignamos el asunto
-	         mensaje.setSubject("Primer correo sencillo");
-	 
-	         // Asignamos el mensaje como tal
-	         mensaje.setText("El mensaje de nuestro primer correo");
-	 
-	         // Enviamos el correo
-	         Transport.send(mensaje);
-	         System.out.println("Mensaje enviado");
-	      }catch (MessagingException e) {
-	         e.printStackTrace();
-	      }
+		String pass = "988000Adrian";
+		String user = "contact@elovendo.com";
+		String host = "smtp.zoho.com";
+		String port = "465";
+		Properties properties = System.getProperties();
+
+		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.auth", "true");
+		properties.put("mail.smtp.port", port);
+		properties.setProperty("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		properties.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		properties.setProperty("mail.smtp.socketFactory.fallback", "false");
+		properties.setProperty("mail.smtp.socketFactory.port", port);
+		properties.put("mail.smtp.startssl.enable", "true");
+
+		Session session = Session.getDefaultInstance(properties);
+		try {
+			MimeMessage message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(user));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+			message.setSubject(subject);
+			message.setText(text);
+			Transport transport = session.getTransport("smtp");
+			transport.connect(host, 465, user, pass);
+			transport.sendMessage(message, message.getAllRecipients());
+			transport.close();
+			logger.debug("Sent contact email successfully...");
+		} catch (MessagingException mex) {
+			logger.error("Error sending contact email...");
+			mex.printStackTrace();
+		}
 	}
 
 }
