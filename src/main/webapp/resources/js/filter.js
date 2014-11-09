@@ -1,6 +1,6 @@
 function setRad(dis) {
 //	console.log("ok");
-	document.getElementById('dis').value = dis;
+	if (dis > 0) document.getElementById('dis').value = dis;
 	
 	var b = 'title';
 	var mi = getURLParameter('min');
