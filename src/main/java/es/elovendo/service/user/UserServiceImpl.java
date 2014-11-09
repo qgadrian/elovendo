@@ -156,12 +156,15 @@ public class UserServiceImpl implements UserService {
 			ConnectionData data = connection.createData();
 
 			logger.error("provider and provid " + data.getProviderUserId() + " / " + data.getProviderId());
+			logger.error("username: " + fbData.getUsername());
+			logger.error("name " + fbData.getFirstName() + " last name " + fbData.getLastName());
 			logger.error("fb data " + fbData.getEmail());
 
 			Role role = roleRepository.findByRoleName(RoleEnum.ROLE_USER);
 
 			String compositeKey = data.getProviderUserId() + data.getProviderId();
-			User user = new User(fbData.getUsername(), data.getAccessToken(), compositeKey, fbData.getFirstName(),
+			String username = fbData.getUsername() != null ? fbData.getUsername() : fbData.getFirstName();
+			User user = new User(username, data.getAccessToken(), compositeKey, fbData.getFirstName(),
 					fbData.getLastName(), fbData.getEmail(), data.getImageUrl(), SocialMediaService.FACEBOOK, role);
 
 			return userRepository.save(user);

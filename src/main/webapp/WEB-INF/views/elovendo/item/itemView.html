@@ -530,9 +530,11 @@
 					reason : $('#denmsg').val(),
 				},
 				success : function() {
+					$('#denmsg').modal("hide");
 					smsg("denounce ok");
 				},
 				error : function() {
+					$('#denmsg').modal("hide");
 					smsg("error on denounce");
 				}
 			});
