@@ -152,11 +152,11 @@
 									<div class="col-xs-12 text-center">
 										<div class="btn-group">
 											<button class="btn btn-primary btn-lg" role="button"
-												data-toggle="modal" data-target="#myModal">
+												data-toggle="modal" data-target="#msgModal">
 												<i class="glyphicon glyphicon-send"></i> Enviar mensaje
 											</button>
-											<button class="btn btn-danger btn-lg" role="button"
-												data-toggle="modal" data-target="#myModal">
+											<button class="btn btn-danger btn-lg" role="button" data-dtp="i"
+												data-toggle="modal" data-target="#denModal">
 												<i class="glyphicon glyphicon-exclamation-sign"></i>
 												Denunciar
 											</button>
@@ -207,10 +207,11 @@
 			<!-- video -->
 			<div class="tab-pane fade" id="videoContent">
 				<div class="row">
-					<div class="col-xs-12 col-md-12">
-						<iframe id="ytplayer" type="text/html" width="100%" height="600"
-							th:src="@{${item.youtubeVideo} + '?autoplay=0&amp;autohide=1&amp;origin=http://elovendo.com'}"
-							frameborder="0"></iframe>
+					<div class="col-xs-12 col-md-12 text-center">
+						<iframe th:unless="${#strings.isEmpty(item.youtubeVideo)}" id="ytplayer" type="text/html" 
+							width="100%" height="600" frameborder="0"
+							th:src="@{${item.youtubeVideo} + '?autoplay=0&amp;autohide=1&amp;origin=http://elovendo.com'}"></iframe>
+						<span th:if="${#strings.isEmpty(item.youtubeVideo)}">No video provided</span>
 					</div>
 				</div>
 			</div>
@@ -312,8 +313,8 @@
 											<li><a href="#"><span
 													class="fa fa-envelope pull-right"></span> Enviar email </a></li>
 											<li class="divider"></li>
-											<li><a href="#"><span
-													class="fa fa-warning pull-right"></span>Denunciar usuario </a></li>
+											<li><a href="#" data-dtp="u" data-toggle="modal" data-target="#denModal">
+												<span class="fa fa-warning pull-right"></span>Denunciar usuario </a></li>
 										</ul>
 									</div>
 								</div>
@@ -328,7 +329,7 @@
 	</div>
 
 	<!-- Modal -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+	<div class="modal fade" id="msgModal" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
@@ -361,6 +362,39 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
 					<button type="button" class="btn btn-primary">Enviar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="denModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+						<i class="glyphicon glyphicon-exclamation-sign"></i> Denounce item
+					</h4>
+				</div>
+				<div class="modal-body">
+						<div class="form-group">
+							<label for="exampleInputPassword1">Reason</label>
+							<textarea id="denmsg" class="form-control textarea" rows="3"
+								required="required" placeholder="Explain why this shouldn't be here..." 
+								maxlength="200"></textarea>
+							<input type="hidden" id="dtp"/>
+						</div>
+						<div class="checkbox">
+							<label> <input type="checkbox" /> I acept terms of use</label>
+						</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-primary" id="denButton">Send</button>
 				</div>
 			</div>
 		</div>
@@ -481,77 +515,33 @@
 				}
 			});
 		});
-	</script>
-
-	<script type="text/javascript">
-		function adjustModalMaxHeightAndPosition() {
-			$('.modal')
-					.each(
-							function() {
-								if ($(this).hasClass('in') == false) {
-									$(this).show(); /* Need this to get modal dimensions */
-								}
-								;
-								var contentHeight = $(window).height() - 60;
-								var headerHeight = $(this)
-										.find('.modal-header').outerHeight() || 2;
-								var footerHeight = $(this)
-										.find('.modal-footer').outerHeight() || 2;
-
-								$(this).find('.modal-content').css({
-									'max-height' : function() {
-										return contentHeight;
-									}
-								});
-
-								$(this)
-										.find('.modal-body')
-										.css(
-												{
-													'max-height' : function() {
-														return (contentHeight - (headerHeight + footerHeight));
-													}
-												});
-
-								$(this)
-										.find('.modal-dialog')
-										.addClass('modal-dialog-center')
-										.css(
-												{
-													'margin-top' : function() {
-														console
-																.log("height "
-																		+ $(
-																				this)
-																				.outerHeight());
-														console
-																.log("height/2 "
-																		+ $(
-																				this)
-																				.outerHeight()
-																		/ 1000);
-														return ($(this)
-																.outerHeight() / 2);
-													},
-													'margin-left' : function() {
-														return -($(this)
-																.outerWidth() / 2);
-													}
-												});
-								if ($(this).hasClass('in') == false) {
-									$(this).hide(); /* Hide modal */
-								}
-								;
-							});
-		};
-		if ($(window).height() >= 320) {
-			$(window).resize(adjustModalMaxHeightAndPosition).trigger("resize");
-		}
-
-// 		$(function() {
-// 			$('a[title]').tooltip();
-// 			$('h3[title]').tooltip();
-// 		});
+		
+		$('#denButton').on('click', function() {
+			var e = "/site/police/denounce/";
+			if ($('#dtp').val() == 'i' ) e = e + "item/" + ii;
+			else e = e + "user/" + ui;
+			$.ajax({
+				type : "POST",
+				beforeSend : function(request) {
+					request.setRequestHeader(cn, cv);
+				},
+				url : e,
+				data : {
+					reason : $('#denmsg').val(),
+				},
+				success : function() {
+					smsg("denounce ok");
+				},
+				error : function() {
+					smsg("error on denounce");
+				}
+			});
+		});
+		
+		$('a[data-toggle=modal], button[data-toggle=modal]').click(function() {
+			var tp = $(this).data('dtp');
+			document.getElementById('dtp').value = tp;
+		});
 	</script>
 
 </body>

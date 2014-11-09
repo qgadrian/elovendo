@@ -36,6 +36,11 @@ function setRad(dis) {
 	$('#locform').submit();
 }
 
+function smsg(msgt) {
+	$('#favMes').text(msgt);
+	$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+}
+
 function popSub() {
 	var cat = $("#category").find(":selected").val();
 	
