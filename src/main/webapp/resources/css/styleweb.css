@@ -340,12 +340,10 @@ Color graph
 	margin-bottom: 0;
 }
 
-.iVote {
+.ivote {
 	position: relative;
 	display: inline-block;
-/* 	height: 60px; */
 	min-width: 30%;
-	margin: 40px;
 	width: auto;
 	border-radius: 3px;
 }
