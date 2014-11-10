@@ -247,6 +247,10 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public Page<Item> getAllItemsByUserName(String userName, int page, int size) {
+		
+		// Protect page size
+		if (size > Constant.MAX_PAGE_SIZE) size = Constant.MAX_PAGE_SIZE;
+		
 		return itemRepository.findByUserName(userName, new PageRequest(page, size));
 	}
 
@@ -287,6 +291,9 @@ public class ItemServiceImpl implements ItemService {
 	public Page<Item> getAllItemsByCategory(String categoryName, int prizeMin, int prizeMax, int page, int size) {
 		BigDecimal bPrizeMin = new BigDecimal(prizeMin);
 		BigDecimal bPrizeMax = new BigDecimal(prizeMax);
+		
+		// Protect page size
+		if (size > Constant.MAX_PAGE_SIZE) size = Constant.MAX_PAGE_SIZE;
 
 		// Don't know if a negative number can break this, so I'm preventing
 		if (prizeMin < 0)
@@ -332,6 +339,9 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public Page<Item> getItemsByParams(String title, long id, String type, double dis, double lat, double lng,
 			int prizeMin, int prizeMax, int page, int size) {
+		
+		// Protect page size
+		if (size > Constant.MAX_PAGE_SIZE) size = Constant.MAX_PAGE_SIZE;
 		
 		// Page Request
 		PageRequest pageRequest = new PageRequest(page, size);
