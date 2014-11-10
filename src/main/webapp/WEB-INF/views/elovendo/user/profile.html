@@ -159,11 +159,8 @@
 							<a th:each="item : ${lastFavs}" class="list-group-item" th:classappend="'fav' + ${item.itemId}"
 								th:href="@{'/bazaar/item/' + ${item.itemId}}">
 								<h4 class="list-group-item-heading" th:text="${item.title}">Title</h4>
-								<p th:if="${#strings.length(item.plainDescription)} &gt; 59"
-										th:utext="${#strings.substring(item.plainDescription, 0, 60)} + ..."
+								<p th:utext="${#strings.abbreviate(item.plainDescription, 60)}" 
 										class="list-group-item-text">Description</p>
-								<p th:if="${#strings.length(item.plainDescription)} &lt; 59"
-									th:utext="${item.plainDescription}" class="list-group-item-text">Description</p>
 								<h5><strong th:text="${item.getCurrencyPrize(#locale)}">Prize</strong></h5>
 							</a>
 						</div>
@@ -333,13 +330,7 @@
 														<!--  Item info -->
 														<div class="row">
 															<div class="col-xs-12 col-md-12 col-lg-12 itemDesc">
-																<p
-																	th:if="${#strings.length(item.plainDescription)} &gt; 99"
-																	th:utext="${#strings.substring(item.plainDescription, 0, 100)} + '(...)'">
-																	Description</p>
-																<p
-																	th:if="${#strings.length(item.plainDescription)} &lt; 100"
-																	th:utext="${item.plainDescription}">Description</p>
+																<p th:utext="${#strings.abbreviate(item.plainDescription, 100)}">Description</p>
 															</div>
 														</div>
 													</div>

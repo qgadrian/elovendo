@@ -103,12 +103,7 @@
 	<hr />
 									<div class="caption">
 										<h4 th:text="${item.title}">Title</h4>
-										<p th:if="${#strings.length(item.plainDescription)} &gt; 99" 
-											th:utext="${#strings.substring(item.plainDescription, 0, 100)}"
-											class="featuredTextDesc">Description</p>
-										<p th:if="${#strings.length(item.plainDescription)} &lt; 100" 
-											th:utext="${item.plainDescription}"
-											class="featuredTextDesc">Description</p>
+										<p th:utext="${#strings.abbreviate(item.plainDescription, 100)}" class="featuredTextDesc">Description</p>
 									</div>
 								</div>
 							</a>

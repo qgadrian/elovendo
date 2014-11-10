@@ -192,11 +192,7 @@
 								<hr />
 								<div class="caption">
 									<h4 th:text="${item.title}">Title</h4>
-									<p th:if="${#strings.length(item.plainDescription)} &gt; 99" 
-										th:utext="${#strings.substring(item.plainDescription, 0, 100)}"
-										class="featuredTextDesc">Description</p>
-									<p th:if="${#strings.length(item.plainDescription)} &lt; 100" 
-										th:utext="${item.plainDescription}"
+									<p th:utext="${#strings.abbreviate(item.plainDescription, 100)}" 
 										class="featuredTextDesc">Description</p>
 								</div>
 							</div>
@@ -253,8 +249,7 @@
 												<div class="row">
 	<!-- 												<div class="col-xs-12 col-md-12"> -->
 														<p class="pull-left">
-															<span
-																th:text="${#calendars.format(item.startDate, 'dd MMMM yyyy')}">
+															<span th:text="${#calendars.format(item.startDate, 'dd MMMM yyyy')}">
 																fecha</span> a las <span
 																th:text="${#calendars.format(item.startDate, 'HH:mm')}">
 																hora</span>
@@ -272,13 +267,9 @@
 											</div>
 											<!--  Item info -->
 											<div class="row">
-												<div class="col-xs-12 col-md-12 col-lg-12 itemDesc">	
-													<p th:if="${#strings.length(item.plainDescription)} &gt; 99" 
-														th:utext="${#strings.substring(item.plainDescription, 0, 100)} + '(...)'">
-														Description</p>
-													<p th:if="${#strings.length(item.plainDescription)} &lt; 100" 
-														th:utext="${item.plainDescription}">Description</p>
-														<!-- class="mediumTextDesc"  -->
+												<div class="col-xs-12 col-md-12 col-lg-12 itemDesc">
+													<p th:utext="${#strings.abbreviate(item.plainDescription, 100)}" 
+														class="featuredTextDesc">Description</p>
 												</div>
 											</div>
 										</div>
