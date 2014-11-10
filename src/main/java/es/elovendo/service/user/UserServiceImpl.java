@@ -196,6 +196,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User updateUser(EditUserForm userForm, long userId, MultipartFile userPic) throws UserNotFoundException {
 		User user = findUserById(userId);
+		
+		System.out.println("#######################");
+		System.out.println("#######################");
+		System.out.println("#######################");
+		System.out.println("#######################");
+		System.out.println("User: " + user);
+		System.out.println("From: " + userForm);
 
 		// Password might be empty (unchanged). If not, change it
 		if (!userForm.getPassword().isEmpty()) {
@@ -204,14 +211,19 @@ public class UserServiceImpl implements UserService {
 			user.setPassword(encoder.encode(password));
 		}
 
+		user.setLogin(userForm.getUsername());
 		user.setFirstName(userForm.getFirstName());
 		user.setLastName(userForm.getLastName());
 		user.setPhone(userForm.getPhone());
 		user.setWhatssapUser(userForm.isWhatssapUser());
-		user.setEmail(userForm.getEmail());
-		user.setAddress(userForm.getAddress());
 
-		saveMultiPartFileImage(user, userPic);
+		if (!userForm.isSocialUser()) {
+			user.setEmail(userForm.getEmail());
+			saveMultiPartFileImage(user, userPic);
+		}
+		
+		System.out.println("user form is social user? " + userForm.isSocialUser());
+		System.out.println("current user email? " + user.getEmail());
 
 		return userRepository.save(user);
 	}
@@ -386,7 +398,7 @@ public class UserServiceImpl implements UserService {
 	 * @param file
 	 */
 	private void saveMultiPartFileImage(User user, MultipartFile file) {
-		if (!file.isEmpty()) {
+		if (file != null && !file.isEmpty()) {
 			byte[] bytes = null;
 			try {
 				bytes = file.getBytes(); // Main image

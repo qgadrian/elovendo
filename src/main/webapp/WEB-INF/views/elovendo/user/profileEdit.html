@@ -57,85 +57,63 @@
 				method="post" enctype="multipart/form-data" accept-charset="UTF-8" >
 				<img th:unless="${session.socialUser}" alt="profile pic"  th:src="@{'http://www.elovendo.com/' + ${user.avatar}}" />
 				<img th:if="${session.socialUser}" alt="profile pic"  th:src="${session.largeSocialAvatar}" />
-				<h1 th:text="${user.login}">Editar perfil</h1>
+				<h1 th:text="${user.username}">User</h1>
 				<hr class="hrStyle"/>
 				<!-- Username 2-20 characters -->
-<!-- 				<div class="col-sm-8 col-sm-offset-2" th:if="${#fields.hasErrors('user.login')}"> -->
-<!-- 					<div class="alert alert-danger" role="alert"> -->
-<!-- 						<span class="alert-link" role="alert" th:errors="${user.login}">Error</span> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
-				<!-- Password (UpperCase, LowerCase, Number/SpecialChar and min 8 Chars) -->
-<!-- 				<div class="col-sm-8 col-sm-offset-2" th:if="${#fields.hasErrors('user.password')}"> -->
-<!-- 					<div class="alert alert-danger" role="alert"> -->
-<!-- 						<span class="alert-link" role="alert" th:errors="${user.password}">Error</span> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
 				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-2">
-						<label for="password" class="col-sm-2 control-label" th:text="#{label.password}">Password</label> 
+					<div class="col-sm-8 col-sm-offset-2" th:classappend="${#fields.hasErrors('user.username')} ? 'has-error'">
+						<label for="username" class="col-sm-2 control-label" th:text="#{User.add.label.username}">User name</label> 
 						<div class="col-sm-8">
-							<input th:unless="${#fields.hasErrors('user.password')}" class="form-control" 
-							id="password" name="password" type="password" 
-							placeholder="Contraseña" th:title="#{password.invalid}"
-							pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
-							<div th:if="${#fields.hasErrors('user.password')}"
-								class="form-group has-error">
-								<label class="control-label" for="inputError1"
-									th:errors="${user.password}"
-									style="text-align: center !important">Input with error</label>
-								<input class="form-control" id="password"
-									name="password" type="password"
-									placeholder="Contraseña"
-									th:title="#{password.invalid}"
-									pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
+							<input class="form-control" id="username" name="username" type="text" th:value="${user.username}"
+								placeholder="Nombre de usuario" pattern="^[a-zA-ZÑñ]{2,20}$" 
+								th:title="#{User.add.Error.username.invalid}"/>
+							<div th:if="${#fields.hasErrors('user.username')}" class="form-group has-error">
+								<small class="control-label" th:errors="${user.username}" 
+									style="text-align: center!important">Input with error</small> 
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Password (minimum 8 Chars) -->
+				<div class="form-group">
+					<div class="col-sm-8 col-sm-offset-2" th:classappend="${#fields.hasErrors('user.password')} ? 'has-error'">
+						<label for="password" class="col-sm-2 control-label" th:text="#{User.add.label.password}">Password</label> 
+						<div class="col-sm-8">
+							<input class="form-control" id="password" name="password" type="password" 
+							placeholder="Contraseña" th:title="#{User.add.Error.password.invalid}"
+							pattern="^$|[0-9a-zA-Z$@$!%*#?&]{8,}$" />
+							<div th:if="${#fields.hasErrors('user.password')}" class="form-group has-error">
+								<small class="control-label" th:errors="${user.password}" 
+									style="text-align: center!important">Input with error</small>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-2">
+					<div class="col-sm-8 col-sm-offset-2" th:classappend="${#fields.hasErrors('user.password')} ? 'has-error'">
 						<label for="confirmPassword" class="col-sm-2 control-label" 
-							th:text="#{label.confirmPassword}">Confirm Password</label> 
+							th:text="#{User.add.label.confirmPassword}">Confirm Password</label> 
 						<div class="col-sm-8">
-							<input th:unless="${#fields.hasErrors('user.confirmPassword')}" class="form-control" 
-							id="confirmPassword" name="confirmPassword" type="password" 
-							placeholder="Contraseña" th:title="#{password.invalid}"
-							pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
-							<div th:if="${#fields.hasErrors('user.confirmPassword')}"
-								class="form-group has-error">
-								<label class="control-label" for="inputError1"
-									th:errors="${user.confirmPassword}"
-									style="text-align: center !important">Input with error</label>
-								<input class="form-control" id="confirmPassword"
-									name="confirmPassword" type="password"
-									placeholder="Contraseña"
-									th:title="#{password.invalid}"
-									pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" />
+							<input class="form-control"  id="confirmPassword" name="confirmPassword" type="password" 
+								placeholder="Contraseña" th:title="#{User.add.Error.password.invalid}" 
+								pattern="^$|[0-9a-zA-Z$@$!%*#?&]{8,}$" />
+							<div th:if="${#fields.hasErrors('user.confirmPassword')}" class="form-group has-error">
+								<small class="control-label" th:errors="${user.confirmPassword}" 
+									style="text-align: center!important">Input with error</small>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-2">
-						<label for="email" class="col-sm-2 control-label"
-							th:text="#{label.email}">Email Address</label>
+				<div class="form-group" th:unless="${session.socialUser}">
+					<div class="col-sm-8 col-sm-offset-2" th:classappend="${#fields.hasErrors('user.email')} ? 'has-error'">
+						<label for="email" class="col-sm-2 control-label" th:text="#{User.add.label.email}">Email Address</label>
 						<div class="col-sm-8">
-<!-- 							<input class="form-control" type="email" id="email" -->
-<!-- 								th:title="#{email.invalid}" th:field="${user.email}" -->
-<!-- 								placeholder="Correo electrónico" th:value="${user.email}" />  -->
-							<input th:unless="${#fields.hasErrors('user.email')}"
-								class="form-control" type="email" id="email"
-								th:title="#{email.invalid}" th:field="${user.email}"
-								placeholder="Correo electrónico" th:value="${user.email}" />
+							<input class="form-control" type="email" id="email" th:title="#{email.invalid}" 
+								th:field="${user.email}" th:placeholder="#{User.add.placeholder.email}" th:value="${user.email}" />
 							<div th:if="${#fields.hasErrors('user.email')}"
 								class="form-group has-error">
-								<label class="control-label" for="emailError"
-									th:errors="${user.email}"
-									style="text-align: center !important">Input with error</label>
-								<input class="form-control" class="form-control" type="email"
-									id="email" th:title="#{email.invalid}" th:field="${user.email}"
-									placeholder="Correo electrónico" th:value="${user.email}" />
+								<small class="control-label" th:errors="${user.email}" 
+									style="text-align: center!important">Input with error</small> 
 							</div>
 						</div>
 					</div>
@@ -144,30 +122,28 @@
 				<hr />
 				<div class="form-group">
 					<div class="col-sm-8 col-sm-offset-2">
-						<label for="firstName" class="col-sm-2 control-label" th:text="#{label.firstName}">Nombre</label>
+						<label for="firstName" class="col-sm-2 control-label" th:text="#{User.add.label.firstName}">Nombre</label>
 						<div class="col-sm-8">
 							<input class="form-control" id="firstName" name="firstName" type="text" 
-							th:field="${user.firstName}" placeholder="Tu nombre" th:value="${user.firstName}"/>
-<!-- 							<span th:if="${#fields.hasErrors('user.login')}" th:errors="${user.login}">Error</span> -->
+								th:field="${user.firstName}" th:placeholder="#{User.add.placeholder.name}" th:value="${user.firstName}"/>
 						</div>
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-sm-8 col-sm-offset-2">
-						<label for="lastName" class="col-sm-2 control-label" th:text="#{label.lastName}">Apellidos</label>
+						<label for="lastName" class="col-sm-2 control-label" th:text="#{User.add.label.lastName}">Apellidos</label>
 						<div class="col-sm-8">
 							<input class="form-control" id="lastName" name="lastName" type="text" 
-							th:field="${user.lastName}" placeholder="Tus apellidos" th:value="${user.lastName}"/>
-<!-- 							<span th:if="${#fields.hasErrors('user.login')}" th:errors="${user.login}">Error</span> -->
+								th:field="${user.lastName}" th:placeholder="#{User.add.placeholder.lastname}" th:value="${user.lastName}"/>
 						</div>
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-sm-8 col-sm-offset-2">
-						<label for="phone" class="col-sm-2 control-label" th:text="#{label.phone}">Teléfono</label>
+						<label for="phone" class="col-sm-2 control-label" th:text="#{User.add.label.phone}">Teléfono</label>
 						<div class="col-sm-8">
 							<input type="number" class="form-control" id="phone" name="phone" min="0"
-							th:field="${user.phone}" placeholder="Móvil" th:value="${user.phone}"/>
+							th:field="${user.phone}" th:placeholder="#{User.add.placeholder.phone}" th:value="${user.phone}"/>
 <!-- 							<span th:if="${#fields.hasErrors('user.login')}" th:errors="${user.login}">Error</span> -->
 						</div>
 					</div>
@@ -192,7 +168,8 @@
 <!-- 				</div> -->
 				<div th:unless="${session.socialUser}" class="form-group">
 					<div class="col-sm-8 col-sm-offset-2">
-						<label for="profilePic" class="col-sm-2 control-label" th:text="#{label.profilePic}">Profile pic</label> 
+						<label for="profilePic" class="col-sm-2 control-label" 
+							th:text="#{User.add.label.profilePic}">Profile pic</label> 
 						<div class="col-sm-8">
 							<input id="profilePic" type="file" class="file" data-show-upload="false" name="userPic"/>
 						</div>

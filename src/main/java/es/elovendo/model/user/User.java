@@ -1,6 +1,7 @@
 package es.elovendo.model.user;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -351,12 +352,13 @@ public class User implements UserDetails, Principal {
 
 	@Override
 	public String toString() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		return "User [userId=" + userId + ", socialCompositeKey=" + socialCompositeKey + ", login=" + login
-				+ ", password=" + password + ", firstName=" + firstName + ", lastName=" + lastName + ", address="
+				+ ", firstName=" + firstName + ", lastName=" + lastName + ", address="
 				+ address + ", phone=" + phone + ", email=" + email + ", whatssapUser=" + whatssapUser + ", avatar="
-				+ avatar + ", avatar200h=" + avatar200h + ", registerDate=" + registerDate + ", userValue=" + userValue
-				+ ", points=" + points + ", role=" + role + ", enabled=" + enabled + ", signInProvider="
-				+ signInProvider + "]";
+				+ avatar + ", avatar200h=" + avatar200h + ", registerDate=" + sdf.format(registerDate.getTime()) 
+				+ ", userValue=" + userValue + ", points=" + points + ", role=" + role + ", enabled=" + enabled 
+				+ ", signInProvider=" + signInProvider + "]";
 	}
 
 	@Override

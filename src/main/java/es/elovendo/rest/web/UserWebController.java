@@ -250,8 +250,6 @@ public class UserWebController {
 			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		EditUserForm userForm = new EditUserForm(user);
-		userForm.setAvatar(user.getAvatar());
-		userForm.setLogin(user.getLogin());
 
 		model.addAttribute("user", userForm);
 
@@ -273,6 +271,8 @@ public class UserWebController {
 		// result.addError(new FieldError("registrationform", "profilePic",
 		// messageSource.getMessage("Error.password.missmatch", null, locale)));
 		// }
+		
+		logger.error("Received: " + userForm);
 
 		User user = null;
 		SecurityContext context = SecurityContextHolder.getContext();
@@ -280,22 +280,25 @@ public class UserWebController {
 			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		// Validate email address
-		if (!EmailValidator.getInstance().isValid(userForm.getEmail())) {
+		if (!user.isSocialUser() && !EmailValidator.getInstance().isValid(userForm.getEmail())) {
 			result.addError(new FieldError("user", "email", 
-					messageSource.getMessage("Error.user.email", null, locale)));
+					messageSource.getMessage("User.add.Error.user.email", null, locale)));
 		}
 		
 		// Validate that confirm password matches
 		if (!userForm.getPassword().isEmpty() && !userForm.getPassword().equals(userForm.getConfirmPassword())) {
 			result.addError(new FieldError("user", "confirmPassword", 
-					messageSource.getMessage("Error.password.missmatch", null, locale)));
+					messageSource.getMessage("User.add.Error.password.missmatch", null, locale)));
 		}
 
 		if (result.hasErrors()) {
+			
+			for (FieldError fe : result.getFieldErrors()) {
+				logger.debug("Edit " + user.getUserId() + " error: " + fe.toString());
+			}
 
-			logger.error(userForm);
 			userForm.setAvatar(user.getAvatar());
-			userForm.setLogin(user.getLogin());
+			userForm.setUsername(user.getLogin());
 			model.addAttribute("user", userForm);
 			return "elovendo/user/profileEdit";
 		}
@@ -303,6 +306,9 @@ public class UserWebController {
 		if (whatssapUser != null)
 			userForm.setWhatssapUser(whatssapUser.equalsIgnoreCase("on"));
 
+		// Set if user is social
+		userForm.setSocialUser(user.isSocialUser());
+		
 		user = userService.updateUser(userForm, user.getUserId(), userPic);
 
 		Authentication authentication = new UsernamePasswordAuthenticationToken(user, user.getPassword(),

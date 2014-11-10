@@ -68,7 +68,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
 //            	.antMatchers("/resources/**", "/signup").permitAll()
             	/* Web matches */
-            	.antMatchers("/private/admin/**").hasRole("ROLE_ADMIN")
+            	.antMatchers("/private/admin/**").hasRole("ADMIN")
             	.antMatchers("/login", "/favicon.ico").permitAll()
             	.antMatchers("/imgs/**").permitAll() //TODO: Not sure if necesary...
             	.antMatchers("/site/profile/**").authenticated()

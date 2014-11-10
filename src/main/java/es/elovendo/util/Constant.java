@@ -56,8 +56,7 @@ public class Constant {
 	/**
 	 * PATTERNS
 	 */
-	public static final String LOGIN_PATTERN = "^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$";
-	public static final String EMAIL_PATTERN="/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$/";
+	public static final String LOGIN_PATTERN = "^[a-zA-ZÑñ]{2,20}$";
 	// Strong password
 //	public static final String PASSWORD_PATTERN = "^$|(?=^.{8,255}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
 	// Weak password

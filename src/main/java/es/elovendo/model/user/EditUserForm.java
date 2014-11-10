@@ -1,11 +1,13 @@
 package es.elovendo.model.user;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import es.elovendo.util.Constant;
 
 public class EditUserForm {
 
+	
 	@Pattern(regexp = Constant.PASSWORD_PATTERN)
 	String password;
 	
@@ -23,12 +25,18 @@ public class EditUserForm {
 	
 	// Parameters to inject if page if form is invalid 
 	String avatar;
-	String login;
+	
+	@NotNull
+	@Pattern(regexp = Constant.LOGIN_PATTERN)
+	String username;
+	
+	boolean socialUser;
 
 	public EditUserForm() {}
 
-	public EditUserForm(String password, String confirmPassword, String firstName, String lastName, 
+	public EditUserForm(String username, String password, String confirmPassword, String firstName, String lastName, 
 			String address, String phone, boolean whatssapUser, String email) {
+		this.username = username;
 		this.password = password;
 		this.confirmPassword = confirmPassword;
 		this.firstName = firstName;
@@ -47,6 +55,9 @@ public class EditUserForm {
 		this.phone = user.getPhone();
 		this.whatssapUser = user.isWhatssapUser();
 		this.email = user.getEmail();
+		this.username = user.getLogin();
+		this.avatar = user.getAvatar();
+		this.socialUser = user.isSocialUser();
 	}
 
 	public String getPassword() {
@@ -121,19 +132,27 @@ public class EditUserForm {
 		this.avatar = avatar;
 	}
 
-	public String getLogin() {
-		return login;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setLogin(String login) {
-		this.login = login;
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public boolean isSocialUser() {
+		return socialUser;
+	}
+
+	public void setSocialUser(boolean socialUser) {
+		this.socialUser = socialUser;
 	}
 
 	@Override
 	public String toString() {
 		return "EditUserForm [password=" + password + ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", address=" + address + ", phone=" + phone + ", whatssapUser=" + whatssapUser + ", email=" + email
-				+ ", avatar=" + avatar + ", login=" + login + "]";
+				+ ", avatar=" + avatar + ", login=" + username + "]";
 	}
 	
 }
