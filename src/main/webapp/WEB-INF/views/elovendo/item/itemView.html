@@ -377,7 +377,8 @@
 						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
 					<h4 class="modal-title" id="myModalLabel">
-						<i class="glyphicon glyphicon-exclamation-sign"></i> Denounce item
+						<i class="glyphicon glyphicon-exclamation-sign"></i> 
+						<span id="dent"> Denounce item</span>
 					</h4>
 				</div>
 				<div class="modal-body">
@@ -463,6 +464,8 @@
 		var ii = /*[[${item.itemId}]]*/'';
 		var cv = $("meta[name='_csrf']").attr("content");
 		var cn = $("meta[name='_csrf_header']").attr("content");
+		var di = /*[[#{Item.view.Modal.denounce.title.item}]]*/ 'Denounce item';
+		var du = /*[[#{Item.view.Modal.denounce.title.user}]]*/ 'Denounce user';
 		/*]]>*/
 		$('#sVote').on('click', function() {
 			var e = "/site/vote";
@@ -543,6 +546,8 @@
 		$('a[data-toggle=modal], button[data-toggle=modal]').click(function() {
 			var tp = $(this).data('dtp');
 			document.getElementById('dtp').value = tp;
+			if (tp == 'i') $('#dent').text(di);
+			else $('#dent').text(du);
 		});
 	</script>
 
