@@ -232,17 +232,17 @@ public class UserWebController {
 		}
 	}
 
-	@RequestMapping(value = "quick_register", method = RequestMethod.GET)
-	public String quickAddUserPage(Model model) {
-		model.addAttribute("user", new User());
-		model.addAttribute("provinceName", new String());
-
-		return "elovendo/user/quick_add_user";
-	}
+//	@RequestMapping(value = "quick_register", method = RequestMethod.GET)
+//	public String quickAddUserPage(Model model) {
+//		model.addAttribute("user", new User());
+//		model.addAttribute("provinceName", new String());
+//
+//		return "elovendo/user/quick_add_user";
+//	}
 
 	/** EDIT USER **/
 
-	@RequestMapping(value = "user/edit", method = RequestMethod.GET)
+	@RequestMapping(value = "profile/user/edit", method = RequestMethod.GET)
 	public String editUserPage(Model model) {
 		User user = null;
 		SecurityContext context = SecurityContextHolder.getContext();
@@ -260,7 +260,7 @@ public class UserWebController {
 		return "elovendo/user/profileEdit";
 	}
 
-	@RequestMapping(value = "user/edit", method = RequestMethod.POST)
+	@RequestMapping(value = "profile/user/edit", method = RequestMethod.POST)
 	public String processEditUserPage(@Valid @ModelAttribute(value = "user") EditUserForm userForm,
 			BindingResult result, @ModelAttribute(value = "userPic") MultipartFile userPic,
 			@RequestParam(value = "uw", required = false) String whatssapUser, Model model, Locale locale)

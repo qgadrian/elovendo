@@ -171,7 +171,7 @@ public class MainController implements ErrorController {
      * 
      */
     
-    @RequestMapping(value={"/elovendo/index", "/", "/index"}, method = RequestMethod.GET)
+    @RequestMapping(value={"/elovendo/index", "/", "/index"}, method = {RequestMethod.GET,  RequestMethod.HEAD})
     public String indexPage(Model model, HttpSession session) {
     	
     	model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, null));

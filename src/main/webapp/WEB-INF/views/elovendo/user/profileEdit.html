@@ -53,7 +53,7 @@
 
 	<div class="container">
 		<div class="row text-center">
-			<form class="form-horizontal userPic" role="form" id="registrationform" th:action="@{/site/user/edit}" 
+			<form class="form-horizontal userPic" role="form" id="registrationform" th:action="@{/site/profile/user/edit}" 
 				method="post" enctype="multipart/form-data" accept-charset="UTF-8" >
 				<img th:unless="${session.socialUser}" alt="profile pic"  th:src="@{'http://www.elovendo.com/' + ${user.avatar}}" />
 				<img th:if="${session.socialUser}" alt="profile pic"  th:src="${session.largeSocialAvatar}" />
