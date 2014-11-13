@@ -491,23 +491,20 @@
 	});
 	
 	$('#category').change( function() {
-		var select = $(this).find(":selected").text();
-		var selVar = $(this).find(":selected").val();
-// 		console.log("cat changed " + $(this).find(":selected").text());
-		if (select != "")
-			if (selVar == 0)
+		var scv = $(this).find(":selected").val();
+			if (scv == 0)
 				location.href = "/bazaar/category/all" + getUrlParams();
 			else
-				location.href = "/bazaar/category/" + select + getUrlParams();
+				location.href = "/bazaar/category/" + scv + getUrlParams();
 	});
 	
 	$('#subCategory').change( function() {
 // 		console.log("subChanged to " + $(this).val());
 		var select = $(this).val();
 		if (select != 0) {
-			location.href = "/bazaar/sub/" + $('#subCategory option:selected').text() + getUrlParams();
+			location.href = "/bazaar/sub/" + $('#subCategory option:selected').val() + getUrlParams();
 		} else {
-			var select = $('#category').find(":selected").text();
+			var select = $('#category').find(":selected").val();
 			location.href = "/bazaar/category/" + select + getUrlParams();
 		}
 	});

@@ -15,7 +15,11 @@ public interface CategoryService {
 	
 	public Category getCategoryBySubCategoryName(String subCategoryName) throws CategoryNotFoundException;
 	
+	public Category getCategoryBySubCategoryId(long subCategoryId) throws CategoryNotFoundException;
+	
 	public Category getCategoryByCategoryName(String categoryName) throws CategoryNotFoundException;
+	
+	public Category getCategoryByCategoryId(long categoryId) throws CategoryNotFoundException;
 
     /**
      * Finds all categories ordering them by its id
@@ -38,6 +42,8 @@ public interface CategoryService {
     public Iterable<SubCategory> getAllSubCatByCategoryId(long categoryId);
     
     public List<SubCategory> getAllSubCategoriesFromSubCategoryName(String subCategoryName);
+    
+    public List<SubCategory> getAllSubCategoriesFromSubCategoryId(long subCategoryId);
     
     public SubCategory getSubCategoryBySubCategoryId(long subCategoryId) throws SubCategoryNotFoundException;
     

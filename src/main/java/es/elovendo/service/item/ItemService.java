@@ -200,7 +200,7 @@ public interface ItemService {
 	 * @param categoryId SubCategory or category name. This parameter can be null to get all items
 	 * @return Random list
 	 */
-	public List<Item> getRandomFeaturedItemsFromCategoryId(int maxItems, long categoryId);
+	public List<Item> getRandomFeaturedItems(int maxItems, long categoryId);
 
 	/**
 	 * Updates an item

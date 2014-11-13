@@ -85,7 +85,7 @@ public class ItemWebController {
 					throws CategoryNotFoundException {
 
 		model.addAttribute("featuredItems", itemService
-				.getRandomFeaturedItemsFromCategoryId(Constant.MAX_RANDOM_ITEMS, categoryId));
+				.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, categoryId));
 		
 		String urlLocation = "search";
 		model.addAttribute("url", urlLocation);
@@ -165,9 +165,9 @@ public class ItemWebController {
 	 * @throws CategoryNotFoundException 
 	 */
 
-	@RequestMapping(value = "category/{categoryName}", method = RequestMethod.GET)
+	@RequestMapping(value = "category/{categoryId}", method = RequestMethod.GET)
 	public String itemListByCategoryPage(Model model, Locale locale, 
-			@PathVariable("categoryName") String categoryName,
+			@PathVariable("categoryId") long categoryId,
 			@RequestParam(value = "title", required = false, defaultValue = "") String title,
 			@RequestParam(value = "dis", required = false, defaultValue = "0") double dis,
 			@RequestParam(value = "lat", required = false, defaultValue = "0") double lat,
@@ -178,12 +178,12 @@ public class ItemWebController {
 			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) 
 					throws CategoryNotFoundException {
 
-		model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, categoryName));
+		model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, categoryId));
 
-		String urlLocation = "category/" + categoryName;
+		String urlLocation = "category/" + categoryId;
 		model.addAttribute("url", urlLocation);
 		
-		Category category = categoryService.getCategoryByCategoryName(categoryName);
+		Category category = categoryService.getCategoryByCategoryId(categoryId);
 //		model.addAttribute("category", category);
 		model.addAttribute("categoryId", category.getCategoryId());
 		model.addAttribute("subCategoryId", 0);
@@ -197,9 +197,10 @@ public class ItemWebController {
 		if (prizeMax != 0)
 			model.addAttribute("prizeMax", prizeMax);
 
-		Page<Item> p = itemService.getItemsByParams(title, categoryName, dis, lat, lng, prizeMin, prizeMax, page, size);
+		Page<Item> p = itemService.getItemsByParams(title, categoryId, Constant.CATEGORY, dis, lat, lng, prizeMin,
+				prizeMax, page, size);
 
-		String fixedUrl = fixPaginationUrl(categoryName, title, dis, lat, lng, prizeMin, prizeMax);
+		String fixedUrl = fixPaginationUrl(categoryId, title, dis, lat, lng, prizeMin, prizeMax);
 
 		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixedUrl);
 		List<Item> items = p.getContent();
@@ -216,9 +217,9 @@ public class ItemWebController {
 	 * @throws CategoryNotFoundException 
 	 */
 
-	@RequestMapping(value = "sub/{subcategoryname}", method = RequestMethod.GET)
+	@RequestMapping(value = "sub/{subcategoryId}", method = RequestMethod.GET)
 	public String itemListPage(Model model, Locale locale, 
-			@PathVariable("subcategoryname") String subCategoryName,
+			@PathVariable("subcategoryId") long subCategoryId,
 			@RequestParam(value = "title", required = false, defaultValue = "") String title,
 			@RequestParam(value = "dis", required = false, defaultValue = "0") double dis,
 			@RequestParam(value = "lat", required = false, defaultValue = "0") double lat,
@@ -227,24 +228,25 @@ public class ItemWebController {
 			@RequestParam(value = "max", required = false, defaultValue = "0") int prizeMax,
 			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
 			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) 
-					throws CategoryNotFoundException {
+					throws CategoryNotFoundException, SubCategoryNotFoundException {
 
 		model.addAttribute("featuredItems",
-				itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, subCategoryName));
+				itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, subCategoryId));
 		
 		logger.error("LOCALE CODE: " + locale.getISO3Country());
 		
-		String urlLocation = "sub/" + subCategoryName;
+		String urlLocation = "sub/" + subCategoryId;
 		model.addAttribute("url", urlLocation);
-		Category category = categoryService.getCategoryBySubCategoryName(subCategoryName);
+		Category category = categoryService.getCategoryBySubCategoryId(subCategoryId);
 //		model.addAttribute("category", category);
 		model.addAttribute("categoryId", category.getCategoryId());
-		SubCategory subCategory = categoryService.getSubCategoryByName(subCategoryName);
+		SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(subCategoryId);
 		model.addAttribute("subCategoryId", subCategory.getId());
 
-		Page<Item> p = itemService.getItemsByParams(title, subCategoryName, dis, lat, lng, prizeMin, prizeMax, page,
+		Page<Item> p = itemService.getItemsByParams(title, subCategoryId, Constant.SUBCATEGORY, dis, lat, lng,
+				prizeMin, prizeMax, page,
 				size);
-		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixPaginationUrl(subCategoryName, title, dis, lat,
+		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixPaginationUrl(subCategoryId, title, dis, lat,
 				lng, prizeMin, prizeMax));
 		List<Item> items = p.getContent();
 
@@ -253,7 +255,7 @@ public class ItemWebController {
 		model.addAttribute("categories", categories);
 		@SuppressWarnings("unchecked")
 		List<SubCategory> subCategories = IteratorUtils.toList(
-				categoryService.getAllSubCategoriesFromSubCategoryName(subCategoryName).iterator());
+				categoryService.getAllSubCategoriesFromSubCategoryId(subCategoryId).iterator());
 		model.addAttribute("subCategories", subCategories);
 
 		model.addAttribute("page", pageWrapper);

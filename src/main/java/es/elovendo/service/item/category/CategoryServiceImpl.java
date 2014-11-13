@@ -33,9 +33,23 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
+	public Category getCategoryBySubCategoryId(long subCategoryId) throws CategoryNotFoundException {
+		Category category = categoryRepository.findCategoryBySubCategoryId(subCategoryId);
+		if (category == null) throw new CategoryNotFoundException(subCategoryId);
+		return category;
+	}
+
+	@Override
 	public Category getCategoryByCategoryName(String categoryName) throws CategoryNotFoundException {
 		Category category = categoryRepository.findCategoryByName(categoryName);
 		if (category == null) throw new CategoryNotFoundException(categoryName);
+		return category;
+	}
+
+	@Override
+	public Category getCategoryByCategoryId(long categoryId) throws CategoryNotFoundException {
+		Category category = categoryRepository.findCategoryByCategoryId(categoryId);
+		if (category == null) throw new CategoryNotFoundException(categoryId);
 		return category;
 	}
 
@@ -72,6 +86,11 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public List<SubCategory> getAllSubCategoriesFromSubCategoryName(String subCategoryName) {
 		return categoryRepository.findAllSubCategoriesFromSubCategoryName(subCategoryName);
+	}
+	
+	@Override
+	public List<SubCategory> getAllSubCategoriesFromSubCategoryId(long subCategoryId) {
+		return categoryRepository.findAllSubCategoriesFromSubCategoryId(subCategoryId);
 	}
 
 	@Override

@@ -334,8 +334,8 @@ public class ItemServiceImpl implements ItemService {
 
 		return itemRepository.findByParams(title, name, lat, lng, dis, bPrizeMin.doubleValue(),
 				bPrizeMax.doubleValue(), pageRequest);
-
 	}
+	
 	@Override
 	public Page<Item> getItemsByParams(String title, long id, String type, double dis, double lat, double lng,
 			int prizeMin, int prizeMax, int page, int size) {
@@ -370,10 +370,10 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Item> getRandomFeaturedItemsFromCategoryId(int maxItems, long categoryId) {
+	public List<Item> getRandomFeaturedItems(int maxItems, long categoryId) {
 		PageRequest request = new PageRequest(0, maxItems);
 		if (categoryId == 0) return itemRepository.findRandomFeaturedItems(request);
-		else  return itemRepository.findRandomFeaturedItemsByCategoryId(categoryId, request);
+		else return itemRepository.findRandomFeaturedItemsByCategoryId(categoryId, request);
 	}
 
 	@Override
