@@ -119,7 +119,7 @@ public class MobileUserController {
 	
 	@RequestMapping(value = "delete/{userId}", method = RequestMethod.DELETE)
 	public void deleteUser(@PathVariable("userId") long userId) throws UserNotFoundException {
-		userService.removeUser(userId);
+		userService.disableUser(userId);
 	}
 
 	/***************************************/

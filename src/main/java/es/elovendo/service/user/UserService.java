@@ -123,12 +123,27 @@ public interface UserService extends UserDetailsService {
     public User updateUser(User user, byte[] profilePic);
     
     public User updateUser(EditUserForm userForm, long userId, MultipartFile userPic) throws UserNotFoundException;
+    
     /**
-     * Deletes an user
+     * Disables an user, but don't delete it
      * @param userId
      * @throws UserNotFoundException
      */
-    public void removeUser(Long userId) throws UserNotFoundException;
+    public void disableUser(Long userId) throws UserNotFoundException;
+    
+    /**
+     * Enable an user who is actually "disabled"
+     * @param userId
+     * @throws UserNotFoundException
+     */
+    public void enableUser(Long userId) throws UserNotFoundException;
+    
+    /**
+     * Deletes completely an user
+     * @param userId
+     * @throws UserNotFoundException
+     */
+    public void deleteUser(Long userId);
     
     /**
      * Emits a vote from an user to another

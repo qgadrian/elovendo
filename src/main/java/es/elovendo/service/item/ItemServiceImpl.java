@@ -241,8 +241,9 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Iterable<Item> getAllItems() {
-		return itemRepository.findAll();
+	public Page<Item> getAllItems(int page, int size) {
+		PageRequest request = new PageRequest(page, size);
+		return itemRepository.findAll(request);
 	}
 
 	@Override
@@ -402,6 +403,14 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public void deleteItem(Long itemId) {
 		itemRepository.delete(itemId);
+	}
+	
+	@Override
+	public void deleteItem(User user, Long itemId) throws NotUserItemException {
+		Item item = itemRepository.findOne(itemId);
+		if (item != null && item.getUser().equals(user))
+			itemRepository.delete(itemId);
+		else throw new NotUserItemException(itemId, user.getUserId());
 	}
 
 	@Override

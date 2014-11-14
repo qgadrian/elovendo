@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+<title>Last items added</title>
+<script src="/js/jquery-1.11.1.min.js"></script>
+</head>
+<body class="container-fluid">
+
+	<!-- Header -->
+	<div th:replace="elovendo/header"></div>
+
+	<div class="row">
+		<div class="col-xs-2">
+			<div th:replace="elovendo/admin/sidebar"></div>
+		</div>
+		
+		<div class="col-xs-10 airr">
+			<div class="panel panel-default" th:each="item : ${items}">
+				<div class="panel-heading">
+					<a th:href="@{'/bazaar/item/' + ${item.itemId}}" th:text="${item.title}">Item title</a>
+				</div>
+				<div class="panel-body" th:text="${#strings.abbreviate(item.plainDescription, 300)}">Item description</div>
+				<img alt="Image" th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}" class="thumbnail"/>
+				<img alt="Image" th:unless="${item.image1200h} == null" 
+					th:src="@{'http://www.elovendo.com/' + ${item.image1200h}}" class="thumbnail"/>
+				<img alt="Image" th:unless="${item.image2200h} == null"
+					th:src="@{'http://www.elovendo.com/' + ${item.image2200h}}" class="thumbnail"/>
+				<img alt="Image" th:unless="${item.image3200h} == null"
+					th:src="@{'http://www.elovendo.com/' + ${item.image3200h}}" class="thumbnail"/>
+					
+				<div class="panel-footer">
+					<button type="button" th:attr="data-itemid=${item.itemId}"
+						class="btn btn-danger pull-right deleteItem">Delete Item</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div th:replace="elovendo/admin/pagingItems"></div>
+	
+	<script th:inline="javascript">
+		$('.deleteItem').on('click', function(e) {
+			var id = $(this).data('itemid');
+			var cv = $("meta[name='_csrf']").attr("content");
+			var cn = $("meta[name='_csrf_header']").attr("content");
+			
+			$.ajax({
+				type: "POST",
+				beforeSend: function (request) { request.setRequestHeader(cn, cv); },
+				url: 'delete/item/' + id,
+				success: function(data) {
+					$('#favMes').text('Item deleted');
+					$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				},
+				error : function() {
+					$('#favMes').text('Cannot delete item');
+					$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				}
+			});
+		});
+	</script>
+
+</body>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="/css/elog.css"/>
+</html>

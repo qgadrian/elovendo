@@ -19,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionKey;
 import org.springframework.social.connect.web.ProviderSignInUtils;
@@ -40,6 +41,8 @@ import es.elovendo.service.item.ItemService;
 import es.elovendo.service.item.category.CategoryService;
 import es.elovendo.service.user.UserService;
 import es.elovendo.util.Constant;
+import es.elovendo.util.RoleEnum;
+import es.elovendo.util.SessionUserObtainer;
 
 /**
  * Created by @adrian on 18/06/14.
@@ -66,19 +69,28 @@ public class MainController implements ErrorController {
 	 * 
 	 */
     
-	@RequestMapping(value="/login")
-    public String loginPage(HttpSession session, HttpServletRequest request, Device device) {
+	@RequestMapping(value = "/login")
+	public String loginPage(HttpSession session, HttpServletRequest request, Device device) {
+		
+//		BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
+//		System.out.println("~~~~~~~~~~~~~~~~~~");
+//		System.out.println("~~~~~~~~~~~~~~~~~~");
+//		System.out.println("~~~~~~~~~~~~~~~~~~");
+//		System.out.println("~~~~~~~~~~~~~~~~~~");
+//		System.out.println(enc.encode("admin"));
+//		System.out.println("~~~~~~~~~~~~~~~~~~");
+//		System.out.println("~~~~~~~~~~~~~~~~~~");
+//		System.out.println("~~~~~~~~~~~~~~~~~~");
+//		System.out.println("~~~~~~~~~~~~~~~~~~");
 
 		if (device.isNormal()) {
 			String referrer = request.getParameter("referrer");
-			if (referrer != null) 
-				session.setAttribute("referrer", referrer);
-			
-	    	return "elovendo/login";
+			if (referrer != null) session.setAttribute("referrer", referrer);
+			return "elovendo/login";
 		}
 		
 		return "";
-    }
+	}
 	
 //	@RequestMapping(value = "/login-error")
 //	public String loginErrorPage(HttpSession session, HttpServletRequest request, Model model, Device device) {
@@ -101,8 +113,13 @@ public class MainController implements ErrorController {
 				session.removeAttribute("referrer");
 				return "redirect:" + referrer;
 			}
-			else
+			else {
+				User user = SessionUserObtainer.getInstance().getSessionUser();
+				if (user.getRole().equals(RoleEnum.ROLE_ADMIN))
+					return "redirect:private/admin/home";
 				return "redirect:elovendo/index";
+			}
+				
 		} 
 		
 		return "";
@@ -224,6 +241,11 @@ public class MainController implements ErrorController {
     @RequestMapping(value="/error401")
     public String error401Page() {
     	return "elovendo/error/error401";
+    }
+    
+    @RequestMapping(value="/error403")
+    public String error403Page() {
+    	return "elovendo/error/error403";
     }
 
 	@Override

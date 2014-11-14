@@ -47,6 +47,7 @@ import es.elovendo.service.user.UserService;
 import es.elovendo.service.vote.VoteService;
 import es.elovendo.util.Constant;
 import es.elovendo.util.PageWrapper;
+import es.elovendo.util.SessionUserObtainer;
 
 @Controller
 @RequestMapping(value = "/bazaar/")
@@ -315,12 +316,7 @@ public class ItemWebController {
 			return "elovendo/error/error";
 		}
 		
-		model.addAttribute("images", item.getAllImages200h());
-		logger.error("images size " + item.getAllImages200h().size());
-		for (String s: item.getAllImages200h()) {
-			logger.error("image: " + s);
-		}
-
+		model.addAttribute("images", item.getAllImages200h()); // Add other images (other ones than main image)
 		model.addAttribute("item", item);
 		model.addAttribute("votesPositive", voteService.getNumberVotesPositive(item.getUser().getUserId()));
 		model.addAttribute("votesNegative", voteService.getNumberVotesNegative(item.getUser().getUserId()));
@@ -537,11 +533,11 @@ public class ItemWebController {
 		}
 	}
 
-	/** DELETE ITEM */
-
 	@RequestMapping(value = "delete/item", method = RequestMethod.POST)
-	public @ResponseBody int deleteItem(@RequestParam(value = "id", required = true, defaultValue = "0") long itemId) {
-		itemService.deleteItem(itemId);
+	public @ResponseBody int deleteItem(@RequestParam(value = "id", required = true, defaultValue = "0") long itemId)
+			throws NotUserItemException {
+		User user = SessionUserObtainer.getInstance().getSessionUser();
+		itemService.deleteItem(user, itemId);
 		return (int) itemId;
 	}
 

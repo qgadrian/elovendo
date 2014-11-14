@@ -5,5 +5,6 @@ package es.elovendo.util;
  * All rights reserved.
  */
 public enum RoleEnum {
-    ROLE_USER
+    ROLE_USER,
+    ROLE_ADMIN
 }

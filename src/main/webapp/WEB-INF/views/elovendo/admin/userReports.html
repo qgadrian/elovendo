@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Items report</title>
+<script src="/js/jquery-1.11.1.min.js"></script>
+</head>
+<body class="container-fluid">
+
+	<!-- Header -->
+	<div th:replace="elovendo/header"></div>
+
+	<div class="row">
+		<div class="col-xs-2">
+			<div th:replace="elovendo/admin/sidebar"></div>
+		</div>
+	
+		<div class="col-xs-10">
+			<div class="list-group">
+				<a th:href="@{'/site/public/' + ${report.user.userId}}" class="list-group-item" th:each="report : ${reports}">
+					<h4 class="list-group-item-heading" th:text="${report.reportMessage}">Report message</h4>
+					<p class="list-group-item-text" th:text="${report.user.login}">Report message</p>
+					<button style="margin-top: -40px; margin-right: 130px;" type="button" th:id="'delItem' + ${report.user.userId}" 
+						class="btn btn-danger pull-right deleteItem">Delete User</button>
+					<button style="margin-top: -40px" type="button" th:id="'delReport' + ${report.userReportId}"
+						class="btn btn-warning pull-right deleteReport">Delete report</button>
+				</a>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+<script type="text/javascript">
+	$('.deleteItem').on('click', function(e) {
+		e.preventDefault();
+	});
+	
+	$('.deleteReport').on('click', function(e) {
+		e.preventDefault();
+	});
+</script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="/css/elog.css"/>
+
+</html>

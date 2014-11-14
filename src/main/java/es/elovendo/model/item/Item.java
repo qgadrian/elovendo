@@ -210,7 +210,7 @@ public class Item {
 
 	@Transient
 	public String getPlainDescription() {
-		String plainText = this.description.replaceAll("(<br\\ ?/>)+", "&");
+		String plainText = this.description.replaceAll("(<br\\ ?/>)+", "");
 		return plainText.replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", "");
 	}
 
@@ -478,13 +478,28 @@ public class Item {
 	public String getImage1() {
 		return image1;
 	}
+	
+	@Transient
+	public String getImage1200h() {
+		return image1 != null ? this.image1.concat("-200h.jpg") : null;
+	}
 
 	public String getImage2() {
 		return image2;
 	}
+	
+	@Transient
+	public String getImage2200h() {
+		return image2 != null ? this.image2.concat("-200h.jpg") : null;
+	}
 
 	public String getImage3() {
 		return image3;
+	}
+	
+	@Transient
+	public String getImage3200h() {
+		return image3 != null ? this.image3.concat("-200h.jpg") : null;
 	}
 
 	public String getYoutubeVideo() {

@@ -1,0 +1,35 @@
+<div class="row">
+			<div class="col-xs-12 col-md-12">
+				<div class="text-center">
+					<div id="contentPagination">
+						<ul class="pagination pagination-lg">
+							<li th:class="${page.firstPage}? 'active' : ''"><span
+								th:if='${page.firstPage}'>← First</span> <a
+								th:if='${not page.firstPage}'
+								th:href='@{${page.url}(p=0,s=${page.size})}'>← First</a></li>
+							<li th:class="${page.hasPreviousPage}? '' : 'active'"><span
+								th:if='${not page.hasPreviousPage}'>«</span> <a
+								th:if='${page.hasPreviousPage}'
+								th:href='@{${page.url}(p=${page.number-2},s=${page.size})}'
+								title='Go to previous page'>«</a></li>
+							<li th:each="item : ${page.items}"
+								th:class="${item.current}? 'active' : ''"><span
+								th:if='${item.current}' th:text='${item.number}'>1</span> <a
+								th:if='${not item.current}'
+								th:href='@{${page.url}(p=${item.number}-1,s=${page.size})}'><span
+									th:text='${item.number}'>1</span></a></li>
+							<li th:class="${page.hasNextPage}? '' : 'active'"><span
+								th:if='${not page.hasNextPage}'>»</span> <a
+								th:if='${page.hasNextPage}'
+								th:href='@{${page.url}(p=${page.number},s=${page.size})}'
+								title='Go to next page'>»</a></li>
+							<li th:class="${page.lastPage}? 'active' : ''"><span
+								th:if='${page.lastPage}'>Last →</span> <a
+								th:if='${not page.lastPage}'
+								th:href='@{${page.url}(p=${page.totalPages-1},s=${page.size})}'>Last
+									→</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>

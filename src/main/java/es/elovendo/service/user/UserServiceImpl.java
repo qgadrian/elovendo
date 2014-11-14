@@ -269,9 +269,21 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void removeUser(Long userId) throws UserNotFoundException {
-		if (findUserById(userId) == null)
-			throw new UserNotFoundException(userId);
+	public void disableUser(Long userId) throws UserNotFoundException {
+		User user = findUserById(userId);
+		user.setEnabled(false);
+		userRepository.save(user);
+	}
+
+	@Override
+	public void enableUser(Long userId) throws UserNotFoundException {
+		User user = findUserById(userId);
+		user.setEnabled(true);
+		userRepository.save(user);
+	}
+
+	@Override
+	public void deleteUser(Long userId) {
 		userRepository.delete(userId);
 	}
 

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<title>Items report</title>
+<script src="/js/jquery-1.11.1.min.js"></script>
+</head>
+<body class="container-fluid">
+
+	<!-- Header -->
+	<div th:replace="elovendo/header"></div>
+
+	<div class="row">
+		<div class="col-xs-2">
+			<div th:replace="elovendo/admin/sidebar"></div>
+		</div>
+	
+		<div class="col-xs-10">
+			<div class="list-group">
+				<a th:href="@{'/bazaar/item/' + ${report.item.itemId}}" class="list-group-item" th:each="report : ${reports}"
+					th:id="${report.itemReportId}">
+					<h4 class="list-group-item-heading" th:text="${report.item.title}">Item title</h4>
+					<p class="list-group-item-text" th:text="${report.reportMessage}">Report message</p>
+					<button style="margin-top: -40px; margin-right: 130px;" type="button" 
+						th:attr="data-itemid=${report.item.itemId}, data-reportid=${report.itemReportId}" 
+						class="btn btn-danger pull-right deleteItem">Delete Item</button>
+					<button style="margin-top: -40px" type="button" th:attr="data-reportid=${report.itemReportId}"
+						class="btn btn-warning pull-right deleteReport">Delete report</button>
+				</a>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+<script type="text/javascript">
+	$('.deleteItem').on('click', function(e) {
+		e.preventDefault();
+		var id = $(this).data('itemid');
+		var repId = $(this).data('reportid');
+		var cv = $("meta[name='_csrf']").attr("content");
+		var cn = $("meta[name='_csrf_header']").attr("content");
+		
+		$.ajax({
+			type: "POST",
+			beforeSend: function (request) { request.setRequestHeader(cn, cv); },
+			url: 'delete/item/' + id,
+			success: function(data) {
+				$('#favMes').text('Item deleted');
+				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				$('#' + repId).remove();
+			},
+			error : function() {
+				$('#favMes').text('Cannot delete item');
+				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+			}
+		});
+	});
+	
+	$('.deleteReport').on('click', function(e) {
+		e.preventDefault();
+		var id = $(this).data('reportid');
+		var cv = $("meta[name='_csrf']").attr("content");
+		var cn = $("meta[name='_csrf_header']").attr("content");
+		
+		$.ajax({
+			type: "POST",
+			beforeSend: function (request) { request.setRequestHeader(cn, cv); },
+			url: 'delete/item/report/' + id,
+			success: function(data) {
+				$('#favMes').text('Item deleted');
+				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				$('#' + id).remove();
+			},
+			error : function() {
+				$('#favMes').text('Cannot delete item');
+				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+			}
+		});
+	});
+</script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="/css/elog.css"/>
+
+</html>

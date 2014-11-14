@@ -22,6 +22,7 @@ public class WebAppConfiguration {
 		pageHandlers = new HashSet<ErrorPage>();
 		pageHandlers.add(new ErrorPage(HttpStatus.NOT_FOUND, "/error404"));
 		pageHandlers.add(new ErrorPage(HttpStatus.UNAUTHORIZED, "/error401"));
+		pageHandlers.add(new ErrorPage(HttpStatus.FORBIDDEN, "/error403"));
 		pageHandlers.add(new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/error"));
 	}
 

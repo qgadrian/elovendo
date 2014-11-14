@@ -81,7 +81,7 @@ public interface ItemService {
 	 * 
 	 * @return Items
 	 */
-	public Iterable<Item> getAllItems();
+	public Page<Item> getAllItems(int page, int size);
 
 	/**
 	 * Get all user items
@@ -223,6 +223,14 @@ public interface ItemService {
 	 * @param itemId
 	 */
 	public void deleteItem(Long itemId);
+	
+	/**
+	 * Deletes an item
+	 * @param user Owner
+	 * @param itemId Item to delete
+	 * @throws NotUserItemException If item doesnt belong to user
+	 */
+	public void deleteItem(User user, Long itemId) throws NotUserItemException;
 
 	/**
 	 * Returns number of active user items
