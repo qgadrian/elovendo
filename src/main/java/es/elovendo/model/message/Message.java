@@ -53,7 +53,7 @@ public class Message {
 			String messageText, long ipAddress) {
 		this.messageThread = messageThread;
 		this.sender = sender;
-		this.messageText = messageText;
+		this.messageText = messageText;//.replaceAll("(\r\n|\n)", "<br />");;
 		this.ipAddress = ipAddress;
 		this.messageDate = Calendar.getInstance();
 	}

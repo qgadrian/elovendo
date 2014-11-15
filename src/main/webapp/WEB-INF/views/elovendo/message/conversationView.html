@@ -60,7 +60,7 @@
 											</abbr> <i class="fa fa-clock-o"></i>
 										</span>
 										</h4>
-									<p class="pull-left mesText" th:text="${message.messageText}"></p>
+									<p class="pull-left mesText" th:utext="${message.messageText}"></p>
 								</div>
 							</div>
 							<div th:unless="${message.sender.email == user.email}">
@@ -81,7 +81,7 @@
 											</abbr> <i class="fa fa-clock-o"></i>
 										</span>
 									</h4>
-									<p class="mesText" th:text="${message.messageText}"></p>
+									<p class="mesText" th:utext="${message.messageText}"></p>
 								</div>
 							</div>
 						</div>
@@ -117,7 +117,7 @@
 		var cn = $("meta[name='_csrf_header']").attr("content");
 		var m2 = '';
 		$("#sendMsg").click(function(event) {
-			m2 = $('#message').val();
+			m2 = $('#message').val().replace(new RegExp('\n','g'), '<br />');
 			event.preventDefault();
 
 			$.ajax({
@@ -168,7 +168,7 @@
 			uu.appendChild(sd2);
 
 			var mm = document.createElement('p');
-			mm.className = 'pull-left';
+			mm.className = 'pull-left mesText';
 			mm.innerHTML = m;
 
 			d.appendChild(uu);
