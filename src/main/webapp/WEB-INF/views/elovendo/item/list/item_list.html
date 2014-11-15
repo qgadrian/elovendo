@@ -208,6 +208,13 @@
 			</div>
 			<!-- STUFF LIST -->
 			<div class="col-xs-8 col-md-8 col-lg-8">
+			
+				<div class="row" th:unless="${hasLatLng}">
+					<div class="well well-sm">
+						<span th:text="#{Item-list.Error.noGPSData}">No GPS data, use location form!</span>
+					</div>
+				</div>
+				
 				<div class="row" th:each="item : ${itemsList}">
 					<div class="col-xs-12 col-md-12 col-lg-12 itemList">
 <!-- 						<div class="thumbnail featuredThumbnail"> -->

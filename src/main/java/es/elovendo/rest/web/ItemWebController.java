@@ -107,6 +107,7 @@ public class ItemWebController {
 
 		List<Item> items = p.getContent();
 
+		model.addAttribute("hasLatLng", lat != 0 && lng != 0); // For show a message if there is no GPS info
 		model.addAttribute("page", pageWrapper);
 		model.addAttribute("itemsList", items);
 
@@ -128,6 +129,8 @@ public class ItemWebController {
 			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
 			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) 
 					throws CategoryNotFoundException {
+		
+		model.addAttribute("hasLatLng", lat != 0 && lng != 0); // For show a message if there is no GPS info
 
 		model.addAttribute("featuredItems", 
 				itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, null));
@@ -178,6 +181,8 @@ public class ItemWebController {
 			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
 			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) 
 					throws CategoryNotFoundException {
+		
+		model.addAttribute("hasLatLng", lat != 0 && lng != 0); // For show a message if there is no GPS info
 
 		model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, categoryId));
 
@@ -230,6 +235,8 @@ public class ItemWebController {
 			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
 			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) 
 					throws CategoryNotFoundException, SubCategoryNotFoundException {
+		
+		model.addAttribute("hasLatLng", lat != 0 && lng != 0); // For show a message if there is no GPS info
 
 		model.addAttribute("featuredItems",
 				itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, subCategoryId));
@@ -275,6 +282,8 @@ public class ItemWebController {
 			@RequestParam(value = "max", required = false, defaultValue = "0") int prizeMax,
 			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
 			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) {
+		
+		model.addAttribute("hasLatLng", lat != 0 && lng != 0); // For show a message if there is no GPS info
 
 		model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, null));
 
