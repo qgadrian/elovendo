@@ -356,7 +356,7 @@ public class UserWebController {
 
 		String paymentStatus = "";
 
-		// logger.debug("Received IPN from payment");
+		logger.debug("Received IPN from payment");
 
 		// Create client for Http communication
 		HttpClient httpClient = HttpClientBuilder.create().build();
@@ -384,15 +384,9 @@ public class UserWebController {
 			while (names.hasMoreElements()) {
 				String param = names.nextElement();
 				String value = request.getParameter(param);
-				// Windows-1252
-				// String param = new String (names.nextElement().getBytes
-				// ("UTF-8"), "8859_1");
-				// String value = new String
-				// (request.getParameter(param).getBytes ("UTF-8"), "8859_1");
 
 				nameValuePairs.add(new BasicNameValuePair(param, value));
 				params.put(param, value);
-				// System.out.println(param + "=" + value);
 				// Get the payment status
 				if (param.equalsIgnoreCase("payment_status"))
 					paymentStatus = value;
