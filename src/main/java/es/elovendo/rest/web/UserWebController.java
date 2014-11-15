@@ -101,7 +101,7 @@ public class UserWebController {
 
 	/** View profile */
 	@RequestMapping(value = "profile", method = RequestMethod.GET)
-	public String getProfile(Model model) {
+	public String getPrivateProfile(Model model) {
 
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 		
@@ -130,12 +130,14 @@ public class UserWebController {
 	 * View profile
 	 * 
 	 * @throws UserNotFoundException
-	 */
-	@RequestMapping(value = "public/{userName}", method = RequestMethod.GET)
-	public String getProfile(@PathVariable(value = "userName") String userName, Model model)
+	 */	
+	@RequestMapping(value = "public/{userId}/{userName}", method = RequestMethod.GET)
+	public String getPublicProfilePost(@PathVariable(value = "userName") String userName,
+			@PathVariable(value = "userId") long userId, Model model)
 			throws UserNotFoundException {
 
-		User user = userService.findUserByLogin(userName);
+//		User user = userService.findUserByLogin(userName);
+		User user = userService.findUserById(userId);
 		model.addAttribute("user", user);
 		
 		List<Item> lastItems = itemService.getLastItems(user);

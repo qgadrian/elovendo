@@ -293,8 +293,8 @@
 										<small>Votos negativos</small>
 									</p>
 									<a class="btn btn-wd-green btn-block" role="button"
-										th:href="@{'/site/public/' + ${item.user.login}}"> <span
-										class="fa fa-user"></span> Ver perfil
+										th:href="@{'/site/public/' + ${item.user.userId} + '/' + ${item.user.login}}"> 
+										<span class="fa fa-user"></span> Ver perfil
 									</a>
 								</div>
 								<div class="col-xs-12 col-sm-4 emphasis">
