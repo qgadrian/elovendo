@@ -3,6 +3,8 @@ package es.elovendo.service.message;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.owasp.html.HtmlPolicyBuilder;
+import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -74,8 +76,14 @@ public class MessageServiceImpl implements MessageService {
 	public Message sendMessage(User sender, User receiver, MessageThread messageThread,
 			String messageText, long ipAddress) throws MessageThreadAlreadyExistsException, UserNotFoundException {
 		
+		// Sanitize item description HTML string
+		// TODO: more check on tags used
+		PolicyFactory policy = new HtmlPolicyBuilder()
+				.allowElements("br").requireRelNofollowOnLinks().toFactory();
+		String safeText = policy.sanitize(messageText);
+		
 		Message message = messageRepository.save(
-				new Message(messageThread, sender, messageText, ipAddress));
+				new Message(messageThread, sender, safeText, ipAddress));
 		
 		createMessageState(sender, receiver, message, messageThread);
 		

@@ -75,8 +75,6 @@ public class ItemServiceImpl implements ItemService {
 			throw new UserNotFoundException(userName);
 		if (subCategory == null)
 			throw new SubCategoryNotFoundException(subCategoryId);
-		// if (province == null) throw new
-		// ProvinceNotFoundEx01ception(provinceName);
 
 		double latitude = Double.parseDouble(_latitude);
 		double longitude = Double.parseDouble(_longitude);
