@@ -71,6 +71,7 @@ import es.elovendo.service.item.category.CategoryService;
 import es.elovendo.service.item.favorite.FavoriteService;
 import es.elovendo.service.purchase.PurchaseService;
 import es.elovendo.service.user.UserService;
+import es.elovendo.util.SessionUserObtainer;
 
 @Controller
 @SuppressWarnings("unused")
@@ -102,10 +103,8 @@ public class UserWebController {
 	@RequestMapping(value = "profile", method = RequestMethod.GET)
 	public String getProfile(Model model) {
 
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = SessionUserObtainer.getInstance().getSessionUser();
+		
 		model.addAttribute("user", user);
 
 		model.addAttribute("itemList", itemService.getAllItemsByUser(user));
@@ -244,10 +243,8 @@ public class UserWebController {
 
 	@RequestMapping(value = "profile/user/edit", method = RequestMethod.GET)
 	public String editUserPage(Model model) {
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 		
 		EditUserForm userForm = new EditUserForm(user);
 
@@ -274,10 +271,7 @@ public class UserWebController {
 		
 		logger.error("Received: " + userForm);
 
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 
 		// Validate email address
 		if (!user.isSocialUser() && !EmailValidator.getInstance().isValid(userForm.getEmail())) {
@@ -334,10 +328,7 @@ public class UserWebController {
 			PurchaseDuplicateException, ItemNotFoundException, VoteDuplicateException, InvalidVoteUsersException,
 			InvalidSelfVoteException {
 
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 
 		return userService.voteUser(user.getUserId(), receiverId, itemId, voteType, voteMessage) != null;
 	}

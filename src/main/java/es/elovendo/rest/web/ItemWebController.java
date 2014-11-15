@@ -381,10 +381,7 @@ public class ItemWebController {
 
 		model.addAttribute("item", new ItemForm());
 
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 
 		model.addAttribute("user", user);
 
@@ -462,10 +459,7 @@ public class ItemWebController {
 	public String editItemPage(Model model, @PathVariable long itemId) throws ItemNotFoundException,
 			NotUserItemException {
 
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 
 		Item item = itemService.getItemById(itemId);
 		ItemForm itemForm = new ItemForm(item);
@@ -497,10 +491,7 @@ public class ItemWebController {
 			@RequestParam("i3") MultipartFile image3) throws ItemNotFoundException, NotUserItemException,
 			SubCategoryNotFoundException {
 
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 
 		if (result.hasErrors()) {
 			for (FieldError fe : result.getFieldErrors()) {
@@ -559,10 +550,8 @@ public class ItemWebController {
 	@RequestMapping(value = "item/fav", method = RequestMethod.POST)
 	public @ResponseBody boolean setItemFavorite(
 			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException {
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 
 		if (user == null) return false;
 
@@ -572,10 +561,8 @@ public class ItemWebController {
 	@RequestMapping(value = "item/unfav", method = RequestMethod.POST)
 	public @ResponseBody boolean unsetItemFavorite(
 			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException {
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 
 		if (user == null) return false;
 		favoriteService.unsetFavorite(user, itemId);

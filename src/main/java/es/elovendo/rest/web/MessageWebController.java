@@ -14,9 +14,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +37,7 @@ import es.elovendo.service.message.MessageService;
 import es.elovendo.service.user.UserService;
 import es.elovendo.util.IOUtil;
 import es.elovendo.util.PageWrapper;
+import es.elovendo.util.SessionUserObtainer;
 import es.elovendo.util.mail.MailSender;
 
 @Controller
@@ -59,10 +57,7 @@ public class MessageWebController {
 	@RequestMapping(value = "/inbox", method = RequestMethod.GET) 
 	public String getConversationList(Model model, HttpSession session) {
 		
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 		
 		List<MessageThread> conversations = new ArrayList<>();
 		
@@ -105,10 +100,7 @@ public class MessageWebController {
 		
 		long messageThreadId = Long.valueOf(_messageThreadId); 
 		
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 		
 		Page<Message> conversationPage = messageService.getMessageThreadMessages(messageThreadId, user);
 		PageWrapper<Message> pageWrapper = 
@@ -136,11 +128,7 @@ public class MessageWebController {
 		
 		long messageThreadId = Long.valueOf(_messageThreadId); 
 		
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken)) {
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		}
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 		
 		Iterable<Message> unreadMessages = messageService.getMessageThreadUnreadMessages(user, messageThreadId);
 		
@@ -187,10 +175,7 @@ public class MessageWebController {
 					throws MessageThreadAlreadyExistsException, UserNotFoundException, InvalidMessageThreadException, 
 					MessageThreadNotFoundException, MessageTextTooLongException {
 		
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 				
 		long remoteIpAddress = IOUtil.Dot2LongIP(request.getRemoteAddr());
 		
@@ -223,10 +208,7 @@ public class MessageWebController {
 	@RequestMapping(value="/getUnread", method = RequestMethod.GET)
 	public @ResponseBody int numberOfMessagesUnread() throws UserNotFoundException {
 		
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 		
 		if (user == null) return 0;
 		

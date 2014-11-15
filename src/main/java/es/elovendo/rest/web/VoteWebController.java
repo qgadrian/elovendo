@@ -6,9 +6,6 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +23,7 @@ import es.elovendo.service.user.UserService;
 import es.elovendo.service.vote.VoteService;
 import es.elovendo.util.Constant;
 import es.elovendo.util.PageWrapper;
+import es.elovendo.util.SessionUserObtainer;
 
 @Controller
 @RequestMapping("/site/")
@@ -87,11 +85,7 @@ public class VoteWebController {
 			@RequestParam(value="p", defaultValue="0") int page, 
 			@RequestParam(value="s", defaultValue="5") int size) {
 		
-		User user = null;
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
-			user = (User) SecurityContextHolder.getContext()
-					.getAuthentication().getPrincipal();
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 		
 		Page<Vote> votes = null;
 		if (type.equalsIgnoreCase(Constant.VOTE_POSITIVE_STRING)) 
