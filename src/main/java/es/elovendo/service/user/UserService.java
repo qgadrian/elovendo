@@ -139,11 +139,17 @@ public interface UserService extends UserDetailsService {
     public void enableUser(Long userId) throws UserNotFoundException;
     
     /**
-     * Deletes completely an user
+     * Deletes an user
      * @param userId
      * @throws UserNotFoundException
      */
     public void deleteUser(Long userId);
+    
+    /**
+     * Deletes an user
+     * @param user
+     */
+    public User deleteUser(User user);
     
     /**
      * Emits a vote from an user to another

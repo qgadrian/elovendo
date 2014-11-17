@@ -231,6 +231,12 @@ public interface ItemService {
 	 * @throws NotUserItemException If item doesnt belong to user
 	 */
 	public void deleteItem(User user, Long itemId) throws NotUserItemException;
+	
+	/**
+	 * Deletes all user items
+	 * @param user
+	 */
+	public void deleteAllUserItems(User user);
 
 	/**
 	 * Returns number of active user items

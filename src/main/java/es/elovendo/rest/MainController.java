@@ -132,6 +132,7 @@ public class MainController implements ErrorController {
     	SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
     	Cookie cookie = new Cookie("JSESSIONID", null);
     	response.addCookie(cookie);
+    	SecurityContextHolder.clearContext();
     	
     	if (device.isNormal()) return "redirect:/elovendo/index";
     	

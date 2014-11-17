@@ -287,6 +287,23 @@ public class UserServiceImpl implements UserService {
 		userRepository.delete(userId);
 	}
 
+	@Override
+	public User deleteUser(User user) {
+		itemService.deleteAllUserItems(user);
+		
+		user.setLogin("--" + user.getUserId() + "--");
+		user.setFirstName("");
+		user.setLastName("");
+		user.setPhone("");
+		user.setAvatar(Constant.AVATAR_DEFAULT);
+		user.setEmail("");
+		user.setPassword("");
+		user.setSocialCompositeKey("");
+		user.setEnabled(false);
+		
+		return userRepository.save(user);
+	}
+
 	// TODO Dummy role added temporarily until next example
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

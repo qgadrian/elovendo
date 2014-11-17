@@ -85,4 +85,9 @@ public class FavoriteServiceImpl implements FavoriteService {
 		return IteratorUtils.toList(itemService.getAll(favsIds).iterator());
 	}
 
+	@Override
+	public void removeAllItemFavs(Item item) {
+		favRepository.deleteAllItemFavorites(item.getItemId());
+	}
+
 }

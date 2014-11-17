@@ -18,6 +18,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.validator.EmailValidator;
@@ -41,6 +42,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -171,7 +173,7 @@ public class UserWebController {
 	}
 
 	@RequestMapping(value = "register", method = RequestMethod.POST)
-	public String processAddUserWeb(@Valid @ModelAttribute(value = "user") UserForm userForm, 
+	public String addUserPost(@Valid @ModelAttribute(value = "user") UserForm userForm, 
 			BindingResult result,
 			@ModelAttribute(value = "profilePic") MultipartFile profilePic,
 			Model model, Locale locale)
@@ -255,6 +257,40 @@ public class UserWebController {
 		model.addAttribute("uw", user.isWhatssapUser());
 
 		return "elovendo/user/profileEdit";
+	}
+	
+	
+	/* Delete user account */
+	
+	@RequestMapping(value = "/user/delete", method = RequestMethod.GET)
+	public String deleteUserPage(Model model) {
+		
+		model.addAttribute("password", new String());
+
+		return "elovendo/user/deleteUser";
+	}
+	
+	@RequestMapping(value = "/user/delete", method = RequestMethod.POST)
+	public String deleteUserPost(Model model,
+			@ModelAttribute(value="password") String password) {
+		
+		User user = SessionUserObtainer.getInstance().getSessionUser();
+		
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		boolean matchPass = encoder.matches(password, user.getPassword());
+		if (!matchPass) {
+			model.addAttribute("hasError", true);
+			model.addAttribute("password", new String());
+			return "elovendo/user/deleteUser";
+		}
+
+		if (userService.deleteUser(user).getEmail().isEmpty()) {
+			SessionUserObtainer obtainer = SessionUserObtainer.getInstance();
+			obtainer.closeSession();
+			return "redirect:/elovendo/index";
+		}
+		
+		return "elovendo/user/deleteUser";
 	}
 
 	@RequestMapping(value = "profile/user/edit", method = RequestMethod.POST)

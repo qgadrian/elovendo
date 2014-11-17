@@ -37,6 +37,7 @@ import es.elovendo.rest.exception.SubCategoryNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.service.exception.InvalidItemNameMinLenghtException;
 import es.elovendo.service.item.category.CategoryService;
+import es.elovendo.service.item.favorite.FavoriteService;
 import es.elovendo.service.user.UserService;
 import es.elovendo.util.Constant;
 import es.elovendo.util.IOUtil;
@@ -54,6 +55,8 @@ public class ItemServiceImpl implements ItemService {
 	ItemRepository itemRepository;
 	@Autowired
 	UserService userService;
+	@Autowired
+	FavoriteService favoriteService;
 	@Autowired
 	CategoryService categoryService;
 
@@ -409,6 +412,17 @@ public class ItemServiceImpl implements ItemService {
 		if (item != null && item.getUser().equals(user))
 			itemRepository.delete(itemId);
 		else throw new NotUserItemException(itemId, user.getUserId());
+	}
+
+	@Override
+	public void deleteAllUserItems(User user) {
+		List<Item> items = itemRepository.findByUserId(user.getUserId());
+		for (Item item : items) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.add(Calendar.MONTH, -1); // Set past date to ensure it will be not shown in item list
+			item.setEndDate(calendar);
+			favoriteService.removeAllItemFavs(item);
+		}
 	}
 
 	@Override
