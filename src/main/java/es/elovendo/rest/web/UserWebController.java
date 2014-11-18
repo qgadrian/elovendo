@@ -73,7 +73,8 @@ import es.elovendo.service.item.category.CategoryService;
 import es.elovendo.service.item.favorite.FavoriteService;
 import es.elovendo.service.purchase.PurchaseService;
 import es.elovendo.service.user.UserService;
-import es.elovendo.util.SessionUserObtainer;
+import es.elovendo.util.sessionHelper.SessionUserObtainer;
+import es.elovendo.util.sessionHelper.exception.AnonymousUserAuthenticationException;
 
 @Controller
 @SuppressWarnings("unused")
@@ -94,19 +95,23 @@ public class UserWebController {
 	private FavoriteService favoriteService;
 	@Autowired
 	private MessageSource messageSource;
-	@Resource(name="sessionRegistry")
+	@Resource(name = "sessionRegistry")
 	private SessionRegistry sessionRegistry;
 
 	/**
 	 * USER STUFF
 	 */
 
-	/** View profile */
+	/**
+	 * View profile
+	 * 
+	 * @throws AnonymousUserAuthenticationException
+	 */
 	@RequestMapping(value = "profile", method = RequestMethod.GET)
-	public String getPrivateProfile(Model model) {
+	public String getPrivateProfile(Model model) throws AnonymousUserAuthenticationException {
 
 		User user = SessionUserObtainer.getInstance().getSessionUser();
-		
+
 		model.addAttribute("user", user);
 
 		model.addAttribute("itemList", itemService.getAllItemsByUser(user));
@@ -132,16 +137,15 @@ public class UserWebController {
 	 * View profile
 	 * 
 	 * @throws UserNotFoundException
-	 */	
+	 */
 	@RequestMapping(value = "public/{userId}/{userName}", method = RequestMethod.GET)
 	public String getPublicProfilePost(@PathVariable(value = "userName") String userName,
-			@PathVariable(value = "userId") long userId, Model model)
-			throws UserNotFoundException {
+			@PathVariable(value = "userId") long userId, Model model) throws UserNotFoundException {
 
-//		User user = userService.findUserByLogin(userName);
+		// User user = userService.findUserByLogin(userName);
 		User user = userService.findUserById(userId);
 		model.addAttribute("user", user);
-		
+
 		List<Item> lastItems = itemService.getLastItems(user);
 		model.addAttribute("lastItems", lastItems);
 
@@ -173,57 +177,57 @@ public class UserWebController {
 	}
 
 	@RequestMapping(value = "register", method = RequestMethod.POST)
-	public String addUserPost(@Valid @ModelAttribute(value = "user") UserForm userForm, 
-			BindingResult result,
-			@ModelAttribute(value = "profilePic") MultipartFile profilePic,
-			Model model, Locale locale)
+	public String addUserPost(@Valid @ModelAttribute(value = "user") UserForm userForm, BindingResult result,
+			@ModelAttribute(value = "profilePic") MultipartFile profilePic, Model model, Locale locale)
 			throws LoginNotAvailableException, EmailNotAvailableException, UserNotFoundException {
 
 		// check image is jpeg
 
 		// TODO: image/png, image/gif
 		// FIXME: Convert objefct to FormUser and make there validations
-//		if (!profilePic.getContentType().equals("image/jpeg") && !profilePic.getContentType().equals("image/pjpeg")) {
-//			logger.error("not jpg!");
-//			logger.error("multipart file is :" + profilePic.getContentType());
-//			result.addError(new FieldError("registrationform", "profilePic", messageSource.getMessage(
-//					"Error.password.missmatch", null, locale)));
-//		}
-		
+		// if (!profilePic.getContentType().equals("image/jpeg") &&
+		// !profilePic.getContentType().equals("image/pjpeg")) {
+		// logger.error("not jpg!");
+		// logger.error("multipart file is :" + profilePic.getContentType());
+		// result.addError(new FieldError("registrationform", "profilePic",
+		// messageSource.getMessage(
+		// "Error.password.missmatch", null, locale)));
+		// }
+
 		// Validate password not empty (because of regex pattern)
 		if (userForm.hasEmptyPassword()) {
-			result.addError(new FieldError("user", "password", 
-					messageSource.getMessage("User.add.Error.password.empty", null, locale)));
+			result.addError(new FieldError("user", "password", messageSource.getMessage(
+					"User.add.Error.password.empty", null, locale)));
 		}
-		
+
 		// Validate confirmPassword not empty (because of regex pattern)
 		if (userForm.hasEmptyConfirmPassword()) {
-			result.addError(new FieldError("user", "confirmPassword", 
-					messageSource.getMessage("User.add.Error.password.empty", null, locale)));
+			result.addError(new FieldError("user", "confirmPassword", messageSource.getMessage(
+					"User.add.Error.password.empty", null, locale)));
 		}
 
 		// Validate email address
 		if (!EmailValidator.getInstance().isValid(userForm.getEmail())) {
-			result.addError(new FieldError("user", "email", messageSource.getMessage(
-					"User.add.Error.user.email", null, locale)));
+			result.addError(new FieldError("user", "email", messageSource.getMessage("User.add.Error.user.email", null,
+					locale)));
 		}
-		
+
 		// Validate phone number
 		if (!userForm.isValidPhoneNumber()) {
-			result.addError(new FieldError("user", "phone", messageSource.getMessage(
-					"User.add.Error.user.phone", null, locale)));
+			result.addError(new FieldError("user", "phone", messageSource.getMessage("User.add.Error.user.phone", null,
+					locale)));
 		}
-		
+
 		// Validate that confirm password matches
 		if (!userForm.isPasswordMatch()) {
-			result.addError(new FieldError("user", "confirmPassword", 
-					messageSource.getMessage("User.add.Error.password.missmatch", null, locale)));
+			result.addError(new FieldError("user", "confirmPassword", messageSource.getMessage(
+					"User.add.Error.password.missmatch", null, locale)));
 		}
-		
+
 		// Validate email availability
 		if (!userService.isEmailAvailable(userForm.getEmail())) {
-			result.addError(new FieldError("user", "email", 
-					messageSource.getMessage("User.add.Error.available.email", null, locale)));
+			result.addError(new FieldError("user", "email", messageSource.getMessage("User.add.Error.available.email",
+					null, locale)));
 		}
 
 		if (result.hasErrors()) {
@@ -235,21 +239,25 @@ public class UserWebController {
 		}
 	}
 
-//	@RequestMapping(value = "quick_register", method = RequestMethod.GET)
-//	public String quickAddUserPage(Model model) {
-//		model.addAttribute("user", new User());
-//		model.addAttribute("provinceName", new String());
-//
-//		return "elovendo/user/quick_add_user";
-//	}
+	// @RequestMapping(value = "quick_register", method = RequestMethod.GET)
+	// public String quickAddUserPage(Model model) {
+	// model.addAttribute("user", new User());
+	// model.addAttribute("provinceName", new String());
+	//
+	// return "elovendo/user/quick_add_user";
+	// }
 
-	/** EDIT USER **/
+	/**
+	 * EDIT USER
+	 * 
+	 * @throws AnonymousUserAuthenticationException
+	 **/
 
 	@RequestMapping(value = "profile/user/edit", method = RequestMethod.GET)
-	public String editUserPage(Model model) {
-		
+	public String editUserPage(Model model) throws AnonymousUserAuthenticationException {
+
 		User user = SessionUserObtainer.getInstance().getSessionUser();
-		
+
 		EditUserForm userForm = new EditUserForm(user);
 
 		model.addAttribute("user", userForm);
@@ -258,24 +266,23 @@ public class UserWebController {
 
 		return "elovendo/user/profileEdit";
 	}
-	
-	
+
 	/* Delete user account */
-	
+
 	@RequestMapping(value = "/user/delete", method = RequestMethod.GET)
 	public String deleteUserPage(Model model) {
-		
+
 		model.addAttribute("password", new String());
 
 		return "elovendo/user/deleteUser";
 	}
-	
+
 	@RequestMapping(value = "/user/delete", method = RequestMethod.POST)
-	public String deleteUserPost(Model model,
-			@ModelAttribute(value="password") String password) {
-		
+	public String deleteUserPost(Model model, @ModelAttribute(value = "password") String password)
+			throws AnonymousUserAuthenticationException {
+
 		User user = SessionUserObtainer.getInstance().getSessionUser();
-		
+
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		boolean matchPass = encoder.matches(password, user.getPassword());
 		if (!matchPass) {
@@ -289,7 +296,7 @@ public class UserWebController {
 			obtainer.closeSession();
 			return "redirect:/elovendo/index";
 		}
-		
+
 		return "elovendo/user/deleteUser";
 	}
 
@@ -297,7 +304,7 @@ public class UserWebController {
 	public String processEditUserPage(@Valid @ModelAttribute(value = "user") EditUserForm userForm,
 			BindingResult result, @ModelAttribute(value = "userPic") MultipartFile userPic,
 			@RequestParam(value = "uw", required = false) String whatssapUser, Model model, Locale locale)
-			throws LoginNotAvailableException, UserNotFoundException {
+			throws LoginNotAvailableException, UserNotFoundException, AnonymousUserAuthenticationException {
 		//
 		// // check image is jpeg
 		// // TODO: image/png, image/gif
@@ -306,25 +313,25 @@ public class UserWebController {
 		// result.addError(new FieldError("registrationform", "profilePic",
 		// messageSource.getMessage("Error.password.missmatch", null, locale)));
 		// }
-		
+
 		logger.error("Received: " + userForm);
 
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 
 		// Validate email address
 		if (!user.isSocialUser() && !EmailValidator.getInstance().isValid(userForm.getEmail())) {
-			result.addError(new FieldError("user", "email", 
-					messageSource.getMessage("User.add.Error.user.email", null, locale)));
+			result.addError(new FieldError("user", "email", messageSource.getMessage("User.add.Error.user.email", null,
+					locale)));
 		}
-		
+
 		// Validate that confirm password matches
 		if (!userForm.getPassword().isEmpty() && !userForm.getPassword().equals(userForm.getConfirmPassword())) {
-			result.addError(new FieldError("user", "confirmPassword", 
-					messageSource.getMessage("User.add.Error.password.missmatch", null, locale)));
+			result.addError(new FieldError("user", "confirmPassword", messageSource.getMessage(
+					"User.add.Error.password.missmatch", null, locale)));
 		}
 
 		if (result.hasErrors()) {
-			
+
 			for (FieldError fe : result.getFieldErrors()) {
 				logger.debug("Edit " + user.getUserId() + " error: " + fe.toString());
 			}
@@ -340,7 +347,7 @@ public class UserWebController {
 
 		// Set if user is social
 		userForm.setSocialUser(user.isSocialUser());
-		
+
 		user = userService.updateUser(userForm, user.getUserId(), userPic);
 
 		Authentication authentication = new UsernamePasswordAuthenticationToken(user, user.getPassword(),
@@ -357,6 +364,7 @@ public class UserWebController {
 	 * @throws VoteDuplicateException
 	 * @throws ItemNotFoundException
 	 * @throws InvalidSelfVoteException
+	 * @throws AnonymousUserAuthenticationException
 	 */
 	@RequestMapping(value = "vote", method = RequestMethod.POST)
 	public @ResponseBody boolean processVote(@RequestParam(value = "uv", required = true) long receiverId,
@@ -364,7 +372,7 @@ public class UserWebController {
 			@RequestParam(value = "vt", required = true) int voteType,
 			@RequestParam(value = "msg", required = true) String voteMessage) throws UserNotFoundException,
 			PurchaseDuplicateException, ItemNotFoundException, VoteDuplicateException, InvalidVoteUsersException,
-			InvalidSelfVoteException {
+			InvalidSelfVoteException, AnonymousUserAuthenticationException {
 
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 
@@ -472,12 +480,14 @@ public class UserWebController {
 						int points = user.getPoints() + item_number;
 						user.setPoints(points);
 						user = userService.updateUser(user);
-						
-//						List<SessionInformation> li = sessionRegistry.getAllSessions(user, false);
-//						for (SessionInformation si : li) {
-//							sessionRegistry.registerNewSession(si.getSessionId(), user);
-//						}
-						
+
+						// List<SessionInformation> li =
+						// sessionRegistry.getAllSessions(user, false);
+						// for (SessionInformation si : li) {
+						// sessionRegistry.registerNewSession(si.getSessionId(),
+						// user);
+						// }
+
 						@SuppressWarnings({ "rawtypes", "unchecked" })
 						List<User> lwi = (ArrayList<User>) (ArrayList) sessionRegistry.getAllPrincipals();
 						for (User u : lwi) {

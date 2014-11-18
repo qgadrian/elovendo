@@ -1,10 +1,11 @@
-package es.elovendo.util;
+package es.elovendo.util.sessionHelper;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import es.elovendo.model.user.User;
+import es.elovendo.util.sessionHelper.exception.AnonymousUserAuthenticationException;
 
 public class SessionUserObtainer {
 
@@ -16,17 +17,14 @@ public class SessionUserObtainer {
 		return obtainer;
 	}
 
-	public User getSessionUser() {
+	public User getSessionUser() throws AnonymousUserAuthenticationException {
 		User user = null;
 		SecurityContext context = SecurityContextHolder.getContext();
 		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
 			user = (User) context.getAuthentication().getPrincipal();
 
-		if (user != null)
-			return user;
-		else
-			return user;
-		// else throw exception noUserssession or so;
+		if (user != null) throw new AnonymousUserAuthenticationException();
+		return user;
 	}
 
 	public void closeSession() {

@@ -23,7 +23,8 @@ import es.elovendo.service.user.UserService;
 import es.elovendo.service.vote.VoteService;
 import es.elovendo.util.Constant;
 import es.elovendo.util.PageWrapper;
-import es.elovendo.util.SessionUserObtainer;
+import es.elovendo.util.sessionHelper.SessionUserObtainer;
+import es.elovendo.util.sessionHelper.exception.AnonymousUserAuthenticationException;
 
 @Controller
 @RequestMapping("/site/")
@@ -83,7 +84,7 @@ public class VoteWebController {
 	@RequestMapping(value = "current/vote/{type}", method = RequestMethod.GET)
 	public @ResponseBody JSONObject getSessionVotesPositive (@PathVariable String type,
 			@RequestParam(value="p", defaultValue="0") int page, 
-			@RequestParam(value="s", defaultValue="5") int size) {
+			@RequestParam(value = "s", defaultValue = "5") int size) throws AnonymousUserAuthenticationException {
 		
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 		

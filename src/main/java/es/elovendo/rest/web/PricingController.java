@@ -6,14 +6,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import es.elovendo.model.user.User;
-import es.elovendo.util.SessionUserObtainer;
+import es.elovendo.util.sessionHelper.SessionUserObtainer;
+import es.elovendo.util.sessionHelper.exception.AnonymousUserAuthenticationException;
 
 @Controller
 @RequestMapping(value = "/site/pricing")
 public class PricingController {
 
 	@RequestMapping(value = "/points", method = RequestMethod.GET)
-	public String itemListPage(Model model) {
+	public String itemListPage(Model model) throws AnonymousUserAuthenticationException {
 
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 		model.addAttribute("user", user);

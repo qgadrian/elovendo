@@ -47,7 +47,8 @@ import es.elovendo.service.user.UserService;
 import es.elovendo.service.vote.VoteService;
 import es.elovendo.util.Constant;
 import es.elovendo.util.PageWrapper;
-import es.elovendo.util.SessionUserObtainer;
+import es.elovendo.util.sessionHelper.SessionUserObtainer;
+import es.elovendo.util.sessionHelper.exception.AnonymousUserAuthenticationException;
 
 @Controller
 @RequestMapping(value = "/bazaar/")
@@ -373,11 +374,12 @@ public class ItemWebController {
 	/**
 	 * ADD ITEMS
 	 * @throws UserNotFoundException 
+	 * @throws AnonymousUserAuthenticationException 
 	 */
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "add/item", method = RequestMethod.GET)
-	public String addItemPage(Model model) throws UserNotFoundException {
+	public String addItemPage(Model model) throws UserNotFoundException, AnonymousUserAuthenticationException {
 
 		model.addAttribute("item", new ItemForm());
 
@@ -452,12 +454,13 @@ public class ItemWebController {
 	 * 
 	 * @throws ItemNotFoundException
 	 * @throws NotUserItemException
+	 * @throws AnonymousUserAuthenticationException 
 	 **/
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "edit/item/{itemId}", method = RequestMethod.GET)
 	public String editItemPage(Model model, @PathVariable long itemId) throws ItemNotFoundException,
-			NotUserItemException {
+			NotUserItemException, AnonymousUserAuthenticationException {
 
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 
@@ -489,7 +492,7 @@ public class ItemWebController {
 			@RequestParam("i1") MultipartFile image1, 
 			@RequestParam("i2") MultipartFile image2,
 			@RequestParam("i3") MultipartFile image3) throws ItemNotFoundException, NotUserItemException,
-			SubCategoryNotFoundException {
+			SubCategoryNotFoundException, AnonymousUserAuthenticationException {
 
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 
@@ -535,7 +538,7 @@ public class ItemWebController {
 
 	@RequestMapping(value = "delete/item", method = RequestMethod.POST)
 	public @ResponseBody int deleteItem(@RequestParam(value = "id", required = true, defaultValue = "0") long itemId)
-			throws NotUserItemException {
+			throws NotUserItemException, AnonymousUserAuthenticationException {
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 		itemService.deleteItem(user, itemId);
 		return (int) itemId;
@@ -545,11 +548,12 @@ public class ItemWebController {
 	 * SET ITEM FAVORITE
 	 * 
 	 * @throws ItemNotFoundException
+	 * @throws AnonymousUserAuthenticationException 
 	 */
 
 	@RequestMapping(value = "item/fav", method = RequestMethod.POST)
 	public @ResponseBody boolean setItemFavorite(
-			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException {
+			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException, AnonymousUserAuthenticationException {
 		
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 
@@ -560,7 +564,7 @@ public class ItemWebController {
 	
 	@RequestMapping(value = "item/unfav", method = RequestMethod.POST)
 	public @ResponseBody boolean unsetItemFavorite(
-			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException {
+			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException, AnonymousUserAuthenticationException {
 		
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 

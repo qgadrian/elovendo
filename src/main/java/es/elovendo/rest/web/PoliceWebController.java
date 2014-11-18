@@ -19,7 +19,8 @@ import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.service.admin.report.item.ItemReportService;
 import es.elovendo.service.admin.report.user.UserReportService;
 import es.elovendo.service.user.UserService;
-import es.elovendo.util.SessionUserObtainer;
+import es.elovendo.util.sessionHelper.SessionUserObtainer;
+import es.elovendo.util.sessionHelper.exception.AnonymousUserAuthenticationException;
 
 @Controller
 @RequestMapping(value = "/site/police")
@@ -38,12 +39,11 @@ public class PoliceWebController {
 	@ResponseStatus(value=HttpStatus.OK)
 	public @ResponseBody void receiveItemDenounce(Principal principal,
 			@PathVariable long itemId,
-			@RequestParam(value="reason", required=true) String reason) throws UserNotFoundException, ItemNotFoundException {
+			@RequestParam(value="reason", required=true) String reason) throws UserNotFoundException, ItemNotFoundException, AnonymousUserAuthenticationException {
 		
 		logger.warn("Received a denounce for item " + itemId + ", reason: " + reason);
 		
-		SessionUserObtainer obtainer = SessionUserObtainer.getInstance();
-		User user = obtainer.getSessionUser();
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 		
 		itemReportService.createItemReport(itemId, user, reason);
 		
@@ -52,12 +52,12 @@ public class PoliceWebController {
 	@RequestMapping(value = "/denounce/user/{userId}", method = RequestMethod.POST)
 	@ResponseStatus(value=HttpStatus.OK)
 	public @ResponseBody void receiveUserDenounce(@PathVariable long userId,
-			@RequestParam(value="reason", required=true) String reason) throws UserNotFoundException {
+			@RequestParam(value = "reason", required = true) String reason) throws UserNotFoundException,
+			AnonymousUserAuthenticationException {
 		
 		logger.warn("Received a denounce for user " + userId + ", reason: " + reason);
 				
-		SessionUserObtainer obtainer = SessionUserObtainer.getInstance();
-		User user = obtainer.getSessionUser();
+		User user = SessionUserObtainer.getInstance().getSessionUser();
 		
 		userReportService.createUserReport(userId, user, reason);
 	}
