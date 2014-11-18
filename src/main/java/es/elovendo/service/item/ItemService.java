@@ -218,14 +218,14 @@ public interface ItemService {
 			NotUserItemException, SubCategoryNotFoundException, InsufficientPointsException;
 
 	/**
-	 * Deletes an item
+	 * Deletes an item, including all favorite references to it
 	 * 
 	 * @param itemId
 	 */
 	public void deleteItem(Long itemId);
 	
 	/**
-	 * Deletes an item
+	 * Deletes an item, including all favorite references to it
 	 * @param user Owner
 	 * @param itemId Item to delete
 	 * @throws NotUserItemException If item doesnt belong to user

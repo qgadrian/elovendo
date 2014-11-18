@@ -403,14 +403,17 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public void deleteItem(Long itemId) {
+		favoriteService.removeAllItemFavs(itemId);
 		itemRepository.delete(itemId);
 	}
 	
 	@Override
 	public void deleteItem(User user, Long itemId) throws NotUserItemException {
 		Item item = itemRepository.findOne(itemId);
-		if (item != null && item.getUser().equals(user))
+		if (item != null && item.getUser().equals(user)) {
+			favoriteService.removeAllItemFavs(item);
 			itemRepository.delete(itemId);
+		}
 		else throw new NotUserItemException(itemId, user.getUserId());
 	}
 

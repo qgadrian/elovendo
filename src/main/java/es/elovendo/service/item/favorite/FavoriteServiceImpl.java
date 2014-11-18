@@ -90,4 +90,9 @@ public class FavoriteServiceImpl implements FavoriteService {
 		favRepository.deleteAllItemFavorites(item.getItemId());
 	}
 
+	@Override
+	public void removeAllItemFavs(Long itemId) {
+		favRepository.deleteAllItemFavorites(itemId);
+	}
+
 }

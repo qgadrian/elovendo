@@ -41,6 +41,12 @@ public interface FavoriteService {
 	 * @param item
 	 */
 	public void removeAllItemFavs(Item item);
+	
+	/**
+	 *  Deletes all favorite references for the given Item
+	 * @param itemId
+	 */
+	public void removeAllItemFavs(Long itemId);
 
 //	public boolean removeFavorite(User user, Long itemId) throws ItemNotFoundException;
 //	
