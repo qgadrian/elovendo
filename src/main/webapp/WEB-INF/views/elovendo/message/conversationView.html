@@ -37,11 +37,7 @@
 				<div class="msg-wrap elochat" id="messages">
 					<div class="msg" id="msg-body">
 						<div class="row chatRow" th:each="message : ${conversation}">
-							<!-- 	<a class="pull-left" href="#"> <img class="media-object" -->
-							<!-- 	data-src="holder.js/64x64" alt="64x64" -->
-							<!-- 	style="width: 32px; height: 32px;" -->
-							<!-- 	th:src="@{'http://83.165.60.132:8080/' + ${message.sender.avatar200h}}" /> -->
-							<!-- 	</a> -->
+							<!--  User -->
 							<div th:if="${message.sender.email == user.email}">
 								<div class="pull-right userPicChat" style="margin-left: 15px"> 
 									<img th:unless="${message.sender.socialUser}" alt="User Image" th:src="@{'http://www.elovendo.com/' + ${message.sender.avatar}}">
@@ -63,12 +59,13 @@
 									<p class="pull-left mesText" th:utext="${message.messageText}"></p>
 								</div>
 							</div>
+							<!--  Other user -->
 							<div th:unless="${message.sender.email == user.email}">
 								<div class="pull-left userPicChat" style="margin-right: 15px"> 
 									<img th:unless="${message.sender.socialUser}" alt="User image" th:src="@{'http://www.elovendo.com/' + ${message.sender.avatar}}">
 									<img th:if="${message.sender.socialUser}" alt="User Image" th:src="${message.sender.largeSocialAvatar}">
 								</div>
-								<div class="media-body chat-pop">
+								<div class="media-body chat-pop" th:classappend="${message.offer} ? 'eloff'">
 									<h4 class="media-heading">
 										<span th:text="${message.sender.login} + ' dice:'"></span>
 										<span class="pull-right">
@@ -81,7 +78,8 @@
 											</abbr> <i class="fa fa-clock-o"></i>
 										</span>
 									</h4>
-									<p class="mesText" th:utext="${message.messageText}"></p>
+									<p th:unless="${message.offer}" class="mesText" th:utext="${message.messageText}"></p>
+									<p th:if="${message.offer}" class="mesText" th:text="@{#{Offer.message.received} + ${message.offerPrize}}"></p>
 								</div>
 							</div>
 						</div>

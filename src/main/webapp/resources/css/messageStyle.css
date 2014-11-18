@@ -252,3 +252,7 @@ text-align: right;
 	-o-user-select: none;
 	user-select: none;
 }
+
+.eloff {
+	background: #70cd61;
+}

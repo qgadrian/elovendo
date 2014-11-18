@@ -41,6 +41,9 @@ public class Message {
 	@Column(name="text")
 	private String messageText;
 	
+	@Column(name="offerPrize")
+	private int offerPrize;
+	
 	private long ipAddress;
 	
 	@Column(columnDefinition="DATETIME", name = "messageDate")
@@ -50,10 +53,11 @@ public class Message {
 	public Message() {}
 
 	public Message(MessageThread messageThread, User sender,
-			String messageText, long ipAddress) {
+			String messageText, int offerPrize, long ipAddress) {
 		this.messageThread = messageThread;
 		this.sender = sender;
 		this.messageText = messageText;//.replaceAll("(\r\n|\n)", "<br />");;
+		this.offerPrize = offerPrize;
 		this.ipAddress = ipAddress;
 		this.messageDate = Calendar.getInstance();
 	}
@@ -82,6 +86,15 @@ public class Message {
 		return ipAddress;
 	}
 	
+	public int getOfferPrize() {
+		return offerPrize;
+	}
+	
+	@Transient
+	public boolean isOffer() {
+		return this.offerPrize > 0;
+	}
+
 	@Transient
 	public boolean isToday() {
 		return DateUtils.isSameDay(Calendar.getInstance(), this.messageDate);

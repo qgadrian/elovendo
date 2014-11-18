@@ -274,24 +274,25 @@ public class Item {
 	@Transient
 	public String getCurrencyPrize(Locale locale) {
 		// Workaround for some language locale's without Country specified
-		if (locale.getISO3Country().isEmpty()) locale = new Locale(locale.toString(), locale.toString());
-		
-		try {
-			CurrencyLocaler localer = CurrencyLocaler.getInstance();
-			Currency currency = Currency.getInstance(this.currency);
-			return localer.getFormattedCurrency(prize, locale, currency);
-			
-		} catch (Exception e) {
-			LocaleHelper localeHelper = LocaleHelper.getInstance();
-			try {
-				locale = localeHelper.getFixedLocale(locale);
-				CurrencyLocaler localer = CurrencyLocaler.getInstance();
-				Currency currency = Currency.getInstance(this.currency);
-				return localer.getFormattedCurrency(prize, locale, currency);
-			} catch (NoFixLocaleFoundException e1) {
-				return this.prize.toString();
-			}
-		}
+//		if (locale.getISO3Country().isEmpty()) locale = new Locale(locale.toString(), locale.toString());
+//		
+//		try {
+//			CurrencyLocaler localer = CurrencyLocaler.getInstance();
+//			Currency currency = Currency.getInstance(this.currency);
+//			return localer.getFormattedCurrency(prize, locale, currency);
+//			
+//		} catch (Exception e) {
+//			LocaleHelper localeHelper = LocaleHelper.getInstance();
+//			try {
+//				locale = localeHelper.getFixedLocale(locale);
+//				CurrencyLocaler localer = CurrencyLocaler.getInstance();
+//				Currency currency = Currency.getInstance(this.currency);
+//				return localer.getFormattedCurrency(prize, locale, currency);
+//			} catch (NoFixLocaleFoundException e1) {
+//				return this.prize.toString();
+//			}
+//		}
+		return CurrencyLocaler.getInstance().getCurrencyFromLocale(locale, this.currency, this.prize);
 	}
 	
 	@Transient

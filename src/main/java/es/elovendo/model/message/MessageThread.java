@@ -38,7 +38,7 @@ public class MessageThread {
 	@Transient
 	private int unreadMessages;
 	@Transient
-	private String lastMessage;
+	private Message lastMessage;
 	
 	public MessageThread() {}
 
@@ -75,11 +75,11 @@ public class MessageThread {
 		this.unreadMessages = unreadMessages;
 	}
 
-	public String getLastMessage() {
+	public Message getLastMessage() {
 		return lastMessage;
 	}
 
-	public void setLastMessage(String lastMessage) {
+	public void setLastMessage(Message lastMessage) {
 		this.lastMessage = lastMessage;
 	}
 }

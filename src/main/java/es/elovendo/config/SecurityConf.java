@@ -84,6 +84,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             	.antMatchers("/logout").authenticated()
             	.antMatchers("/elovendo/messages/public/send").anonymous()
             	.antMatchers("/elovendo/messages/**").authenticated()
+            	.antMatchers("/elovendo/offer/public/send").anonymous()
+            	.antMatchers("/elovendo/offer/**").authenticated()
                 .and()
             .formLogin()
 //            	.failureHandler(new LoginFailureHandler())

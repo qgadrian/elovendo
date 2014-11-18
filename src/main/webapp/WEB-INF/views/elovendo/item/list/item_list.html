@@ -312,11 +312,19 @@
 											<span th:text="${'A ' + item.distance + ' KM'}"></span>
 										</span>
 										</h4>
-										<button class="btn btn-primary pull-right messButit"
-											th:attr="data-user=${item.user.userId}" data-toggle="modal"
-											data-target="#msgModal">
-											<i class="glyphicon glyphicon-send" style="margin-right: 4px;"></i> Mensaje
-										</button>
+										<div class="btn-group pull-right">
+											<button class="btn btn-primary messButit"
+												th:attr="data-user=${item.user.userId}" data-toggle="modal"
+												data-target="#msgModal">
+												<i class="glyphicon glyphicon-send"
+													style="margin-right: 4px;"></i> Mensaje
+											</button>
+											<button class="btn btn-success offButit" role="button" 
+												th:attr="data-user=${item.user.userId}"
+												data-toggle="modal" data-target="#offModal">
+												<i class="glyphicon glyphicon-usd"></i> Oferta
+											</button>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -362,87 +370,9 @@
 		</div>
 	</div>
 	
-	<!-- Modal -->
-	<div class="modal fade" id="msgModal" tabindex="-1" role="dialog"
-		aria-labelledby="myModalLabel" aria-hidden="true">
-		<div th:if="${#httpServletRequest.remoteUser} == null" class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-					</button>
-					<h4 class="modal-title" id="myModalLabel">Enviar mensaje -
-						SÓLO si estás funciona logueado! -</h4>
-				</div>
-				<div class="modal-body">
-					<form id="messageForm" name="messageForm" role="form"
-						th:action="@{/elovendo/messages/public/send}" method="post"
-						accept-charset="UTF-8">
-						<div class="form-group">
-							<label for="exampleInputEmail1">Email</label> <input
-								type="email" name="email" class="form-control" id="semail"
-								placeholder="Tu email..." />
-						</div>
-						<div class="form-group">
-							<label for="sender">Nombre</label> <input
-								type="text" class="form-control" id="sender"
-								name="sender" placeholder="Tu nombre..." />
-						</div>
-						<input type="hidden" id="receiver" name="receiver" />
-						<div class="form-group">
-							<label for="exampleInputPassword1">Mensaje</label>
-							<textarea id="messageText" class="form-control textarea"
-								rows="10" name="messageText" required="required"
-								placeholder="Tu mensaje..." maxlength="1000"></textarea>
-						</div>
-						<div class="checkbox">
-							<label> <input type="checkbox" /> Acepto las condiciones
-								de uso
-							</label>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default"
-								data-dismiss="modal" >Cancelar</button>
-							<button type="submit" class="btn btn-primary" onclick="hpd('b')">Enviar</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-		<div th:unless="${#httpServletRequest.remoteUser} == null" class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-					</button>
-					<h4 class="modal-title" id="myModalLabel">Enviar mensaje</h4>
-				</div>
-				<div class="modal-body">
-					<form id="messageForm" name="messageForm" role="form"
-						th:action="@{/elovendo/messages/send}" method="post"
-						accept-charset="UTF-8">
-						<input type="hidden" id="receiver" name="receiver" />
-						<div class="form-group">
-							<label for="exampleInputPassword1">Mensaje</label>
-							<textarea id="messageText" class="form-control textarea"
-								rows="10" name="messageText" required="required"
-								placeholder="Tu mensaje..." maxlength="1000"></textarea>
-						</div>
-						<div class="checkbox">
-							<label> <input type="checkbox" /> Acepto las condiciones
-								de uso
-							</label>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default"
-								data-dismiss="modal" >Cancelar</button>
-							<button type="submit" class="btn btn-primary" onclick="hpd('l')">Enviar</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+	<div th:replace="/elovendo/item/list/msgModal"></div>
+	
+	<div th:replace="/elovendo/item/list/offModal"></div>
 
 	<script th:inline="javascript">
 	/*<![CDATA[*/
@@ -520,6 +450,10 @@
 		e.preventDefault();
 	});
 	
+	$('.offButit').on('click', function(e) {
+		e.preventDefault();
+	});
+	
 	function favClick(value, d) {
 		var f = value;
 		var cv = $("meta[name='_csrf']").attr("content");
@@ -576,11 +510,35 @@
 			$('#msgModal').modal('hide');
 		});
 		
+		var sendOffUrl;
 		
-// 		$('#locform').ajaxForm(function() {
-// 			alert("Thank you for your comment!");
-// 			return true;
-// 		});
+		function hdp(t) {
+			if (t == 'a') sendOffUrl = "/elovendo/offer/public/send";
+			else sendOffUrl = "/elovendo/offer/send";
+		}
+		
+		$('#offerForm').submit(function(event) {
+			event.preventDefault();
+			var cv = $("meta[name='_csrf']").attr("content");
+			var cn = $("meta[name='_csrf_header']").attr("content");
+			$.ajax({
+				type : 'POST',
+				beforeSend : function(request) {
+					request.setRequestHeader(cn, cv);
+				},
+				url : sendOffUrl,
+				data : ({
+					receiver : $('#receiver').val(),
+					sender: $('#sender').val(),
+					email: $('#semail').val(),
+					offer : $('#offer').val()
+				})
+
+			});
+
+			document.getElementById('messageText').value = '';
+			$('#msgModal').modal('hide');
+		});
 
 		function fillFilter() {
 			var dis = getURLParameter('dis');

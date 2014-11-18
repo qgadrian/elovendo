@@ -73,7 +73,7 @@ public class MessageWebController {
 			String p1 = messageThread.getParticipant1().getLogin();
 			String p2 = messageThread.getParticipant2().getLogin();
 
-			String lastMessage = messageService.getLastMessage(messageThread.getMessageThreadId());
+			Message lastMessage = messageService.getLastMessage(messageThread.getMessageThreadId());
 			int unreadMessages = messageService.getUnreadMessages(user);
 
 			partner = p1.equals(user.getLogin()) ? p2 : p1;

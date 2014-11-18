@@ -43,9 +43,16 @@
 		<div class="row">
 			<div class="list-group elomes" th:each="messageThread : ${conversations}">
 			  <a th:href="@{'/elovendo/messages/conversation/' + ${messageThread.messageThreadId}}" 
-			  	class="list-group-item" th:classappend="${messageThread.unreadMessages} &gt; 0? 'list-group-item-success'">
+			  	class="list-group-item" th:classappend="${messageThread.unreadMessages} &gt; 0? 'list-group-item-success'"
+			  	th:unless="${messageThread.lastMessage.offer}">
 			    <h4 class="list-group-item-heading text-center" th:text="${messageThread.partner}">user</h4>
-			    <p class="list-group-item-text" th:text="${#strings.abbreviate(messageThread.lastMessage, 90)}">...</p>
+			    <p class="list-group-item-text" th:text="${#strings.abbreviate(messageThread.lastMessage.messageText, 90)}">...</p>
+			  </a>
+			  <a th:href="@{'/elovendo/messages/conversation/' + ${messageThread.messageThreadId}}" 
+			  	class="list-group-item" th:classappend="${messageThread.unreadMessages} &gt; 0? 'list-group-item-success'"
+			  	th:if="${messageThread.lastMessage.offer}">
+			    <h4 class="list-group-item-heading text-center" th:text="${messageThread.partner}">user</h4>
+			    <span class="list-group-item-text" th:text="@{#{Offer.message.received} + ${messageThread.lastMessage.offerPrize}}">Offer received</span>
 			  </a>
 			</div>
 		</div>

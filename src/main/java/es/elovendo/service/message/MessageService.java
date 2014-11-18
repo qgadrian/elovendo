@@ -17,6 +17,15 @@ public interface MessageService {
 	public MessageThread createMessageThread(User sender, User receiver) 
 			throws MessageThreadAlreadyExistsException, UserNotFoundException;
 	
+	/**
+	 * Create a message state for a send message. Sender will be set as "read", and receiver as "not read" 
+	 * @param sender
+	 * @param receiver
+	 * @param message
+	 * @param messageThread
+	 */
+	public void createMessageState(User sender, User receiver, Message message, MessageThread messageThread);
+	
 	public Message sendMessage(User sender, User receiver, MessageThread messageThread,
 			String messageText, long ipAddress) throws MessageThreadAlreadyExistsException, UserNotFoundException;
 	
@@ -48,5 +57,5 @@ public interface MessageService {
 	
 	public MessageState getMessageState(Long messageId, User user);
 
-	public String getLastMessage(long messageThreadId);
+	public Message getLastMessage(long messageThreadId);
 }

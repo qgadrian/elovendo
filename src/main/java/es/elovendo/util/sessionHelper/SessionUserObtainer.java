@@ -23,7 +23,7 @@ public class SessionUserObtainer {
 		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
 			user = (User) context.getAuthentication().getPrincipal();
 
-		if (user != null) throw new AnonymousUserAuthenticationException();
+		if (user == null) throw new AnonymousUserAuthenticationException();
 		return user;
 	}
 

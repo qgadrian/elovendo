@@ -14,7 +14,7 @@ public interface MessageRepository extends PagingAndSortingRepository<Message, L
 	@Query("SELECT m FROM Message m WHERE messageThreadId = :messageThread ORDER BY messageDate DESC")
 	Page<Message> findMessagesByMessageThread(@Param("messageThread") Long messageThread, Pageable pageable);
 	
-	@Query("SELECT messageText FROM Message m WHERE messageThreadId = :messageThread ORDER BY messageDate DESC")
-	Page<String> findLastMessageFromMessageThread(@Param("messageThread") Long messageThread, Pageable pageable);
+	@Query("SELECT m FROM Message m WHERE messageThreadId = :messageThread ORDER BY messageDate DESC")
+	Page<Message> findLastMessageFromMessageThread(@Param("messageThread") Long messageThread, Pageable pageable);
 	
 }
