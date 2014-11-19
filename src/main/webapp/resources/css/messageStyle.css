@@ -180,11 +180,12 @@ width: 100%;
 }
 
 .chat-pop {
-	background-color: #f4f4f4;
+	background-color: #f0ecdf;
 	padding: 8px;
 	border-radius: 4px;
 	position: relative;
 	width: 70%;
+	box-shadow: 0 0.5px 0 0 #ffffff inset, 0 1px 2px 0 #B3B3B3;
 }
 
 .chat-pop .media-heading {
@@ -214,7 +215,7 @@ margin-top: 15px;
 }
 
 .elochat .chatcurr {
-background-color: #dbdbdb;
+background-color: #e2dce6;
 text-align: right;
 }
 
@@ -254,5 +255,11 @@ text-align: right;
 }
 
 .eloff {
-	background: #70cd61;
+	background: #70cd61!important;
+	text-align: right;
+}
+
+.elofff {
+	background: #70cd61!important;
+	text-align: left;
 }

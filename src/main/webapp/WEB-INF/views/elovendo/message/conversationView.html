@@ -43,9 +43,10 @@
 									<img th:unless="${message.sender.socialUser}" alt="User Image" th:src="@{'http://www.elovendo.com/' + ${message.sender.avatar}}">
 									<img th:if="${message.sender.socialUser}" alt="User Image" th:src="${message.sender.largeSocialAvatar}">
 								</div>
-								<div class="pull-right media-body chat-pop chatcurr">
+								<div class="pull-right media-body chat-pop" th:classappend="${message.offer} ? 'eloff' : 'chatcurr'">
 									<h4 class="media-heading">
-										<span th:text="${message.sender.login} + ' dice:'"></span>
+										<span th:unless="${message.offer}" th:text="${message.sender.login} + ' ' + #{Global.lower.says}"></span>
+										<span th:if="${message.offer}" th:text="#{Offer.message.sent.user}">Offer</span>
 										<span class="pull-left">
 											<abbr class="timeago" 
 											th:title="${#calendars.format(message.messageDate, 'dd MMMM yyyy, HH:mm')}">
@@ -56,7 +57,8 @@
 											</abbr> <i class="fa fa-clock-o"></i>
 										</span>
 										</h4>
-									<p class="pull-left mesText" th:utext="${message.messageText}"></p>
+									<p th:unless="${message.offer}" class="pull-left mesText" th:utext="${message.messageText}"></p>
+									<h2 th:if="${message.offer}" class="text-center" th:text="${message.offerPrize} + ' euros'"></h2>
 								</div>
 							</div>
 							<!--  Other user -->
@@ -65,9 +67,10 @@
 									<img th:unless="${message.sender.socialUser}" alt="User image" th:src="@{'http://www.elovendo.com/' + ${message.sender.avatar}}">
 									<img th:if="${message.sender.socialUser}" alt="User Image" th:src="${message.sender.largeSocialAvatar}">
 								</div>
-								<div class="media-body chat-pop" th:classappend="${message.offer} ? 'eloff'">
+								<div class="media-body chat-pop" th:classappend="${message.offer} ? 'elofff'">
 									<h4 class="media-heading">
-										<span th:text="${message.sender.login} + ' dice:'"></span>
+										<span th:unless="${message.offer}" th:text="${message.sender.login} + ' ' + #{Global.lower.says}"></span>
+										<span th:if="${message.offer}" th:text="${#strings.replace('__#{Offer.message.received.from}__', '$USER', message.sender.login)}">Offer</span>
 										<span class="pull-right">
 											<abbr class="timeago" 
 											th:title="${#calendars.format(message.messageDate, 'dd MMMM yyyy, HH:mm')}">
@@ -79,7 +82,7 @@
 										</span>
 									</h4>
 									<p th:unless="${message.offer}" class="mesText" th:utext="${message.messageText}"></p>
-									<p th:if="${message.offer}" class="mesText" th:text="@{#{Offer.message.received} + ${message.offerPrize}}"></p>
+									<h2 th:if="${message.offer}" class="text-center" th:text="${message.offerPrize} + ' euros'"></h2>
 								</div>
 							</div>
 						</div>
@@ -110,6 +113,7 @@
 	/*<![CDATA[*/
 		var c = /*[[${messageThreadId}]]*/ '';
 		var h = /*[[${session.userName}]]*/ '';
+		var sy = /*[[#{Global.lower.says}]]*/ '';
 		var s = "/elovendo/messages/send";
 		var cv = $("meta[name='_csrf']").attr("content");
 		var cn = $("meta[name='_csrf_header']").attr("content");
@@ -141,7 +145,7 @@
 
 			var uu = document.createElement('h4');
 			uu.className = 'media-heading';
-			uu.innerHTML = u + " says:";
+			uu.innerHTML = u + " " + sy;
 
 			var ssA = document.createElement('abbr');
 			ssA.className = "timeago";
@@ -266,7 +270,7 @@
 		
 					var im = document.createElement('img');
 					var ua = this.pic;
-					im.src = "http://www.elovendo.com/" + ua;
+					im.src = ua;
 					id.appendChild(im);
 		
 					fd.appendChild(id);
@@ -275,10 +279,6 @@
 					$("#msg-body").append(fd);
 					scroll();
 				});
-
-				
-				
-// 				console.log("text is " + text);
 				
 			});
 		

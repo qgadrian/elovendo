@@ -140,10 +140,14 @@ public class MessageWebController {
 
 		for (Message message : unreadMessages) {
 			JSONObject messageObject = new JSONObject();
-			messageObject.put("pic", message.getSender().getAvatar200h());
 			messageObject.put("userName", message.getSender().getLogin());
 			messageObject.put("message", message.getMessageText());
 			messageObject.put("date", message.getMessageDate().getTimeInMillis());
+			
+			if (message.getSender().isSocialUser())
+				messageObject.put("pic", message.getSender().getLargeSocialAvatar());
+			else 
+				messageObject.put("pic", message.getSender().getAvatar200h());
 
 			messageArray.add(messageObject);
 		}
