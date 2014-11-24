@@ -1,36 +1,33 @@
 package es.elovendo.util.currency;
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import javax.annotation.meta.Exhaustive;
+
+import org.apache.log4j.Logger;
 import org.json.simple.parser.ParseException;
 
+import es.elovendo.rest.web.ItemWebController;
 import es.elovendo.util.LocaleHelper;
 
 public class CurrencyLocaler {
 	
+	private static Logger logger = null;
 	private static CurrencyLocaler currencyLocaler;
-	private static JSONObject jsonCountries;
-	private static JSONParser parser;
-	private static final String JSON_CURRENCY_FILE = "/home/elovendo/elovendo/currency.json";
 	
 	private CurrencyLocaler() {}
 	
 	public static CurrencyLocaler getInstance() {
-		if (currencyLocaler == null) currencyLocaler = new CurrencyLocaler();
+		if (currencyLocaler == null) {
+			currencyLocaler = new CurrencyLocaler();
+			logger = Logger.getLogger(CurrencyLocaler.class); 
+		}
 		return currencyLocaler;
-	}
-	
-	private void initCountryJSON() throws FileNotFoundException, IOException, ParseException {
-		parser = new JSONParser();
-		jsonCountries = ((JSONObject) parser.parse(new FileReader(JSON_CURRENCY_FILE)));
 	}
 	
 	public Currency getCurrencyLocaled(Locale locale) throws NoCurrencyLocaleException {
@@ -115,9 +112,9 @@ public class CurrencyLocaler {
 			numberFormat.setCurrency(toCurrency);
 			return numberFormat.format(exchanged);
 		}
-		// If item's currency and locale currency is the same, just format the
-		// prize
+		// If item's currency and locale currency is the same, just format the prize
 		else {
+			logger.debug("Currencies are the same: " + fromCurrency + " vs " + toCurrency);
 			// Format using fromCurrency (actual currency)
 			NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
 			numberFormat.setCurrency(fromCurrency);

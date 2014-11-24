@@ -204,8 +204,10 @@ public class ItemWebController {
 		if (prizeMax != 0)
 			model.addAttribute("prizeMax", prizeMax);
 
-		Page<Item> p = itemService.getItemsByParams(title, categoryId, Constant.CATEGORY, dis, lat, lng, prizeMin,
-				prizeMax, page, size);
+//		Page<Item> p = itemService.getItemsByParams(title, categoryId, Constant.CATEGORY, dis, lat, lng, prizeMin,
+//				prizeMax, page, size);
+		Page<Item> p = itemService.getLocaledItemsByParams(locale, title, categoryId, Constant.CATEGORY, dis, lat, lng,
+				prizeMin, prizeMax, page, size);
 
 		String fixedUrl = fixPaginationUrl(categoryId, title, dis, lat, lng, prizeMin, prizeMax);
 

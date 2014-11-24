@@ -1,5 +1,13 @@
 package es.elovendo.service.item;
 
+import java.util.List;
+import java.util.Locale;
+
+import javax.annotation.Nullable;
+
+import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
+
 import es.elovendo.model.item.Item;
 import es.elovendo.model.item.ItemForm;
 import es.elovendo.model.user.User;
@@ -11,17 +19,6 @@ import es.elovendo.rest.exception.SubCategoryNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.service.exception.InvalidItemNameMinLenghtException;
 import es.elovendo.util.Constant;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.sql.Blob;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import org.springframework.data.domain.Page;
-import org.springframework.hateoas.Link;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by @adrian on 17/06/14. All rights reserved.
@@ -185,6 +182,24 @@ public interface ItemService {
 	 */
 	public Page<Item> getItemsByParams(String title, long id, String type, double dis, double lat,
 			double lng, int prizeMin, int prizeMax, int page, int size);
+	
+	/**
+	 * Get items using parameters with localized prize's currency
+	 * @param locale
+	 * @param title
+	 * @param id
+	 * @param type
+	 * @param dis
+	 * @param lat
+	 * @param lng
+	 * @param prizeMin
+	 * @param prizeMax
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	public Page<Item> getLocaledItemsByParams(Locale locale, String title, long id, String type, double dis,
+			double lat, double lng, int prizeMin, int prizeMax, int page, int size);
 
 	/**
 	 * Returns random 'maxItems' items

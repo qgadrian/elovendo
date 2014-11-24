@@ -19,9 +19,10 @@ import org.json.simple.parser.ParseException;
 public class CurrencyConverter {
 	
 	private final static String JSON_RATES = "rates";
-	private static final String JSON_RATE_FILE = "/home/elovendo/elovendo/latest.json";
+//	private static final String JSON_RATE_FILE = "/home/elovendo/elovendo/latest.json";
+	private static final String JSON_RATE_FILE = "/home/adrian/Proyectos/eclipse/elovendo/src/main/webapp/resources/json/latest.json";
 
-	Logger logger = Logger.getLogger(CurrencyConverter.class);
+	private static Logger logger;
 
 	private static CurrencyConverter currencyConverter;
 	private static JSONParser parser;
@@ -39,6 +40,7 @@ public class CurrencyConverter {
 			currencyConverter = new CurrencyConverter();
 			parser = new JSONParser();
 			jsonRates = (JSONObject) ((JSONObject) parser.parse(new FileReader(JSON_RATE_FILE))).get(JSON_RATES);
+			logger = Logger.getLogger(CurrencyConverter.class);
 		}
 		return currencyConverter;
 	}
@@ -105,12 +107,19 @@ public class CurrencyConverter {
 	 * @return Exchange rate
 	 */
 	private float getLocalCurrencyConvertRate(Currency fromCurrency, Currency toCurrency) {
-		
 		float fromRate = ((Number) jsonRates.get(fromCurrency.getCurrencyCode())).floatValue();
 		float toRate = ((Number) jsonRates.get(toCurrency.getCurrencyCode())).floatValue();
 		
 		logger.debug("Obtained *from* rate " + fromRate);
 		logger.debug("Obtained *to* rate " + toRate);
+		
+		return fromRate/toRate;
+	}
+	
+	public float getConvertRate(Currency fromCurrency, Currency toCurrency) {
+		
+		float fromRate = ((Number) jsonRates.get(fromCurrency.getCurrencyCode())).floatValue();
+		float toRate = ((Number) jsonRates.get(toCurrency.getCurrencyCode())).floatValue();
 		
 		return fromRate/toRate;
 	}

@@ -92,15 +92,6 @@ public class MainController implements ErrorController {
 		return "";
 	}
 
-	// @RequestMapping(value = "/login-error")
-	// public String loginErrorPage(HttpSession session, HttpServletRequest
-	// request, Model model, Device device) {
-	//
-	// model.addAttribute("error", true);
-	//
-	// return "elovendo/login";
-	// }
-
 	@RequestMapping(value = "/loginRedirect")
 	@ResponseStatus(HttpStatus.OK)
 	// TODO Testear esta notación
@@ -153,8 +144,6 @@ public class MainController implements ErrorController {
 		ProviderSignInUtils providerSignInUtils = new ProviderSignInUtils();
 		Connection<?> connection = providerSignInUtils.getConnectionFromSession(request);
 		// UserProfile socialMediaProfile = connection.fetchUserProfile();
-
-		logger.error("received login " + connection.getProfileUrl());
 
 		try {
 

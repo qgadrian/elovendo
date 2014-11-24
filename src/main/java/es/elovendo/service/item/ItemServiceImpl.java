@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -14,6 +15,7 @@ import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
 import org.elasticsearch.common.Strings;
 import org.imgscalr.Scalr;
+import org.json.simple.parser.ParseException;
 import org.owasp.html.HtmlPolicyBuilder;
 import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,8 @@ import es.elovendo.service.item.favorite.FavoriteService;
 import es.elovendo.service.user.UserService;
 import es.elovendo.util.Constant;
 import es.elovendo.util.IOUtil;
+import es.elovendo.util.currency.CurrencyConverter;
+import es.elovendo.util.currency.CurrencyLocaler;
 
 /**
  * Created by @adrian on 17/06/14. All rights reserved.
@@ -362,6 +366,47 @@ public class ItemServiceImpl implements ItemService {
 					bPrizeMax.doubleValue(), pageRequest);
 		}
 		
+	}
+
+	@Override
+	public Page<Item> getLocaledItemsByParams(Locale locale, String title, long id, String type, double dis,
+			double lat, double lng, int prizeMin, int prizeMax, int page, int size) {
+		// Protect page size
+		if (size > Constant.MAX_PAGE_SIZE) size = Constant.MAX_PAGE_SIZE;
+		
+		// Page Request
+		PageRequest pageRequest = new PageRequest(page, size);
+
+		BigDecimal bPrizeMin = prizeMin > 0 ? new BigDecimal(prizeMin) : new BigDecimal(0);
+		BigDecimal bPrizeMax = prizeMin > prizeMax ? new BigDecimal(0) : new BigDecimal(prizeMax);
+
+		if (dis <= 0)
+			dis = Constant.DEFAULT_RADIUS_SEARCH;
+		
+		// Get currency locale
+//		try {
+//			CurrencyLocaler localer = CurrencyLocaler.getInstance();
+//			CurrencyConverter converter = CurrencyConverter.getInstance();
+//			converter.getConvertRate(localer.getCurrencyLocaled(locale), toCurrency)
+//		} catch (IOException | ParseException e) {
+//			logger.error("Error " + CurrencyConverter.class.getCanonicalName() + " parsing file");
+//		}
+
+		Page<Item> items;
+		if (type.equalsIgnoreCase(Constant.CATEGORY)) {
+			items = itemRepository.findByParams(title, id, true, lat, lng, dis, bPrizeMin.doubleValue(),
+					bPrizeMax.doubleValue(), pageRequest);
+		} else {
+			items = itemRepository.findByParams(title, id, false, lat, lng, dis, bPrizeMin.doubleValue(),
+					bPrizeMax.doubleValue(), pageRequest);
+		}
+		
+		// Convert every item for the current locale
+		for (Item item : items) {
+			logger.warn("Locale prized currency is " + item.getExchangeCurrencyPrize(locale));
+		}
+		
+		return items;
 	}
 
 	public List<Item> getRandomFeaturedItems(int maxItems, String filter) {

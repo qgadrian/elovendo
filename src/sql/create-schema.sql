@@ -4,7 +4,6 @@
 
 -- GRANT ALL PRIVILEGES ON elovendo.* to admin@localhost IDENTIFIED BY 'password';
 
--- Eliminamos tablas.
 	--SET FOREIGN_KEY_CHECKS = 0;
 	/*DROP TABLE IF EXISTS image CASCADE*/;
 	DROP TABLE IF EXISTS messageState CASCADE;
@@ -21,7 +20,6 @@
 	DROP TABLE IF EXISTS role CASCADE;
 	--   SET FOREIGN_KEY_CHECKS = 1;
 
--- ROLE
 
 	CREATE TABLE role (
 		roleid BIGINT NOT NULL AUTO_INCREMENT,
@@ -30,8 +28,6 @@
 		CONSTRAINT u_rolename UNIQUE(rolename)
 	);	
 	
--- USER TABLE
---TODO: save register date to see how long is member
 	CREATE TABLE userprofile (
 		  userid BIGINT NOT NULL AUTO_INCREMENT,
 		  login VARCHAR(50) NOT NULL,
@@ -60,16 +56,12 @@
 		  CONSTRAINT check_uservalue_max CHECK (userValue < 101)
 	);
 
--- CATEGORY
-
     CREATE TABLE category (
         categoryid BIGINT NOT NULL AUTO_INCREMENT,
         categoryname VARCHAR(20) NOT NULL,
         CONSTRAINT pk_categoryid PRIMARY KEY (categoryid),
         CONSTRAINT u_categoryname UNIQUE(categoryname)
     );
-
--- SUBCATEGORY
 
     CREATE TABLE subcategory (
             subcategoryid BIGINT NOT NULL AUTO_INCREMENT,
@@ -78,8 +70,6 @@
             CONSTRAINT pk_subcategoryid PRIMARY KEY (subcategoryid),
             CONSTRAINT fk_subcategory_categoryid FOREIGN KEY (categoryid) REFERENCES category(categoryid) ON UPDATE CASCADE ON DELETE CASCADE
     );
-
-    -- ITEM TABLE
 
     	CREATE TABLE item (
     	    itemid BIGINT NOT NULL AUTO_INCREMENT,
@@ -109,8 +99,6 @@
     	    CONSTRAINT fk_item_subcategoryid FOREIGN KEY (subcategoryid) REFERENCES subcategory(subcategoryid) ON UPDATE CASCADE ON DELETE CASCADE
     	);
 
--- VOTE
-
     CREATE TABLE vote (
     	voteId BIGINT NOT NULL AUTO_INCREMENT,
         userIdVote BIGINT NOT NULL,
@@ -125,31 +113,6 @@
         CONSTRAINT fk_vote_useridreceive FOREIGN KEY (userIdReceive) REFERENCES userprofile(userid) ON UPDATE CASCADE ON DELETE CASCADE,
         CONSTRAINT fk_vote_itemId FOREIGN KEY (itemId) REFERENCES item(itemid) ON UPDATE CASCADE ON DELETE CASCADE
     );
-    
--- PENDING VOTE
-
-/*
-CREATE TABLE pendingVote(
-	pendingBoteId BIGINT NOT NULL AUTOINCREMENT,
-	userIdPending BIGINT NOT NULL,
-	userIdVoted BIGINT NOT NULL,
-);
-*/
-
--- PAYMENTS
--- txn_id -> Transaction id
--- payment_date
--- payment_status
--- item_name
--- item_number -> USER ID
--- ipn_track_id -< for paypal's internal purposes, save it for, "who knows"
--- mc_gross -> Precio
--- mc_fee -> Paypal commision
--- receiver_id -> ID de recibo de usuario
--- first_name
--- last_name
--- payer_email
--- residence_country -> Country
 
     CREATE TABLE purchase (
 		txn_id VARCHAR(255),
@@ -171,9 +134,6 @@ CREATE TABLE pendingVote(
 		CONSTRAINT check_purchase_item_number CHECK (item_number > 0)
 	);
 
-    
-    
--- MESSAGING
 
 	CREATE TABLE messageThread(
 		messageThreadId BIGINT NOT NULL AUTO_INCREMENT,
@@ -221,3 +181,18 @@ CREATE TABLE pendingVote(
 		token varchar(64) not null, 
 		last_used timestamp not null
 	);
+	
+	-- PAYMENTS
+-- txn_id -> Transaction id
+-- payment_date
+-- payment_status
+-- item_name
+-- item_number -> USER ID
+-- ipn_track_id -< for paypal's internal purposes, save it for, "who knows"
+-- mc_gross -> Precio
+-- mc_fee -> Paypal commision
+-- receiver_id -> ID de recibo de usuario
+-- first_name
+-- last_name
+-- payer_email
+-- residence_country -> Country
