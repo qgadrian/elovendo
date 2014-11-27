@@ -215,7 +215,7 @@ public class MainController implements ErrorController {
 
 	@RequestMapping(value = "/about")
 	public String aboutPage() {
-		return "/elovendo/about";
+		return "/elovendo/about/about";
 	}
 
 	/** ERRORS */

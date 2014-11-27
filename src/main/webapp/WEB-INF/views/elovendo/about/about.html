@@ -2,7 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8"/>
-<title>Qué es Elovendo</title>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<title>Qué es Elllllovendo</title>
 
 <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'/>
 <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'/>
@@ -120,7 +122,8 @@
 					<div class="col-lg-4">
 						<h2>Siempre querremos escucharte</h2>
 						<p>Nuestros usuarios son la máxima prioridad en Elovendo. Por eso si tienes sugerencias, dudas, o cualquier asunto que quieras comunicarnos, ¡no dudes en ponerte en contacto con nosotros y te responderemos lo antes posible!.</p>
-						<p><a class="btn btn-success">Contáctanos</a></p>
+						<p><a class="btn btn-success" data-toggle="modal"
+							data-target="#contactModal">Contáccctanos</a></p>
 					</div>					
 				</div><!-- row -->
 			</div>
@@ -133,6 +136,34 @@
 				<h4><a href="http://www.elovendo.com/index">Elovendo</a> - Copyright 2014</h4>
 			</div>
 		</div>
+		
+
+		<div th:replace="/elovendo/about/aboutContactModal"></div>
+
+	<script type="text/javascript">
+		$('#contactForm').submit(function(event) {
+			console.log("from going to submit");
+			event.preventDefault();
+			var cv = $("meta[name='_csrf']").attr("content");
+			var cn = $("meta[name='_csrf_header']").attr("content");
+			$.ajax({
+				type : 'POST',
+				beforeSend : function(request) {
+					request.setRequestHeader(cn, cv);
+				},
+				url : $(this).attr('action'),
+				data : ({
+					name : $('#name').val(),
+					email: $('#email').val(),
+					msg : $('#msg').val()
+				})
+	
+			});
+	
+			document.getElementById('msg').value = '';
+			$('#contactModal').modal('hide');
+		});
+	</script>
 
 </body>
 </html>

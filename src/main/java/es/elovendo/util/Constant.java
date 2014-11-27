@@ -16,6 +16,9 @@ public class Constant {
 	public static final int MAX_LAST_FAVORITES = 5;
 	public static final int MAX_LAST_ITEMS = 5;
 	
+	/** Elovendo's email accounts **/
+	public static final String CONTACT_EMAIL = "contact@elovendo.com";
+	
 	/** Items per page **/
 	public static final int MAX_PAGE_SIZE = 50;
 	public static final int ITEMS_PER_PAGE = 15;

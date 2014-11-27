@@ -11,6 +11,8 @@ import javax.mail.internet.MimeMessage;
 
 import org.apache.log4j.Logger;
 
+import es.elovendo.util.Constant;
+
 public class MailSender {
 
 	private static Logger logger = null;
@@ -25,13 +27,22 @@ public class MailSender {
 		return mailSender;
 	}
 
+	/**
+	 * Sends an email
+	 * @param senderName Sender name
+	 * @param senderEmail Sender's email. Email will be sent by "contact@elovendo.com" but will be notified to reply to
+	 * this attribute.
+	 * @param to Email destination.
+	 * @param subject Subject.
+	 * @param text Email message.
+	 */
 	public void sendMail(String senderName, String senderEmail, String to, String subject, String text) {
 
-		logger.warn("Sending from " + senderName + " to " + to);
-		logger.warn("Subject: " + subject + " msg: " + text);
+		logger.debug("Sending from " + senderName + " to " + to);
+		logger.debug("Subject: " + subject + " msg: " + text);
 
 		String pass = "988000Adrian";
-		String user = "contact@elovendo.com";
+		String user = Constant.CONTACT_EMAIL;
 		String host = "smtp.zoho.com";
 		String port = "465";
 		Properties properties = System.getProperties();
