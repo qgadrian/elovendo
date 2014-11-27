@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="_csrf" th:content="${_csrf.token}"/>
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-<title>Qué es Elllllovendo</title>
+<title th:text="#{About.title}">About</title>
 
 <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'/>
 <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'/>
@@ -33,28 +33,28 @@
 	    <div id="headerwrap">
 			<header class="clearfix">
 	  		 		<h1><i class="glyphicon glyphicon-heart"></i></h1>
-	  		 		<p>Elovendo,</p>
-	  		 		<p>reiventando la segunda mano.</p>
+	  		 		<p th:text="#{About.HeaderWrap.Line1}">Elovendo</p>
+	  		 		<p th:text="#{About.HeaderWrap.Line2}">reinventing.</p>
 	  		</header>
 	    </div>
 	    <div id="greywrap">
 			<div class="row">
 				<div class="col-lg-4 callout">
 					<i class="glyphicon glyphicon-thumbs-up"></i>
-					<h2>Reputación</h2>
-					<p>Nuestro algoritmo de reputación se auto ajusta acorde a los usuarios y aprende con ellos. Con lo que podrás estar seguro de si puedes confiar en un vendedor. </p>
+					<h2 th:text="#{About.feature1.title}">Reputation</h2>
+					<p th:text="#{About.feature1.text}">Text</p>
 				</div><!-- col-lg-4 -->
 					
 				<div class="col-lg-4 callout">
 					<i class="glyphicon glyphicon-map-marker"></i>
-					<h2>Geolocalización</h2>
-					<p>Estés donde estés, vende, busca o recibe alertas de lo que te interese. </p>
+					<h2 th:text="#{About.feature2.title}">Geolocation</h2>
+					<p th:text="#{About.feature2.text}">Text</p>
 				</div><!-- col-lg-4 -->	
 				
 				<div class="col-lg-4 callout">
 					<i class="glyphicon glyphicon glyphicon-eye-open"></i>
-					<h2>Información</h2>
-					<p>Queremos ofrecer la máxima información es nuestros anuncios, para que puedas ver absolutamente todo sin tenerlo delante.</p>
+					<h2 th:text="#{About.feature3.title}">Information</h2>
+					<p th:text="#{About.feature3.text}">Text</p>
 				</div><!-- col-lg-4 -->	
 			</div><!-- row -->
 		</div>
@@ -63,15 +63,15 @@
 		<div class="container" >
 			<div class="row white">
 			<br />
-				<h1 class="centered">SOBRE ELOVENDO</h1>
+				<h1 class="centered" th:text="#{About.sec1.title}">ABOUT ELOVENDO</h1>
 				<hr/>
 				
 				<div class="col-lg-6">
-					<p>En Elovendo apostamos por el avance. Es por eso por lo que siempre estamos investigando nuevas formas de renovar el mercado de la segunda mano. Ya sea en la aplicación móvil o web, nuestro objetivo es que puedas disfrutar de un producto que te ofrezca comodidad y seguridad. En Elovendo siempre estaremos trabajando para ti.</p>
+					<p th:text="#{About.sec1.text1}">Text</p>
 				</div><!-- col-lg-6 -->
 				
 				<div class="col-lg-6">
-					<p>Los anuncios geolocazidos no lo son todo de por sí. Es por eso por lo que nuestra priodidad, aparte de la comodidad de que puedas buscar donde, cuando y cómo quieras, es que nuestro vendedores te ofrezcan la máxima información sobre eso que venden y tú estás interesado. Y lo que estás viendo es sólo el principio, tenemos muchas más cosas en el horno para que disfrutes.</p>
+					<p th:text="#{About.sec1.text2}">Text</p>
 				</div><!-- col-lg-6 -->
 			</div><!-- row -->
 		</div><!-- container -->
@@ -79,9 +79,9 @@
 		<!-- ==== SECTION DIVIDER1 -->
 		<section class="section-divider textdivider divider1">
 			<div class="container">
-				<h1>EL LÍMITE ESTÁ DETRÁS DE TI</h1>
+				<h1 th:text="#{About.sec2.title}">NO LIMIT</h1>
 				<hr/>
-				<p>Todos nuestros anuncios están basados de la geolocazación, es la base de todo lo demás. Por eso podrás buscar lo que quieras, hasta en la otra punta del planeta, para encontrar eso que tanto buscas.</p>
+				<p th:text="#{About.sec2.text1}">Text</p>
 			</div><!-- container -->
 		</section><!-- section -->
 		
@@ -90,14 +90,13 @@
 			<br/>
 			<br/>
 			<div class="row">
-				<h2 class="centered">ANUNCIOS, ANUNCIOS, ANUNCIOS</h2>
+				<h2 class="centered" th:text="#{About.sec3.title}">STUFF</h2>
 				<hr/>
 				<br/>
 				<div class="col-lg-offset-2 col-lg-8">
-					<p>Los anuncios son la piedra angular de la segunda mano. Por eso queremos que tú, como vendedor o vendedora, vendas eso de lo que quieres deshacerte lo antes posible. Y también queremos que tú, como comprador o compradora, encuentres eso que buscas con la máxima información. Queremos que ambos, vendedores y compradores, puedan hablar, ver y comprobar aquello con lo que van a comerciar, como si esuviesen en la misma habitación.
-					</p>
-					<p>La información de la localización de los anuncios es privada, aunque recomendamos marcar una zona en particular, nadie nunca podrá ver punto exacto donde está ubicado el anuncio. Queremos ofrecer la máxima información, sin proporcionar ninguna información sensible.</p>
-					<p>En Elovendo, tenemos nuestro propio sistema de mensajes, es una manera rápida y cómoda de que nuestros usuarios se comuniquen. Sin embargo, como no queremos obligar nada a nadie, ofrecemos la posibilidad de que usuarios se pongan en contacto fácilmente mediante otras vías, como correo electrónico o aplicaciones de mensajería.</p>
+					<p th:text="#{About.sec3.text1}">Text</p>
+					<p th:text="#{About.sec3.text2}">Text</p>
+					<p th:text="#{About.sec3.text3}">Text</p>
 				</div><!-- col-lg -->
 			</div><!-- row -->
 			
@@ -106,9 +105,9 @@
 		<!-- ==== SECTION DIVIDER2 -->
 		<section class="section-divider textdivider divider2">
 			<div class="container">
-				<h1>EN EL MÓVIL, CONTIGO</h1>
+				<h1 th:text="#{About.sec4.title}">MOBILE</h1>
 				<hr/>
-				<p>Si eres usuario de nuestras aplicaciones móviles, tendrás los anuncios en todas partes, siempre que lo necesites. Da igual estés donde estés, ya sea en el tren, o en el sofá de tu casa, podrás buscar donde quieras, como quieras.</p>
+				<p th:text="#{About.sec4.text1}">Text</p>
 			</div><!-- container -->
 		</section><!-- section -->
 		
@@ -120,10 +119,10 @@
 						<img class="img-responsive" src="/images/about/aboutuser.png" align="middle"/>
 					</div>
 					<div class="col-lg-4">
-						<h2>Siempre querremos escucharte</h2>
-						<p>Nuestros usuarios son la máxima prioridad en Elovendo. Por eso si tienes sugerencias, dudas, o cualquier asunto que quieras comunicarnos, ¡no dudes en ponerte en contacto con nosotros y te responderemos lo antes posible!.</p>
+						<h2 th:text="#{About.sec5.title}">Contact</h2>
+						<p th:text="#{About.sec5.text1}">Text</p>
 						<p><a class="btn btn-success" data-toggle="modal"
-							data-target="#contactModal">Contáccctanos</a></p>
+							data-target="#contactModal" th:text="#{About.sec5.button.contact}">Contact</a></p>
 					</div>					
 				</div><!-- row -->
 			</div>
