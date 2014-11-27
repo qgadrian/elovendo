@@ -17,6 +17,7 @@ import es.elovendo.rest.exception.MessageTextTooLongException;
 import es.elovendo.rest.exception.MessageThreadAlreadyExistsException;
 import es.elovendo.rest.exception.MessageThreadNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
+import es.elovendo.rest.exception.UserSelfishOperationException;
 import es.elovendo.service.exception.EmailNotFoundException;
 import es.elovendo.service.message.MessageService;
 import es.elovendo.service.offer.OfferService;
@@ -57,13 +58,14 @@ public class OfferWebController {
 	 * @throws MessageThreadNotFoundException
 	 * @throws MessageTextTooLongException
 	 * @throws AnonymousUserAuthenticationException
+	 * @throws UserSelfishOperationException 
 	 */
 	@RequestMapping(value = "/send", method = RequestMethod.POST)
 	public @ResponseBody void sendMessage(
 			@RequestParam(value = "receiver", required = true, defaultValue = "") Long receiver,
 			@RequestParam(value = "offer", required = true) int offer, Model model, HttpServletRequest request)
 			throws AnonymousUserAuthenticationException, MessageThreadAlreadyExistsException, UserNotFoundException,
-			MessageTextTooLongException {
+			MessageTextTooLongException, UserSelfishOperationException {
 
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 

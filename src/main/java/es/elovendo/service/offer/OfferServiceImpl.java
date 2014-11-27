@@ -10,6 +10,7 @@ import es.elovendo.model.message.MessageThreadRepository;
 import es.elovendo.model.user.User;
 import es.elovendo.rest.exception.MessageThreadAlreadyExistsException;
 import es.elovendo.rest.exception.UserNotFoundException;
+import es.elovendo.rest.exception.UserSelfishOperationException;
 import es.elovendo.service.message.MessageService;
 import es.elovendo.service.user.UserService;
 
@@ -27,7 +28,7 @@ public class OfferServiceImpl implements OfferService {
 
 	@Override
 	public Message sendOffer(User sender, Long receiverId, int offer, long ipAddress) throws UserNotFoundException,
-			MessageThreadAlreadyExistsException {
+			MessageThreadAlreadyExistsException, UserSelfishOperationException {
 
 		User receiver = userService.findUserById(receiverId);
 		if (sender.equals(receiver))
@@ -39,9 +40,13 @@ public class OfferServiceImpl implements OfferService {
 	System.out.println("Offer: " + offer + " from IP: " + ipAddress);
 	System.out.println("#################################");
 
+		if (sender.equals(receiver))
+			throw new UserSelfishOperationException("Users " + sender.getUserId() + " tried to offer himself");
+	
 		MessageThread messageThread = messageThreadRepository.findMessageThreadByUsers(sender.getUserId(),
 				receiver.getUserId());
 
+		// If there is no thread between users, create a new one
 		if (messageThread == null)
 			messageThread = messageService.createMessageThread(sender, receiver);
 

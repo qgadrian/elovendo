@@ -1,4 +1,4 @@
-package es.elovendo.rest.controller;
+package es.elovendo.rest.api.controller.v1;
 
 import static es.elovendo.util.Constant.S_ITEMS_PER_PAGE;
 import es.elovendo.model.item.Item;
@@ -38,7 +38,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by @adrian on 17/06/14.
+ * Created by @author Adrián Quintás on 17/06/14.
  * All rights reserved.
  */
 
@@ -158,46 +158,61 @@ public class MobileItemController {
     	return jsonResponse;  	
     }
     
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	private JSONObject getJSONObjectFromFilter(String[] filterParams, Item item) {
-    	
-    	JSONObject itemJsonObject = new JSONObject();
-    	
-    	for (String field : filterParams) {
+
+		JSONObject itemJsonObject = new JSONObject();
+
+		for (String field : filterParams) {
 			switch (field) {
-    			case "itemId": 
-    				itemJsonObject.put("itemid", item.getItemId()); break;
-    			case "title": 
-    				itemJsonObject.put("title", item.getTitle()); break;
-    			case "description": 
-    				itemJsonObject.put("description", item.getDescription()); break;
-    			case "prize": 
-    				itemJsonObject.put("prize", item.getPrize()); break;
-    			case "distance":
-    				itemJsonObject.put("distance", item.getDistance()); break;
-    			case "lat":
-    				itemJsonObject.put("lat",item.getLatitude()); break;
-    			case "lng":
-    				itemJsonObject.put("lng", item.getLongitude()); break;
-    			case "userName": 
-    				itemJsonObject.put("userName", item.getUser().getLogin()); break;
-    			case "profilePic": 
-    				itemJsonObject.put("profilePic", 
-    					"http://www.elovendo.com/" + item.getUser().getAvatar()); break;
-    			case "userValue": 
-    				itemJsonObject.put("userValue", item.getUser().getUserValue()); break;
-    			case "subCategory": 
-    				itemJsonObject.put("subcategory", item.getSubCategory().getSubCategoryName()); break;
-    			case "category": 
-    				itemJsonObject.put("category", item.getSubCategory().getCategory().getCategoryName()); break;
-    			case "imageHome": 
-    				itemJsonObject.put("imageHome", "http://www.elovendo.com/" + item.getMainImage200h()); break;
+			case "itemId":
+				itemJsonObject.put("itemid", item.getItemId());
+				break;
+			case "title":
+				itemJsonObject.put("title", item.getTitle());
+				break;
+			case "description":
+				itemJsonObject.put("description", item.getDescription());
+				break;
+			case "prize":
+				itemJsonObject.put("prize", item.getPrize());
+				break;
+			case "distance":
+				itemJsonObject.put("distance", item.getDistance());
+				break;
+			case "lat":
+				itemJsonObject.put("lat", item.getLatitude());
+				break;
+			case "lng":
+				itemJsonObject.put("lng", item.getLongitude());
+				break;
+			case "userName":
+				itemJsonObject.put("userName", item.getUser().getLogin());
+				break;
+			case "profilePic":
+				if (item.getUser().isSocialUser())
+					itemJsonObject.put("profilePic", item.getUser().getLargeSocialAvatar());
+				else
+					itemJsonObject.put("profilePic", "http://www.elovendo.com/" + item.getUser().getAvatar());
+				break;
+			case "userValue":
+				itemJsonObject.put("userValue", item.getUser().getUserValue());
+				break;
+			case "subCategory":
+				itemJsonObject.put("subcategory", item.getSubCategory().getSubCategoryName());
+				break;
+			case "category":
+				itemJsonObject.put("category", item.getSubCategory().getCategory().getCategoryName());
+				break;
+			case "imageHome":
+				itemJsonObject.put("imageHome", "http://www.elovendo.com/" + item.getMainImage200h());
+				break;
 			}
 		}
-    	
-    	return itemJsonObject;
-    	
-    }
+
+		return itemJsonObject;
+
+	}
 
     @SuppressWarnings("unchecked")
 	private JSONObject getJSONObjectFromItem(Item item) {

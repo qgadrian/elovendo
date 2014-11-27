@@ -15,7 +15,6 @@ import es.elovendo.rest.exception.InvalidSelfVoteException;
 import es.elovendo.rest.exception.InvalidVoteUsersException;
 import es.elovendo.rest.exception.ItemNotFoundException;
 import es.elovendo.rest.exception.LoginNotAvailableException;
-import es.elovendo.rest.exception.ProvinceNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.rest.exception.VoteDuplicateException;
 import es.elovendo.service.exception.EmailNotFoundException;

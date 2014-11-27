@@ -1,4 +1,4 @@
-package es.elovendo.rest.controller;
+package es.elovendo.rest.api.controller.v1;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

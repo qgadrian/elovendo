@@ -14,7 +14,6 @@ import es.elovendo.model.user.User;
 import es.elovendo.rest.exception.InsufficientPointsException;
 import es.elovendo.rest.exception.ItemNotFoundException;
 import es.elovendo.rest.exception.NotUserItemException;
-import es.elovendo.rest.exception.ProvinceNotFoundException;
 import es.elovendo.rest.exception.SubCategoryNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.service.exception.InvalidItemNameMinLenghtException;
@@ -53,8 +52,7 @@ public interface ItemService {
 	public Item addItem(String userName, long subCategoryId, String title, String description, String currency,
 			double prize, byte[] mainImage, byte[] image1, byte[] image2, byte[] image3, String youtubeVideo,
 			boolean featured, boolean highlight, boolean autoRenew, String latitude, String longitude)
-			throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException,
-			ProvinceNotFoundException;
+			throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException;
 
 
 	/**

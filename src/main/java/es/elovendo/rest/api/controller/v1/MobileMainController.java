@@ -1,4 +1,4 @@
-package es.elovendo.rest.controller;
+package es.elovendo.rest.api.controller.v1;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

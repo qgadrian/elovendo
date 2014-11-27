@@ -1,4 +1,4 @@
-package es.elovendo.rest.controller;
+package es.elovendo.rest.api.controller.v1;
 
 import java.io.IOException;
 
@@ -18,7 +18,6 @@ import es.elovendo.model.item.Item;
 import es.elovendo.model.user.User;
 import es.elovendo.rest.exception.EmailNotAvailableException;
 import es.elovendo.rest.exception.LoginNotAvailableException;
-import es.elovendo.rest.exception.ProvinceNotFoundException;
 import es.elovendo.rest.exception.SubCategoryNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.service.exception.InvalidItemNameMinLenghtException;
@@ -75,7 +74,7 @@ public class MobileUserController {
 			@RequestParam("email") String email,
 			@RequestParam("province") String provinceName,
 			@RequestParam(value="avatar", required=false) MultipartFile avatar) 
-					throws ProvinceNotFoundException, LoginNotAvailableException, EmailNotAvailableException {
+					throws LoginNotAvailableException, EmailNotAvailableException {
 		
 		byte[] avatarBytes = null;
 		try {
@@ -101,7 +100,7 @@ public class MobileUserController {
 			@RequestParam(value = "email", required=false) String email,
 			@RequestParam(value = "province", required=false) String provinceName,
 			@RequestParam(value="avatar", required=false) MultipartFile avatar) 
-					throws ProvinceNotFoundException, LoginNotAvailableException, UserNotFoundException {
+					throws LoginNotAvailableException, UserNotFoundException {
 		
 		byte[] avatarBytes = null;
 		if (avatar != null) {
@@ -150,7 +149,7 @@ public class MobileUserController {
 			@RequestParam(value="currency", required=true) String currency,
 			@RequestParam(value="prize", required=true) double prize,
 			@RequestParam(value="image") MultipartFile file)
-			throws InvalidItemNameMinLenghtException, ProvinceNotFoundException, UserNotFoundException, 
+			throws InvalidItemNameMinLenghtException, UserNotFoundException, 
 				SubCategoryNotFoundException, IOException {
 		
 		// FIXME check if user if logged!!!
@@ -194,7 +193,7 @@ public class MobileUserController {
 	/* EXCEPTIONS HANDLERS */
 	/***************************************/
 
-	@ExceptionHandler({ProvinceNotFoundException.class, UserNotFoundException.class, 
+	@ExceptionHandler({UserNotFoundException.class, 
 		SubCategoryNotFoundException.class, InvalidItemNameMinLenghtException.class, 
 		LoginNotAvailableException.class})
 	protected String handleNoteNotFoundException(
