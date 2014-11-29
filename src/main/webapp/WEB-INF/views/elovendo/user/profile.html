@@ -490,13 +490,11 @@ function rmClick(value, d) {
 		  url: e,
 		  data: {id: f},
 		  success: function(data) {
-				$('#favMes').text(okrm);
-				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				shal(okrm, 'alert-success');
 				$('.fav' + value).remove();
 			},
 			error : function() {
-				$('#favMes').text(frm);
-				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				shal(frm, 'alert-danger');
 			}
 		});
 	}
@@ -513,13 +511,11 @@ function rmImi(mi) {
 		  url: e,
 		  data: {id: h},
 		  success: function(data) {
-				$('#favMes').text(okimi);
-				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				shal(okimi, 'alert-success');
 				$('#did' + mi).remove();
 			},
 			error : function() {
-				$('#favMes').text(fimi);
-				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				shal(fimi, 'alert-danger');
 			}
 	});
 }
@@ -536,80 +532,69 @@ function remImi(mi) {
 		url: e,
 		data: {id: h},
 		success: function(data) {
-			console.log("sutff " + data);
 			if (data == 0) {
-				$('#favMes').text(dlrex);
-				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				shal(dlrex, 'alert-danger');
 			} else {
-				$('#favMes').text(okrimi);
-				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				shal(okrimi, 'alert-success');
 			}
 		},
 		error : function() {
-			$('#favMes').text(frimi);
-			$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+			shal(frimi, 'alert-danger');
 		}
 	});
 }
 	
-$('a[data-toggle=modal], button[data-toggle=modal]').click(function () {
-    var itemId = $(this).data('item');
-//     console.log("i: " + itemId);
-    document.getElementById('itemId').value = itemId;
-//     console.log("y : " + document.getElementById('itemId').value);
-});
 
-// $(function() {
-// 	$('a[title]').tooltip();
-// 	$('h3[title]').tooltip();
-// });
+	$('a[data-toggle=modal], button[data-toggle=modal]').click(function() {
+		var itemId = $(this).data('item');
+		document.getElementById('itemId').value = itemId;
+	});
 
-$('.deleteButton').on('click', function(e) {
-	var idi = $(this).data('item');
-	e.preventDefault();
-	swal({
-	      title: dlWr,
-	      text: dlTx,
-	      type: "error",
-	      showCancelButton: true,
-	      confirmButtonClass: 'btn-danger',
-	      confirmButtonText: dlYs,
-	      cancelButtonText: dlNs
-	    },
-	    function(isConfirm) {
-	    	  if (isConfirm) {
-	    		rmImi(idi);
-	    	  }
-	    	}
-	);
-});
+	// $(function() {
+	// 	$('a[title]').tooltip();
+	// 	$('h3[title]').tooltip();
+	// });
 
-$('.editButton').on('click', function(e) {
-	e.preventDefault();
-	window.location = this.attributes.href.value;
-});
+	$('.deleteButton').on('click', function(e) {
+		var idi = $(this).data('item');
+		e.preventDefault();
+		swal({
+			title : dlWr,
+			text : dlTx,
+			type : "error",
+			showCancelButton : true,
+			confirmButtonClass : 'btn-danger',
+			confirmButtonText : dlYs,
+			cancelButtonText : dlNs
+		}, function(isConfirm) {
+			if (isConfirm) {
+				rmImi(idi);
+			}
+		});
+	});
 
-$('.renewButton').on('click', function(e) {
-	var idi = $(this).data('item');
-	e.preventDefault();
-	swal({
-	      title: dlRWr,
-	      text: dlRTx,
-	      type: "warning",
-	      showCancelButton: true,
-	      confirmButtonClass: 'btn-success',
-	      confirmButtonText: dlRYs,
-	      cancelButtonText: dlNs
-	    },
-	    function(isConfirm) {
-	    	  if (isConfirm) {
-	    		  remImi(idi);
-	    		console.log("anuncio renovado");
-	    	  }
-	    	}
-	);
-});
+	$('.editButton').on('click', function(e) {
+		e.preventDefault();
+		window.location = this.attributes.href.value;
+	});
 
+	$('.renewButton').on('click', function(e) {
+		var idi = $(this).data('item');
+		e.preventDefault();
+		swal({
+			title : dlRWr,
+			text : dlRTx,
+			type : "warning",
+			showCancelButton : true,
+			confirmButtonClass : 'btn-success',
+			confirmButtonText : dlRYs,
+			cancelButtonText : dlNs
+		}, function(isConfirm) {
+			if (isConfirm) {
+				remImi(idi);
+			}
+		});
+	});
 </script>
 
 </body>

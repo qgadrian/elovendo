@@ -175,7 +175,7 @@
 	</nav>
 	
 	<!-- Alert -->
-	<div class="falert alert alert-success alert-dismissible" id="favMesDiv" role="alert" style="display: none;">
+	<div class="falert alert alert-dismissible" id="favMesDiv" role="alert" style="display: none;">
 		<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span>
 		<span class="sr-only">Close</span></button>
 		<span id="favMes"></span>
@@ -199,6 +199,18 @@
 			} catch(err) {}
 		});
 	});
+	
+	function shal(msg, thm) {
+		console.log('user shadl fun');
+		$('#favMes').text(msg);
+		if (thm != null) {
+			$('#favMesDiv').addClass(thm)
+		}
+		else {
+			$('#favMesDiv').addClass('alert-success')
+		}
+		$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+	}
 	
 	// Workaround to be able to search from location at navbar
 	// Just insert new inputs with the values obtained from main
