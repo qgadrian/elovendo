@@ -14,16 +14,17 @@ import es.elovendo.model.user.User;
 import es.elovendo.rest.exception.InsufficientPointsException;
 import es.elovendo.rest.exception.ItemNotFoundException;
 import es.elovendo.rest.exception.NotUserItemException;
+import es.elovendo.rest.exception.RenewItemAfterEndDateException;
 import es.elovendo.rest.exception.SubCategoryNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.service.exception.InvalidItemNameMinLenghtException;
 import es.elovendo.util.Constant;
 
 /**
- * Created by @adrian on 17/06/14. All rights reserved.
+ * Created by @Adrián on 17/06/14. All rights reserved.
  */
 
-@SuppressWarnings({ "unused", "javadoc" })
+@SuppressWarnings("javadoc")
 public interface ItemService {
 
 	/**
@@ -229,6 +230,17 @@ public interface ItemService {
 	public Item updateItem(ItemForm itemForm, User user, MultipartFile mainImage,
 			MultipartFile image1, MultipartFile image2, MultipartFile image3) throws ItemNotFoundException,
 			NotUserItemException, SubCategoryNotFoundException, InsufficientPointsException;
+	
+	/**
+	 * Renew an item if it's actually is expired
+	 * @param user User who will renew the item
+	 * @param itemId Item to renew
+	 * @return
+	 * @throws ItemNotFoundException If item it's not found 
+	 * @throws NotUserItemException If item doesn't belong to user
+	 * @throws RenewItemAfterEndDateException If item end date is not expired yet (end date it's before today) 
+	 */
+	public Item renewItem(User user, Long itemId) throws ItemNotFoundException, NotUserItemException, RenewItemAfterEndDateException;
 
 	/**
 	 * Deletes an item, including all favorite references to it

@@ -37,6 +37,7 @@ import es.elovendo.rest.exception.CategoryNotFoundException;
 import es.elovendo.rest.exception.InsufficientPointsException;
 import es.elovendo.rest.exception.ItemNotFoundException;
 import es.elovendo.rest.exception.NotUserItemException;
+import es.elovendo.rest.exception.RenewItemAfterEndDateException;
 import es.elovendo.rest.exception.SubCategoryNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
 import es.elovendo.service.exception.InvalidItemNameMinLenghtException;
@@ -538,12 +539,24 @@ public class ItemWebController {
 		}
 	}
 
-	@RequestMapping(value = "delete/item", method = RequestMethod.POST)
+	@RequestMapping(value = "item/delete", method = RequestMethod.POST)
 	public @ResponseBody int deleteItem(@RequestParam(value = "id", required = true, defaultValue = "0") long itemId)
 			throws NotUserItemException, AnonymousUserAuthenticationException {
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 		itemService.deleteItem(user, itemId);
 		return (int) itemId;
+	}
+	
+	@RequestMapping(value = "item/renew", method = RequestMethod.POST)
+	public @ResponseBody int renewItem(@RequestParam(value = "id", required = true, defaultValue = "0") long itemId)
+			throws AnonymousUserAuthenticationException, ItemNotFoundException, NotUserItemException {
+		User user = SessionUserObtainer.getInstance().getSessionUser();
+		try {
+			itemService.renewItem(user, itemId);
+		}catch (RenewItemAfterEndDateException e) {
+			return 0;
+		}
+		return (int) 1;
 	}
 
 	/**

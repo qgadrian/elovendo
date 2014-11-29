@@ -36,6 +36,9 @@
 
 <link rel="stylesheet" href="/css/styleItem.css" />
 
+<link rel="stylesheet" href="http://lipis.github.io/bootstrap-sweetalert/lib/sweet-alert.css">
+<script src="http://lipis.github.io/bootstrap-sweetalert/lib/sweet-alert.js"></script>
+
 <title>User profile</title>
 
 </head>
@@ -213,8 +216,7 @@
 													<button class="btn btn-danger btn-m deleteButton"
 														style="padding: 6px 12px 5px 10px; min-width: 100px;"
 														th:value="${item.itemId}" data-toggle="modal" 
-														th:attr="data-item=${item.itemId}"
-														data-target="#removeModal">
+														th:attr="data-item=${item.itemId}">
 														<i class="glyphicon glyphicon-trash"></i> Eliminar
 													</button>
 														<div class="btn btn-mag btn-m editButton"
@@ -225,7 +227,7 @@
 													<button class="btn btn-warning btn-m renewButton"
 														style="padding: 6px 12px 5px 10px; min-width: 100px;"
 														th:value="${item.itemId}" data-toggle="modal"
-														data-target="#removeModal">
+														th:attr="data-item=${item.itemId}">
 														<i th:id="'i'+${item.itemId}"
 															class="glyphicon glyphicon-cog"></i> Renovar
 													</button>
@@ -462,6 +464,18 @@
 /*<![CDATA[*/
 var okrm = /*[[#{Alert.itemList.favorite.remove.ok}]]*/ 'Added to favorite';
 var frm = /*[[#{Alert.itemList.favorite.remove.error}]]*/ 'Error adding to favorite. Please try again.';
+var okimi = /*[[#{Alert.delete.item.text}]]*/ 'Item deleted';
+var fimi = /*[[#{Alert.delete.item.text.error}]]*/ 'Error deleting item';
+var okrimi = /*[[#{Alert.renew.item.text}]]*/ 'Item renewed';
+var frimi = /*[[#{Alert.renew.item.text.error}]]*/ 'Error renewing item';
+var dlWr = /*[[#{Item.delete.modal.title}]]*/ 'ARE YOU SURE?';
+var dlTx = /*[[#{Item.delete.modal.text}]]*/ 'Your item will be deleted';
+var dlRWr = /*[[#{Item.renew.modal.title}]]*/ 'RENEW?';
+var dlRTx = /*[[#{Item.renew.modal.text}]]*/ 'Renew item';
+var dlrex = /*[[#{Alert.renew.item.text.expire.error}]]*/ 'Cannot renew';
+var dlYs = /*[[#{Global.upper.delete}]]*/ 'Delete';
+var dlRYs = /*[[#{Global.upper.renew}]]*/ 'Renew';
+var dlNs = /*[[#{Global.upper.cancel}]]*/ 'Cancel';
 /*]]>*/
 
 function rmClick(value, d) {
@@ -487,6 +501,57 @@ function rmClick(value, d) {
 		});
 	}
 	
+function rmImi(mi) {
+	var h = mi;
+	var cv = $("meta[name='_csrf']").attr("content");
+	var cn = $("meta[name='_csrf_header']").attr("content");
+	var e = "/bazaar/item/delete";
+	
+	$.ajax({
+		  type: "POST",
+		  beforeSend: function (request) { request.setRequestHeader(cn, cv); },
+		  url: e,
+		  data: {id: h},
+		  success: function(data) {
+				$('#favMes').text(okimi);
+				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				$('#did' + mi).remove();
+			},
+			error : function() {
+				$('#favMes').text(fimi);
+				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+			}
+	});
+}
+
+function remImi(mi) {
+	var h = mi;
+	var cv = $("meta[name='_csrf']").attr("content");
+	var cn = $("meta[name='_csrf_header']").attr("content");
+	var e = "/bazaar/item/renew";
+	
+	$.ajax({
+		type: "POST",
+		beforeSend: function (request) { request.setRequestHeader(cn, cv); },
+		url: e,
+		data: {id: h},
+		success: function(data) {
+			console.log("sutff " + data);
+			if (data == 0) {
+				$('#favMes').text(dlrex);
+				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+			} else {
+				$('#favMes').text(okrimi);
+				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+			}
+		},
+		error : function() {
+			$('#favMes').text(frimi);
+			$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+		}
+	});
+}
+	
 $('a[data-toggle=modal], button[data-toggle=modal]').click(function () {
     var itemId = $(this).data('item');
 //     console.log("i: " + itemId);
@@ -500,7 +565,23 @@ $('a[data-toggle=modal], button[data-toggle=modal]').click(function () {
 // });
 
 $('.deleteButton').on('click', function(e) {
+	var idi = $(this).data('item');
 	e.preventDefault();
+	swal({
+	      title: dlWr,
+	      text: dlTx,
+	      type: "error",
+	      showCancelButton: true,
+	      confirmButtonClass: 'btn-danger',
+	      confirmButtonText: dlYs,
+	      cancelButtonText: dlNs
+	    },
+	    function(isConfirm) {
+	    	  if (isConfirm) {
+	    		rmImi(idi);
+	    	  }
+	    	}
+	);
 });
 
 $('.editButton').on('click', function(e) {
@@ -509,7 +590,24 @@ $('.editButton').on('click', function(e) {
 });
 
 $('.renewButton').on('click', function(e) {
+	var idi = $(this).data('item');
 	e.preventDefault();
+	swal({
+	      title: dlRWr,
+	      text: dlRTx,
+	      type: "warning",
+	      showCancelButton: true,
+	      confirmButtonClass: 'btn-success',
+	      confirmButtonText: dlRYs,
+	      cancelButtonText: dlNs
+	    },
+	    function(isConfirm) {
+	    	  if (isConfirm) {
+	    		  remImi(idi);
+	    		console.log("anuncio renovado");
+	    	  }
+	    	}
+	);
 });
 
 </script>

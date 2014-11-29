@@ -31,5 +31,11 @@ public interface ItemReportService {
 	 * @return
 	 */
 	public Page<ItemReport> getAllItemReport(int page, int size);
+	
+	/**
+	 * Deletes all report for a given Item
+	 * @param itemId
+	 */
+	public void deleteAllItemReports(Long itemId);
 
 }

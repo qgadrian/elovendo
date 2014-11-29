@@ -15,7 +15,6 @@ import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
 import org.elasticsearch.common.Strings;
 import org.imgscalr.Scalr;
-import org.json.simple.parser.ParseException;
 import org.owasp.html.HtmlPolicyBuilder;
 import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,16 +34,16 @@ import es.elovendo.model.user.User;
 import es.elovendo.rest.exception.InsufficientPointsException;
 import es.elovendo.rest.exception.ItemNotFoundException;
 import es.elovendo.rest.exception.NotUserItemException;
+import es.elovendo.rest.exception.RenewItemAfterEndDateException;
 import es.elovendo.rest.exception.SubCategoryNotFoundException;
 import es.elovendo.rest.exception.UserNotFoundException;
+import es.elovendo.service.admin.report.item.ItemReportService;
 import es.elovendo.service.exception.InvalidItemNameMinLenghtException;
 import es.elovendo.service.item.category.CategoryService;
 import es.elovendo.service.item.favorite.FavoriteService;
 import es.elovendo.service.user.UserService;
 import es.elovendo.util.Constant;
 import es.elovendo.util.IOUtil;
-import es.elovendo.util.currency.CurrencyConverter;
-import es.elovendo.util.currency.CurrencyLocaler;
 
 /**
  * Created by @adrian on 17/06/14. All rights reserved.
@@ -53,16 +52,18 @@ import es.elovendo.util.currency.CurrencyLocaler;
 @Service("itemService")
 public class ItemServiceImpl implements ItemService {
 
-	Logger logger = Logger.getLogger(ItemServiceImpl.class);
+	private Logger logger = Logger.getLogger(ItemServiceImpl.class);
 
 	@Autowired
-	ItemRepository itemRepository;
+	private ItemRepository itemRepository;
 	@Autowired
-	UserService userService;
+	private UserService userService;
 	@Autowired
-	FavoriteService favoriteService;
+	private FavoriteService favoriteService;
 	@Autowired
-	CategoryService categoryService;
+	private CategoryService categoryService;
+	@Autowired
+	private ItemReportService itemReportService;
 
 	@Override
 	public Item addItem(String userName, long subCategoryId, String title, String description, String currency,
@@ -121,28 +122,33 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Item addItem(ItemForm itemForm, User user, MultipartFile mainImage, 
-			MultipartFile image1, MultipartFile image2, MultipartFile image3) 
-					throws SubCategoryNotFoundException, InsufficientPointsException {
-				
-		SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(itemForm.getSubCategory());
-		
-		// Check if user's points are enough to purchase premium options selected
-		int totalPoints = 0;
-		if (itemForm.isFeatured()) totalPoints += Constant.OP_FEATURE_PRIZE;
-		if (itemForm.isHighlight()) totalPoints += Constant.OP_HIGLIGHT_PRIZE;
-		if (itemForm.isAutoRenew()) totalPoints += Constant.OP_AUTORENEW_PRIZE;
+	public Item addItem(ItemForm itemForm, User user, MultipartFile mainImage, MultipartFile image1,
+			MultipartFile image2, MultipartFile image3) throws SubCategoryNotFoundException,
+			InsufficientPointsException {
 
-		if (user.getPoints() < totalPoints) throw new InsufficientPointsException();
+		SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(itemForm.getSubCategory());
+
+		// Check if user's points are enough to purchase premium options
+		// selected
+		int totalPoints = 0;
+		if (itemForm.isFeatured())
+			totalPoints += Constant.OP_FEATURE_PRIZE;
+		if (itemForm.isHighlight())
+			totalPoints += Constant.OP_HIGLIGHT_PRIZE;
+		if (itemForm.isAutoRenew())
+			totalPoints += Constant.OP_AUTORENEW_PRIZE;
+
+		if (user.getPoints() < totalPoints)
+			throw new InsufficientPointsException();
 		else {
 			user.setPoints(user.getPoints() - totalPoints);
 			user = userService.updateUser(user);
 			// Update session user with the new points balance
-			Authentication authentication = new UsernamePasswordAuthenticationToken(user, 
-					user.getPassword(), user.getAuthorities());
+			Authentication authentication = new UsernamePasswordAuthenticationToken(user, user.getPassword(),
+					user.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 		}
-		
+
 		// Sanitize item description HTML string
 		// TODO: more check on tags used
 		PolicyFactory policy = new HtmlPolicyBuilder()
@@ -160,26 +166,26 @@ public class ItemServiceImpl implements ItemService {
 			wellYoutubeVideo = Strings.replace(wellYoutubeVideo, "watch?v=", "embed/");
 			itemForm.setYoutubeVideo(wellYoutubeVideo);
 		}
-		
+
 		Item item = new Item(user, subCategory, itemForm.getTitle(), itemForm.getDescription(), itemForm.getCurrency(),
 				itemForm.getPrize(), itemForm.getYoutubeVideo(), itemForm.isFeatured(), itemForm.isHighlight(),
 				itemForm.isAutoRenew(), itemForm.getLatitude(), itemForm.getLongitude());
-		
+
 		// Save new images (produce an unique name for an item)
 		item = saveMultiPartFileImage(item, mainImage, image1, image2, image3);
-		
+
 		// Randomize coordinates
 		Double[] latLng = randomizeCoordinates(itemForm.getLatitude(), itemForm.getLongitude());
 		item.setLatitude(latLng[0]);
 		item.setLongitude(latLng[1]);
-		
+
 		return itemRepository.save(item);
 	}
 
 	@Override
-	public Item updateItem(ItemForm itemForm, User user, MultipartFile mainImage,
-			MultipartFile image1, MultipartFile image2, MultipartFile image3) throws ItemNotFoundException,
-			NotUserItemException, SubCategoryNotFoundException, InsufficientPointsException {
+	public Item updateItem(ItemForm itemForm, User user, MultipartFile mainImage, MultipartFile image1,
+			MultipartFile image2, MultipartFile image3) throws ItemNotFoundException, NotUserItemException,
+			SubCategoryNotFoundException, InsufficientPointsException {
 
 		if (!itemForm.getUser().equals(user))
 			throw new NotUserItemException(itemForm.getItemId(), user.getUserId());
@@ -190,22 +196,25 @@ public class ItemServiceImpl implements ItemService {
 
 		// If subCategory is changed, get it
 		SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(itemForm.getSubCategory());
-		
-		// Check if user's points are enough to purchase premium options selected
+
+		// Check if user's points are enough to purchase premium options
+		// selected
 		int totalPoints = 0;
-		if (itemForm.isFeatured()) totalPoints += Constant.OP_FEATURE_PRIZE;
-		if (itemForm.isHighlight()) totalPoints += Constant.OP_HIGLIGHT_PRIZE;
-		if (itemForm.isAutoRenew()) totalPoints += Constant.OP_AUTORENEW_PRIZE;
+		if (itemForm.isFeatured())
+			totalPoints += Constant.OP_FEATURE_PRIZE;
+		if (itemForm.isHighlight())
+			totalPoints += Constant.OP_HIGLIGHT_PRIZE;
+		if (itemForm.isAutoRenew())
+			totalPoints += Constant.OP_AUTORENEW_PRIZE;
 
 		if (user.getPoints() < totalPoints) {
 			throw new InsufficientPointsException();
-		}
-		else {
+		} else {
 			user.setPoints(user.getPoints() - totalPoints);
 			user = userService.updateUser(user);
 			// Update session user with the new points balance
-			Authentication authentication = new UsernamePasswordAuthenticationToken(user, 
-					user.getPassword(), user.getAuthorities());
+			Authentication authentication = new UsernamePasswordAuthenticationToken(user, user.getPassword(),
+					user.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 		}
 
@@ -222,7 +231,7 @@ public class ItemServiceImpl implements ItemService {
 				image3 = null;
 			}
 		}
-		
+
 		// Save new images (produce an unique name for an item)
 		item = saveMultiPartFileImage(item, mainImage, image1, image2, image3);
 
@@ -235,7 +244,8 @@ public class ItemServiceImpl implements ItemService {
 		item.setHighlight(itemForm.isHighlight());
 		item.setAutoRenew(itemForm.isAutoRenew());
 
-		// If latitude or longitude are different from original, randomize the given ones
+		// If latitude or longitude are different from original, randomize the
+		// given ones
 		if (itemForm.getLatitude() != item.getLatitude() || itemForm.getLongitude() != item.getLongitude()) {
 			Double[] latLng = randomizeCoordinates(itemForm.getLatitude(), itemForm.getLongitude());
 			item.setLatitude(latLng[0]);
@@ -253,10 +263,11 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public Page<Item> getAllItemsByUserName(String userName, int page, int size) {
-		
+
 		// Protect page size
-		if (size > Constant.MAX_PAGE_SIZE) size = Constant.MAX_PAGE_SIZE;
-		
+		if (size > Constant.MAX_PAGE_SIZE)
+			size = Constant.MAX_PAGE_SIZE;
+
 		return itemRepository.findByUserName(userName, new PageRequest(page, size));
 	}
 
@@ -288,7 +299,6 @@ public class ItemServiceImpl implements ItemService {
 		return item;
 	}
 
-
 	/**
 	 * For simplicity I will work with integers, but passing to repository
 	 * BigDecimals
@@ -297,9 +307,10 @@ public class ItemServiceImpl implements ItemService {
 	public Page<Item> getAllItemsByCategory(String categoryName, int prizeMin, int prizeMax, int page, int size) {
 		BigDecimal bPrizeMin = new BigDecimal(prizeMin);
 		BigDecimal bPrizeMax = new BigDecimal(prizeMax);
-		
+
 		// Protect page size
-		if (size > Constant.MAX_PAGE_SIZE) size = Constant.MAX_PAGE_SIZE;
+		if (size > Constant.MAX_PAGE_SIZE)
+			size = Constant.MAX_PAGE_SIZE;
 
 		// Don't know if a negative number can break this, so I'm preventing
 		if (prizeMin < 0)
@@ -317,11 +328,12 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Page<Item> getItemsByParams(String title, String name, double dis, double lat, double lng,
-			int prizeMin, int prizeMax, int page, int size) {
-		
+	public Page<Item> getItemsByParams(String title, String name, double dis, double lat, double lng, int prizeMin,
+			int prizeMax, int page, int size) {
+
 		// Protect page size
-		if (size > Constant.MAX_PAGE_SIZE) size = Constant.MAX_PAGE_SIZE;
+		if (size > Constant.MAX_PAGE_SIZE)
+			size = Constant.MAX_PAGE_SIZE;
 
 		// Page Request
 		PageRequest pageRequest = new PageRequest(page, size);
@@ -335,20 +347,22 @@ public class ItemServiceImpl implements ItemService {
 		if (name.equalsIgnoreCase(Constant.ALL_PATH))
 			name = "";
 
-//		logger.debug("dis : " + dis + " ; lat: " + lat + " ; lng: " + lng + " cat: " + subCategory + " min "
-//				+ bPrizeMin + " max " + bPrizeMax);
+		// logger.debug("dis : " + dis + " ; lat: " + lat + " ; lng: " + lng +
+		// " cat: " + subCategory + " min "
+		// + bPrizeMin + " max " + bPrizeMax);
 
 		return itemRepository.findByParams(title, name, lat, lng, dis, bPrizeMin.doubleValue(),
 				bPrizeMax.doubleValue(), pageRequest);
 	}
-	
+
 	@Override
 	public Page<Item> getItemsByParams(String title, long id, String type, double dis, double lat, double lng,
 			int prizeMin, int prizeMax, int page, int size) {
-		
+
 		// Protect page size
-		if (size > Constant.MAX_PAGE_SIZE) size = Constant.MAX_PAGE_SIZE;
-		
+		if (size > Constant.MAX_PAGE_SIZE)
+			size = Constant.MAX_PAGE_SIZE;
+
 		// Page Request
 		PageRequest pageRequest = new PageRequest(page, size);
 
@@ -365,15 +379,16 @@ public class ItemServiceImpl implements ItemService {
 			return itemRepository.findByParams(title, id, false, lat, lng, dis, bPrizeMin.doubleValue(),
 					bPrizeMax.doubleValue(), pageRequest);
 		}
-		
+
 	}
 
 	@Override
 	public Page<Item> getLocaledItemsByParams(Locale locale, String title, long id, String type, double dis,
 			double lat, double lng, int prizeMin, int prizeMax, int page, int size) {
 		// Protect page size
-		if (size > Constant.MAX_PAGE_SIZE) size = Constant.MAX_PAGE_SIZE;
-		
+		if (size > Constant.MAX_PAGE_SIZE)
+			size = Constant.MAX_PAGE_SIZE;
+
 		// Page Request
 		PageRequest pageRequest = new PageRequest(page, size);
 
@@ -382,15 +397,17 @@ public class ItemServiceImpl implements ItemService {
 
 		if (dis <= 0)
 			dis = Constant.DEFAULT_RADIUS_SEARCH;
-		
+
 		// Get currency locale
-//		try {
-//			CurrencyLocaler localer = CurrencyLocaler.getInstance();
-//			CurrencyConverter converter = CurrencyConverter.getInstance();
-//			converter.getConvertRate(localer.getCurrencyLocaled(locale), toCurrency)
-//		} catch (IOException | ParseException e) {
-//			logger.error("Error " + CurrencyConverter.class.getCanonicalName() + " parsing file");
-//		}
+		// try {
+		// CurrencyLocaler localer = CurrencyLocaler.getInstance();
+		// CurrencyConverter converter = CurrencyConverter.getInstance();
+		// converter.getConvertRate(localer.getCurrencyLocaled(locale),
+		// toCurrency)
+		// } catch (IOException | ParseException e) {
+		// logger.error("Error " + CurrencyConverter.class.getCanonicalName() +
+		// " parsing file");
+		// }
 
 		Page<Item> items;
 		if (type.equalsIgnoreCase(Constant.CATEGORY)) {
@@ -400,12 +417,12 @@ public class ItemServiceImpl implements ItemService {
 			items = itemRepository.findByParams(title, id, false, lat, lng, dis, bPrizeMin.doubleValue(),
 					bPrizeMax.doubleValue(), pageRequest);
 		}
-		
+
 		// Convert every item for the current locale
 		for (Item item : items) {
 			logger.warn("Locale prized currency is " + item.getExchangeCurrencyPrize(locale));
 		}
-		
+
 		return items;
 	}
 
@@ -419,8 +436,10 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public List<Item> getRandomFeaturedItems(int maxItems, long categoryId) {
 		PageRequest request = new PageRequest(0, maxItems);
-		if (categoryId == 0) return itemRepository.findRandomFeaturedItems(request);
-		else return itemRepository.findRandomFeaturedItemsByCategoryId(categoryId, request);
+		if (categoryId == 0)
+			return itemRepository.findRandomFeaturedItems(request);
+		else
+			return itemRepository.findRandomFeaturedItemsByCategoryId(categoryId, request);
 	}
 
 	@Override
@@ -451,15 +470,16 @@ public class ItemServiceImpl implements ItemService {
 		favoriteService.removeAllItemFavs(itemId);
 		itemRepository.delete(itemId);
 	}
-	
+
 	@Override
 	public void deleteItem(User user, Long itemId) throws NotUserItemException {
 		Item item = itemRepository.findOne(itemId);
 		if (item != null && item.getUser().equals(user)) {
 			favoriteService.removeAllItemFavs(item);
+			itemReportService.deleteAllItemReports(itemId);
 			itemRepository.delete(itemId);
-		}
-		else throw new NotUserItemException(itemId, user.getUserId());
+		} else
+			throw new NotUserItemException(itemId, user.getUserId());
 	}
 
 	@Override
@@ -467,7 +487,8 @@ public class ItemServiceImpl implements ItemService {
 		List<Item> items = itemRepository.findByUserId(user.getUserId());
 		for (Item item : items) {
 			Calendar calendar = Calendar.getInstance();
-			calendar.add(Calendar.MONTH, -1); // Set past date to ensure it will be not shown in item list
+			calendar.add(Calendar.MONTH, -1); // Set past date to ensure it will
+												// be not shown in item list
 			item.setEndDate(calendar);
 			favoriteService.removeAllItemFavs(item);
 		}
@@ -516,7 +537,9 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	/**
-	 * Gets @MultiPartFile data from the image list, saves it to a file and updates item information
+	 * Gets @MultiPartFile data from the image list, saves it to a file and
+	 * updates item information
+	 * 
 	 * @param item
 	 * @param files
 	 * @return
@@ -532,33 +555,46 @@ public class ItemServiceImpl implements ItemService {
 					logger.debug("Error getting bytes from image");
 				}
 				switch (count) {
-					case 0: item.setMainImage(saveImage(item, bytes)); break;
-					case 1: item.setImage1(saveImage(item, bytes)); break;
-					case 2: item.setImage2(saveImage(item, bytes)); break;
-					case 3: item.setImage3(saveImage(item, bytes)); break;
-					default: break;
+				case 0:
+					item.setMainImage(saveImage(item, bytes));
+					break;
+				case 1:
+					item.setImage1(saveImage(item, bytes));
+					break;
+				case 2:
+					item.setImage2(saveImage(item, bytes));
+					break;
+				case 3:
+					item.setImage3(saveImage(item, bytes));
+					break;
+				default:
+					break;
 				}
 				count++;
 			}
 		}
-		
+
 		// Check if no image where provided, and set a default one
-		if (count == 0) item.setMainImage(Constant.ITEM_IMG_DEFAULT);
-		
+		if (count == 0)
+			item.setMainImage(Constant.ITEM_IMG_DEFAULT);
+
 		return item;
 	}
-	
+
 	/**
-	 * Uses item's user Id among the current timestamp to generate an unique String
+	 * Uses item's user Id among the current timestamp to generate an unique
+	 * String
+	 * 
 	 * @param item
 	 * @return Generated String with user Id and timestamp
 	 */
 	private String itemHash(Item item) {
 		return String.valueOf((item.getUser().getUserId() + Calendar.getInstance().getTimeInMillis()));
 	}
-	
+
 	/**
 	 * Saves an image to disk naming as unique filename
+	 * 
 	 * @param item
 	 * @param bytes
 	 * @return Image file path
@@ -602,13 +638,15 @@ public class ItemServiceImpl implements ItemService {
 				// item.setMainImage(IOUtil.calculateFileName(item) +"/"+
 				// imageFileName);
 
-//				logger.debug("Saving image with path " + IOUtil.calculateFileName(item) + "/" + imageFileName);
+				// logger.debug("Saving image with path " +
+				// IOUtil.calculateFileName(item) + "/" + imageFileName);
 				String absolutePath = IOUtil.calculateFileName(item) + "/" + imageFileName;
-				
-				// Remember to call Image.flush() on the src to free up native resources 
+
+				// Remember to call Image.flush() on the src to free up native
+				// resources
 				// and make it easier for the GC to collect the unused image.
 				resizedImage.flush();
-				
+
 				return absolutePath;
 
 			} catch (NullPointerException | IOException | IllegalArgumentException e) {
@@ -616,6 +654,25 @@ public class ItemServiceImpl implements ItemService {
 			}
 
 		return null;
+	}
+
+	@Override
+	public Item renewItem(User user, Long itemId) throws ItemNotFoundException, NotUserItemException,
+			RenewItemAfterEndDateException {
+		Item item = getItemById(itemId);
+		if (!item.getUser().equals(user)) {
+			throw new NotUserItemException(itemId, user.getUserId());
+		}
+
+		Calendar cal = Calendar.getInstance();
+		if (item.getEndDate().after(cal)) {
+			throw new RenewItemAfterEndDateException("Manually renew of item " + itemId + " before expiring");
+		}
+
+		cal.add(Calendar.DATE, Constant.DEFAULT_RENEW_DAYS);
+		item.setEndDate(cal);
+
+		return itemRepository.save(item);
 	}
 
 }

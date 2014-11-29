@@ -38,4 +38,9 @@ public class ItemReportServiceImpl implements ItemReportService {
 		return itemReportRepository.findAll(request);
 	}
 
+	@Override
+	public void deleteAllItemReports(Long itemId) {
+		itemReportRepository.deleteAllItemReports(itemId);
+	}
+
 }
