@@ -13,12 +13,12 @@
 					<form id="offerForm" name="offerForm" role="form" action="/elovendo/offer/public/send" method="post"
 						accept-charset="UTF-8">
 						<div class="form-group">
-							<label for="anonEmail" th:text="#{Global.email}">Email</label> 
+							<label for="anonEmail" th:text="#{Global.upper.email}">Email</label> 
 								<input type="email" name="email" class="form-control" id="semail"
 								th:placeholder="#{Common.email.placeholder}" />
 						</div>
 						<div class="form-group">
-							<label for="sender" th:text="#{Global.name}">Name</label> <input
+							<label for="sender" th:text="#{Global.upper.name}">Name</label> <input
 								type="text" class="form-control" id="sender"
 								name="sender" th:placeholder="#{Common.name.placeholder}" />
 						</div>
@@ -34,8 +34,8 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default"
-								data-dismiss="modal" th:text="#{Global.cancel}">Cancel</button>
-							<button type="submit" class="btn btn-success" onclick="hdp('a')" th:text="#{Global.offer}">Offer</button>
+								data-dismiss="modal" th:text="#{Global.upper.cancel}">Cancel</button>
+							<button type="submit" class="btn btn-success" onclick="hdp('a')" th:text="#{Global.upper.offer}">Offer</button>
 						</div>
 					</form>
 				</div>
@@ -54,8 +54,8 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default"
-								data-dismiss="modal" th:text="#{Global.cancel}">Cancel</button>
-							<button type="submit" class="btn btn-success" onclick="hdp('s')" th:text="#{Global.offer}">Offer</button>
+								data-dismiss="modal" th:text="#{Global.upper.cancel}">Cancel</button>
+							<button type="submit" class="btn btn-success" onclick="hdp('s')" th:text="#{Global.upper.offer}">Offer</button>
 						</div>
 					</form>
 				</div>

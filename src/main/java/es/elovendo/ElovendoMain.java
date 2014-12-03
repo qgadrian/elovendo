@@ -9,8 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
- * Created by @adrian on 13/06/14.
- * All rights reserved.
+ * Created by @Adrian on 13/06/14. All rights reserved.
  */
 
 @EnableAutoConfiguration
@@ -18,14 +17,14 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan("es.elovendo")
 @EnableJpaRepositories
 public class ElovendoMain extends SpringBootServletInitializer {
-	
+
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(ElovendoMain.class);
 	}
 
-    public static void main(String[] args) {
-        SpringApplication.run(ElovendoMain.class, args);
-    }
+	public static void main(String[] args) {
+		 SpringApplication.run(ElovendoMain.class, args);
+	}
 
 }

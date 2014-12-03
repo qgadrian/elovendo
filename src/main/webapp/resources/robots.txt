@@ -1,11 +1,18 @@
 #ROBOTS
 
-#temp
 User-agent: Googlebot
-Disallow: /
+Disallow: /elovendo/messages/*
+Disallow: /site/profile/*
+Disallow: /*.js$
+Allow: /site/public/*
+Allow: /bazaar/*
 
 User-agent: Slurp
-Disallow: /
+Disallow: /elovendo/messages/*
+Disallow: /site/profile/*
+Disallow: /*.js$
+Allow: /site/public/*
+Allow: /bazaar/*
 
 User-agent: e-SocietyRobot
 Disallow: /
@@ -140,11 +147,8 @@ Disallow: /
 User-agent: Mail.Ru
 Disallow: /
 
-
-
 User-agent: Jyxobot/1
 Disallow: /
-
 
 User-agent: cityreview
 Disallow: /

@@ -41,6 +41,8 @@ public class Constant {
 	public static final String VOTE_POSITIVE_STRING = "positive";
 	public static final String VOTE_NEGATIVE_STRING = "negative";
 	public static final String VOTE_PENDING_STRING = "pending";
+	public static final String URL_ROOT_PATH = "http://www.elovendo.com";
+	public static final String SITEMAP_XML_LOCAL_PATH = "./src/main/webapp/resources/sitemap";
 	
 	/**
 	 * URL PREFIXES

@@ -134,6 +134,10 @@ public class User implements UserDetails, Principal {
 	public Long getUserId() {
 		return userId;
 	}
+	
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
 
 	public String getLogin() {
 		return login;

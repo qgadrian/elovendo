@@ -466,12 +466,10 @@
 			url: e,
 			data: {id: f},
 			success: function(data) {
-				$('#favMes').text(okm);
-				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				shal(okm, 'alert-success');
 			},
 			error : function() {
-				$('#favMes').text(fm);
-				$('#favMesDiv').delay(100).fadeIn().delay(3000).fadeOut();
+				shal(fm, 'alert-danger');
 			}
 		});
 	}
