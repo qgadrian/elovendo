@@ -63,7 +63,7 @@ public class BatchConfiguration {
 	/**
 	 * @throws Exception
 	 */
-	@Scheduled(fixedRate = 300000)
+	@Scheduled(cron = "00 00 * * * *") // Everyday at midnight
 	public void doStuff() throws Exception {
 
 		WebSitemapGenerator sitemapGenerator = sitemapGenerator(environment);

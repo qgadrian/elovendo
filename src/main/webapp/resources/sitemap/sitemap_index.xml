@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>http://www.elovendo.com/sitemap1.xml.gz</loc>
+    <lastmod>2014-12-04T12:00:00.027+01:00</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>http://www.elovendo.com/sitemap2.xml.gz</loc>
+    <lastmod>2014-12-04T12:00:00.027+01:00</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>http://www.elovendo.com/sitemap3.xml.gz</loc>
+    <lastmod>2014-12-04T12:00:00.027+01:00</lastmod>
+  </sitemap>
+</sitemapindex>

@@ -131,11 +131,6 @@
 						</div>
 					</div>
 					<div class="row">
-	<!-- 						<div class="col-xs-6 col-md-6"> -->
-	<!-- 							<a href="/bazaar/category/tecnologia" class="thumbnail">  -->
-	<!-- 							<img src="/images/categories/technology.jpg" data-src="holder.js/100%x150" /> -->
-	<!-- 							</a> -->
-	<!-- 						</div> -->
 						<div class="col-xs-6 col-md-6">
 						<a href="/bazaar/category/1" class="thumbnail" style="text-decoration: none;"> 
 							<img src="/images/categories/technology.jpg" data-src="holder.js/100%x150" />
@@ -147,18 +142,15 @@
 						<div class="col-xs-6 col-md-6">
 							<a href="/bazaar/category/2" class="thumbnail" style="text-decoration: none;">
 								<img src="/images/categories/sport.jpg" data-src="holder.js/100%x150" />
-	<!-- 							<div class="caption"> -->
-									<div class="caption post-content">
+								<div class="caption post-content">
 									<h3>Deportes</h3> 
-									</div>
-	<!-- 							</div> -->
+								</div>
 							</a>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-xs-6 col-md-6">
-						<!-- Down here this was, padawan: thumbnail2 -->
-							<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
+							<a href="/bazaar/category/3" class="thumbnail" style="text-decoration: none;">
 								<img src="/images/categories/house.jpg" data-src="holder.js/100%x150" />
 								<div class="caption post-content">
 									<h3 >Hogar</h3> 
@@ -166,7 +158,7 @@
 							</a>
 						</div>
 						<div class="col-xs-6 col-md-6">
-							<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
+							<a href="/bazaar/category/4" class="thumbnail" style="text-decoration: none;">
 								<img src="/images/categories/car.jpg" data-src="holder.js/100%x150" />
 								<div class="caption post-content">
 									<h3>Motor</h3> 
@@ -176,7 +168,7 @@
 					</div>
 					<div class="row">
 						<div class="col-xs-6 col-md-6">
-							<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
+							<a href="/bazaar/category/5" class="thumbnail" style="text-decoration: none;">
 								<img src="/images/categories/puppy.jpg" data-src="holder.js/100%x150" />
 								<div class="caption post-content">
 									<h3 >Mascotas</h3> 
@@ -184,7 +176,7 @@
 							</a>
 						</div>
 						<div class="col-xs-6 col-md-6">
-							<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
+							<a href="/bazaar/category/6" class="thumbnail" style="text-decoration: none;">
 								<img src="/images/categories/book.jpg" data-src="holder.js/100%x150" />
 								<div class="caption post-content">
 									<h3 >Libros</h3> 
@@ -194,7 +186,7 @@
 					</div>
 					<div class="row">
 						<div class="col-xs-6 col-md-6">
-							<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
+							<a href="/bazaar/category/7" class="thumbnail" style="text-decoration: none;">
 								<img src="/images/categories/fashion.jpg" data-src="holder.js/100%x150" />
 								<div class="caption post-content">
 									<h3 >Moda</h3> 
@@ -202,7 +194,7 @@
 							</a>
 						</div>
 						<div class="col-xs-6 col-md-6">
-							<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
+							<a href="/bazaar/category/8" class="thumbnail" style="text-decoration: none;">
 								<img src="/images/categories/jewelry.jpg" data-src="holder.js/100%x150" />
 								<div class="caption post-content">
 									<h3 >Joyas</h3> 
@@ -212,7 +204,7 @@
 					</div>
 					<div class="row">
 						<div class="col-xs-6 col-md-6">
-							<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
+							<a href="/bazaar/category/9" class="thumbnail" style="text-decoration: none;">
 								<img src="/images/categories/toy.jpg" data-src="holder.js/100%x150" />
 								<div class="caption post-content">
 									<h3 >Juguetes</h3> 
@@ -220,7 +212,7 @@
 							</a>
 						</div>
 						<div class="col-xs-6 col-md-6">
-							<a href="/bazaar/category/tecnologia" class="thumbnail" style="text-decoration: none;">
+							<a href="/bazaar/category/10" class="thumbnail" style="text-decoration: none;">
 								<img src="/images/categories/music.jpg" data-src="holder.js/100%x150" />
 								<div class="caption post-content">
 									<h3 >Música</h3> 
@@ -231,11 +223,10 @@
 				</div>
 			</div>
 			<!-- FIN -->
-			
-			<!-- Footer -->
-			<div th:include="elovendo/footer"></div>
-
 		</div>
+		
+		<!-- Footer -->
+		<div th:replace="elovendo/footer"></div>
 		
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
@@ -246,8 +237,7 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="myModalLabel">Enviar mensaje -
-						SÓLO si estás funciona logueado! -</h4>
+					<h4 class="modal-title" id="myModalLabel">Enviar mensaje</h4>
 				</div>
 				<div class="modal-body">
 					<form id="messageForm" name="messageForm" role="form"

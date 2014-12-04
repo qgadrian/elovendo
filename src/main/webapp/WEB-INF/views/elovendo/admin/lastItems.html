@@ -42,6 +42,9 @@
 	
 	<div th:replace="elovendo/admin/pagingItems"></div>
 	
+	<!-- Footer -->
+	<div th:replace="elovendo/footer"></div>
+	
 	<script th:inline="javascript">
 		$('.deleteItem').on('click', function(e) {
 			var id = $(this).data('itemid');
