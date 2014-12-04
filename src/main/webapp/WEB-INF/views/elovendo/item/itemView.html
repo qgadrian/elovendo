@@ -151,6 +151,10 @@
 								<div class="row">
 									<div class="col-xs-12 text-center">
 										<div class="btn-group">
+											<button class="btn btn-mag btn-lg" role="button"
+												th:onclick="'favClick(' + ${item.itemId} + ', this)'">
+												<i class="glyphicon glyphicon-heart-empty"></i> Añadir favorito
+											</button>
 											<button class="btn btn-primary btn-lg" role="button"
 												data-toggle="modal" data-target="#msgModal">
 												<i class="glyphicon glyphicon-send"></i> Enviar mensaje
@@ -469,6 +473,9 @@
 		var cn = $("meta[name='_csrf_header']").attr("content");
 		var di = /*[[#{Item.view.Modal.denounce.title.item}]]*/ 'Denounce item';
 		var du = /*[[#{Item.view.Modal.denounce.title.user}]]*/ 'Denounce user';
+		var okm = /*[[#{Alert.itemList.favorite.ok}]]*/ 'Added to favorite';
+		var fm = /*[[#{Alert.itemList.favorite.error}]]*/ 'Error adding to favorite. Please try again.';
+		var ell = /*[[#{Alert.itemList.favorite.login}]]*/ 'You have to login first.';
 		/*]]>*/
 		$('#sVote').on('click', function() {
 			var e = "/site/vote";
@@ -495,6 +502,27 @@
 				}
 			});
 		});
+		
+		function favClick(value, d) {
+			var f = value;
+			var cv = $("meta[name='_csrf']").attr("content");
+			var cn = $("meta[name='_csrf_header']").attr("content");
+			var e = "/bazaar/item/fav";
+			
+			$.ajax({
+				type: "POST",
+				beforeSend: function (request) { request.setRequestHeader(cn, cv); },
+				url: e,
+				data: {id: f},
+				success: function(data) {
+					if (data) shal(okm, 'alert-success');
+					else shal(ell, 'alert-danger');
+				},
+				error : function() {
+					shal(fm, 'alert-danger');
+				}
+			});
+		}
 
 		$('#nVote').on('click', function() {
 			var e = "/site/vote";
