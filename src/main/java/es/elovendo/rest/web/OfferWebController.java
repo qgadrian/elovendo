@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import es.elovendo.model.user.User;
 import es.elovendo.rest.exception.InvalidMessageThreadException;
+import es.elovendo.rest.exception.ItemNotFoundException;
 import es.elovendo.rest.exception.MessageTextTooLongException;
 import es.elovendo.rest.exception.MessageThreadAlreadyExistsException;
 import es.elovendo.rest.exception.MessageThreadNotFoundException;
@@ -29,7 +30,7 @@ import es.elovendo.util.sessionHelper.exception.AnonymousUserAuthenticationExcep
 @Controller
 @RequestMapping(value = "/elovendo/offer")
 public class OfferWebController {
-	
+
 	Logger logger = Logger.getLogger(MessageWebController.class);
 
 	@Autowired
@@ -43,7 +44,7 @@ public class OfferWebController {
 	 * Send a intern message to the user. ReceiverId or MessageThreadId can be
 	 * null, but not both of them.
 	 * 
-	 * @param receiver
+	 * @param receiverId
 	 *            Can be empty. Receivers user Id.
 	 * @param messageThreadId
 	 *            Message thread, if the conversation previously exists. Can be
@@ -58,37 +59,40 @@ public class OfferWebController {
 	 * @throws MessageThreadNotFoundException
 	 * @throws MessageTextTooLongException
 	 * @throws AnonymousUserAuthenticationException
-	 * @throws UserSelfishOperationException 
+	 * @throws UserSelfishOperationException
+	 * @throws ItemNotFoundException
 	 */
 	@RequestMapping(value = "/send", method = RequestMethod.POST)
 	public @ResponseBody void sendMessage(
-			@RequestParam(value = "receiver", required = true, defaultValue = "") Long receiver,
+			@RequestParam(value = "receiver", required = true, defaultValue = "") Long receiverId,
+			@RequestParam(value = "i", required = true, defaultValue = "") Long itemId,
 			@RequestParam(value = "offer", required = true) int offer, Model model, HttpServletRequest request)
 			throws AnonymousUserAuthenticationException, MessageThreadAlreadyExistsException, UserNotFoundException,
-			MessageTextTooLongException, UserSelfishOperationException {
+			MessageTextTooLongException, UserSelfishOperationException, ItemNotFoundException {
 
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 
 		long remoteIpAddress = IOUtil.Dot2LongIP(request.getRemoteAddr());
 
-		offerService.sendOffer(user, receiver, offer, remoteIpAddress);
+		offerService.sendOffer(user, receiverId, itemId, offer, remoteIpAddress);
 	}
 
 	@RequestMapping(value = "/public/send", method = RequestMethod.POST)
 	public @ResponseBody void sendPublicMessage(@RequestParam(value = "receiver", required = true) Long receiverId,
 			@RequestParam(value = "sender", required = true) String senderName,
 			@RequestParam(value = "email", required = true) String senderEmail,
-			@RequestParam(value = "offer", required = true) int offer, 
-			Model model, HttpServletRequest request) throws EmailNotFoundException {
+			@RequestParam(value = "offer", required = true) int offer, Model model, HttpServletRequest request)
+			throws EmailNotFoundException {
 
 		// long remoteIpAddress = IOUtil.Dot2LongIP(request.getRemoteAddr());
 
 		String receiverEmail = userService.getUserEmailFromUserId(receiverId);
-		
-		logger.error("Received an public offer of " + offer );
 
-//		MailSender mailSender = MailSender.getInstance();
-//		mailSender.sendMail(senderName, senderEmail, receiverEmail, "Testing", offer);
+		logger.error("Received an public offer of " + offer);
+
+		// MailSender mailSender = MailSender.getInstance();
+		// mailSender.sendMail(senderName, senderEmail, receiverEmail,
+		// "Testing", offer);
 	}
 
 }

@@ -28,6 +28,7 @@ import es.elovendo.model.message.Message;
 import es.elovendo.model.message.MessageThread;
 import es.elovendo.model.user.User;
 import es.elovendo.rest.exception.InvalidMessageThreadException;
+import es.elovendo.rest.exception.ItemNotFoundException;
 import es.elovendo.rest.exception.MessageTextTooLongException;
 import es.elovendo.rest.exception.MessageThreadAlreadyExistsException;
 import es.elovendo.rest.exception.MessageThreadNotFoundException;
@@ -67,18 +68,17 @@ public class MessageWebController {
 		try {
 			conversations = IteratorUtils.toList(messageService.getMessageThreads(user).iterator());
 
-			// Set for each conversation which user is speaking with curent user
-			// (avoid show conversation as with himself)
-			MessageThread messageThread = conversations.iterator().next();
-			String p1 = messageThread.getParticipant1().getLogin();
-			String p2 = messageThread.getParticipant2().getLogin();
-
-			Message lastMessage = messageService.getLastMessage(messageThread.getMessageThreadId());
-			int unreadMessages = messageService.getUnreadMessages(user);
-
-			partner = p1.equals(user.getLogin()) ? p2 : p1;
-
+			// Set for each conversation which user is speaking with current user
+			// (avoid show conversation with himself)
 			for (MessageThread thread : conversations) {
+				// To set the "non-user" name in the conversations view
+				String p1 = thread.getParticipant1().getLogin();
+				String p2 = thread.getParticipant2().getLogin();
+				partner = p1.equals(user.getLogin()) ? p2 : p1;
+				
+				Message lastMessage = messageService.getLastMessage(thread.getMessageThreadId());
+				int unreadMessages = messageService.getUnreadMessages(user);
+
 				thread.setPartner(partner);
 				thread.setLastMessage(lastMessage);
 				thread.setUnreadMessages(unreadMessages);
@@ -90,7 +90,7 @@ public class MessageWebController {
 
 		model.addAttribute("conversations", conversations);
 
-		return "elovendo/message/messageList";
+		return "elovendo/message/conversationsList";
 
 	}
 
@@ -164,7 +164,7 @@ public class MessageWebController {
 	 * Send a intern message to the user. ReceiverId or MessageThreadId can be
 	 * null, but not both of them.
 	 * 
-	 * @param receiver
+	 * @param receiverId
 	 *            Can be empty. Receivers user Id.
 	 * @param messageThreadId
 	 *            Message thread, if the conversation previously exists. Can be
@@ -179,15 +179,17 @@ public class MessageWebController {
 	 * @throws MessageThreadNotFoundException
 	 * @throws MessageTextTooLongException
 	 * @throws AnonymousUserAuthenticationException
+	 * @throws ItemNotFoundException 
 	 */
 	@RequestMapping(value = "/send", method = RequestMethod.POST)
 	public @ResponseBody void sendMessage(
-			@RequestParam(value = "receiver", required = false, defaultValue = "") Long receiver,
+			@RequestParam(value = "receiver", required = false, defaultValue = "") Long receiverId,
 			@RequestParam(value = "m", required = false, defaultValue = "") String messageThreadId,
-			@RequestParam(value = "messageText", required = true) String messageText, Model model,
-			HttpServletRequest request) throws MessageThreadAlreadyExistsException, UserNotFoundException,
+			@RequestParam(value = "i", required = false, defaultValue = "0") long itemId,
+			@RequestParam(value = "messageText", required = true) String messageText, 
+			Model model, HttpServletRequest request) throws MessageThreadAlreadyExistsException, UserNotFoundException,
 			InvalidMessageThreadException, MessageThreadNotFoundException, MessageTextTooLongException,
-			AnonymousUserAuthenticationException {
+			AnonymousUserAuthenticationException, ItemNotFoundException {
 
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 
@@ -198,7 +200,7 @@ public class MessageWebController {
 			long mThreadId = Long.valueOf(messageThreadId);
 			messageService.sendMessage(user, mThreadId, messageText, remoteIpAddress);
 		} else
-			messageService.sendMessage(user, receiver, messageText, remoteIpAddress);
+			messageService.sendMessage(user, receiverId, itemId, messageText, remoteIpAddress);
 		// messageService.sendMessage(user, receiver, messageText,
 		// remoteIpAddress);
 	}

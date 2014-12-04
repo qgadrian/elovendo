@@ -309,8 +309,8 @@
 										</h4>
 										<div class="btn-group pull-right">
 											<button class="btn btn-primary messButit"
-												th:attr="data-user=${item.user.userId}" data-toggle="modal"
-												data-target="#msgModal">
+												th:attr="data-user=${item.user.userId}, data-item=${item.itemId}" 
+												data-toggle="modal" data-target="#msgModal">
 												<i class="glyphicon glyphicon-send"
 													style="margin-right: 4px;"></i> Mensaje
 											</button>
@@ -502,6 +502,7 @@
 				data : ({
 					receiver : $('#receiver').val(),
 					sender: $('#sender').val(),
+					i: $('#item').val(),
 					email: $('#semail').val(),
 					messageText : $('#messageText').val()
 				})
@@ -568,7 +569,9 @@
 
 		$('a[data-toggle=modal], button[data-toggle=modal]').click(function() {
 			var user = $(this).data('user');
+			var item = $(this).data('item');
 			document.getElementById('receiver').value = user;
+			document.getElementById('item').value = item;
 		});
 		
 		$(function() {

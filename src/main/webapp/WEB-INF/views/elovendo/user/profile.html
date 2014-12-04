@@ -68,14 +68,14 @@
 					<li>
 						<a href="#itemsContent" role="tab" data-toggle="tab" title="Mis anuncios" class="text-center">
 							<span class="round-tabs violet"> 
-								<i class="glyphicon glyphicon-th-list"></i> My items
+								<i class="fa fa-archive"></i> My items
 							</span>
 						</a>
 					</li>
 					<li>
 						<a href="#voteContent" role="tab" data-toggle="tab" title="Mis votos" class="text-center">
 							<span class="round-tabs blue"> 
-								<i class="glyphicon glyphicon-stats"></i> My votes
+								<i class="fa fa-bar-chart"></i> My votes
 							</span>
 						</a>
 					</li>
@@ -128,7 +128,7 @@
 							<div class="list" style="width: 50%;">
 								<ul class="list-group list-no-border">
 									<li class="list-group-item"><h4>Votos recibidos</h4></li>
-									<li class="list-group-item"><span class="badge" th:text="${votesPositive}">0</span>Positivos</li>
+									<li class="list-group-item"><span class="badge" th:text="${votesPositive}">0</span>Positives</li>
 									<li class="list-group-item"><span class="badge" th:text="${votesNegative}">0</span>Negativos</li>
 									<li class="list-group-item"><span class="badge" th:text="${votesQueued}">0</span>Pendientes</li>
 								</ul>
@@ -247,11 +247,11 @@
 						<div class="btn-group btn-group-lg" data-toggle="buttons">
 							<label class="btn btn-primary active"> <input
 								type="radio" name="options" id="sPend" checked>
-								Pendientes
+								<i class="fa fa-exclamation-circle"></i><span> Pending</span>
 							</label> <label class="btn btn-success"> <input type="radio"
-								name="options" id="sPos"> Positivos
+								name="options" id="sPos"> <i class="fa fa-check-circle"></i><span> Positives</span>
 							</label> <label class="btn btn-danger"> <input type="radio"
-								name="options" id="sNeg"> Negativos
+								name="options" id="sNeg"> <i class="fa fa-times-circle"></i><span> Negatives</span>
 							</label>
 						</div>
 					</div>

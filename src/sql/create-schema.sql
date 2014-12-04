@@ -139,7 +139,9 @@
 		messageThreadId BIGINT NOT NULL AUTO_INCREMENT,
 		participant1 BIGINT NOT NULL,
 		participant2 BIGINT NOT NULL,
+		itemId BIGINT NOT NULL,
 		CONSTRAINT pk_messThreadId PRIMARY KEY(messageThreadId),
+		CONSTRAINT fk_item_itemId FOREIGN KEY (itemId) REFERENCES item(itemid),
 		CONSTRAINT fk_user_user1 FOREIGN KEY (participant1) REFERENCES userprofile(userid),
 		CONSTRAINT fk_user_user2 FOREIGN KEY (participant2) REFERENCES userprofile(userid)
 	);

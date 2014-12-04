@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Immutable;
 
+import es.elovendo.model.item.Item;
 import es.elovendo.model.user.User;
 
 @Entity
@@ -33,8 +34,12 @@ public class MessageThread {
 	@JoinColumn(name="participant2", referencedColumnName="userId")
 	private User participant2;
 	
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name="itemId", referencedColumnName="itemId")
+	private Item item;
+	
 	@Transient
-	private String partner;
+	private String partner; // Helper to save the "non-user" person in the conversation
 	@Transient
 	private int unreadMessages;
 	@Transient
@@ -42,9 +47,10 @@ public class MessageThread {
 	
 	public MessageThread() {}
 
-	public MessageThread(User participant1, User participant2) {
+	public MessageThread(User participant1, User participant2, Item item) {
 		this.participant1 = participant1;
 		this.participant2 = participant2;
+		this.item = item;
 	}
 
 	public Long getMessageThreadId() {
@@ -57,6 +63,10 @@ public class MessageThread {
 
 	public User getParticipant2() {
 		return participant2;
+	}
+
+	public Item getItem() {
+		return item;
 	}
 
 	public String getPartner() {
