@@ -68,7 +68,8 @@
 						<div class="col-md-4">
 							<!-- Thumbnails -->
 							<div class="thumbnail" >
-								<img alt="profile pic" class="profilePic" th:src="@{'http://www.elovendo.com/' + ${user.avatar}}" />
+								<img th:unless="${user.socialUser}" alt="profile pic" class="profilePic" th:src="@{'http://www.elovendo.com/' + ${user.avatar}}" />
+								<img th:if="${user.socialUser}" alt="profile pic" class="profilePic" th:src="${user.largeSocialAvatar}" />
 								<div class="whiteList list-group">
 									<a class="list-group-item" href="#itemsContent" role="tab-kv" data-toggle="tab">
 									<span class="glyphicon glyphicon-briefcase"></span>

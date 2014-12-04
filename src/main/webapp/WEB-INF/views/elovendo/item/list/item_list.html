@@ -229,13 +229,8 @@
 									</div>
 									<div class="col-xs-7 col-md-8 col-lg-8">
 										<!-- favorite -->
-	<!-- 									<button onclick="favClick(this)" type="submit" class="btn btn-danger btn-m pull-right" -->
-	<!-- 									th:value="${item.itemId}" data-toggle="button"> -->
-	<!-- 									<i class="glyphicon glyphicon-heart-empty"></i></button> -->
-										<div class="btn-group pull-right" data-toggle="buttons"
-											th:onclick="'favClick(' + ${item.itemId} + ', this)'">
+										<div class="btn-group pull-right favBf" th:onclick="'favClick(' + ${item.itemId} + ', this)'">
 	  										<label class="btn btn-danger btn-m" style="padding: 6px 12px 5px 10px;">
-<!-- 	  											<input type="hidden" th:value="${item.itemId}" th:id="'f' + ${item.itemId}"/> -->
 	  											<i th:id="'i'+${item.itemId}" class="glyphicon glyphicon-heart-empty"></i>
 	  										</label>
 	  									</div>
@@ -381,6 +376,7 @@
 	/*<![CDATA[*/
 	var okm = /*[[#{Alert.itemList.favorite.ok}]]*/ 'Added to favorite';
 	var fm = /*[[#{Alert.itemList.favorite.error}]]*/ 'Error adding to favorite. Please try again.';
+	var ell = /*[[#{Alert.itemList.favorite.login}]]*/ 'You have to login first.';
 	var cat = /*[[${categoryId}]]*/ '0';
 	var sCat = /*[[${subCategoryId}]]*/ '0';
 	/*]]>*/
@@ -430,6 +426,10 @@
 		console.log($('#lng').val());
 	});
 	
+	$('.favBf').on('click', function(e) {
+		e.preventDefault();
+	});
+	
 	$('#category').change( function() {
 		var scv = $(this).find(":selected").val();
 			if (scv == 0)
@@ -469,7 +469,8 @@
 			url: e,
 			data: {id: f},
 			success: function(data) {
-				shal(okm, 'alert-success');
+				if (data) shal(okm, 'alert-success');
+				else shal(ell, 'alert-danger');
 			},
 			error : function() {
 				shal(fm, 'alert-danger');

@@ -570,9 +570,12 @@ public class ItemWebController {
 	public @ResponseBody boolean setItemFavorite(
 			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException, AnonymousUserAuthenticationException {
 		
-		User user = SessionUserObtainer.getInstance().getSessionUser();
-
-		if (user == null) return false;
+		User user = null;
+		try {
+			user = SessionUserObtainer.getInstance().getSessionUser();
+		} catch (AnonymousUserAuthenticationException e) {
+			return false;
+		}
 
 		return favoriteService.setFavorite(user, itemId) != null;
 	}
