@@ -111,7 +111,7 @@ public class BatchConfiguration {
 
 	public WebSitemapGenerator sitemapGenerator(Environment environment) throws Exception {
 		return WebSitemapGenerator.builder(Constant.URL_ROOT_PATH, new File(Constant.SITEMAP_XML_LOCAL_PATH))
-				.allowMultipleSitemaps(true).gzip(true).maxUrls(8).build();
+				.allowMultipleSitemaps(true).gzip(true).maxUrls(1000).build();
 	}
 
 }

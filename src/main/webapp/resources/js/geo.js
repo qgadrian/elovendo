@@ -132,7 +132,7 @@ function setCurrelo(currelo) {
 	var json = JSON.parse(currecountry);
 	var curry = json[currelo];
 	
-	console.log("got it, currency is " + curry);
+//	console.log("got it, currency is " + curry);
 
 	// If there is no such currency available, just set USD as currency
 	if ($('#currelo > option[value="'+ curry +'"]').length > 0)

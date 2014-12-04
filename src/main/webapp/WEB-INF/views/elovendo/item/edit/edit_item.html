@@ -380,12 +380,21 @@
 
 		<script th:inline="javascript">
 		
+		$(document).ready( function() {
+			$('#category').val(cat);
+			$('#subCategory').val(sCat);
+
+			if ($('#currelo > option[value="' + rric + '"]').length > 0) $("#currelo").val(rric);
+			else $("#currelo").val('USD');
+		});
+		
 		/*<![CDATA[*/
 		var cat = /*[[${item.category}]]*/ 0;
 		var sCat = /*[[${item.subCategory}]]*/ 0;
 		var f = /*[[${item.featured}]]*/ false;
 		var h = /*[[${item.highlight}]]*/ false;
 		var a = /*[[${item.autoRenew}]]*/ false;
+		var rric = /*[[${item.currency}]]*/ 'USD';
 		/*]]>*/
 		
 		$("[name='featured']").bootstrapSwitch({
@@ -399,29 +408,25 @@
 		$("[name='autoRenew']").bootstrapSwitch({
 			state: a
 		});
-
-		$(document).ready( function() {
-			$('#category').val(cat);
-			$('#subCategory').val(sCat);
-		});
-
-		var p = "http://www.elovendo.com/bazaar/";
-		var suf = "getsubs/";
-		$('#category').change( function() {
-			var s = $(this).val();
-			// clean dom
-			var mn = document.getElementById('subCategory');
-			while (mn.firstChild) mn.removeChild(mn.firstChild);
-			$.getJSON(p+suf+s, function(json) {
-				jQuery.each(json.output, function() {
-					var o = document.createElement('option');
-					o.value = this.id;
-					o.innerHTML = this.name;
-					$("#subCategory").append(o);
+		
+			var p = "http://www.elovendo.com/bazaar/";
+			var suf = "getsubs/";
+			$('#category').change(function() {
+				var s = $(this).val();
+				// clean dom
+				var mn = document.getElementById('subCategory');
+				while (mn.firstChild)
+					mn.removeChild(mn.firstChild);
+				$.getJSON(p + suf + s, function(json) {
+					jQuery.each(json.output, function() {
+						var o = document.createElement('option');
+						o.value = this.id;
+						o.innerHTML = this.name;
+						$("#subCategory").append(o);
+					})
 				})
-			})
-		});
-        </script>
+			});
+		</script>
         
 <!-- Google maps -->
 
