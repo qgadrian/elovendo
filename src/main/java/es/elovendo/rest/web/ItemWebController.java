@@ -104,7 +104,7 @@ public class ItemWebController {
 				lng, prizeMin, prizeMax, page, size);
 
 		// Quick workaround for manage pagination with searches
-		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixPaginationUrl(categoryId, title, dis, lat, lng,
+		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixSearchPaginationUrl(categoryId, title, dis, lat, lng,
 				prizeMin, prizeMax));
 
 		List<Item> items = p.getContent();
@@ -210,7 +210,7 @@ public class ItemWebController {
 		Page<Item> p = itemService.getLocaledItemsByParams(locale, title, categoryId, Constant.CATEGORY, dis, lat, lng,
 				prizeMin, prizeMax, page, size);
 
-		String fixedUrl = fixPaginationUrl(categoryId, title, dis, lat, lng, prizeMin, prizeMax);
+		String fixedUrl = fixPaginationUrl(String.valueOf(categoryId), title, dis, lat, lng, prizeMin, prizeMax);
 
 		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixedUrl);
 		List<Item> items = p.getContent();
@@ -258,7 +258,7 @@ public class ItemWebController {
 		Page<Item> p = itemService.getItemsByParams(title, subCategoryId, Constant.SUBCATEGORY, dis, lat, lng,
 				prizeMin, prizeMax, page,
 				size);
-		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixPaginationUrl(subCategoryId, title, dis, lat,
+		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixPaginationUrl(String.valueOf(subCategoryId), title, dis, lat,
 				lng, prizeMin, prizeMax));
 		List<Item> items = p.getContent();
 
@@ -340,10 +340,10 @@ public class ItemWebController {
 
 	/** STUFF **/
 
-	private String fixPaginationUrl(String categoryName, String title, double dis, double lat, double lng,
+	private String fixPaginationUrl(String baseUrl, String title, double dis, double lat, double lng,
 			int prizeMin, int prizeMax) {
 
-		String tmp = categoryName + "?lat=" + lat + "&lng=" + lng;
+		String tmp = baseUrl + "?lat=" + lat + "&lng=" + lng;
 
 		if (!title.equals(""))
 			tmp = tmp.concat("&title=" + title);
@@ -357,7 +357,7 @@ public class ItemWebController {
 		return tmp;
 	}
 	
-	private String fixPaginationUrl(long categoryId, String title, double dis, double lat, double lng,
+	private String fixSearchPaginationUrl(long categoryId, String title, double dis, double lat, double lng,
 			int prizeMin, int prizeMax) {
 
 		String tmp = "search?category=" + categoryId + "&lat=" + lat + "&lng=" + lng;

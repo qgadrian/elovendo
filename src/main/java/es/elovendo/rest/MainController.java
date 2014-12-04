@@ -71,16 +71,18 @@ public class MainController implements ErrorController {
 	@RequestMapping(value = "/login")
 	public String loginPage(HttpSession session, HttpServletRequest request, Device device) {
 
-		// BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
-		// System.out.println("~~~~~~~~~~~~~~~~~~");
-		// System.out.println("~~~~~~~~~~~~~~~~~~");
-		// System.out.println("~~~~~~~~~~~~~~~~~~");
-		// System.out.println("~~~~~~~~~~~~~~~~~~");
-		// System.out.println(enc.encode("admin"));
-		// System.out.println("~~~~~~~~~~~~~~~~~~");
-		// System.out.println("~~~~~~~~~~~~~~~~~~");
-		// System.out.println("~~~~~~~~~~~~~~~~~~");
-		// System.out.println("~~~~~~~~~~~~~~~~~~");
+		// Password:
+		// $2a$10$c6ZQvwMbdJhz7R3gqgT06O93AaLyhn0QbL4Z16tr3UP65ZsBHvUtW
+//		 BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
+//		 System.out.println("~~~~~~~~~~~~~~~~~~");
+//		 System.out.println("~~~~~~~~~~~~~~~~~~");
+//		 System.out.println("~~~~~~~~~~~~~~~~~~");
+//		 System.out.println("~~~~~~~~~~~~~~~~~~");
+//		 System.out.println(enc.encode("password"));
+//		 System.out.println("~~~~~~~~~~~~~~~~~~");
+//		 System.out.println("~~~~~~~~~~~~~~~~~~");
+//		 System.out.println("~~~~~~~~~~~~~~~~~~");
+//		 System.out.println("~~~~~~~~~~~~~~~~~~");
 
 		if (device.isNormal()) {
 			String referrer = request.getParameter("referrer");

@@ -51,7 +51,6 @@ public class User implements UserDetails, Principal {
 	private String firstName;
 	@Column(name = "lastname")
 	private String lastName;
-	private String address;
 	private String phone;
 	private String email;
 
@@ -83,17 +82,17 @@ public class User implements UserDetails, Principal {
 	// private Collection<? extends GrantedAuthority> authorities = new
 	// ArrayList<>();
 
-	public User() { }
+	public User() {
+	}
 
 	public User(String login, String password, String socialCompositeKey, String firstName, String lastName,
-			String address, String phone, boolean whatssapUser, String email, String avatar, Role role,
+			String phone, boolean whatssapUser, String email, String avatar, Role role,
 			SocialMediaService signInProvider) {
 		this.login = login;
 		this.password = password;
 		this.socialCompositeKey = socialCompositeKey;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.address = address;
 		this.phone = phone;
 		this.whatssapUser = whatssapUser;
 		this.email = email;
@@ -105,7 +104,7 @@ public class User implements UserDetails, Principal {
 		this.enabled = true;
 		this.registerDate = Calendar.getInstance();
 	}
-	
+
 	public User(String login, String password, String socialCompositeKey, String firstName, String lastName,
 			String email, String avatar, SocialMediaService signInProvider, Role role) {
 		this.login = login;
@@ -134,7 +133,7 @@ public class User implements UserDetails, Principal {
 	public Long getUserId() {
 		return userId;
 	}
-	
+
 	public void setUserId(long userId) {
 		this.userId = userId;
 	}
@@ -169,14 +168,6 @@ public class User implements UserDetails, Principal {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
 	}
 
 	public String getPhone() {
@@ -226,30 +217,35 @@ public class User implements UserDetails, Principal {
 	public void setSignInProvider(SocialMediaService signInProvider) {
 		this.signInProvider = signInProvider;
 	}
-	
+
 	@Transient
 	public boolean isSocialUser() {
 		return this.socialCompositeKey != null && !this.socialCompositeKey.isEmpty();
 	}
-	
+
 	/**
 	 * Get the user picture value
+	 * 
 	 * @return
 	 */
 	@Transient
 	public String getSocialAvatar() {
 		return this.avatar;
 	}
-	
+
 	@Transient
 	public String getLargeSocialAvatar() {
-		switch(signInProvider) {
-			case GOOGLE: return this.avatar.replace("?sz=50", "?sz=150");
-			case TWITTER: break;
-			case FACEBOOK: return this.avatar.concat("?type=large");
-			default: break;
+		switch (signInProvider) {
+		case GOOGLE:
+			return this.avatar.replace("?sz=50", "?sz=150");
+		case TWITTER:
+			break;
+		case FACEBOOK:
+			return this.avatar.concat("?type=large");
+		default:
+			break;
 		}
-		
+
 		return "";
 	}
 
@@ -358,11 +354,10 @@ public class User implements UserDetails, Principal {
 	public String toString() {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		return "User [userId=" + userId + ", socialCompositeKey=" + socialCompositeKey + ", login=" + login
-				+ ", firstName=" + firstName + ", lastName=" + lastName + ", address="
-				+ address + ", phone=" + phone + ", email=" + email + ", whatssapUser=" + whatssapUser + ", avatar="
-				+ avatar + ", avatar200h=" + avatar200h + ", registerDate=" + sdf.format(registerDate.getTime()) 
-				+ ", userValue=" + userValue + ", points=" + points + ", role=" + role + ", enabled=" + enabled 
-				+ ", signInProvider=" + signInProvider + "]";
+				+ ", firstName=" + firstName + ", lastName=" + lastName + ", phone=" + phone + ", email=" + email
+				+ ", whatssapUser=" + whatssapUser + ", avatar=" + avatar + ", avatar200h=" + avatar200h
+				+ ", registerDate=" + sdf.format(registerDate.getTime()) + ", userValue=" + userValue + ", points="
+				+ points + ", role=" + role + ", enabled=" + enabled + ", signInProvider=" + signInProvider + "]";
 	}
 
 	@Override

@@ -12,6 +12,8 @@
 	DROP TABLE IF EXISTS vote CASCADE;
 	DROP TABLE IF EXISTS purchase CASCADE;
 	DROP TABLE IF EXISTS favorite CASCADE;
+	DROP TABLE IF EXISTS ItemReport CASCADE;
+	DROP TABLE IF EXISTS UserReport CASCADE;
 	DROP TABLE IF EXISTS item CASCADE;
 	DROP TABLE IF EXISTS subcategory CASCADE;
 	DROP TABLE IF EXISTS category CASCADE;
@@ -35,8 +37,7 @@
 		  socialCompositeKey VARCHAR(255),
 		  firstname VARCHAR(100),
 		  lastname VARCHAR(100),
-		  address VARCHAR(100),
-		  phone VARCHAR(20),
+		  phone VARCHAR(30),
 		  whatssap TINYINT(1),
 		  email VARCHAR(255) NOT NULL,
 		  avatar VARCHAR(255),

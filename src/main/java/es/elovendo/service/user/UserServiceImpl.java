@@ -76,9 +76,9 @@ public class UserServiceImpl implements UserService {
 	// an user and pass it
 	// BE CAREFULL WITH USER DISABLED BY DEFAULT
 	@Override
-	public User addUser(String login, String password, String cmpKey, String firstName, String lastName,
-			String address, String phone, boolean whatssapUser, String email, byte[] avatar)
-			throws LoginNotAvailableException, EmailNotAvailableException {
+	public User addUser(String login, String password, String cmpKey, String firstName, String lastName, String phone,
+			boolean whatssapUser, String email, byte[] avatar) throws LoginNotAvailableException,
+			EmailNotAvailableException {
 
 		User user = userRepository.findByLogin(login);
 		if (user != null)
@@ -90,8 +90,7 @@ public class UserServiceImpl implements UserService {
 		Role role = roleRepository.findByRoleName(RoleEnum.ROLE_USER);
 
 		// Create user (notice the null for avatar path)
-		user = new User(login, password, cmpKey, firstName, lastName, address, phone, whatssapUser, email, null, role,
-				null);
+		user = new User(login, password, cmpKey, firstName, lastName, phone, whatssapUser, email, null, role, null);
 
 		user = userRepository.save(user);
 		user.setAvatar(saveUserImage(user, avatar));
@@ -110,8 +109,7 @@ public class UserServiceImpl implements UserService {
 			EmailNotAvailableException {
 
 		return addUser(user.getLogin(), user.getPassword(), user.getSocialCompositeKey(), user.getFirstName(),
-				user.getLastName(), user.getAddress(), user.getPhone(), user.isWhatssapUser(), user.getEmail(),
-				profilePicBytes);
+				user.getLastName(), user.getPhone(), user.isWhatssapUser(), user.getEmail(), profilePicBytes);
 	}
 
 	@Override
@@ -133,8 +131,8 @@ public class UserServiceImpl implements UserService {
 			userForm.setPassword(encoder.encode(password));
 
 		User user = new User(userForm.getLogin(), userForm.getPassword(), null, userForm.getFirstName(),
-				userForm.getLastName(), userForm.getAddress(), userForm.getPhone(), userForm.isWhatssap(),
-				userForm.getEmail(), null, role, null);
+				userForm.getLastName(), userForm.getPhone(), userForm.isWhatssap(), userForm.getEmail(), null, role,
+				null);
 
 		user = userRepository.save(user);
 		saveMultiPartFileImage(user, userPic);
@@ -196,7 +194,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User updateUser(EditUserForm userForm, long userId, MultipartFile userPic) throws UserNotFoundException {
 		User user = findUserById(userId);
-		
+
 		System.out.println("#######################");
 		System.out.println("#######################");
 		System.out.println("#######################");
@@ -221,7 +219,7 @@ public class UserServiceImpl implements UserService {
 			user.setEmail(userForm.getEmail());
 			saveMultiPartFileImage(user, userPic);
 		}
-		
+
 		System.out.println("user form is social user? " + userForm.isSocialUser());
 		System.out.println("current user email? " + user.getEmail());
 
@@ -244,8 +242,6 @@ public class UserServiceImpl implements UserService {
 			user.setFirstName(firstName);
 		if (lastName != null)
 			user.setLastName(lastName);
-		if (address != null)
-			user.setAddress(address);
 		if (phone != null)
 			user.setPhone(phone);
 		if (email != null)
@@ -290,7 +286,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User deleteUser(User user) {
 		itemService.deleteAllUserItems(user);
-		
+
 		user.setLogin("--" + user.getUserId() + "--");
 		user.setFirstName("");
 		user.setLastName("");
@@ -300,7 +296,7 @@ public class UserServiceImpl implements UserService {
 		user.setPassword("");
 		user.setSocialCompositeKey("");
 		user.setEnabled(false);
-		
+
 		return userRepository.save(user);
 	}
 

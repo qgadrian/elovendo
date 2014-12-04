@@ -83,7 +83,7 @@ public class MobileUserController {
 			System.out.println("Error converting to bytes image file");
 		}
 		
-		return userService.addUser(login, password, null, firstname, lastname,
+		return userService.addUser(login, password, firstname, lastname,
 				address, phone, whatssapUser, email, avatarBytes);
 	}
 	

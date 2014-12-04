@@ -7,51 +7,48 @@ import es.elovendo.util.Constant;
 
 public class EditUserForm {
 
-	
 	@Pattern(regexp = Constant.PASSWORD_PATTERN)
 	String password;
-	
+
 	String confirmPassword;
-	
+
 	String firstName;
 	String lastName;
-	String address;
 	String phone;
 	boolean whatssapUser;
 
 	// Will use a well-tested method instead rely on a string pattern
 	// EmailValidator.getInstance().isValid(String email);
 	String email;
-	
-	// Parameters to inject if page if form is invalid 
+
+	// Parameters to inject if page if form is invalid
 	String avatar;
-	
+
 	@NotNull
 	@Pattern(regexp = Constant.LOGIN_PATTERN)
 	String username;
-	
+
 	boolean socialUser;
 
-	public EditUserForm() {}
+	public EditUserForm() {
+	}
 
-	public EditUserForm(String username, String password, String confirmPassword, String firstName, String lastName, 
-			String address, String phone, boolean whatssapUser, String email) {
+	public EditUserForm(String username, String password, String confirmPassword, String firstName, String lastName,
+			String phone, boolean whatssapUser, String email) {
 		this.username = username;
 		this.password = password;
 		this.confirmPassword = confirmPassword;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.address = address;
 		this.phone = phone;
 		this.whatssapUser = whatssapUser;
 		this.email = email;
 	}
-	
+
 	public EditUserForm(User user) {
 		this.password = user.getPassword();
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
-		this.address = user.getAddress();
 		this.phone = user.getPhone();
 		this.whatssapUser = user.isWhatssapUser();
 		this.email = user.getEmail();
@@ -90,14 +87,6 @@ public class EditUserForm {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
 	}
 
 	public String getPhone() {
@@ -151,8 +140,8 @@ public class EditUserForm {
 	@Override
 	public String toString() {
 		return "EditUserForm [password=" + password + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", address=" + address + ", phone=" + phone + ", whatssapUser=" + whatssapUser + ", email=" + email
-				+ ", avatar=" + avatar + ", login=" + username + "]";
+				+ ", phone=" + phone + ", whatssapUser=" + whatssapUser + ", email=" + email + ", avatar=" + avatar
+				+ ", login=" + username + "]";
 	}
-	
+
 }
