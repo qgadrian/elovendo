@@ -6,6 +6,7 @@ Disallow: /site/profile/*
 Disallow: /*.js$
 Allow: /site/public/*
 Allow: /bazaar/*
+Sitemap:http://www.elovendo.com/sitemap_index.xml
 
 User-agent: Slurp
 Disallow: /elovendo/messages/*

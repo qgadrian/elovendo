@@ -57,7 +57,10 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 								httpProtocol.setCompression("on");
 								httpProtocol.setCompressionMinSize(256);
 								String mimeTypes = httpProtocol.getCompressableMimeTypes();
-								String mimeTypesWithJson = mimeTypes + "," + MediaType.APPLICATION_JSON_VALUE;
+								String mimeTypesWithJson = mimeTypes + "," + MediaType.APPLICATION_JSON_VALUE
+										+ "text/javascript,text/css,text/css,application/x-javascript,text/x-component"
+										+ ",text/richtext,image/svg+xml,text/xsd,text/xsl,image/x-icon"
+										+ ",application/javascript";
 								httpProtocol.setCompressableMimeTypes(mimeTypesWithJson);
 							}
 						});

@@ -4,7 +4,7 @@
 
 -- GRANT ALL PRIVILEGES ON elovendo.* to admin@localhost IDENTIFIED BY 'password';
 
-	--SET FOREIGN_KEY_CHECKS = 0;
+	--           SET FOREIGN_KEY_CHECKS = 0;
 	/*DROP TABLE IF EXISTS image CASCADE*/;
 	DROP TABLE IF EXISTS messageState CASCADE;
 	DROP TABLE IF EXISTS message CASCADE;
@@ -20,7 +20,7 @@
 	DROP TABLE IF EXISTS persistent_logins;
 	DROP TABLE IF EXISTS userprofile CASCADE;
 	DROP TABLE IF EXISTS role CASCADE;
-	--   SET FOREIGN_KEY_CHECKS = 1;
+	--         SET FOREIGN_KEY_CHECKS = 1;
 
 
 	CREATE TABLE role (
