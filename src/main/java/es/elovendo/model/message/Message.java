@@ -99,5 +99,14 @@ public class Message {
 	public boolean isToday() {
 		return DateUtils.isSameDay(Calendar.getInstance(), this.messageDate);
 	}
+	
+	/**
+	 * Returns the message text until the next line break, if exists
+	 * @return
+	 */
+	@Transient
+	public String getFixedMessage() {
+		return this.messageText.split("<br />")[0];
+	}
 
 }

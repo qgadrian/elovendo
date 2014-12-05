@@ -37,7 +37,7 @@
 						<span
 							th:text="${#strings.replace(#strings.replace('__#{Message.thread.title}__', '$ITEM', #strings.abbreviate(messageThread.item.title, 23)), '$USER', messageThread.partner)}">Conv</span>
 					</h4>
-					<span class="list-group-item-text" th:text="${#strings.abbreviate(messageThread.lastMessage.messageText, 90)}">...</span>
+					<span class="list-group-item-text" th:text="${#strings.abbreviate(messageThread.lastMessage.fixedMessage, 90)}">...</span>
 					<span class="pull-right" th:if="${messageThread.lastMessage.isToday()}" 
 						th:text="${#calendars.format(messageThread.lastMessage.messageDate, 'HH:mm')}"></span>
 					<span class="pull-right" th:unless="${messageThread.lastMessage.isToday()}" 
