@@ -1,140 +1,130 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8"/>
-<meta name="_csrf" th:content="${_csrf.token}"/>
-<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta charset="UTF-8" />
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
 <title th:text="#{About.title}">About</title>
-
-<link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'/>
-<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'/>
-
-<!-- ************************* -->
-<!-- ******* Bootstrap ******* -->
-<!-- ************************* -->
-
-<!-- Javascript -->
+<link
+	href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic'
+	rel='stylesheet' type='text/css' />
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700'
+	rel='stylesheet' type='text/css' />
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/css/aboutStyle.css" />
 <script src="/js/jquery-1.11.1.min.js"></script>
-<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script> -->
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
-<!-- Latest compiled and minified JavaScript -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-
-<link rel="stylesheet" href="/css/aboutStyle.css"/>
-
+<script src="/js/bootstrap.min.js"></script>
 </head>
-<body>
 
+<body>
 	<!-- Header -->
 	<div th:replace="elovendo/header"></div>
-
-<!-- ==== HEADERWRAP ==== -->
-	    <div id="headerwrap">
-			<header class="clearfix">
-	  		 		<h1><i class="glyphicon glyphicon-heart"></i></h1>
-	  		 		<p th:text="#{About.HeaderWrap.Line1}">Elovendo</p>
-	  		 		<p th:text="#{About.HeaderWrap.Line2}">reinventing.</p>
-	  		</header>
-	    </div>
-	    <div id="greywrap">
-			<div class="row">
-				<div class="col-lg-4 callout">
-					<i class="glyphicon glyphicon-thumbs-up"></i>
-					<h2 th:text="#{About.feature1.title}">Reputation</h2>
-					<p th:text="#{About.feature1.text}">Text</p>
-				</div><!-- col-lg-4 -->
-					
-				<div class="col-lg-4 callout">
-					<i class="glyphicon glyphicon-map-marker"></i>
-					<h2 th:text="#{About.feature2.title}">Geolocation</h2>
-					<p th:text="#{About.feature2.text}">Text</p>
-				</div><!-- col-lg-4 -->	
-				
-				<div class="col-lg-4 callout">
-					<i class="glyphicon glyphicon glyphicon-eye-open"></i>
-					<h2 th:text="#{About.feature3.title}">Information</h2>
-					<p th:text="#{About.feature3.text}">Text</p>
-				</div><!-- col-lg-4 -->	
-			</div><!-- row -->
-		</div>
-		
-		<!-- ==== ABOUT ==== -->
-		<div class="container" >
-			<div class="row white">
-			<br />
-				<h1 class="centered" th:text="#{About.sec1.title}">ABOUT ELOVENDO</h1>
-				<hr/>
-				
-				<div class="col-lg-6">
-					<p th:text="#{About.sec1.text1}">Text</p>
-				</div><!-- col-lg-6 -->
-				
-				<div class="col-lg-6">
-					<p th:text="#{About.sec1.text2}">Text</p>
-				</div><!-- col-lg-6 -->
-			</div><!-- row -->
-		</div><!-- container -->
-		
-		<!-- ==== SECTION DIVIDER1 -->
-		<section class="section-divider textdivider divider1">
-			<div class="container">
-				<h1 th:text="#{About.sec2.title}">NO LIMIT</h1>
-				<hr/>
-				<p th:text="#{About.sec2.text1}">Text</p>
-			</div><!-- container -->
-		</section><!-- section -->
-		
-		<!-- ==== SERVICES ==== -->
-		<div class="container" >
-			<br/>
-			<br/>
-			<div class="row">
-				<h2 class="centered" th:text="#{About.sec3.title}">STUFF</h2>
-				<hr/>
-				<br/>
-				<div class="col-lg-offset-2 col-lg-8">
-					<p th:text="#{About.sec3.text1}">Text</p>
-					<p th:text="#{About.sec3.text2}">Text</p>
-					<p th:text="#{About.sec3.text3}">Text</p>
-				</div><!-- col-lg -->
-			</div><!-- row -->
-			
-		</div><!-- container -->
-		
-		<!-- ==== SECTION DIVIDER2 -->
-		<section class="section-divider textdivider divider2">
-			<div class="container">
-				<h1 th:text="#{About.sec4.title}">MOBILE</h1>
-				<hr/>
-				<p th:text="#{About.sec4.text1}">Text</p>
-			</div><!-- container -->
-		</section><!-- section -->
-		
-		<!-- ==== GREYWRAP ==== -->
-		<div id="greywrap">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-8 centered">
-						<img class="img-responsive" src="/images/about/aboutuser.png" align="middle"/>
-					</div>
-					<div class="col-lg-4">
-						<h2 th:text="#{About.sec5.title}">Contact</h2>
-						<p th:text="#{About.sec5.text1}">Text</p>
-						<p><a class="btn btn-success" data-toggle="modal"
-							data-target="#contactModal" th:text="#{About.sec5.button.contact}">Contact</a></p>
-					</div>					
-				</div><!-- row -->
+	<div id="headerwrap">
+		<header class="clearfix">
+			<h1>
+				<i class="glyphicon glyphicon-heart"></i>
+			</h1>
+			<p th:text="#{About.HeaderWrap.Line1}">Elovendo</p>
+			<p th:text="#{About.HeaderWrap.Line2}">reinventing.</p>
+		</header>
+	</div>
+	<div id="greywrap">
+		<div class="row">
+			<div class="col-lg-4 callout">
+				<i class="glyphicon glyphicon-thumbs-up"></i>
+				<h2 th:text="#{About.feature1.title}">Reputation</h2>
+				<p th:text="#{About.feature1.text}">Text</p>
 			</div>
-			<br/>
-			<br/>
-		</div><!-- greywrap -->
-		
+
+			<div class="col-lg-4 callout">
+				<i class="glyphicon glyphicon-map-marker"></i>
+				<h2 th:text="#{About.feature2.title}">Geolocation</h2>
+				<p th:text="#{About.feature2.text}">Text</p>
+			</div>
+
+			<div class="col-lg-4 callout">
+				<i class="glyphicon glyphicon glyphicon-eye-open"></i>
+				<h2 th:text="#{About.feature3.title}">Information</h2>
+				<p th:text="#{About.feature3.text}">Text</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="row white">
+			<br />
+			<h1 class="centered" th:text="#{About.sec1.title}">ABOUT
+				ELOVENDO</h1>
+			<hr />
+
+			<div class="col-lg-6">
+				<p th:text="#{About.sec1.text1}">Text</p>
+			</div>
+
+			<div class="col-lg-6">
+				<p th:text="#{About.sec1.text2}">Text</p>
+			</div>
+		</div>
+	</div>
+
+	<section class="section-divider textdivider divider1">
+		<div class="container">
+			<h1 th:text="#{About.sec2.title}">NO LIMIT</h1>
+			<hr />
+			<p th:text="#{About.sec2.text1}">Text</p>
+		</div>
+	</section>
+
+	<div class="container">
+		<br /> <br />
+		<div class="row">
+			<h2 class="centered" th:text="#{About.sec3.title}">STUFF</h2>
+			<hr />
+			<br />
+			<div class="col-lg-offset-2 col-lg-8">
+				<p th:text="#{About.sec3.text1}">Text</p>
+				<p th:text="#{About.sec3.text2}">Text</p>
+				<p th:text="#{About.sec3.text3}">Text</p>
+			</div>
+		</div>
+
+	</div>
+
+	<section class="section-divider textdivider divider2">
+		<div class="container">
+			<h1 th:text="#{About.sec4.title}">MOBILE</h1>
+			<hr />
+			<p th:text="#{About.sec4.text1}">Text</p>
+		</div>
+	</section>
+
+	<div id="greywrap">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 centered">
+					<img class="img-responsive" src="/images/about/aboutuser.png"
+						align="middle" />
+				</div>
+				<div class="col-lg-4">
+					<h2 th:text="#{About.sec5.title}">Contact</h2>
+					<p th:text="#{About.sec5.text1}">Text</p>
+					<p>
+						<a class="btn btn-success" data-toggle="modal"
+							data-target="#contactModal"
+							th:text="#{About.sec5.button.contact}">Contact</a>
+					</p>
+				</div>
+			</div>
+		</div>
+		<br /> <br />
+	</div>
+
 	<!-- Footer -->
 	<div th:replace="elovendo/footer"></div>
-		
 
-		<div th:replace="/elovendo/about/aboutContactModal"></div>
+
+	<div th:replace="/elovendo/about/aboutContactModal"></div>
 
 	<script type="text/javascript">
 		$('#contactForm').submit(function(event) {
@@ -150,12 +140,12 @@
 				url : $(this).attr('action'),
 				data : ({
 					name : $('#name').val(),
-					email: $('#email').val(),
+					email : $('#email').val(),
 					msg : $('#msg').val()
 				})
-	
+
 			});
-	
+
 			document.getElementById('msg').value = '';
 			$('#contactModal').modal('hide');
 		});

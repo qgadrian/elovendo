@@ -101,24 +101,9 @@ function die() {
 }
 
 function dieRmv(val) {
-//	console.log("died " + val); 
 	$('#did'+val).remove();
 	$('#removeModal').modal('hide');
 }
-
-//function submitSearchForm() {
-//	console.log("submiting prize");
-////	form = $("#prizeForm");
-////	var params = getUrlParams();
-////	console.log("params " + params);
-////	
-////	form.submit(function(e) {
-////		console.log("submitted form " + e);
-////	})
-//	return true;
-////	//disable empty fields so they don't clutter up the url
-////	form.find(':input[value=""]').attr('disabled', true);
-//}
 
 function removeParam(key, sourceURL) {
 	var rtn = sourceURL.split("?")[0], param, params_arr = [], queryString = (sourceURL.indexOf("?") !== -1) ? sourceURL.split("?")[1] : "";

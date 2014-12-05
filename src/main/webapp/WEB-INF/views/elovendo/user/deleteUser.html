@@ -8,44 +8,14 @@
 <title>Registrarse en Elovendo</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-<!-- <script src="/js/imagePreview.js"></script> -->
-
-<!-- Form -->
-<!-- <link rel="stylesheet" href="/css/formStyle.css" /> -->
-
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
 <link href="/css/styleweb.css" rel="stylesheet" type="text/css" />
-
-<!-- ************************* -->
-<!-- ******* Bootstrap ******* -->
-<!-- ************************* -->
-
-<!-- Javascript -->
+<link rel="stylesheet" type="text/css" href="/css/headerStyle.css"
+	media="screen" />
 <script src="/js/jquery-1.11.1.min.js"></script>
-<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script> -->
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
-<!-- Latest compiled and minified JavaScript -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<!-- Bootstrap extra (bs-callout) -->
-<link href="/css/bootstrap-extra.css" media="all" rel="stylesheet" type="text/css" />
-
+<script src="/js/bootstrap.min.js"></script>
 <script src="/js/filter.js" type="text/javascript"></script>
-
-<link rel="stylesheet" type="text/css" href="/css/bootstrap-social.css" media="screen" />
-<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
-
-<!-- File input -->
-<link href="/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
-<script src="/js/fileinput.min.js" type="text/javascript"></script>
-
-<!-- Switch -->
-<link href="/css/bootstrap-switch.css" rel="stylesheet"/>
-<script src="/js/bootstrap-switch.js"></script>
-
-<!--  Phone input -->
-<link href="/css/intlTelInput.css" rel="stylesheet"/>
-<script src="/js/intlTelInput.js" type="text/javascript"></script>
-<script src="/js/utils.js" type="text/javascript"></script>
 
 </head>
 
@@ -55,19 +25,23 @@
 
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;">
+			<div class="col-xs-12 col-md-12 text-center"
+				style="margin-bottom: 20px;">
 				<h1>Elimina tu cuenta en Elovendo</h1>
-				<hr class="hrStyle2"/>
+				<hr class="hrStyle2" />
 			</div>
 		</div>
 		<div class="row">
-			<div class="alert alert-warning" role="alert"><strong th:text="#{User.delete.sorry}">We are sorry.</strong> 
-			<span th:text="#{User.delete.message}">You have to confirm your password</span>
+			<div class="alert alert-warning" role="alert">
+				<strong th:text="#{User.delete.sorry}">We are sorry.</strong> <span
+					th:text="#{User.delete.message}">You have to confirm your
+					password</span>
 			</div>
 		</div>
 		<div class="row">
-			<form class="form-horizontal userPic" role="form" id="registrationform" th:action="@{/site/user/delete}" 
-					method="post" enctype="multipart/form-data" accept-charset="UTF-8" >
+			<form class="form-horizontal userPic" role="form"
+				id="registrationform" th:action="@{/site/user/delete}" method="post"
+				enctype="multipart/form-data" accept-charset="UTF-8">
 				<div class="form-group has-warning">
 					<div class="col-sm-8 col-sm-offset-2"
 						th:classappend="${hasError} ? 'has-error'">
@@ -75,32 +49,32 @@
 							th:text="#{User.delete.label.password}">Password</label>
 						<div class="col-sm-8">
 							<input class="form-control" id="password" name="password"
-								type="password" th:placeholder="#{User.delete.label.password}" pattern="^{8,}$"
-								th:title="#{User.delete.wrong.password}" />
-							<div th:if="${hasError}"
-								class="form-group has-error">
-								<small class="control-label" th:errors="${password}" th:text="#{User.delete.wrong.password}"
+								type="password" th:placeholder="#{User.delete.label.password}"
+								pattern="^{8,}$" th:title="#{User.delete.wrong.password}" />
+							<div th:if="${hasError}" class="form-group has-error">
+								<small class="control-label" th:errors="${password}"
+									th:text="#{User.delete.wrong.password}"
 									style="text-align: center !important">Input with error</small>
 							</div>
 						</div>
 					</div>
 				</div>
-				<hr/>
+				<hr />
 				<div class="text-center">
-					<button type="submit" class="btn btn-danger" th:text="#{User.delete.button.do}">Eliminar mi cuenta</button>
+					<button type="submit" class="btn btn-danger"
+						th:text="#{User.delete.button.do}">Eliminar mi cuenta</button>
 				</div>
 			</form>
 		</div>
 	</div>
-	
+
 	<!-- Footer -->
 	<div th:replace="elovendo/footer"></div>
 
 
-<script th:inline="javascript">
-
-
-</script>
+	<script th:inline="javascript">
+		
+	</script>
 
 </body>
 </html>

@@ -2,6 +2,8 @@ package es.elovendo.config;
 
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.AbstractHttp11Protocol;
+import org.elasticsearch.http.HttpRequest;
+import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter.FaviconConfiguration;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.mvc.WebContentInterceptor;
 
 import es.elovendo.util.Constant;
 
@@ -66,6 +69,17 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 						});
 			}
 		};
+	}
+	
+	@Bean
+	public WebContentInterceptor webContentInterceptor() {
+		WebContentInterceptor wci = new WebContentInterceptor();
+		wci.setCacheSeconds(31556926);
+		wci.setUseExpiresHeader(true);
+		wci.setUseCacheControlHeader(true);
+		wci.setUseCacheControlNoStore(true);
+		
+		return wci;
 	}
 
 	//

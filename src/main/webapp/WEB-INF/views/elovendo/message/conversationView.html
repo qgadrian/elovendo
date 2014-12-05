@@ -6,24 +6,17 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="_csrf" th:content="${_csrf.token}"/>
-<!-- default header name is X-CSRF-TOKEN -->
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <title>Conversación</title>
 
-<!-- ************************* -->
-<!-- ******* Bootstrap ******* -->
-<!-- ************************* -->
-
-<!-- Javascript -->
-<script src="/js/jquery-1.11.0.min.js"></script>
-<script src="/js/jquery.cookie.js"></script>
-<!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
-<!-- Latest compiled and minified JavaScript -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-
 <link rel="stylesheet" href="/css/messageStyle.css"/>
 <link rel="stylesheet" href="/css/styleweb.css"/>
+<link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
+
+<script src="/js/jquery-1.11.0.min.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 
 </head>
 <body onload="scroll()">
@@ -61,7 +54,7 @@
 									<h2 th:if="${message.offer}" class="text-center" th:text="${message.offerPrize} + ' euros'"></h2>
 								</div>
 							</div>
-							<!--  Other user -->
+							<!--  Other -->
 							<div th:unless="${message.sender.email == user.email}">
 								<div class="pull-left userPicChat" style="margin-right: 15px"> 
 									<img th:unless="${message.sender.socialUser}" alt="User image" th:src="@{'http://www.elovendo.com/' + ${message.sender.avatar}}">
@@ -207,14 +200,6 @@
 	var lt = 5000;
 	
 		function scroll() {
-// 			var d = document.getElementById("messages");
-// 			d.scrollTop = d.scrollHeight;
-
-// 			var mydiv = $('#messages');
-// 			mydiv.scrollTop(mydiv.prop('scrollHeight'));
-
-// 			$('#messages').scrollTop(1000000);
-			
 			$("#messages").scrollTop($("#messages")[0].scrollHeight);
 		}
 		
@@ -289,7 +274,6 @@
 
 		$(document).ready( function() {
 			var state = $.cookie("usesEnter") == "true" ? true : false;
-// 			console.log("coockie " + state);
 			$('#enterCheckbox').prop('checked', state);
 		});
 		
@@ -301,29 +285,12 @@
 		
 		$('#message').keypress(function(e) {
 			var state = $('#enterCheckbox').prop('checked');
-// 			console.log("cb " + state);
 			if (e.which == 13 && state) {
 				e.preventDefault();
-// 				console.log("pressed enter and is cookie");
 				$('#sendMsg').click();
 			}
 		});
 
-		// Tip:
-
-		// 		{
-		// 			  "content" : [ {
-		// 			    "message" : "hjk",
-		// 			    "userName" : "pepito",
-		// 			    "pic" : "imgs/avatars/2-200h.jpg",
-		// 			    "date" : 1409575239000
-		// 			  }, {
-		// 			    "message" : "hjk",
-		// 			    "userName" : "pepito",
-		// 			    "pic" : "imgs/avatars/2-200h.jpg",
-		// 			    "date" : 1409575240000
-		// 			  } ]
-		// 			}
 	</script>
 
 </body>

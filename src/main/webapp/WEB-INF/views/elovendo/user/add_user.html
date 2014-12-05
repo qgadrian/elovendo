@@ -8,42 +8,33 @@
 <title>Registrarse en Elovendo</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-<!-- <script src="/js/imagePreview.js"></script> -->
-
-<!-- Form -->
-<!-- <link rel="stylesheet" href="/css/formStyle.css" /> -->
-
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
 <link href="/css/styleweb.css" rel="stylesheet" type="text/css" />
+<link href="/css/bootstrap-extra.css" media="all" rel="stylesheet"
+	type="text/css" />
 
-<!-- ************************* -->
-<!-- ******* Bootstrap ******* -->
-<!-- ************************* -->
-
-<!-- Javascript -->
 <script src="/js/jquery-1.11.1.min.js"></script>
-<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script> -->
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
-<!-- Latest compiled and minified JavaScript -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<!-- Bootstrap extra (bs-callout) -->
-<link href="/css/bootstrap-extra.css" media="all" rel="stylesheet" type="text/css" />
-
+<script src="/js/bootstrap.min.js"></script>
 <script src="/js/filter.js" type="text/javascript"></script>
 
-<link rel="stylesheet" type="text/css" href="/css/bootstrap-social.css" media="screen" />
-<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/css/bootstrap-social.css"
+	media="screen" />
+<link
+	href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+	type="text/css" rel="stylesheet">
 
 <!-- File input -->
-<link href="/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+<link href="/css/fileinput.min.css" media="all" rel="stylesheet"
+	type="text/css" />
 <script src="/js/fileinput.min.js" type="text/javascript"></script>
 
 <!-- Switch -->
-<link href="/css/bootstrap-switch.css" rel="stylesheet"/>
+<link href="/css/bootstrap-switch.css" rel="stylesheet" />
 <script src="/js/bootstrap-switch.js"></script>
 
 <!--  Phone input -->
-<link href="/css/intlTelInput.css" rel="stylesheet"/>
+<link href="/css/intlTelInput.css" rel="stylesheet" />
 <script src="/js/intlTelInput.js" type="text/javascript"></script>
 <script src="/js/utils.js" type="text/javascript"></script>
 
@@ -52,74 +43,74 @@
 <body>
 
 	<div th:replace="elovendo/header"></div>
-	
+
 	<div class="row">
-		<div class="col-xs-12 col-md-12 text-center" style="margin-bottom:20px;">
+		<div class="col-xs-12 col-md-12 text-center"
+			style="margin-bottom: 20px;">
 			<h1>Crea tu cuenta en Elovendo</h1>
-			<hr class="hrStyle2"/>
+			<hr class="hrStyle2" />
 		</div>
 	</div>
 
 	<div class="container">
 		<div class="row">
-			<div class="alert alert-warning" role="alert">Recuerda que si eres usuario de algún <strong>foro u otra web
-			de venta de segunda mano</strong>, debes registrarte <strong>con el mismo nombre de usuario</strong> 
-			y enviar una <a href="#" class="alert-link">solicitud de 
-			transferencia</a> para mantener tus votos en Elovendo.</div>
+			<div class="alert alert-warning" role="alert">
+				Recuerda que si eres usuario de algún <strong>foro u otra
+					web de venta de segunda mano</strong>, debes registrarte <strong>con
+					el mismo nombre de usuario</strong> y enviar una <a href="#"
+					class="alert-link">solicitud de transferencia</a> para mantener tus
+				votos en Elovendo.
+			</div>
 		</div>
 		<div class="row">
 			<div class="col-xs-6 col-xs-offset-3 text-center">
 				<a th:href="@{/auth/facebook(scope='email')}"
-					class="btn btn-lg btn-block btn-social btn-facebook"> <i class="fa fa-facebook"></i>
-					Registrarse usando tu cuenta de Facebook
-				</a>
-				<a th:href="@{/auth/google(scope='email')}"
-					class="btn btn-lg btn-block btn-social btn-google-plus"> <i class="fa fa-google"></i> 
-					Registrarse usando tu cuenta de Google
+					class="btn btn-lg btn-block btn-social btn-facebook"> <i
+					class="fa fa-facebook"></i> Registrarse usando tu cuenta de
+					Facebook
+				</a> <a th:href="@{/auth/google(scope='email')}"
+					class="btn btn-lg btn-block btn-social btn-google-plus"> <i
+					class="fa fa-google"></i> Registrarse usando tu cuenta de Google
 				</a>
 			</div>
 		</div>
 		<div class="row text-center">
-			<form class="form-horizontal" role="form" id="registrationform" th:action="@{/site/register}" 
-				method="post" enctype="multipart/form-data" accept-charset="UTF-8" >
-				<h2><small>Datos de tu cuenta</small></h2>
-				<hr/>
-				<!-- Username 2-20 characters -->
-<!-- 				<div class="col-sm-8 col-sm-offset-2" th:if="${#fields.hasErrors('user.login')}"> -->
-<!-- 					<div class="alert alert-danger" role="alert"> -->
-<!-- 							<span class="alert-link" role="alert" th:errors="${user.login}">Error</span> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
+			<form class="form-horizontal" role="form" id="registrationform"
+				th:action="@{/site/register}" method="post"
+				enctype="multipart/form-data" accept-charset="UTF-8">
+				<h2>
+					<small>Datos de tu cuenta</small>
+				</h2>
+				<hr />
 				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-2" th:classappend="${#fields.hasErrors('user.login')} ? 'has-error'">
-						<label for="title" class="col-sm-2 control-label">Usuario</label> 
-						<div class="col-sm-8">
-							<input type="text" class="form-control" id="username" name="username" 
-								th:title="#{login.invalid}" placeholder="Nombre de usuario" 
-								th:field="${user.login}" required="required"
-								pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,23}$"/>
-							<div th:if="${#fields.hasErrors('user.login')}" class="form-group has-error">
+					<div class="col-sm-12"
+						th:classappend="${#fields.hasErrors('user.login')} ? 'has-error'">
+						<label for="title" class="col-sm-3 control-label" th:text="#{User.add.label.username}">Usuario</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="username"
+								name="username" th:title="#{login.invalid}"
+								placeholder="Nombre de usuario" th:field="${user.login}"
+								required="required" pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,23}$" />
+							<div th:if="${#fields.hasErrors('user.login')}"
+								class="form-group has-error">
 								<small class="control-label" th:errors="${user.login}"
 									style="text-align: center !important">Input with error</small>
 							</div>
 						</div>
 					</div>
 				</div>
-				<!-- Password (UpperCase, LowerCase, Number/SpecialChar and min 8 Chars) -->
-<!-- 				<div class="col-sm-8 col-sm-offset-2" th:if="${#fields.hasErrors('user.password')}"> -->
-<!-- 					<div class="alert alert-danger" role="alert"> -->
-<!-- 							<span class="alert-link" -->
-<!-- 							role="alert" th:errors="${user.password}">Error</span> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
 				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-2" th:classappend="${#fields.hasErrors('user.confirmPassword')} ? 'has-error'">
-						<label for="password" class="col-sm-2 control-label" th:text="#{label.password}">Password</label> 
-						<div class="col-sm-8">
-							<input class="form-control" id="password" name="password" type="password" 
-								placeholder="Contraseña" th:title="#{Pattern.user.password}"
+					<div class="col-sm-12"
+						th:classappend="${#fields.hasErrors('user.confirmPassword')} ? 'has-error'">
+						<label for="password" class="col-sm-3 control-label"
+							th:text="#{User.add.label.password}">Password</label>
+						<div class="col-sm-6">
+							<input class="form-control" id="password" name="password"
+								type="password" placeholder="Contraseña"
+								th:title="#{Pattern.user.password}"
 								pattern="[0-9a-zA-Z$@$!%*#?&]{8,}$" />
-							<div th:if="${#fields.hasErrors('user.password')}" class="form-group has-error">
+							<div th:if="${#fields.hasErrors('user.password')}"
+								class="form-group has-error">
 								<small class="control-label" th:errors="${user.password}"
 									style="text-align: center !important">Input with error</small>
 							</div>
@@ -127,13 +118,17 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-2" th:classappend="${#fields.hasErrors('user.confirmPassword')} ? 'has-error'">
-						<label for="confirmPassword" class="col-sm-2 control-label" th:text="#{label.confirmPassword}">Confirm Password</label> 
-						<div class="col-sm-8">
-							<input class="form-control" id="confirmPassword" name="confirmPassword" type="password" 
-								placeholder="Contraseña" th:title="#{password.invalid}"
+					<div class="col-sm-12"
+						th:classappend="${#fields.hasErrors('user.confirmPassword')} ? 'has-error'">
+						<label for="confirmPassword" class="col-sm-3 control-label"
+							th:text="#{User.add.label.confirmPassword}">Confirm Password</label>
+						<div class="col-sm-6">
+							<input class="form-control" id="confirmPassword"
+								name="confirmPassword" type="password" placeholder="Contraseña"
+								th:title="#{password.invalid}"
 								pattern="[0-9a-zA-Z$@$!%*#?&]{8,}$" />
-							<div th:if="${#fields.hasErrors('user.confirmPassword')}" class="form-group has-error">
+							<div th:if="${#fields.hasErrors('user.confirmPassword')}"
+								class="form-group has-error">
 								<small class="control-label" th:errors="${user.confirmPassword}"
 									style="text-align: center !important">Input with error</small>
 							</div>
@@ -141,48 +136,59 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-2" th:classappend="${#fields.hasErrors('user.email')} ? 'has-error'">
-						<label for="email" class="col-sm-2 control-label" th:text="#{User.add.label.email}">Email Address</label> 
-						<div class="col-sm-8">
-							<input class="form-control" type="email" id="email" th:field="${user.email}" 
-								required="required" th:placeholder="#{User.add.placeholder.email}" 
+					<div class="col-sm-12"
+						th:classappend="${#fields.hasErrors('user.email')} ? 'has-error'">
+						<label for="email" class="col-sm-3 control-label"
+							th:text="#{User.add.label.email}">Email Address</label>
+						<div class="col-sm-6">
+							<input class="form-control" type="email" id="email"
+								th:field="${user.email}" required="required"
+								th:placeholder="#{User.add.placeholder.email}"
 								th:value="${user.email}" />
-							<div th:if="${#fields.hasErrors('user.email')}" class="form-group has-error">
+							<div th:if="${#fields.hasErrors('user.email')}"
+								class="form-group has-error">
 								<small class="control-label" th:errors="${user.email}"
 									style="text-align: center !important">Input with error</small>
 							</div>
 						</div>
 					</div>
 				</div>
-				<h2><small>Información básica</small></h2>
+				<h2>
+					<small>Información básica</small>
+				</h2>
 				<hr />
 				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-2">
-						<label for="firstName" class="col-sm-2 control-label" th:text="#{label.firstName}">Nombre</label>
-						<div class="col-sm-8">
-							<input class="form-control" id="firstName" name="firstName" type="text" 
-							placeholder="Tu nombre" th:field="${user.firstName}"/>
-<!-- 							<span th:if="${#fields.hasErrors('user.login')}" th:errors="${user.login}">Error</span> -->
+					<div class="col-sm-12">
+						<label for="firstName" class="col-sm-3 control-label"
+							th:text="#{User.add.label.firstName}">Nombre</label>
+						<div class="col-sm-6">
+							<input class="form-control" id="firstName" name="firstName"
+								type="text" placeholder="Tu nombre" th:field="${user.firstName}" />
 						</div>
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-2">
-						<label for="lastName" class="col-sm-2 control-label" th:text="#{label.lastName}">Apellidos</label>
-						<div class="col-sm-8">
-							<input class="form-control" id="lastName" name="lastName" type="text" 
-							placeholder="Tus apellidos" th:field="${user.lastName}"/>
-<!-- 							<span th:if="${#fields.hasErrors('user.login')}" th:errors="${user.login}">Error</span> -->
+					<div class="col-sm-12">
+						<label for="lastName" class="col-sm-3 control-label"
+							th:text="#{User.add.label.lastName}">Apellidos</label>
+						<div class="col-sm-6">
+							<input class="form-control" id="lastName" name="lastName"
+								type="text" placeholder="Tus apellidos"
+								th:field="${user.lastName}" />
 						</div>
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-2" id="phoneForm" th:classappend="${#fields.hasErrors('user.phone')} ? 'has-error'">
-						<label for="phone" class="col-sm-2 control-label" th:text="#{label.phone}">Phone</label>
-						<div class="col-sm-8">
+					<div class="col-sm-12" id="phoneForm"
+						th:classappend="${#fields.hasErrors('user.phone')} ? 'has-error'">
+						<label for="phone" class="col-sm-3 control-label"
+							th:text="#{User.add.label.phone}">Phone</label>
+						<div class="col-sm-6">
 							<input type="tel" class="form-control" id="phone" name="phone"
-								th:placeholder="#{User.register.ph.mobile}" th:value="${user.phone}"/>
-							<div th:if="${#fields.hasErrors('user.phone')}" class="form-group has-error">
+								th:placeholder="#{User.add.placeholder.phone}"
+								th:value="${user.phone}" />
+							<div th:if="${#fields.hasErrors('user.phone')}"
+								class="form-group has-error">
 								<small class="control-label" th:errors="${user.phone}"
 									style="text-align: center !important">Input with error</small>
 							</div>
@@ -191,8 +197,10 @@
 				</div>
 				<div class="form-group">
 					<div class="col-sm-8 col-sm-offset-2">
-						<label for="phone" class="col-sm-8 control-label">¿Quieres marcarte como usuario de whatssap con tu número de teléfono?
-						Los usuarios podrán enviarte mensajes a Whatssap directamente desde nuestra aplicación.</label>
+						<label for="phone" class="col-sm-8 control-label">¿Quieres
+							marcarte como usuario de whatssap con tu número de teléfono? Los
+							usuarios podrán enviarte mensajes a Whatssap directamente desde
+							nuestra aplicación.</label>
 						<div class="col-sm-2">
 							<div class="pull-right has-success">
 								<input type="checkbox" name="whatssap" data-on-text="Sí"
@@ -202,16 +210,13 @@
 						</div>
 					</div>
 				</div>
-<!-- 				<div class="col-sm-8 col-sm-offset-2" th:if="${#fields.hasErrors('profilePic')}"> -->
-<!-- 					<div class="alert alert-danger" role="alert"> -->
-<!-- 							<span class="alert-link" role="alert" th:errors="${profilePic}">Error</span> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
 				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-2 form-fix">
-						<label for="profilePic" class="col-sm-2 control-label" th:text="#{label.profilePic}">Profile pic</label> 
-						<div class="col-sm-8">
-							<input id="profilePic" type="file" class="file" data-show-upload="false" name="profilePic"/>
+					<div class="col-sm-12 form-fix">
+						<label for="profilePic" class="col-sm-3 control-label"
+							th:text="#{User.add.label.profilePic}">Profile pic</label>
+						<div class="col-sm-6">
+							<input id="profilePic" type="file" class="file"
+								data-show-upload="false" name="profilePic" />
 						</div>
 					</div>
 				</div>
@@ -219,169 +224,206 @@
 					<div class="col-sm-8 col-sm-offset-2">
 						<div class="col-sm-2">
 							<span class="button-checkbox">
-								<button id="buttonAccept" type="button" class="btn" data-color="info" tabindex="7">Acepto</button>
-								<input type="checkbox" name="acceptCheck" id="acceptCheck" class="hidden" value="1"/>
+								<button id="buttonAccept" type="button" class="btn"
+									data-color="info" tabindex="7">Acepto</button> <input
+								type="checkbox" name="acceptCheck" id="acceptCheck"
+								class="hidden" value="1" />
 							</span>
 						</div>
 						<div class="col-sm-8">
-							 Pulsando <strong class="label label-primary">Acepto</strong>, confirmas que has leído 
-							 y aceptas nuestras 
-							 <a href="#" data-toggle="modal" data-target="#t_and_c_m">Condiciones y términos de uso</a> 
-							 , incluyendo nuestra política de cookies.
+							Pulsando <strong class="label label-primary">Acepto</strong>,
+							confirmas que has leído y aceptas nuestras <a href="#"
+								data-toggle="modal" data-target="#t_and_c_m">Condiciones y
+								términos de uso</a> , incluyendo nuestra política de cookies.
 						</div>
 					</div>
 				</div>
 				<div class="col-sm-6 col-sm-offset-3" style="margin-top: 20px;">
-					<button id="buttonRegister" type="submit" disabled="disabled" 
-					class="btn btn-success btn-lg btn-block web-top-margin">Registrarse</button>
-					<hr/>
+					<button id="buttonRegister" type="submit" disabled="disabled"
+						class="btn btn-success btn-lg btn-block web-top-margin">Registrarse</button>
+					<hr />
 				</div>
 			</form>
 		</div>
 	</div>
-	
+
 	<div th:replace="elovendo/user/modalConditions"></div>
-	
+
 	<!-- Footer -->
 	<div th:replace="elovendo/footer"></div>
 
 
-<script th:inline="javascript">
+	<script th:inline="javascript">
 
-	/*<![CDATA[*/
-	var w = /*[[${isWhatssap}]]*/ false;
-	/*]]>*/
+		/*<![CDATA[*/
+		var w = /*[[${isWhatssap}]]*/false;
+		/*]]>*/
 
-	$(document).ready(function() {
-		console.log("phone valid? " + $('#phone').val());
-		
-		console.log("flag? " + $(".flag .es").prop('class'));
-		var els = document.getElementsByClassName('flag');
-		
-		console.log("size " + $.fn.intlTelInput.getCountryData().length);
-		
-// 		var isValid = intlTelInputUtils.isValidNumber($('#phone').val(), 34);
-// 		var isValid = $('#phone').intlTelInput("isValidNumber");
-		try {
-			console.log("phone is? " + $('#phone').val());
-			var iv = $('#phone').val() != "";
-			console.log("really valid? " + iv);
-			console.log("cause is? " + $('#phone').val());
-			
-			if (iv) {
-				$("[name='whatssap']").bootstrapSwitch('disabled', false, true);
-			} else {
-				$("[name='whatssap']").bootstrapSwitch('disabled', true, true);
-			}
-		} catch (err) {
-			console.log("error reading phone value valid");
-			$("[name='whatssap']").bootstrapSwitch('disabled', true, true);
-		}
+		$(document).ready(
+				function() {
+					console.log("phone valid? " + $('#phone').val());
 
-		if (w != null) $("[name='whatssap']").bootstrapSwitch('state', w, true);
+					console.log("flag? " + $(".flag .es").prop('class'));
+					var els = document.getElementsByClassName('flag');
 
-	});
-	
-	$("[name='whatssap']").bootstrapSwitch({
-		checked: true,
-		disabled: true
-	});
-	
-	$("#accept").on('click', function() {
-		console.log("accept click");
-		document.getElementById('buttonAccept').className = "btn btn-info active";
-		document.getElementById('buttonAcceptCheck').className = "state-icon glyphicon glyphicon-check";
-		document.getElementById('acceptCheck').checked = true;
-		document.getElementById('buttonRegister').disabled = false;
-	});
-	
-	$('#phone').intlTelInput({
-		 defaultCountry: "auto",
-		 numberType: intlTelInputUtils.numberType.MOBILE,
-		 preferredCountries: ["us", "gb", "es", "fr", "in", "de"]
-	});
-	
-	$('#phone').on("change", function() {
-		var val = $(this).val();
-		var isValid = $("#phone").intlTelInput("isValidNumber");
-		if (isValid) {
-			if (val.length == 0) {
-				$("[name='whatssap']").bootstrapSwitch('disabled', true, true);
-			} else {
-				$("[name='whatssap']").bootstrapSwitch('disabled', false, true);
-			}
-		} else {
-			$('#phoneForm').addClass('has-error');
-		}
-	});
+					console.log("size "
+							+ $.fn.intlTelInput.getCountryData().length);
 
-	
-	$(function() {
-		$('.button-checkbox').each(
-			function() {
-				// Settings
-				var $widget = $(this), $button = $widget
-					.find('button'), $checkbox = $widget
-					.find('input:checkbox'), color = $button
-					.data('color'), settings = {
-						on : {
-							icon : 'glyphicon glyphicon-check'
-						},
-						off : {
-							icon : 'glyphicon glyphicon-unchecked'
+					try {
+						console.log("phone is? " + $('#phone').val());
+						var iv = $('#phone').val() != "";
+						console.log("really valid? " + iv);
+						console.log("cause is? " + $('#phone').val());
+
+						if (iv) {
+							$("[name='whatssap']").bootstrapSwitch('disabled',
+									false, true);
+						} else {
+							$("[name='whatssap']").bootstrapSwitch('disabled',
+									true, true);
 						}
-				};
-
-				// Event Handlers
-				$button.on('click', function() {
-					$checkbox.prop('checked', !$checkbox.is(':checked'));
-					$checkbox.triggerHandler('change');
-					updateDisplay();
-					if ($checkbox.is(':checked')) {
-						document.getElementById("buttonRegister").disabled = false;
-					} else {
-						document.getElementById("buttonRegister").disabled = true;
+					} catch (err) {
+						console.log("error reading phone value valid");
+						$("[name='whatssap']").bootstrapSwitch('disabled',
+								true, true);
 					}
-				});
-				
-				$checkbox.on('change', function() {
-					updateDisplay();
+
+					if (w != null)
+						$("[name='whatssap']")
+								.bootstrapSwitch('state', w, true);
+
 				});
 
-				// Actions
-				function updateDisplay() {
-					var isChecked = $checkbox.is(':checked');
+		$("[name='whatssap']").bootstrapSwitch({
+			checked : true,
+			disabled : true
+		});
 
-					// Set the button's state
-					$button.data('state', (isChecked) ? "on" : "off");
+		$("#accept")
+				.on(
+						'click',
+						function() {
+							console.log("accept click");
+							document.getElementById('buttonAccept').className = "btn btn-info active";
+							document.getElementById('buttonAcceptCheck').className = "state-icon glyphicon glyphicon-check";
+							document.getElementById('acceptCheck').checked = true;
+							document.getElementById('buttonRegister').disabled = false;
+						});
 
-					// Set the button's icon
-					$button
-							.find('.state-icon')
-							.removeClass()
-							.addClass('state-icon ' + settings[$button.data('state')].icon);
+		$('#phone').intlTelInput({
+			defaultCountry : "auto",
+			numberType : intlTelInputUtils.numberType.MOBILE,
+			preferredCountries : [ "us", "gb", "es", "fr", "in", "de" ]
+		});
 
-					// Update the button's color
-					if (isChecked) {
-						$button.removeClass('btn-default').addClass('btn-' + color + ' active');
+		$('#phone').on(
+				"change",
+				function() {
+					var val = $(this).val();
+					var isValid = $("#phone").intlTelInput("isValidNumber");
+					if (isValid) {
+						if (val.length == 0) {
+							$("[name='whatssap']").bootstrapSwitch('disabled',
+									true, true);
+						} else {
+							$("[name='whatssap']").bootstrapSwitch('disabled',
+									false, true);
+						}
 					} else {
-						$button.removeClass('btn-' + color + ' active').addClass('btn-default');
+						$('#phoneForm').addClass('has-error');
 					}
-				}
+				});
 
-				// Initialization
-				function init() {
-					updateDisplay();
-					// Inject the icon if applicable
-					if ($button.find('.state-icon').length == 0) {
-						$button.prepend('<i id="buttonAcceptCheck" class="state-icon '
-							+ settings[$button.data('state')].icon + '"></i> ');
-					}
-				}
-				init();
-			});
-	});
-</script>
+		$(function() {
+			$('.button-checkbox')
+					.each(
+							function() {
+								// Settings
+								var $widget = $(this), $button = $widget
+										.find('button'), $checkbox = $widget
+										.find('input:checkbox'), color = $button
+										.data('color'), settings = {
+									on : {
+										icon : 'glyphicon glyphicon-check'
+									},
+									off : {
+										icon : 'glyphicon glyphicon-unchecked'
+									}
+								};
+
+								// Event Handlers
+								$button
+										.on(
+												'click',
+												function() {
+													$checkbox
+															.prop(
+																	'checked',
+																	!$checkbox
+																			.is(':checked'));
+													$checkbox
+															.triggerHandler('change');
+													updateDisplay();
+													if ($checkbox
+															.is(':checked')) {
+														document
+																.getElementById("buttonRegister").disabled = false;
+													} else {
+														document
+																.getElementById("buttonRegister").disabled = true;
+													}
+												});
+
+								$checkbox.on('change', function() {
+									updateDisplay();
+								});
+
+								// Actions
+								function updateDisplay() {
+									var isChecked = $checkbox.is(':checked');
+
+									// Set the button's state
+									$button.data('state', (isChecked) ? "on"
+											: "off");
+
+									// Set the button's icon
+									$button
+											.find('.state-icon')
+											.removeClass()
+											.addClass(
+													'state-icon '
+															+ settings[$button
+																	.data('state')].icon);
+
+									// Update the button's color
+									if (isChecked) {
+										$button.removeClass('btn-default')
+												.addClass(
+														'btn-' + color
+																+ ' active');
+									} else {
+										$button.removeClass(
+												'btn-' + color + ' active')
+												.addClass('btn-default');
+									}
+								}
+
+								// Initialization
+								function init() {
+									updateDisplay();
+									// Inject the icon if applicable
+									if ($button.find('.state-icon').length == 0) {
+										$button
+												.prepend('<i id="buttonAcceptCheck" class="state-icon '
+														+ settings[$button
+																.data('state')].icon
+														+ '"></i> ');
+									}
+								}
+								init();
+							});
+		});
+	</script>
 
 </body>
 </html>

@@ -1,45 +1,46 @@
-	<!-- Modal -->
-	<div class="modal fade" id="contactModal" tabindex="-1" role="dialog"
-		aria-labelledby="contactLabel" aria-hidden="true">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-					</button>
-					<h4 class="modal-title" id="myModalLabel" th:text="#{About.Modal.title}">Contact</h4>
+<div class="modal fade" id="contactModal" tabindex="-1" role="dialog"
+	aria-labelledby="contactLabel" aria-hidden="true">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">
+				<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+			</button>
+			<h4 class="modal-title" id="myModalLabel"
+				th:text="#{About.Modal.title}">Contact</h4>
+		</div>
+		<div class="modal-body">
+			<form id="contactForm" name="contactForm" role="form"
+				th:action="@{/elovendo/contact/about}" method="post"
+				accept-charset="UTF-8">
+				<div class="form-group">
+					<label for="email" th:text="#{Global.upper.email}">Email</label> <input
+						type="email" name="email" class="form-control" id="email"
+						th:placeholder="#{Common.email.placeholder}" />
 				</div>
-				<div class="modal-body">
-					<form id="contactForm" name="contactForm" role="form"
-						th:action="@{/elovendo/contact/about}" method="post"
-						accept-charset="UTF-8">
-						<div class="form-group">
-							<label for="email" th:text="#{Global.upper.email}">Email</label> <input
-								type="email" name="email" class="form-control" id="email"
-								th:placeholder="#{Common.email.placeholder}" />
-						</div>
-						<div class="form-group">
-							<label for="name" th:text="#{Global.upper.name}">Name</label> <input
-								type="text" class="form-control" id="name"
-								name="name" th:placeholder="#{Common.name.placeholder}" />
-						</div>
-						<input type="hidden" id="receiver" name="receiver" />
-						<div class="form-group">
-							<label for="message" th:text="#{Global.upper.message}">Message</label>
-							<textarea id="msg" class="form-control textarea"
-								rows="10" name="msg" required="required"
-								th:placeholder="#{Common.message.placeholder}" maxlength="1000"></textarea>
-						</div>
-						<div class="checkbox">
-							<label> <input type="checkbox" /> Acepto las condiciones
-								de uso
-							</label>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default"
-								data-dismiss="modal" th:text="#{Global.upper.cancel}">Cancel</button>
-							<button type="submit" class="btn btn-primary" th:text="#{Global.upper.send}">Send</button>
-						</div>
-					</form>
+				<div class="form-group">
+					<label for="name" th:text="#{Global.upper.name}">Name</label> <input
+						type="text" class="form-control" id="name" name="name"
+						th:placeholder="#{Common.name.placeholder}" />
 				</div>
-			</div>
+				<input type="hidden" id="receiver" name="receiver" />
+				<div class="form-group">
+					<label for="message" th:text="#{Global.upper.message}">Message</label>
+					<textarea id="msg" class="form-control textarea" rows="10"
+						name="msg" required="required"
+						th:placeholder="#{Common.message.placeholder}" maxlength="1000"></textarea>
+				</div>
+				<div class="checkbox">
+					<label> <input type="checkbox" /> Acepto las condiciones
+						de uso
+					</label>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						th:text="#{Global.upper.cancel}">Cancel</button>
+					<button type="submit" class="btn btn-primary"
+						th:text="#{Global.upper.send}">Send</button>
+				</div>
+			</form>
+		</div>
 	</div>
+</div>

@@ -6,66 +6,27 @@
 <head>
 <title>Editar mi anuncio</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
 
-<!-- Form -->
-<!-- <link rel="stylesheet" -->
-<!-- 	href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css" /> -->
-
-<!-- Button style -->
-<link href="/css/buttonStyle.css" media="all" rel="stylesheet" type="text/css" />
-<!-- Web style -->
-<link href="/css/styleweb.css" media="all" rel="stylesheet" type="text/css" />
-
-<!-- ************************* -->
-<!-- ******* Bootstrap ******* -->
-<!-- ************************* -->
-
-<!-- Javascript -->
-<script src="/js/jquery-1.11.1.min.js"></script>
-<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script> -->
-<!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
-<!-- Latest compiled and minified JavaScript -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<!-- Bootstrap extra (bs-callout) -->
+<link href="/css/styleweb.css" media="all" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
 <link href="/css/bootstrap-extra.css" media="all" rel="stylesheet" type="text/css" />
-
-<!-- File input -->
 <link href="/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
-<script src="/js/fileinput.min.js" type="text/javascript"></script>
-
-<!-- Checkbox -->
-<link href="/css/checkbox-x.min.css" media="all" rel="stylesheet" type="text/css" />
-<script src="/js/checkbox-x.min.js" type="text/javascript"></script>
-
-<!-- Switch -->
 <link href="/css/bootstrap-switch.css" rel="stylesheet"/>
-<script src="/js/bootstrap-switch.js"></script>
-
-<!-- Markdown text -->
-<script src="/js/richtext/wysihtml5-0.3.0.min.js"></script> <!-- Library -->
-<script src="/js/richtext/advanced.js"></script> <!-- wysihtml5 parser rules -->
-<script src="/js/richtext/bootstrap-wysihtml5.js"></script> <!-- wysihtml5 parser rules -->
 <link href="/css/bootstrap-wysihtml5.css" media="all" rel="stylesheet" type="text/css" />
 
-<!-- dependent dropdown -->
-<link href="/css/dependent-dropdown.min.css" media="all" rel="stylesheet" type="text/css" />
-<script src="/js/dependent-dropdown.min.js" type="text/javascript"></script>
-
-<!--  geo -->
+<script src="/js/jquery-1.11.1.min.js"></script>
 <script src="/js/geo.js"></script>
-<!-- Google autocomplete  -->
-<!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;libraries=places"></script> -->
-
-<!-- <script src="/js/initAddItemPage.js"></script> Library -->
-
-<!-- Bootstrap switch -->
-<!-- <link href="/css/bootstrap-switch.css" rel="stylesheet"/> -->
-<!-- <script src="/js/bootstrap-switch.js"></script> -->
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/fileinput.min.js" type="text/javascript"></script>
+<script src="/js/checkbox-x.min.js" type="text/javascript"></script>
+<script src="/js/bootstrap-switch.js"></script>
+<script src="/js/richtext/wysihtml5-0.3.0.min.js"></script>
+<script src="/js/richtext/advanced.js"></script>
+<script src="/js/richtext/bootstrap-wysihtml5.js"></script>
 
 </head>
 
@@ -76,8 +37,6 @@
 		display sections completely.&lt;/div&gt;</noscript>
 
 	<!-- Header -->
-<!-- 	<div th:replace="/elovendo/header :: elovendo-header"></div>-->
-<!-- 	<div th:include="/elovendo/header :: elovendo-header"></div> -->
 	<div th:replace="elovendo/header"></div>
 
 	<div class="row">
@@ -123,37 +82,17 @@
 				<div class="hero-unit" >
 					<label for="title" class="col-sm-2 control-label" style="margin-top:40px;">Description</label> 
 					<div class="col-sm-10">
-						<!-- FIXME -->
-						<!-- Pasting formatted HTML when creating item makes show formatted everywhere -->
-						<!-- it's important make sure pasting DOES AS TEXT/PLAIN -->
 						<textarea id="textarea" class="form-control textarea" rows="15" th:field="${item.description}" 
 						required="required" placeholder="Descripción..." maxlength="500"
 						th:title="#{Length.item.description}"></textarea>
 					</div>
 				</div>
 			</div>
-<!-- 			<div class="form-group"> -->
-<!-- 				<label for="title" class="col-sm-2 control-label">Prize</label>  -->
-<!-- 				<div class="col-sm-10"> -->
-<!-- 					<input type="number" class="form-control" id="prize" min="0" -->
-<!-- 					placeholder="Enter prize" th:field="${item.prize}" required="required"/> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
 			<div class="form-group"
 				th:classappend="${#fields.hasErrors('item.prize')} ? 'has-error'">
 				<label for="title" class="col-sm-2 control-label"
 					th:text=#{Item.add.label.prize}>Prize</label>
 				<div class="col-sm-10">
-<!-- 					<div class="input-group"> -->
-<!-- 						<select class="selectpicker form-control" id="currelo" -->
-<!-- 							name="currency"> -->
-<!-- 							<option value="USD">USD</option> -->
-<!-- 							<option value="GBP">GBP</option> -->
-<!-- 							<option value="EUR">EUR</option> -->
-<!-- 						</select> <input type="number" class="form-control" id="prize" min="0" -->
-<!-- 							placeholder="Enter prize" th:field="${item.prize}" -->
-<!-- 							required="required" /> -->
-<!-- 					</div> -->
 					<div class="input-group" style="display: flex !important;">
 						<select class="selectpicker form-control" id="currelo" 
 							name="currency" style="width: 10% !important;">
@@ -180,9 +119,6 @@
 					          th:text="${category.categoryName}">Category</option>
 					</select>
 				</div>
-<!-- 					<select id="category" class="depdrop" depends="['category']" url="www.elovendo.com/bazaar/getsubs"> -->
-					
-<!-- 					</select> -->
 			</div>
 			<div class="form-group">
 				<label for="subCategory" class="col-sm-2 control-label">SubCategoría</label>
@@ -250,10 +186,6 @@
 				 nunca se proporcionará ninguna información específica o personal.</p>
 				<p>De esta manera los usuarios de la web o aplicación móvil podrán <strong>acceder con más facilidad</strong> 
 				a tu anuncio, además de otras muchas ventajas.</p>
-<!-- 				<div> -->
-<!-- 					<input type="hidden" id="latitude" name="lat" /> -->
-<!-- 					<input type="hidden" id="longitude" name="lng" /> -->
-<!-- 				</div> -->
 			</div>
 			<!-- geo -->
 			<div class="row">
@@ -267,9 +199,7 @@
 				</div>
 			</div>
 			<!-- maps -->
-<!-- 			<div class="row"> -->
 				<div id="map_canvas" style="width:100%; height:500px; display: block"></div>
-<!-- 			</div> -->
 			<div><h3>Opciones para tu anuncio</h3><hr class="hrStyle2" /></div>
 			<div class="bs-callout bs-callout-info">
 				<h4>¿Mostrar anuncio en la <strong>barra de patrocinados</strong>?</h4>
@@ -427,12 +357,10 @@
 				})
 			});
 		</script>
-        
-<!-- Google maps -->
 
+	<!-- Google maps -->
 	<script type="text/javascript"
-		src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCQ-Utb1oduNieaf74WcrBdnwmVpPiJUFo&amp;sensor=TRUE&libraries=places">
-	</script>
+		src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCQ-Utb1oduNieaf74WcrBdnwmVpPiJUFo&amp;sensor=TRUE&libraries=places"></script>
 
 </body>
 </html>

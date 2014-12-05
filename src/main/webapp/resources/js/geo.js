@@ -107,7 +107,6 @@ function getInitPosition(position) {
 	// initialize geosearch in index
 	var arr = [], l = document.links;
 	for (var i = 0; i < l.length; i++) {
-		// console.log(l[i].href);
 		var ela = l[i].href;
 		if (ela.indexOf("bazaar/category") > -1) {
 			l[i].href = ela + "?lat=" + lat + "&lng=" + lng;
@@ -118,11 +117,8 @@ function getInitPosition(position) {
 
 // Geo for currency
 function getCountryCurrency(callback) {
-//	console.log("calling currency");
 	$.getJSON("http://ipinfo.io/json", function(json) {
-		console.log("my country is " + json.country);
 		callback(json.country);
-//		callback("GB");
 	});
 }
 
@@ -132,8 +128,6 @@ function setCurrelo(currelo) {
 	var json = JSON.parse(currecountry);
 	var curry = json[currelo];
 	
-//	console.log("got it, currency is " + curry);
-
 	// If there is no such currency available, just set USD as currency
 	if ($('#currelo > option[value="'+ curry +'"]').length > 0)
 		$("#currelo").val(curry);
