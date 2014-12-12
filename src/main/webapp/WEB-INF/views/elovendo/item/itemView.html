@@ -448,7 +448,7 @@
 		var okm = /*[[#{Alert.itemList.favorite.ok}]]*/ 'Added to favorite';
 		var fm = /*[[#{Alert.itemList.favorite.error}]]*/ 'Error adding to favorite. Please try again.';
 		var ell = /*[[#{Alert.itemList.favorite.login}]]*/ 'You have to login first.';
-		/*]]>*/
+		
 		$('#sVote').on('click', function() {
 			var e = "/site/vote";
 			$.ajax({
@@ -555,33 +555,106 @@
 		
 		function vstff() {
 			swal({
-				  title: "Vote",
-				  text: "What kind of voute do you want to emit?",
+				  title: /*[[#{Vote.item.main.title}]]*/ "Vote",
+				  text: /*[[#{Vote.item.main.text}]]*/ "Send your vote",
 				  type: "warning",
 				  showCancelButton: true,
 				  confirmButtonClass: "btn-success",
-				  confirmButtonText: "Positive!",
+				  confirmButtonText: /*[[#{Vote.item.main.button.positive}]]*/ "Positive!",
 				  cancelButtonClass: "btn-danger",
-				  cancelButtonText: "Negative!",
+				  cancelButtonText: /*[[#{Vote.item.main.button.negative}]]*/ "Negative!",
 				  closeOnConfirm: false,
-				  closeOnCancel: false
+				  closeOnCancel: false,
+				  allowOutsideClick: true,
+				  hasInput: true,
+				  inputPlaceHolder: /*[[#{Vote.item.main.message}]]*/ "Message..."
 				},
 				function(isConfirm) {
-				  if (isConfirm) {
-// 				    swal("Perfect!", "Hope you enjoyed talking to this user.", "success");
-					swal({
-						title: "Perfect!",
-						text: "Hope you enjoyed talking to this user.",
-						type: "success",
-						showCancelButton: true,
-						confirmButtonClass: "btn-success",
-						confirmButtonText: "Ok"
+					if (isConfirm) {
+						sprfn(1, /*[[#{Vote.item.success.title}]]*/ "Perfect!", 
+								/*[[#{Vote.item.success.text}]]*/ "Hope you enjoyed talking to this user.", "success");
 					}
-				} else {
-					swal("Negative voted", "Hope this was an isolated incident :)", "error");
+					else {
+						sprfn(0, /*[[#{Vote.item.negative.title}]]*/ "Negative vote", 
+								/*[[#{Vote.item.negative.text}]]*/ "Hope this was an isolated incident :(", "error");
 					}
+				}
+			);
+		}
+		
+		var e = "/site/vote";
+		function sprfn(val, tit, txt, tpy) {
+			$.ajax({
+				type : "POST",
+				beforeSend : function(request) {
+					request.setRequestHeader(cn, cv);
+				},
+				url : e,
+				data : {
+					uv : ui,
+					iv : ii,
+					vt : val,
+					msg : $('#voteComment').val()
+				},
+				success : function(data) {
+					if (data == 1) {
+						swal({
+							title: tit,
+							text: txt,
+							type: tpy,
+							showCancelButton: false,
+							confirmButtonClass: "btn-success",
+							confirmButtonText: "Ok",
+							allowOutsideClick: true,
+							hasInput: false
+						});
+					} else {
+						emaxu(data);
+					}
+				},
+				error : function() {
+					emaxu(0);
+				}
 			});
 		}
+		
+		function emaxu(a) {
+			if (a == 2) {
+				swal({
+					title: /*[[#{Vote.item.error.self.title}]]*/ "You can't vote to yourself...",
+					text: /*[[#{Vote.item.error.self.text}]]*/ "It's illegal.",
+					type: "error",
+					showCancelButton: false,
+					confirmButtonClass: "btn-success",
+					confirmButtonText: "Ok",
+					allowOutsideClick: true,
+					hasInput: false
+				});
+			} else if (a == 3) {
+				swal({
+					title: /*[[#{Vote.item.duplicate.title}]]*/ "You already voted...",
+					text: /*[[#{Vote.item.duplicate.text}]]*/ "You can vote once.",
+					type: "error",
+					showCancelButton: false,
+					confirmButtonClass: "btn-success",
+					confirmButtonText: "Ok",
+					allowOutsideClick: true,
+					hasInput: false
+				});
+			} else {
+				swal({
+					title: /*[[#{Vote.item.error.title}]]*/ "Cannot vote",
+					text: /*[[#{Vote.item.error.text}]]*/ "Something happened.",
+					type: "error",
+					showCancelButton: false,
+					confirmButtonClass: "btn-success",
+					confirmButtonText: "Ok",
+					allowOutsideClick: true,
+					hasInput: false
+				});
+			}
+		}
+		/*]]>*/
 	</script>
 
 </body>

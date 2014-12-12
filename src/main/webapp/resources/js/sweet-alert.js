@@ -20,7 +20,9 @@
         cancelButtonClass: 'btn-default',
         imageUrl: null,
         imageSize: null,
-        timer: null
+        timer: null,
+        hasInput: false,
+        inputPlaceHolder: ""
       };
 
 
@@ -177,7 +179,7 @@
    */
 
   window.sweetAlertInitialize = function() {
-    var sweetHTML = '<div class="sweet-overlay" tabIndex="-1"></div><div class="sweet-alert" tabIndex="-1"><div class="icon error"><span class="x-mark"><span class="line left"></span><span class="line right"></span></span></div><div class="icon warning"> <span class="body"></span> <span class="dot"></span> </div> <div class="icon info"></div> <div class="icon success"> <span class="line tip"></span> <span class="line long"></span> <div class="placeholder"></div> <div class="fix"></div> </div> <div class="icon custom"></div> <h2>Title</h2><p class="lead text-muted">Text</p><p><button class="cancel btn btn-lg" tabIndex="2">Cancel</button> <button class="confirm btn btn-lg" tabIndex="1">OK</button></p></div>',
+    var sweetHTML = '<div class="sweet-overlay" tabIndex="-1"></div><div class="sweet-alert" tabIndex="-1"><div class="icon error"><span class="x-mark"><span class="line left"></span><span class="line right"></span></span></div><div class="icon warning"> <span class="body"></span> <span class="dot"></span> </div> <div class="icon info"></div> <div class="icon success"> <span class="line tip"></span> <span class="line long"></span> <div class="placeholder"></div> <div class="fix"></div> </div> <div class="icon custom"></div> <h2>Title</h2><p class="lead text-muted">Text</p><input class="form-control sweet-input" id="msg" name="msg" placeholder="messsssage..." autofocus></input><p><button class="cancel btn btn-lg" tabIndex="2">Cancel</button> <button class="confirm btn btn-lg" tabIndex="1">OK</button></p></div>',
         sweetWrap = document.createElement('div');
 
     sweetWrap.innerHTML = sweetHTML;
@@ -198,7 +200,6 @@
   /*
    * Global sweetAlert function
    */
-
   window.sweetAlert = window.swal = function() {
     if (arguments[0] === undefined) {
       window.console.error('sweetAlert expects at least 1 attribute!');
@@ -230,6 +231,8 @@
         params.closeOnConfirm     = arguments[0].closeOnConfirm !== undefined ? arguments[0].closeOnConfirm : defaultParams.closeOnConfirm;
         params.closeOnCancel      = arguments[0].closeOnCancel !== undefined ? arguments[0].closeOnCancel : defaultParams.closeOnCancel;
         params.timer              = arguments[0].timer || defaultParams.timer;
+        params.hasInput           = arguments[0].hasInput !== undefined ? arguments[0].hasInput : defaultParams.hasInput;
+        params.inputPlaceHolder   = arguments[0].inputPlaceHolder !== undefined ? arguments[0].inputPlaceHolder : defaultParams.inputPlaceHolder;
 
         // Show "Confirm" instead of "OK" if cancel button is visible
         params.confirmButtonText  = (defaultParams.showCancelButton) ? 'Confirm' : defaultParams.confirmButtonText;
@@ -498,6 +501,15 @@
           break;
       }
 
+    }
+    
+    // Input field
+    var $msg = modal.querySelector('#msg');
+    if (!params.hasInput) {
+    	$msg.style.display="none";
+    } else {
+    	$msg.style.display="";
+    	$msg.placeholder=params.inputPlaceHolder;
     }
 
     // Custom image

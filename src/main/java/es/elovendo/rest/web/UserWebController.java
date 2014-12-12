@@ -358,28 +358,6 @@ public class UserWebController {
 	}
 
 	/**
-	 * VOTE STUFF
-	 * 
-	 * @throws InvalidVoteUsersException
-	 * @throws VoteDuplicateException
-	 * @throws ItemNotFoundException
-	 * @throws InvalidSelfVoteException
-	 * @throws AnonymousUserAuthenticationException
-	 */
-	@RequestMapping(value = "vote", method = RequestMethod.POST)
-	public @ResponseBody boolean processVote(@RequestParam(value = "uv", required = true) long receiverId,
-			@RequestParam(value = "iv", required = true) long itemId,
-			@RequestParam(value = "vt", required = true) int voteType,
-			@RequestParam(value = "msg", required = true) String voteMessage) throws UserNotFoundException,
-			PurchaseDuplicateException, ItemNotFoundException, VoteDuplicateException, InvalidVoteUsersException,
-			InvalidSelfVoteException, AnonymousUserAuthenticationException {
-
-		User user = SessionUserObtainer.getInstance().getSessionUser();
-
-		return userService.voteUser(user.getUserId(), receiverId, itemId, voteType, voteMessage) != null;
-	}
-
-	/**
 	 * PAYPAL
 	 * 
 	 * @throws PurchaseDuplicateException

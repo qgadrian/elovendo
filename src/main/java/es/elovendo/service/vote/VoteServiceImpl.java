@@ -106,21 +106,19 @@ public class VoteServiceImpl implements VoteService {
 		userService.updateUser(user);
 	}
 	
+	/**
+	 * Check if for an existing vote, another user is trying to vote to another
+	 * @param user1
+	 * @param user2
+	 * @param vote
+	 * @throws InvalidVoteUsersException
+	 */
 	private void validateUsersForVote(User user1, User user2, Vote vote) 
 			throws InvalidVoteUsersException {
 		
 		if ((!vote.getUserVote().equals(user1) && vote.getUserReceive().equals(user2))
 			|| (!vote.getUserVote().equals(user2) && vote.getUserReceive().equals(user1)))
 			throw new InvalidVoteUsersException(user1.getUserId(), user2.getUserId(), vote.getVoteId());
-		
-//		if (vote.getUserVote().equals(user1)) {
-//			if (!vote.getUserReceive().equals(user2)) 
-//				throw new InvalidVoteUsersException(user1.getUserId(), user2.getUserId(), vote.getVoteId());
-//		} else if (vote.getUserVote().equals(user2)) {
-//			if (!vote.getUserReceive().equals(user1)) 
-//				throw new InvalidVoteUsersException(user2.getUserId(), user1.getUserId(), vote.getVoteId());
-//		} else 
-//			throw new InvalidVoteUsersException(user2.getUserId(), user1.getUserId(), vote.getVoteId());
 		
 	}
 

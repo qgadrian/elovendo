@@ -529,6 +529,9 @@
   background-position: center center;
   background-repeat: no-repeat;
 }
+.sweet-alert .sweet-input {
+  margin-bottom: 27px;
+}
 .sweet-alert .btn-default:focus {
   border-color: #cccccc;
   outline: 0;
