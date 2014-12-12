@@ -72,7 +72,7 @@ body {
 }
 
 .featuredSection .thumbnail>img {
-	max-height: 200px;
+	height: 190px;
 	max-width: 100%;
 }
 
