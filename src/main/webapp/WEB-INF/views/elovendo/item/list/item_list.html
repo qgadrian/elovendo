@@ -5,17 +5,20 @@
 
 <head>
 <meta charset="UTF-8" />
-<meta name="_csrf" th:content="${_csrf.token}"/>
-<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
 <title>Ver anuncios</title>
 
-<link rel="shortcut icon" type="image/x-icon" href="/images/webimg/favicon.ico" />
+<link rel="shortcut icon" type="image/x-icon"
+	href="/images/webimg/favicon.ico" />
 
 <!-- <link rel="stylesheet" href="/css/bootstrap.min.css"/> -->
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
-<link rel="stylesheet" type="text/css" href="/css/styleweb.css"/>
-<link rel="stylesheet" type="text/css" href="/css/bootstrap-extra.css"/>
-<link rel="stylesheet" type="text/css" href="/css/headerStyle.css" media="screen" />
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/styleweb.css" />
+<link rel="stylesheet" type="text/css" href="/css/bootstrap-extra.css" />
+<link rel="stylesheet" type="text/css" href="/css/headerStyle.css"
+	media="screen" />
 
 <script src="/js/jquery-1.11.1.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
@@ -25,7 +28,8 @@
 <script src="/js/geo.js"></script>
 
 </head>
-<body style="background-color:#FBFAF9;" onload="fillFilter(); popSub(); initAutoComplete()">
+<body style="background-color: #FBFAF9;"
+	onload="fillFilter(); popSub(); initAutoComplete()">
 
 	<!-- Header -->
 	<header th:replace="elovendo/header"></header>
@@ -33,45 +37,48 @@
 	<div class="container">
 		<div class="row">
 			<!-- Filter -->
-			<div class="col-xs-4 col-md-4 col-lg-4" >
+			<div class="col-xs-4 col-md-4 col-lg-4">
 				<!-- title -->
 				<div class="row">
-						<div class="col-xs-12">
-							<h1 style="margin-top: 0px;"><small th:text="#{Item.list.filter.title}">Filter</small></h1>
-							<hr class="hrStyle"/>
-						</div>
+					<div class="col-xs-12">
+						<h1 style="margin-top: 0px;">
+							<small th:text="#{Item.list.filter.title}">Filter</small>
+						</h1>
+						<hr class="hrStyle" />
+					</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-12 col-md-12">
 						<div class="form-group" style="width: 100%!imporant;">
-							
-							<form id="locform" class="form-inline" name="locationForm" th:action="@{'/bazaar/' + ${url}}" >
-								<label for="autocomplete" th:text="#{Item.list.filter.searchFrom}">Search from</label>
+
+							<form id="locform" class="form-inline" name="locationForm"
+								th:action="@{'/bazaar/' + ${url}}">
+								<label for="autocomplete"
+									th:text="#{Item.list.filter.searchFrom}">Search from</label>
 								<div class="row">
 									<div class="col-lg-12">
-										<div class="input-group" 
-												style="width: 100%;">
+										<div class="input-group" style="width: 100%;">
 											<input class="form-control" id="autocomplete"
-												th:placeholder="#{Item.list.filter.searchPlace}" type="text"> 
-											<input type="hidden" id="lat" name="lat" value="0" /> 
-											<input type="hidden" id="lng" name="lng" value="0" /> 
-											<span class="input-group-btn">
+												th:placeholder="#{Item.list.filter.searchPlace}" type="text">
+											<input type="hidden" id="lat" name="lat" value="0" /> <input
+												type="hidden" id="lng" name="lng" value="0" /> <span
+												class="input-group-btn">
 												<button type="submit" class="btn btn-default"
 													th:text="#{Item.list.filter.search}">Search</button>
 											</span>
 										</div>
 									</div>
 								</div>
-	
 								<div class="row">
 									<div class="col-lg-12">
-									<label for="dis" style="margin-top: 15px;" th:text="#{Item.list.filter.searchRadius}">Radius</label><br/>
+										<label for="dis" style="margin-top: 15px;"
+											th:text="#{Item.list.filter.searchRadius}">Radius</label><br />
 										<div class="input-group" style="width: 100%;">
 											<input type="number" min="0" class="form-control" id="dis"
-													placeholder="Hasta..." name="dis" step="0.01"/>
+												placeholder="Hasta..." name="dis" step="0.01" />
 											<div class="input-group-btn">
 												<button type="submit" class="btn btn-default" tabindex="-1"
-												th:text="#{Item.list.filter.search}" onclick="setRad(-1)">Search</button>
+													th:text="#{Item.list.filter.search}" onclick="setRad(-1)">Search</button>
 												<button type="button"
 													class="btn btn-default dropdown-toggle"
 													data-toggle="dropdown" tabindex="-1">
@@ -102,10 +109,11 @@
 							<label for="exampleInputEmail1">Categoría</label>
 							<form>
 								<select id="category" class="form-control">
-									<option value="0" th:text="#{Form.category.select.default}"> All categories </option> 
-									<option th:each="category : ${categories}" 
-									th:value="${category.categoryId}"  th:text="${category.categoryName}"> 
-									Category </option>
+									<option value="0" th:text="#{Form.category.select.default}">
+										All categories</option>
+									<option th:each="category : ${categories}"
+										th:value="${category.categoryId}"
+										th:text="${category.categoryName}">Category</option>
 								</select>
 							</form>
 						</div>
@@ -117,10 +125,11 @@
 							<label for="exampleInputEmail1">Subcategoría</label>
 							<form>
 								<select id="subCategory" class="form-control">
-									<option value="0" th:text="#{Form.subCategory.select.default}"> Select</option> 
-									<option th:each="subCategory : ${subCategories}" 
-										th:value="${subCategory.id}" 
-										th:text="${subCategory.subCategoryName}"> </option>
+									<option value="0" th:text="#{Form.subCategory.select.default}">
+										Select</option>
+									<option th:each="subCategory : ${subCategories}"
+										th:value="${subCategory.id}"
+										th:text="${subCategory.subCategoryName}"></option>
 								</select>
 							</form>
 						</div>
@@ -132,13 +141,13 @@
 							<label for="exampleInputEmail1">Precio</label>
 							<form class="form-inline" id="prizeForm"
 								th:action="@{'/bazaar/' + ${url}}" method="GET" name="prizeForm">
-									<input type="number" min="0" class="form-control" id="prizeMin"
-										placeholder="Mínimo" th:value="${prizeMin}"
-										name="min" style="max-width:100px;"/> 
-									<input type="number" min="0" class="form-control" id="prizeMax"
-										placeholder="Máximo" th:value="${prizeMax}"
-										name="max" style="max-width:100px;"/>
-								<button type="submit" class="btn btn-default">Filtrar precio</button>
+								<input type="number" min="0" class="form-control" id="prizeMin"
+									placeholder="Mínimo" th:value="${prizeMin}" name="min"
+									style="max-width: 100px;" /> <input type="number" min="0"
+									class="form-control" id="prizeMax" placeholder="Máximo"
+									th:value="${prizeMax}" name="max" style="max-width: 100px;" />
+								<button type="submit" class="btn btn-default">Filtrar
+									precio</button>
 							</form>
 						</div>
 					</div>
@@ -147,21 +156,25 @@
 				<!-- title -->
 				<div class="row">
 					<div class="col-xs-12">
-						<h1><small>Te puede interesar</small></h1>
-						<hr class="hrStyle2"/>
+						<h1>
+							<small>Te puede interesar</small>
+						</h1>
+						<hr class="hrStyle2" />
 					</div>
 				</div>
-				
+
 				<div class="row" th:each="item : ${featuredItems}">
 					<div class="col-xs-12 col-md-12">
-						<a th:href="@{'/bazaar/item/' + ${item.itemId}}" class="featuredSection">
+						<a th:href="@{'/bazaar/item/' + ${item.itemId}}"
+							class="featuredSection">
 							<div class="thumbnail">
-									<img data-src="holder.js/300x300" alt="..." 
-									th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}"/>
+								<img data-src="holder.js/300x300" alt="..."
+									th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}" />
 								<hr />
 								<div class="caption">
 									<h4 th:text="${item.title}">Title</h4>
-									<p th:utext="${#strings.abbreviate(item.plainDescription, 100)}" 
+									<p
+										th:utext="${#strings.abbreviate(item.plainDescription, 100)}"
 										class="featuredTextDesc">Description</p>
 								</div>
 							</div>
@@ -177,51 +190,64 @@
 			</div>
 			<!-- STUFF LIST -->
 			<div class="col-xs-8 col-md-8 col-lg-8">
-			
+
 				<div class="row" th:unless="${hasLatLng}">
 					<div class="well well-sm">
-						<span th:text="#{Item-list.Error.noGPSData}">No GPS data, use location form!</span>
+						<span th:text="#{Item-list.Error.noGPSData}">No GPS data,
+							use location form!</span>
 					</div>
 				</div>
-				
+
 				<div class="row" th:each="item : ${itemsList}">
 					<div class="col-xs-12 col-md-12 col-lg-12 itemList">
 						<a th:href="@{'/bazaar/item/' + ${item.itemId}}">
-							<div th:class="${item.highlight}? 'thumbnail featuredThumbnail pop' : 'thumbnail'">
+							<div
+								th:class="${item.highlight}? 'thumbnail featuredThumbnail pop' : 'thumbnail'">
 								<div class="row">
 									<div class="col-xs-5 col-md-4 col-lg-4">
-										<div class="thumbnail pull-left itemList" style="min-height: 180px; max-height: 180px; width: 220px; max-width: 100%;">
-												<img data-src="holder.js/300x300" alt="Image" class="img-responsive center-block"
-												th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}"/>
+										<div class="thumbnail pull-left itemList"
+											style="min-height: 180px; max-height: 180px; width: 220px; max-width: 100%;">
+											<img data-src="holder.js/300x300" alt="Image"
+												class="img-responsive center-block"
+												th:src="@{'http://www.elovendo.com/' + ${item.mainImage200h}}" />
 										</div>
 									</div>
 									<div class="col-xs-7 col-md-8 col-lg-8">
 										<!-- favorite -->
-										<div class="btn-group pull-right favBf" th:onclick="'favClick(' + ${item.itemId} + ', this)'">
-											<label class="btn btn-mag btn-m" style="padding: 6px 12px 5px 10px;">
-												<i th:id="'i'+${item.itemId}" class="glyphicon glyphicon-heart-empty"></i>
+										<div class="btn-group pull-right favBf"
+											th:onclick="'favClick(' + ${item.itemId} + ', this)'">
+											<label class="btn btn-mag btn-m"
+												style="padding: 6px 12px 5px 10px;"> <i
+												th:id="'i'+${item.itemId}"
+												class="glyphicon glyphicon-heart-empty"></i>
 											</label>
 										</div>
 										<!--  User info -->
 										<div class="row userInfo">
-											<div class="col-xs-4 col-md-4 col-lg-4 userPicMin" style="width: 80px; margin-right: 10px;">
-												<img th:unless="${item.user.socialUser}" data-src="holder.js/50x50" alt="Profile pic"
-													th:src="@{'http://www.elovendo.com/' + ${item.user.avatar200h}}"/>
-												<img th:if="${item.user.socialUser}" data-src="holder.js/50x50" alt="Profile pic"
-													th:src="${item.user.largeSocialAvatar}"/>
+											<div class="col-xs-4 col-md-4 col-lg-4 userPicMin"
+												style="width: 80px; margin-right: 10px;">
+												<img th:unless="${item.user.socialUser}"
+													data-src="holder.js/50x50" alt="Profile pic"
+													th:src="@{'http://www.elovendo.com/' + ${item.user.avatar200h}}" />
+												<img th:if="${item.user.socialUser}"
+													data-src="holder.js/50x50" alt="Profile pic"
+													th:src="${item.user.largeSocialAvatar}" />
 											</div>
 											<div class="col-xs-12 col-md-8 col-lg-8">
 												<div class="row">
-														<p class="pull-left">Lo vende <span th:text="${item.user.login}">user</span>
-														en <span th:text="${item.subCategory.subCategoryName}"></span></p>
+													<p class="pull-left">
+														Lo vende <span th:text="${item.user.login}">user</span> en
+														<span th:text="${item.subCategory.subCategoryName}"></span>
+													</p>
 												</div>
 												<div class="row">
-														<p class="pull-left">
-															<span th:text="${#calendars.format(item.startDate, 'dd MMMM yyyy')}">
-																fecha</span> a las <span
-																th:text="${#calendars.format(item.startDate, 'HH:mm')}">
-																hora</span>
-														</p>
+													<p class="pull-left">
+														<span
+															th:text="${#calendars.format(item.startDate, 'dd MMMM yyyy')}">
+															fecha</span> a las <span
+															th:text="${#calendars.format(item.startDate, 'HH:mm')}">
+															hora</span>
+													</p>
 												</div>
 											</div>
 										</div>
@@ -235,7 +261,8 @@
 											<!--  Item info -->
 											<div class="row">
 												<div class="col-xs-12 col-md-12 col-lg-12 itemDesc">
-													<p th:utext="${#strings.abbreviate(item.plainDescription, 100)}" 
+													<p
+														th:utext="${#strings.abbreviate(item.plainDescription, 100)}"
 														class="featuredTextDesc">Description</p>
 												</div>
 											</div>
@@ -243,41 +270,44 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-xs-10 col-md-12 col-lg-12">
-										<h3 style="display: inline; margin-left: 10px;">
-											<span class="label label-or prizeLabel" 
-											th:text="${item.getCurrencyPrize(#locale)}"
-											th:attr="data-prize=${item.prize}, data-currency=${item.currency}"
-											th:title="${item.isOtherCurrency(#locale)} ? #{Item.pop.about} + ' ' + ${item.getExchangeCurrencyPrize(#locale)}"></span>
-										</h3>
-										<h4 th:if="${item.new}" style="display: inline; ">
-											<span class="label label-danger">
-											<i class="glyphicon glyphicon-fire"></i> Nuevo</span>
-										</h4>
-										<h4 th:if="${item.user.whatssapUser}" style="display: inline; ">
-											<span class="label label-success">
-											<i class="glyphicon glyphicon-phone"></i> Whatssap</span>
-										</h4>
-										<h4 th:if="${item.user.userValue} &gt; 70" style="display: inline;" 
-										onmouseover="mouseHover()"><span class="label label-rep">
-											<i class="glyphicon glyphicon-thumbs-up"></i> Reputado</span>
-										</h4>
-										<h4 style="display: inline;" >
-										<span class="label label-dis">
-											<i class="glyphicon glyphicon-globe"></i>
-											<span th:text="${'A ' + item.distance + ' KM'}"></span>
-										</span>
-										</h4>
+									<div class="col-xs-12 col-md-12 col-lg-12">
+<!-- 										<div class="btn-group pull-left"> -->
+											<span class="btn btn-xs btn-labeled btn-labeled-yellow">
+												<span class="btn-label btn-label-xs"><i
+													class="glyphicon glyphicon-tag"></i></span> <strong> <span
+													th:text="${item.getCurrencyPrize(#locale)}"
+													th:attr="data-prize=${item.prize}, data-currency=${item.currency}"
+													th:title="${item.isOtherCurrency(#locale)} ? #{Item.pop.about} + ' ' + ${item.getExchangeCurrencyPrize(#locale)}"></span>
+											</strong>
+											</span> <span class="btn btn-xs btn-labeled btn-labeled-purple">
+												<span class="btn-label btn-label-xs"><i
+													class="glyphicon glyphicon-globe"></i></span> <strong><span
+													th:text="${'A ' + item.distance + ' KM'}"></span></strong>
+											</span> <span th:if="${item.new}"
+												class="btn btn-xs btn-labeled btn-labeled-red"> <span
+												class="btn-label btn-label-xs"><i
+													class="glyphicon glyphicon-fire"></i></span> <strong><span
+													th:text="${'New'}"></span></strong>
+											</span> <span th:if="${item.user.whatssapUser}"
+												class="btn btn-xs btn-labeled btn-labeled-green"> <span
+												class="btn-label btn-label-xs"><i
+													class="glyphicon glyphicon-phone"></i></span> <strong><span>Whatssap</span></strong>
+											</span> <span th:if="${item.user.userValue} &gt; 70"
+												class="btn btn-xs btn-labeled btn-labeled-violet"> <span
+												class="btn-label btn-label-xs"><i
+													class="glyphicon glyphicon-thumbs-up"></i></span> <strong><span>Reputado</span></strong>
+											</span>
+<!-- 										</div> -->
 										<div class="btn-group pull-right">
 											<button class="btn btn-primary messButit"
-												th:attr="data-user=${item.user.userId}, data-item=${item.itemId}" 
+												th:attr="data-user=${item.user.userId}, data-item=${item.itemId}"
 												data-toggle="modal" data-target="#msgModal">
 												<i class="glyphicon glyphicon-send"
 													style="margin-right: 4px;"></i> Mensaje
 											</button>
-											<button class="btn btn-success offButit" role="button" 
-												th:attr="data-user=${item.user.userId}"
-												data-toggle="modal" data-target="#offModal">
+											<button class="btn btn-success offButit" role="button"
+												th:attr="data-user=${item.user.userId}" data-toggle="modal"
+												data-target="#offModal">
 												<i class="glyphicon glyphicon-usd"></i> Oferta
 											</button>
 										</div>
@@ -325,123 +355,142 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<!-- Footer -->
 	<div th:replace="elovendo/footer"></div>
-	
+
 	<div th:replace="/elovendo/item/list/msgModal"></div>
-	
+
 	<div th:replace="/elovendo/item/list/offModal"></div>
 
 	<script th:inline="javascript">
-	/*<![CDATA[*/
-	var okm = /*[[#{Alert.itemList.favorite.ok}]]*/ 'Added to favorite';
-	var fm = /*[[#{Alert.itemList.favorite.error}]]*/ 'Error adding to favorite. Please try again.';
-	var ell = /*[[#{Alert.itemList.favorite.login}]]*/ 'You have to login first.';
-	var cat = /*[[${categoryId}]]*/ '0';
-	var sCat = /*[[${subCategoryId}]]*/ '0';
-	/*]]>*/
-	
-	$(document).ready( function() {
-		
-		$('#category').val(cat);
-		$('#subCategory').val(sCat);
-		
-		$('#prizeForm').submit(function(e) {
-			var destUrl = e.currentTarget.action + getUrlParams();
-			var min = $('#prizeMin').val();
-			var max = $('#prizeMax').val();
-			
-			var currMin = $.url(destUrl).param('min');
-			if (min != '') {
-				if (getURLParameter('min') == null)
-					destUrl = destUrl + "&min=" + min;
-				else destUrl = destUrl.replace('min='+currMin, 'min='+min);
-			} else if (currMin != '') {
-				destUrl = removeParam('min', destUrl);
-			}
-			
-			var currMax = $.url(destUrl).param('max');
-			if (max != '') {
-				if (getURLParameter('max') == null)
-					destUrl = destUrl + "&max=" + max;
-				else destUrl = destUrl.replace('max='+currMax, 'max='+max);
-			} else if (currMax != '') {
-				destUrl = removeParam('max', destUrl);
-			}
-			
-			location.href = destUrl;
-			return false;
+		/*<![CDATA[*/
+		var okm = /*[[#{Alert.itemList.favorite.ok}]]*/'Added to favorite';
+		var fm = /*[[#{Alert.itemList.favorite.error}]]*/'Error adding to favorite. Please try again.';
+		var ell = /*[[#{Alert.itemList.favorite.login}]]*/'You have to login first.';
+		var cat = /*[[${categoryId}]]*/'0';
+		var sCat = /*[[${subCategoryId}]]*/'0';
+		/*]]>*/
+
+		$(document).ready(
+				function() {
+
+					$('#category').val(cat);
+					$('#subCategory').val(sCat);
+
+					$('#prizeForm').submit(
+							function(e) {
+								var destUrl = e.currentTarget.action
+										+ getUrlParams();
+								var min = $('#prizeMin').val();
+								var max = $('#prizeMax').val();
+
+								var currMin = $.url(destUrl).param('min');
+								if (min != '') {
+									if (getURLParameter('min') == null)
+										destUrl = destUrl + "&min=" + min;
+									else
+										destUrl = destUrl.replace('min='
+												+ currMin, 'min=' + min);
+								} else if (currMin != '') {
+									destUrl = removeParam('min', destUrl);
+								}
+
+								var currMax = $.url(destUrl).param('max');
+								if (max != '') {
+									if (getURLParameter('max') == null)
+										destUrl = destUrl + "&max=" + max;
+									else
+										destUrl = destUrl.replace('max='
+												+ currMax, 'max=' + max);
+								} else if (currMax != '') {
+									destUrl = removeParam('max', destUrl);
+								}
+
+								location.href = destUrl;
+								return false;
+							});
+
+					// Get location
+					var lat = getURLParameter('lat');
+					var lng = getURLParameter('lng');
+					if (lat != null && lng != null) {
+						$('#lat').val(lat);
+						$('#lng').val(lng);
+					} else if (navigator.geolocation) {
+						navigator.geolocation.getCurrentPosition(getPosition);
+					}
+				});
+
+		$('.favBf').on('click', function(e) {
+			e.preventDefault();
 		});
-		
-		// Get location
-		var lat = getURLParameter('lat');
-		var lng = getURLParameter('lng');
-		if (lat != null && lng != null) {
-			$('#lat').val(lat);
-			$('#lng').val(lng);
-		} else if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(getPosition);
-		}
-	});
-	
-	$('.favBf').on('click', function(e) {
-		e.preventDefault();
-	});
-	
-	$('#category').change( function() {
-		var scv = $(this).find(":selected").val();
+
+		$('#category').change(function() {
+			var scv = $(this).find(":selected").val();
 			if (scv == 0)
 				location.href = "/bazaar/category/all" + getUrlParams();
 			else
 				location.href = "/bazaar/category/" + scv + getUrlParams();
-	});
-	
-	$('#subCategory').change( function() {
-// 		console.log("subChanged to " + $(this).val());
-		var select = $(this).val();
-		if (select != 0) {
-			location.href = "/bazaar/sub/" + $('#subCategory option:selected').val() + getUrlParams();
-		} else {
-			var select = $('#category').find(":selected").val();
-			location.href = "/bazaar/category/" + select + getUrlParams();
-		}
-	});
-	
-	$('.messButit').on('click', function(e) {
-		e.preventDefault();
-	});
-	
-	$('.offButit').on('click', function(e) {
-		e.preventDefault();
-	});
-	
-	function favClick(value, d) {
-		var f = value;
-		var cv = $("meta[name='_csrf']").attr("content");
-		var cn = $("meta[name='_csrf_header']").attr("content");
-		var e = "/bazaar/item/fav";
-		
-		$.ajax({
-			type: "POST",
-			beforeSend: function (request) { request.setRequestHeader(cn, cv); },
-			url: e,
-			data: {id: f},
-			success: function(data) {
-				if (data) shal(okm, 'alert-success');
-				else shal(ell, 'alert-danger');
-			},
-			error : function() {
-				shal(fm, 'alert-danger');
-			}
 		});
-	}
+
+		$('#subCategory').change(
+				function() {
+					// 		console.log("subChanged to " + $(this).val());
+					var select = $(this).val();
+					if (select != 0) {
+						location.href = "/bazaar/sub/"
+								+ $('#subCategory option:selected').val()
+								+ getUrlParams();
+					} else {
+						var select = $('#category').find(":selected").val();
+						location.href = "/bazaar/category/" + select
+								+ getUrlParams();
+					}
+				});
+
+		$('.messButit').on('click', function(e) {
+			e.preventDefault();
+		});
+
+		$('.offButit').on('click', function(e) {
+			e.preventDefault();
+		});
+
+		function favClick(value, d) {
+			var f = value;
+			var cv = $("meta[name='_csrf']").attr("content");
+			var cn = $("meta[name='_csrf_header']").attr("content");
+			var e = "/bazaar/item/fav";
+
+			$.ajax({
+				type : "POST",
+				beforeSend : function(request) {
+					request.setRequestHeader(cn, cv);
+				},
+				url : e,
+				data : {
+					id : f
+				},
+				success : function(data) {
+					if (data)
+						shal(okm, 'alert-success');
+					else
+						shal(ell, 'alert-danger');
+				},
+				error : function() {
+					shal(fm, 'alert-danger');
+				}
+			});
+		}
 
 		var sendMessageUrl;
-		
+
 		function hpd(t) {
-			if (t == 'b') sendMessageUrl = "/elovendo/messages/public/send";
-			else sendMessageUrl = "/elovendo/messages/send";
+			if (t == 'b')
+				sendMessageUrl = "/elovendo/messages/public/send";
+			else
+				sendMessageUrl = "/elovendo/messages/send";
 		}
 
 		$('#msgModal').on('hidden', function() {
@@ -460,9 +509,9 @@
 				url : sendMessageUrl,
 				data : ({
 					receiver : $('#receiver').val(),
-					sender: $('#sender').val(),
-					i: $('#item').val(),
-					email: $('#semail').val(),
+					sender : $('#sender').val(),
+					i : $('#item').val(),
+					email : $('#semail').val(),
 					messageText : $('#messageText').val()
 				})
 
@@ -471,14 +520,16 @@
 			document.getElementById('messageText').value = '';
 			$('#msgModal').modal('hide');
 		});
-		
+
 		var sendOffUrl;
-		
+
 		function hdp(t) {
-			if (t == 'a') sendOffUrl = "/elovendo/offer/public/send";
-			else sendOffUrl = "/elovendo/offer/send";
+			if (t == 'a')
+				sendOffUrl = "/elovendo/offer/public/send";
+			else
+				sendOffUrl = "/elovendo/offer/send";
 		}
-		
+
 		$('#offerForm').submit(function(event) {
 			event.preventDefault();
 			var cv = $("meta[name='_csrf']").attr("content");
@@ -491,8 +542,8 @@
 				url : sendOffUrl,
 				data : ({
 					receiver : $('#receiver').val(),
-					sender: $('#sender').val(),
-					email: $('#semail').val(),
+					sender : $('#sender').val(),
+					email : $('#semail').val(),
 					offer : $('#offer').val()
 				})
 
@@ -514,21 +565,25 @@
 				document.getElementById('prizeMax').value = max;
 		}
 
-
 		$('a[data-toggle=modal], button[data-toggle=modal]').click(function() {
 			var user = $(this).data('user');
 			var item = $(this).data('item');
 			document.getElementById('receiver').value = user;
-			try { document.getElementById('item').value = item; } catch(err) { };
+			try {
+				document.getElementById('item').value = item;
+			} catch (err) {
+			}
+			;
 		});
-		
+
 		$(function() {
 			$('span[title]').tooltip();
 		});
 	</script>
-	
+
 	<!-- Google autocomplete  -->
-	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;libraries=places"></script>
+	<script
+		src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;libraries=places"></script>
 
 </body>
 </html>
