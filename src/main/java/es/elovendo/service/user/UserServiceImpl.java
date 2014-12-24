@@ -33,6 +33,7 @@ import es.elovendo.model.user.role.RoleRepository;
 import es.elovendo.model.vote.Vote;
 import es.elovendo.rest.exception.EmailNotAvailableException;
 import es.elovendo.rest.exception.InvalidSelfVoteException;
+import es.elovendo.rest.exception.InvalidVoteException;
 import es.elovendo.rest.exception.InvalidVoteUsersException;
 import es.elovendo.rest.exception.ItemNotFoundException;
 import es.elovendo.rest.exception.LoginNotAvailableException;
@@ -315,7 +316,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Vote voteUser(Long userIdVote, Long userIdReceive, Long itemId, int voteType, String voteMessage)
 			throws UserNotFoundException, ItemNotFoundException, VoteDuplicateException, InvalidVoteUsersException,
-			InvalidSelfVoteException {
+			InvalidSelfVoteException, InvalidVoteException {
 		User userVote = userRepository.findOne(userIdVote);
 		User userReceive = userRepository.findOne(userIdReceive);
 		Item item = itemService.getItemById(itemId);

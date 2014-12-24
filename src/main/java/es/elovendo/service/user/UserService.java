@@ -12,6 +12,7 @@ import es.elovendo.model.user.UserForm;
 import es.elovendo.model.vote.Vote;
 import es.elovendo.rest.exception.EmailNotAvailableException;
 import es.elovendo.rest.exception.InvalidSelfVoteException;
+import es.elovendo.rest.exception.InvalidVoteException;
 import es.elovendo.rest.exception.InvalidVoteUsersException;
 import es.elovendo.rest.exception.ItemNotFoundException;
 import es.elovendo.rest.exception.LoginNotAvailableException;
@@ -171,10 +172,11 @@ public interface UserService extends UserDetailsService {
 	 * @throws VoteDuplicateException
 	 * @throws InvalidVoteUsersException
 	 * @throws InvalidSelfVoteException
+	 * @throws InvalidVoteException 
 	 */
 	public Vote voteUser(Long userIdVote, Long userIdReceive, Long itemId, int voteType, String voteMessage)
 			throws UserNotFoundException, ItemNotFoundException, VoteDuplicateException, InvalidVoteUsersException,
-			InvalidSelfVoteException;
+			InvalidSelfVoteException, InvalidVoteException;
 
 	public int getVotesPositive(User user);
 

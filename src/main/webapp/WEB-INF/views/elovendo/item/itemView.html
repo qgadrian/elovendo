@@ -176,7 +176,7 @@
 					</div>
 				</div>
 			</div>
-			<!-- geoloation -->
+			<!-- geolocation -->
 			<div class="tab-pane fade" id="geolocationContent">
 				<div class="row">
 					<div class="col-xs-12 col-md-12">
@@ -555,19 +555,19 @@
 		
 		function vstff() {
 			swal({
-				  title: /*[[#{Vote.item.main.title}]]*/ "Vote",
-				  text: /*[[#{Vote.item.main.text}]]*/ "Send your vote",
-				  type: "warning",
-				  showCancelButton: true,
-				  confirmButtonClass: "btn-success",
-				  confirmButtonText: /*[[#{Vote.item.main.button.positive}]]*/ "Positive!",
-				  cancelButtonClass: "btn-danger",
-				  cancelButtonText: /*[[#{Vote.item.main.button.negative}]]*/ "Negative!",
-				  closeOnConfirm: false,
-				  closeOnCancel: false,
-				  allowOutsideClick: true,
-				  hasInput: true,
-				  inputPlaceHolder: /*[[#{Vote.item.main.message}]]*/ "Message..."
+					title: /*[[#{Vote.item.main.title}]]*/ "Vote",
+					text: /*[[#{Vote.item.main.text}]]*/ "Send your vote",
+					type: "warning",
+					showCancelButton: true,
+					confirmButtonClass: "btn-success",
+					confirmButtonText: /*[[#{Vote.item.main.button.positive}]]*/ "Positive!",
+					cancelButtonClass: "btn-danger",
+					cancelButtonText: /*[[#{Vote.item.main.button.negative}]]*/ "Negative!",
+					closeOnConfirm: false,
+					closeOnCancel: false,
+					allowOutsideClick: true,
+					hasInput: true,
+					inputPlaceHolder: /*[[#{Vote.item.main.message}]]*/ "Message..."
 				},
 				function(isConfirm) {
 					if (isConfirm) {
@@ -584,6 +584,7 @@
 		
 		var e = "/site/vote";
 		function sprfn(val, tit, txt, tpy) {
+			console.log("MESSAGE: " + $('#msg').val());
 			$.ajax({
 				type : "POST",
 				beforeSend : function(request) {
@@ -594,7 +595,7 @@
 					uv : ui,
 					iv : ii,
 					vt : val,
-					msg : $('#voteComment').val()
+					msg : $('#msg').val()
 				},
 				success : function(data) {
 					if (data == 1) {

@@ -7,6 +7,7 @@ public class Constant {
 	public static final int MIN_ITEM_TITLE_LENGHT = 4;
 	
 	public static final int DEFAULT_USER_VALUE = 70;
+	public static final int REP_LIMIT_USER_VALUE = 80;
 	
 	public static final int INITIAL_POINTS = 0;
 	
@@ -90,9 +91,11 @@ public class Constant {
 	
 	// Vote
 
-	// Vote state
-	public static final boolean VOTE_INACTIVE = false;
-	public static final boolean VOTE_ACTIVE = true;
+	// Vote state & queue
+	public static final boolean VOTE_STATE_INACTIVE = false;
+	public static final boolean VOTE_STATE_ACTIVE = true;
+	public static final boolean VOTE_QUEUED = true;
+	public static final boolean VOTE_NOT_QUEUED = false;
 	
 	/**
 	 * PRIZES

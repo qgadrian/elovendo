@@ -106,6 +106,7 @@
         userIdReceive BIGINT NOT NULL,
         itemId BIGINT NOT NULL,
         voteType TINYINT(1),
+        voteQueue BOOLEAN,
         voteState BOOLEAN,
         voteValue INTEGER NOT NULL,
         voteMessage VARCHAR(50),

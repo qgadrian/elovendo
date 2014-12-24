@@ -34,25 +34,26 @@ public interface VoteRepository extends PagingAndSortingRepository<Vote, Long> {
 	@Query("SELECT v FROM Vote v WHERE v.item.itemId = :itemId")
 	List<Vote> findByItem(@Param(value="itemId") Long itemId);
 	
-	@Query("SELECT COUNT(v) FROM Vote v WHERE voteType = 1 AND v.userReceive.userId = :userId")
+	@Query("SELECT COUNT(v) FROM Vote v WHERE voteType = 1 AND v.userReceive.userId = :userId AND voteQueue = FALSE")
 	int findNumberVotesPositive(@Param("userId") Long userId);
 
-	@Query("SELECT COUNT(v) FROM Vote v WHERE voteType = 0 AND v.userReceive.userId = :userId)")
+	@Query("SELECT COUNT(v) FROM Vote v WHERE voteType = 0 AND v.userReceive.userId = :userId AND voteQueue = FALSE")
 	int findNumberVotesNegative(@Param("userId") Long userId);
 	
-	@Query("SELECT COUNT(v) FROM Vote v WHERE v.userReceive.userId = :userId AND "
-			+ "(voteState = FALSE OR voteId NOT IN "
-			+ "(SELECT vo.voteId FROM Vote vo WHERE voteState = TRUE AND vo.userVote.userId = :userId))")
+//	@Query("SELECT COUNT(v) FROM Vote v WHERE v.userReceive.userId = :userId AND "
+//			+ "(voteState = FALSE OR voteId NOT IN "
+//			+ "(SELECT vo.voteId FROM Vote vo WHERE voteState = TRUE AND vo.userVote.userId = :userId))")
+//	int findNumberVotesQueued(@Param("userId") Long userId);
+	
+	@Query("SELECT COUNT(v) FROM Vote v WHERE v.userReceive.userId = :userId AND voteQueue = TRUE")
 	int findNumberVotesQueued(@Param("userId") Long userId);
 	
-	@Query("SELECT v FROM Vote v WHERE voteType = 1 AND v.userReceive.userId = :userId")
+	@Query("SELECT v FROM Vote v WHERE voteType = 1 AND v.userReceive.userId = :userId AND voteQueue = FALSE")
 	Page<Vote> findVotesPositive(@Param("userId") Long userId, Pageable pageable);
 
-	@Query("SELECT v FROM Vote v WHERE voteType = 0 AND v.userReceive.userId = :userId)")
+	@Query("SELECT v FROM Vote v WHERE voteType = 0 AND v.userReceive.userId = :userId AND voteQueue = FALSE")
 	Page<Vote> findVotesNegative(@Param("userId") Long userId, Pageable pageable);
 	
-	@Query("SELECT v FROM Vote v WHERE v.userReceive.userId = :userId AND "
-			+ "(voteState = FALSE OR voteId NOT IN "
-			+ "(SELECT vo.voteId FROM Vote vo WHERE voteState = TRUE AND vo.userVote.userId = :userId))")
+	@Query("SELECT v FROM Vote v WHERE v.userReceive.userId = :userId AND voteQueue = TRUE")
 	Page<Vote> findVotesQueued(@Param("userId") Long userId, Pageable pageable);
 }

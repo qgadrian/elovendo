@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import es.elovendo.model.user.User;
 import es.elovendo.model.vote.Vote;
 import es.elovendo.rest.exception.InvalidSelfVoteException;
+import es.elovendo.rest.exception.InvalidVoteException;
 import es.elovendo.rest.exception.InvalidVoteUsersException;
 import es.elovendo.rest.exception.ItemNotFoundException;
 import es.elovendo.rest.exception.PurchaseDuplicateException;
@@ -81,14 +82,26 @@ public class VoteWebController {
 			throws AnonymousUserAuthenticationException {
 
 		User user = SessionUserObtainer.getInstance().getSessionUser();
+		
+		logger.error("VOTE RECEIVED: Item: " + itemId + " Type: " + voteType + " Message: " + voteMessage);
 
 		try {
 			userService.voteUser(user.getUserId(), receiverId, itemId, voteType, voteMessage);
 		} catch (UserNotFoundException | ItemNotFoundException | InvalidVoteUsersException e) {
+			logger.debug(e.getMessage());
+			return 0;
+		} catch (InvalidVoteException e) {
+			logger.error(e.getMessage());
+			logger.error("invalid vote");
+			logger.debug(e.getMessage());
 			return 0;
 		} catch (InvalidSelfVoteException e) {
+			logger.error(e.getMessage());
+			logger.error("invalid vote");
+			logger.debug(e.getMessage());
 			return 2;
 		} catch (VoteDuplicateException e) {
+			logger.debug(e.getMessage());
 			return 3;
 		}
 
@@ -159,6 +172,8 @@ public class VoteWebController {
 			element.put("message", vote.getVoteMessage());
 			element.put("user", vote.getUserVote().getLogin());
 			element.put("avatar", vote.getUserVote().getAvatar200h());
+			element.put("item", vote.getItem().getItemId());
+			element.put("userid", vote.getUserVote().getUserId());
 			outputArray.add(element);
 		}
 

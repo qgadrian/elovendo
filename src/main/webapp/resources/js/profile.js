@@ -2,8 +2,7 @@ $(document).ready( function() {
 
 	$('#sPend').on('change', function() {
 		cVl();
-		var p = 0;
-		gv("pending", p);
+		gv("pending", 0);
 		
 	});
 	
@@ -33,12 +32,17 @@ function gv(mUrl, pa, s) {
 	var url = "current/vote/" + mUrl; 
 	$.get(url).done(function( json ) {
 		jQuery.each(json.output, function() {
+			var aid = this.user + this.item;
+			
 			console.log(this.message);
 			console.log(this.avatar);
 			console.log(this.type);
 			console.log(this.user);
+			console.log(this.userid);
+			console.log(this.item);
 			
 			var a = document.createElement('a');
+			a.setAttribute("id", aid);
 			if (mUrl == "positive")
 				a.className = "list-group-item list-group-item-success text-center";
 			else if (mUrl == "negative")
@@ -56,6 +60,23 @@ function gv(mUrl, pa, s) {
 			
 			a.appendChild(h4);
 			a.appendChild(p);
+			
+			a.setAttribute("style", "cursor: pointer;");
+			a.setAttribute("onclick", "vstff(" + this.item  + ", " + this.userid + ")");
+			
+			var inp = document.createElement('input');
+			inp.setAttribute("type", "hidden");
+			inp.setAttribute("id", 'item');
+			inp.setAttribute("value", this.item);
+			inp.setAttribute("name", "item");
+			a.appendChild(inp);
+			
+			var inpu = document.createElement('input');
+			inpu.setAttribute("type", "hidden");
+			inpu.setAttribute("id", 'user');
+			inpu.setAttribute("value", this.userid);
+			inpu.setAttribute("name", "user");
+			a.appendChild(inpu);
 			
 			$("#voteList").append(a);
 		})

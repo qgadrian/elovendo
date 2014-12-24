@@ -4,7 +4,7 @@ package es.elovendo.rest.exception;
 public class InvalidSelfVoteException extends Exception {
 	
 	public InvalidSelfVoteException(long userId) {
-        super("user " + userId + "tried to vote himself");
+        super("user " + userId + " tried to vote himself");
     }
 	
 }
