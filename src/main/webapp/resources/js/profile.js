@@ -32,23 +32,21 @@ function gv(mUrl, pa, s) {
 	var url = "current/vote/" + mUrl; 
 	$.get(url).done(function( json ) {
 		jQuery.each(json.output, function() {
-			var aid = this.user + this.item;
-			
-			console.log(this.message);
-			console.log(this.avatar);
-			console.log(this.type);
-			console.log(this.user);
-			console.log(this.userid);
-			console.log(this.item);
+			var aid = this.userid + this.item;
 			
 			var a = document.createElement('a');
 			a.setAttribute("id", aid);
-			if (mUrl == "positive")
+			if (mUrl == "positive") {
 				a.className = "list-group-item list-group-item-success text-center";
-			else if (mUrl == "negative")
+			}
+			else if (mUrl == "negative") {
 				a.className = "list-group-item list-group-item-danger text-center";
-			else 
+			}
+			else  {
 				a.className = "list-group-item text-center";
+				a.setAttribute("style", "cursor: pointer;");
+				a.setAttribute("onclick", "vstff(" + this.item  + ", " + this.userid + ")");
+			}
 			
 			var h4 = document.createElement('h4');
 			h4.className = "list-group-item-heading";
@@ -60,9 +58,6 @@ function gv(mUrl, pa, s) {
 			
 			a.appendChild(h4);
 			a.appendChild(p);
-			
-			a.setAttribute("style", "cursor: pointer;");
-			a.setAttribute("onclick", "vstff(" + this.item  + ", " + this.userid + ")");
 			
 			var inp = document.createElement('input');
 			inp.setAttribute("type", "hidden");

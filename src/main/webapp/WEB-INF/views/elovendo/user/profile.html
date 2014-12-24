@@ -567,7 +567,7 @@
 		var cn = $("meta[name='_csrf_header']").attr("content");
 		var e = "/site/vote";
 		function sprfn(val, tit, txt, tpy, ii, ui) {
-			console.log("MESSAGE: " + $('#msg').val());
+			var ida = ui + ii;
 			$.ajax({
 				type : "POST",
 				beforeSend : function(request) {
@@ -583,15 +583,18 @@
 				success : function(data) {
 					if (data == 1) {
 						swal({
-							title: tit,
-							text: txt,
-							type: tpy,
-							showCancelButton: false,
-							confirmButtonClass: "btn-success",
-							confirmButtonText: "Ok",
-							allowOutsideClick: true,
-							hasInput: false
-						});
+								title: tit,
+								text: txt,
+								type: tpy,
+								showCancelButton: false,
+								confirmButtonClass: "btn-success",
+								confirmButtonText: "Ok",
+								allowOutsideClick: true,
+								hasInput: false
+							}, function(isConfirm) {
+								document.getElementById(ida).remove();
+							}
+						);
 					} else {
 						emaxu(data);
 					}
