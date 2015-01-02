@@ -28,7 +28,7 @@ public class MobileMainController {
 
 	@RequestMapping(value = "login")
 	public @ResponseBody String loginPage(
-			@RequestParam(value="username", required=true) String username,
+			@RequestParam(value="username", required=true) String email,
 			@RequestParam(value="password", required=true) String password,
 			Device device) {
 
@@ -37,7 +37,7 @@ public class MobileMainController {
 			User user = null;
 
 			try {
-				user = userService.findUserByLogin(username);
+				user = userService.findUserByEmail(email);
 				BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 				
 				if (encoder.matches(password, user.getPassword())) {

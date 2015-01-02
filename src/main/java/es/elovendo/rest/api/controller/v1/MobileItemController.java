@@ -4,19 +4,25 @@ import static es.elovendo.util.Constant.S_ITEMS_PER_PAGE;
 import es.elovendo.model.item.Item;
 import es.elovendo.model.item.category.Category;
 import es.elovendo.model.item.category.CategoryRepository;
+import es.elovendo.model.item.category.subcategory.SubCategory;
+import es.elovendo.rest.exception.CategoryNotFoundException;
 import es.elovendo.rest.exception.ItemNotFoundException;
+import es.elovendo.rest.exception.SubCategoryNotFoundException;
 import es.elovendo.rest.exception.WrongItemSubCategoryRequestException;
 import es.elovendo.rest.util.RestItemObject;
 import es.elovendo.service.item.ItemService;
 import es.elovendo.util.Constant;
 import es.elovendo.util.IOUtil;
+import es.elovendo.util.PageWrapper;
 
+import org.apache.commons.collections.IteratorUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import scala.annotation.meta.getter;
@@ -33,6 +39,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
@@ -128,6 +135,60 @@ public class MobileItemController {
 		// prizeMin, prizeMax, page, size);
 
 		Page<Item> p = itemService.getItemsByParams(title, subCategoryName, dis, lat, lng, prizeMin, prizeMax, page,
+				size);
+		List<Item> list = p.getContent();
+
+		// Obtain the desired page and format a JSON with data
+		JSONObject jsonResponse = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		JSONArray itemArray = new JSONArray();
+		for (Item item : list) {
+			JSONObject itemJsonObject = new JSONObject();
+			if (filterParams != null)
+				itemJsonObject = getJSONObjectFromFilter(filterParams, item);
+			else
+				itemJsonObject = getJSONObjectFromItem(item);
+			itemArray.add(itemJsonObject);
+		}
+		JSONObject pageJSONObject = new JSONObject();
+		pageJSONObject.put("pageNumber", p.getNumber());
+		pageJSONObject.put("pageElements", p.getNumberOfElements());
+		pageJSONObject.put("totalPages", p.getTotalPages());
+		pageJSONObject.put("totalElements", p.getTotalElements());
+		jsonArray.add(pageJSONObject);
+
+		jsonResponse.put("content", itemArray);
+		jsonResponse.put("page", jsonArray);
+
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.setStatus(HttpServletResponse.SC_OK);
+
+		return jsonResponse;
+	}
+	
+	@RequestMapping(value = "/view/sub/{subcategoryId}", method = RequestMethod.GET)
+	public @ResponseBody JSONObject getItemsBySubCategory(Model model, Locale locale, HttpServletResponse response,
+			@PathVariable("subcategoryId") long subCategoryId,
+			@RequestParam(value = "filter", required = false) String filter,
+			@RequestParam(value = "title", required = false, defaultValue = "") String title,
+			@RequestParam(value = "dis", required = false, defaultValue = "0") double dis,
+			@RequestParam(value = "lat", required = false, defaultValue = "0") double lat,
+			@RequestParam(value = "lng", required = false, defaultValue = "0") double lng,
+			@RequestParam(value = "min", required = false, defaultValue = "0") int prizeMin,
+			@RequestParam(value = "max", required = false, defaultValue = "0") int prizeMax,
+			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
+			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) 
+					throws CategoryNotFoundException, SubCategoryNotFoundException {
+
+		String[] filterParams = filter.split(",");
+
+		// TODO: Maybe could be better a query with the params in filter?
+		// Page<Item> p = itemService.getAllItemsBySubCategory(subCategoryName,
+		// prizeMin, prizeMax, page, size);
+
+		Page<Item> p = itemService.getItemsByParams(title, subCategoryId, Constant.SUBCATEGORY, dis, lat, lng,
+				prizeMin, prizeMax, page,
 				size);
 		List<Item> list = p.getContent();
 

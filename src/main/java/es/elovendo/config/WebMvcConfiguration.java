@@ -137,15 +137,15 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 	// });
 	// }
 
-	@Bean
-	public MultipartResolver multipartResolver() {
-		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-		// Size in bytes
-		// resolver.setMaxUploadSize(1752300);
-		resolver.setMaxUploadSize(3000);
-		resolver.setDefaultEncoding("utf-8");
-		return resolver;
-	}
+//	@Bean
+//	public MultipartResolver multipartResolver() {
+//		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+//		// Size in bytes
+//		// resolver.setMaxUploadSize(1752300);
+//		resolver.setMaxUploadSize(1500000); // ~1,5MB
+//		resolver.setDefaultEncoding("utf-8");
+//		return resolver;
+//	}
 
 	/** Internationalization **/
 
