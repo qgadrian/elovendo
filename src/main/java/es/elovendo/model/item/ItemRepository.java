@@ -34,16 +34,16 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
 	/* USER */
 
     @Query("SELECT i, i.user.login AS username, i.subCategory.subCategoryName AS subCategory,"
-    		+ " i.subCategory.category.categoryName FROM Item i WHERE i.user.login = :username AND endDate > NOW()")
+    		+ " i.subCategory.category.categoryName FROM Item i WHERE i.user.login = :username AND endDate > NOW() ORDER BY startDate")
     Page<Item> findByUserName(@Param("username") String userName, Pageable pageable);
     
-    @Query("SELECT COUNT(i) FROM Item i WHERE i.user.userId = :userId AND endDate > NOW()")
+    @Query("SELECT COUNT(i) FROM Item i WHERE i.user.userId = :userId AND endDate > NOW() ORDER BY startDate")
     int findNumberUserItems(@Param("userId") Long userId);
     
-    @Query("SELECT i FROM Item i WHERE i.user.login = :userName AND endDate > NOW()")
+    @Query("SELECT i FROM Item i WHERE i.user.login = :userName AND endDate > NOW() ORDER BY startDate")
 	List<Item> findByUserName(@Param("userName") String userName);
 
-    @Query("SELECT i FROM Item i WHERE i.user.userId = :userId")
+    @Query("SELECT i FROM Item i WHERE i.user.userId = :userId ORDER BY startDate")
 	List<Item> findByUserId(@Param("userId") Long userId);
     
     @Query("SELECT i FROM Item i WHERE i.user.userId = :userId AND endDate > NOW() ORDER BY startDate")
@@ -82,114 +82,112 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     Page<Item> findAllItemsMax(@Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
     
     @Query("SELECT i FROM Item i WHERE prize >= :prizeMin AND prize <= :prizeMax AND "
-    		+ "endDate > NOW() ORDER BY startdate")
+    		+ "endDate > NOW() ORDER BY startdate DESC")
     Page<Item> findAllItemsMinMax(@Param("prizeMin") BigDecimal prizeMin, @Param("prizeMax") BigDecimal prizeMax,
     		Pageable pageable);
     
-    //TODO Find items caducated
-    
     /* TITLE */
     
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findByTitle(@Param("title") String title, Pageable pageable);
-    
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND prize >= :prizeMin AND endDate > NOW()")
-    Page<Item> findByTitleMin(@Param("title") String title, @Param("prizeMin") String prizeMin, Pageable pageable);
-    
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND prize <= :prizeMax AND endDate > NOW()")
-    Page<Item> findByTitleMax(@Param("title") String title, @Param("prizeMax") String prizeMax, Pageable pageable);
-    
-    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND prize >= :prizeMin AND prize <= :prizeMax "
-    		+ "AND endDate > NOW()")
-    Page<Item> findByTitleMinMax(@Param("title") String title, @Param("prizeMin") String prizeMin,
-    		@Param("prizeMax") String prizeMax, Pageable pageable);
-    
-    /*************************************************************************************************************/
-
-    /* CATEGORY */
-    
-    /**
-     * Find all items from a subCategory
-     * @param subCategoryName SubCategory name
-     * @param pageable
-     * @return Items
-     */
-    @Query("SELECT i FROM Item i WHERE i.subCategory.category.categoryName = :categoryName AND "
-    		+ "endDate > NOW() ORDER BY startdate")
-    Page<Item> findItemsByCategoryName(@Param("categoryName") String categoryName, Pageable pageable);
-    
-    /**
-     * Find all items from a subCategory filtering by a minimum prize
-     * @param subCategoryName SubCategory name
-     * @param prizeMin Minimum prize
-     * @param pageable
-     * @return Items
-     */
-    @Query("SELECT i FROM Item i WHERE i.subCategory.category.categoryName = :categoryName AND "
-    		+ "prize >= :prizeMin AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findItemsByCategoryNameMin(@Param("categoryName") String categoryName, 
-    		@Param("prizeMin") BigDecimal prizeMin, Pageable pageable);
-    
-    @Query("SELECT i FROM Item i WHERE i.subCategory.category.categoryName = :categoryName AND "
-    		+ "prize <= :prizeMax AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findItemsByCategoryNameMax(@Param("categoryName") String categoryName, 
-    		@Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
-    
-    /**
-     * Find all items from a subCategory filtering by a minimum and maximum prize
-     * @param subCategoryName
-     * @param prizeMin Minimum prize
-     * @param prizeMax Maximum prize
-     * @param pageable
-     * @return
-     */
-    @Query("SELECT i FROM Item i WHERE i.subCategory.category.categoryName = :categoryName AND "
-    		+ "prize >= :prizeMin AND prize <= :prizeMax AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findItemsByCategoryNameMinMax(@Param("categoryName") String categoryName, 
-    		@Param("prizeMin") BigDecimal prizeMin, @Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
+//    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND endDate > NOW() ORDER BY startdate")
+//    Page<Item> findByTitle(@Param("title") String title, Pageable pageable);
+//    
+//    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND prize >= :prizeMin AND endDate > NOW()")
+//    Page<Item> findByTitleMin(@Param("title") String title, @Param("prizeMin") String prizeMin, Pageable pageable);
+//    
+//    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND prize <= :prizeMax AND endDate > NOW()")
+//    Page<Item> findByTitleMax(@Param("title") String title, @Param("prizeMax") String prizeMax, Pageable pageable);
+//    
+//    @Query("SELECT i FROM Item i WHERE i.title LIKE %:title% AND prize >= :prizeMin AND prize <= :prizeMax "
+//    		+ "AND endDate > NOW()")
+//    Page<Item> findByTitleMinMax(@Param("title") String title, @Param("prizeMin") String prizeMin,
+//    		@Param("prizeMax") String prizeMax, Pageable pageable);
     
     /*************************************************************************************************************/
 
-    /* SUBCATEGORY */
+//    /* CATEGORY */
+//    
+//    /**
+//     * Find all items from a subCategory
+//     * @param subCategoryName SubCategory name
+//     * @param pageable
+//     * @return Items
+//     */
+//    @Query("SELECT i FROM Item i WHERE i.subCategory.category.categoryName = :categoryName AND "
+//    		+ "endDate > NOW() ORDER BY startdate")
+//    Page<Item> findItemsByCategoryName(@Param("categoryName") String categoryName, Pageable pageable);
+//    
+//    /**
+//     * Find all items from a subCategory filtering by a minimum prize
+//     * @param subCategoryName SubCategory name
+//     * @param prizeMin Minimum prize
+//     * @param pageable
+//     * @return Items
+//     */
+//    @Query("SELECT i FROM Item i WHERE i.subCategory.category.categoryName = :categoryName AND "
+//    		+ "prize >= :prizeMin AND endDate > NOW() ORDER BY startdate")
+//    Page<Item> findItemsByCategoryNameMin(@Param("categoryName") String categoryName, 
+//    		@Param("prizeMin") BigDecimal prizeMin, Pageable pageable);
+//    
+//    @Query("SELECT i FROM Item i WHERE i.subCategory.category.categoryName = :categoryName AND "
+//    		+ "prize <= :prizeMax AND endDate > NOW() ORDER BY startdate")
+//    Page<Item> findItemsByCategoryNameMax(@Param("categoryName") String categoryName, 
+//    		@Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
+//    
+//    /**
+//     * Find all items from a subCategory filtering by a minimum and maximum prize
+//     * @param subCategoryName
+//     * @param prizeMin Minimum prize
+//     * @param prizeMax Maximum prize
+//     * @param pageable
+//     * @return
+//     */
+//    @Query("SELECT i FROM Item i WHERE i.subCategory.category.categoryName = :categoryName AND "
+//    		+ "prize >= :prizeMin AND prize <= :prizeMax AND endDate > NOW() ORDER BY startdate")
+//    Page<Item> findItemsByCategoryNameMinMax(@Param("categoryName") String categoryName, 
+//    		@Param("prizeMin") BigDecimal prizeMin, @Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
     
-    /**
-     * Find all items from a subCategory
-     * @param subCategoryName SubCategory name
-     * @param pageable
-     * @return Items
-     */
-    @Query("SELECT i FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findBySubCategoryName(@Param("subCategoryName") String subCategoryName, Pageable pageable);
-    
-    /**
-     * Find all items from a subCategory filtering by a minimum prize
-     * @param subCategoryName SubCategory name
-     * @param prizeMin Minimum prize
-     * @param pageable
-     * @return Items
-     */
-    @Query("SELECT i FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName AND prize >= :prizeMin "
-    		+ "AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findBySubCategoryNameMin(@Param("subCategoryName") String subCategoryName, 
-    		@Param("prizeMin") BigDecimal prizeMin, Pageable pageable);
-    
-    @Query("SELECT i FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName AND prize >= :prizeMax "
-    		+ "AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findBySubCategoryNameMax(@Param("subCategoryName") String subCategoryName, 
-    		@Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
-    
-    /**
-     * Find all items from a subCategory filtering by a minimum and maximum prize
-     * @param subCategoryName
-     * @param prizeMin Minimum prize
-     * @param prizeMax Maximum prize
-     * @param pageable
-     * @return
-     */
-    @Query("SELECT i FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName AND prize >= :prizeMin "
-    		+ "AND prize <= :prizeMax AND endDate > NOW() ORDER BY startdate")
-    Page<Item> findBySubCategoryNameMinMax(@Param("subCategoryName") String subCategoryName, 
-    		@Param("prizeMin") BigDecimal prizeMin, @Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
+    /*************************************************************************************************************/
+
+//    /* SUBCATEGORY */
+//    
+//    /**
+//     * Find all items from a subCategory
+//     * @param subCategoryName SubCategory name
+//     * @param pageable
+//     * @return Items
+//     */
+//    @Query("SELECT i FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName AND endDate > NOW() ORDER BY startdate")
+//    Page<Item> findBySubCategoryName(@Param("subCategoryName") String subCategoryName, Pageable pageable);
+//    
+//    /**
+//     * Find all items from a subCategory filtering by a minimum prize
+//     * @param subCategoryName SubCategory name
+//     * @param prizeMin Minimum prize
+//     * @param pageable
+//     * @return Items
+//     */
+//    @Query("SELECT i FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName AND prize >= :prizeMin "
+//    		+ "AND endDate > NOW() ORDER BY startdate")
+//    Page<Item> findBySubCategoryNameMin(@Param("subCategoryName") String subCategoryName, 
+//    		@Param("prizeMin") BigDecimal prizeMin, Pageable pageable);
+//    
+//    @Query("SELECT i FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName AND prize >= :prizeMax "
+//    		+ "AND endDate > NOW() ORDER BY startdate")
+//    Page<Item> findBySubCategoryNameMax(@Param("subCategoryName") String subCategoryName, 
+//    		@Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
+//    
+//    /**
+//     * Find all items from a subCategory filtering by a minimum and maximum prize
+//     * @param subCategoryName
+//     * @param prizeMin Minimum prize
+//     * @param prizeMax Maximum prize
+//     * @param pageable
+//     * @return
+//     */
+//    @Query("SELECT i FROM Item i WHERE i.subCategory.subCategoryName = :subCategoryName AND prize >= :prizeMin "
+//    		+ "AND prize <= :prizeMax AND endDate > NOW() ORDER BY startdate")
+//    Page<Item> findBySubCategoryNameMinMax(@Param("subCategoryName") String subCategoryName, 
+//    		@Param("prizeMin") BigDecimal prizeMin, @Param("prizeMax") BigDecimal prizeMax, Pageable pageable);
     
     /*************************************************************************************************************/
     
@@ -211,7 +209,7 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     		+ "AND (:pMin <= 0.0 OR prize > :pMin) AND (:pMax <= 0.0 OR prize < :pMax) AND "
     		+ "(:name = '' OR i.subCategory.subCategoryName = :name OR i.subCategory.category.categoryName = :name) "
     		+ "AND (:dis >= 5000.0 OR "
-    		+ "(6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :dis)")
+    		+ "(6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :dis) ORDER BY startDate DESC")
 //    @Query("SELECT new Item(i, SQRT(POW(:lat - latitude , 2) + POW(:lng - longitude, 2)) * 100) "
 //    		+ "FROM Item i WHERE endDate > NOW() AND title LIKE %:title% "
 //    		+ "AND (:pMin <= 0.0 OR prize > :pMin) AND (:pMax <= 0.0 OR prize < :pMax) AND "
@@ -231,7 +229,7 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
     		+ "((:isCategory = TRUE AND :cat > 0L AND i.subCategory.category.categoryId = :cat) OR "
     		+ "(:cat > 0L AND i.subCategory.id = :cat) OR :cat = 0L) "
     		+ "AND (:dis >= 5000.0 OR "
-    		+ "(6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :dis)")
+    		+ "(6371*acos(cos(radians(:lat))*cosRadLat*cos(radLng-radians(:lng))+sin(radians(:lat))*sinRadLat)) < :dis) ORDER BY startDate DESC")
     Page<Item> findByParams(@Param("title") String title, 
     		@Param("cat") long cat, @Param("isCategory") boolean isCategory, 
     		@Param("lat") double latitude, @Param("lng") double longitude, 
