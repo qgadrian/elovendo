@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.log4j.Logger;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -72,10 +74,11 @@ public class ItemWebController {
 
 	/**
 	 * FIND BY TITLE
-	 * @throws CategoryNotFoundException 
+	 * 
+	 * @throws CategoryNotFoundException
 	 */
 	@RequestMapping(value = "search", method = RequestMethod.GET)
-	public String itemListByTitleSearchPage(Model model,
+	public String itemListByTitleSearchPage(Model model, Locale locale,
 			@RequestParam(value = "category", required = false, defaultValue = "0") long categoryId,
 			@RequestParam("title") String title,
 			@RequestParam(value = "dis", required = false, defaultValue = "0") double dis,
@@ -84,12 +87,11 @@ public class ItemWebController {
 			@RequestParam(value = "min", required = false, defaultValue = "0") int prizeMin,
 			@RequestParam(value = "max", required = false, defaultValue = "0") int prizeMax,
 			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
-			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) 
-					throws CategoryNotFoundException {
+			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size)
+			throws CategoryNotFoundException {
 
-		model.addAttribute("featuredItems", itemService
-				.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, categoryId));
-		
+		model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, categoryId));
+
 		String urlLocation = "search";
 		model.addAttribute("url", urlLocation);
 
@@ -99,29 +101,33 @@ public class ItemWebController {
 
 		model.addAttribute("categoryId", categoryId);
 
-//		Category category = categoryService.getCategoryByCategoryId(categoryId);
-		Page<Item> p = itemService.getItemsByParams(title, categoryId, Constant.CATEGORY, dis, lat, 
-				lng, prizeMin, prizeMax, page, size);
+		// Category category =
+		// categoryService.getCategoryByCategoryId(categoryId);
+		Page<Item> p = itemService.getItemsByParams(title, categoryId, Constant.CATEGORY, dis, lat, lng, prizeMin,
+				prizeMax, locale, page, size);
 
 		// Quick workaround for manage pagination with searches
-		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixSearchPaginationUrl(categoryId, title, dis, lat, lng,
-				prizeMin, prizeMax));
+		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixSearchPaginationUrl(categoryId, title, dis, lat,
+				lng, prizeMin, prizeMax));
 
 		List<Item> items = p.getContent();
 
-		model.addAttribute("hasLatLng", lat != 0 && lng != 0); // For show a message if there is no GPS info
+		model.addAttribute("hasLatLng", lat != 0 && lng != 0); // For show a
+																// message if
+																// there is no
+																// GPS info
 		model.addAttribute("page", pageWrapper);
 		model.addAttribute("itemsList", items);
 
 		return "elovendo/item/list/item_list";
 	}
-	
+
 	/**
 	 * FIND ALL ITEMS
 	 */
 
 	@RequestMapping(value = "category/all", method = RequestMethod.GET)
-	public String allItemList(Model model,
+	public String allItemList(Model model, Locale locale,
 			@RequestParam(value = "title", required = false, defaultValue = "") String title,
 			@RequestParam(value = "dis", required = false, defaultValue = "0") double dis,
 			@RequestParam(value = "lat", required = false, defaultValue = "0") double lat,
@@ -129,17 +135,19 @@ public class ItemWebController {
 			@RequestParam(value = "min", required = false, defaultValue = "0") int prizeMin,
 			@RequestParam(value = "max", required = false, defaultValue = "0") int prizeMax,
 			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
-			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) 
-					throws CategoryNotFoundException {
-		
-		model.addAttribute("hasLatLng", lat != 0 && lng != 0); // For show a message if there is no GPS info
+			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size)
+			throws CategoryNotFoundException {
 
-		model.addAttribute("featuredItems", 
-				itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, null));
+		model.addAttribute("hasLatLng", lat != 0 && lng != 0); // For show a
+																// message if
+																// there is no
+																// GPS info
+
+		model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, null));
 
 		String urlLocation = "category/all";
 		model.addAttribute("url", urlLocation);
-		
+
 		model.addAttribute("categoryId", 0);
 		model.addAttribute("subCategoryId", 0);
 
@@ -152,8 +160,8 @@ public class ItemWebController {
 		if (prizeMax != 0)
 			model.addAttribute("prizeMax", prizeMax);
 
-		Page<Item> p = itemService.getItemsByParams(title, Constant.ALL_PATH, dis, lat, lng, 
-				prizeMin, prizeMax, page, size);
+		Page<Item> p = itemService.getItemsByParams(title, Constant.ALL_PATH, dis, lat, lng, prizeMin, prizeMax, locale, page,
+				size);
 
 		String fixedUrl = fixPaginationUrl(Constant.ALL_PATH, title, dis, lat, lng, prizeMin, prizeMax);
 
@@ -168,12 +176,12 @@ public class ItemWebController {
 
 	/**
 	 * FIND BY CATEGORY
-	 * @throws CategoryNotFoundException 
+	 * 
+	 * @throws CategoryNotFoundException
 	 */
 
 	@RequestMapping(value = "category/{categoryId}", method = RequestMethod.GET)
-	public String itemListByCategoryPage(Model model, Locale locale, 
-			@PathVariable("categoryId") long categoryId,
+	public String itemListByCategoryPage(Model model, Locale locale, @PathVariable("categoryId") long categoryId,
 			@RequestParam(value = "title", required = false, defaultValue = "") String title,
 			@RequestParam(value = "dis", required = false, defaultValue = "0") double dis,
 			@RequestParam(value = "lat", required = false, defaultValue = "0") double lat,
@@ -181,18 +189,21 @@ public class ItemWebController {
 			@RequestParam(value = "min", required = false, defaultValue = "0") int prizeMin,
 			@RequestParam(value = "max", required = false, defaultValue = "0") int prizeMax,
 			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
-			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) 
-					throws CategoryNotFoundException {
-		
-		model.addAttribute("hasLatLng", lat != 0 && lng != 0); // For show a message if there is no GPS info
+			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size)
+			throws CategoryNotFoundException {
+
+		model.addAttribute("hasLatLng", lat != 0 && lng != 0); // For show a
+																// message if
+																// there is no
+																// GPS info
 
 		model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, categoryId));
 
 		String urlLocation = "category/" + categoryId;
 		model.addAttribute("url", urlLocation);
-		
+
 		Category category = categoryService.getCategoryByCategoryId(categoryId);
-//		model.addAttribute("category", category);
+		// model.addAttribute("category", category);
 		model.addAttribute("categoryId", category.getCategoryId());
 		model.addAttribute("subCategoryId", 0);
 
@@ -205,8 +216,9 @@ public class ItemWebController {
 		if (prizeMax != 0)
 			model.addAttribute("prizeMax", prizeMax);
 
-//		Page<Item> p = itemService.getItemsByParams(title, categoryId, Constant.CATEGORY, dis, lat, lng, prizeMin,
-//				prizeMax, page, size);
+		// Page<Item> p = itemService.getItemsByParams(title, categoryId,
+		// Constant.CATEGORY, dis, lat, lng, prizeMin,
+		// prizeMax, page, size);
 		Page<Item> p = itemService.getLocaledItemsByParams(locale, title, categoryId, Constant.CATEGORY, dis, lat, lng,
 				prizeMin, prizeMax, page, size);
 
@@ -223,12 +235,13 @@ public class ItemWebController {
 
 	/**
 	 * FIND BY SUBCATEGORY
-	 * @throws SubCategoryNotFoundException 
-	 * @throws CategoryNotFoundException 
+	 * 
+	 * @throws SubCategoryNotFoundException
+	 * @throws CategoryNotFoundException
 	 */
 
 	@RequestMapping(value = "sub/{subcategoryId}", method = RequestMethod.GET)
-	public String itemListPage(Model model, Locale locale, 
+	public String itemListPageBySubcategoryId(Model model, Locale locale, HttpServletRequest request,
 			@PathVariable("subcategoryId") long subCategoryId,
 			@RequestParam(value = "title", required = false, defaultValue = "") String title,
 			@RequestParam(value = "dis", required = false, defaultValue = "0") double dis,
@@ -237,37 +250,37 @@ public class ItemWebController {
 			@RequestParam(value = "min", required = false, defaultValue = "0") int prizeMin,
 			@RequestParam(value = "max", required = false, defaultValue = "0") int prizeMax,
 			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
-			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) 
-					throws CategoryNotFoundException, SubCategoryNotFoundException {
-		
-		model.addAttribute("hasLatLng", lat != 0 && lng != 0); // For show a message if there is no GPS info
+			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size)
+			throws CategoryNotFoundException, SubCategoryNotFoundException {
+
+		model.addAttribute("hasLatLng", lat != 0 && lng != 0); // For show a
+																// message if
+																// there is no
+																// GPS info
 
 		model.addAttribute("featuredItems",
 				itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, subCategoryId));
-		
-		logger.error("LOCALE CODE: " + locale.getISO3Country());
-		
+
 		String urlLocation = "sub/" + subCategoryId;
 		model.addAttribute("url", urlLocation);
 		Category category = categoryService.getCategoryBySubCategoryId(subCategoryId);
-//		model.addAttribute("category", category);
+		// model.addAttribute("category", category);
 		model.addAttribute("categoryId", category.getCategoryId());
 		SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(subCategoryId);
 		model.addAttribute("subCategoryId", subCategory.getId());
 
 		Page<Item> p = itemService.getItemsByParams(title, subCategoryId, Constant.SUBCATEGORY, dis, lat, lng,
-				prizeMin, prizeMax, page,
-				size);
-		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixPaginationUrl(String.valueOf(subCategoryId), title, dis, lat,
-				lng, prizeMin, prizeMax));
+				prizeMin, prizeMax, locale, page, size);
+		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixPaginationUrl(String.valueOf(subCategoryId), title,
+				dis, lat, lng, prizeMin, prizeMax));
 		List<Item> items = p.getContent();
 
 		@SuppressWarnings("unchecked")
 		List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
 		model.addAttribute("categories", categories);
 		@SuppressWarnings("unchecked")
-		List<SubCategory> subCategories = IteratorUtils.toList(
-				categoryService.getAllSubCategoriesFromSubCategoryId(subCategoryId).iterator());
+		List<SubCategory> subCategories = IteratorUtils.toList(categoryService.getAllSubCategoriesFromSubCategoryId(
+				subCategoryId).iterator());
 		model.addAttribute("subCategories", subCategories);
 
 		model.addAttribute("page", pageWrapper);
@@ -277,7 +290,7 @@ public class ItemWebController {
 	}
 
 	@RequestMapping(value = Constant.ALL_PATH, method = RequestMethod.GET)
-	public String allItemListPage(Model model,
+	public String allItemListPage(Model model, Locale locale,
 			@RequestParam(value = "title", required = false, defaultValue = "") String title,
 			@RequestParam(value = "dis", required = false, defaultValue = "0") double dis,
 			@RequestParam(value = "lat", required = false, defaultValue = "0") double lat,
@@ -286,12 +299,15 @@ public class ItemWebController {
 			@RequestParam(value = "max", required = false, defaultValue = "0") int prizeMax,
 			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
 			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size) {
-		
-		model.addAttribute("hasLatLng", lat != 0 && lng != 0); // For show a message if there is no GPS info
+
+		model.addAttribute("hasLatLng", lat != 0 && lng != 0); // For show a
+																// message if
+																// there is no
+																// GPS info
 
 		model.addAttribute("featuredItems", itemService.getRandomFeaturedItems(Constant.MAX_RANDOM_ITEMS, null));
 
-		Page<Item> p = itemService.getItemsByParams(title, null, dis, lat, lng, prizeMin, prizeMax, page, size);
+		Page<Item> p = itemService.getItemsByParams(title, null, dis, lat, lng, prizeMin, prizeMax, locale, page, size);
 
 		PageWrapper<Item> pageWrapper = new PageWrapper<Item>(p, fixPaginationUrl(Constant.ALL_PATH, title, dis, lat,
 				lng, prizeMin, prizeMax));
@@ -328,8 +344,11 @@ public class ItemWebController {
 		} catch (ItemNotFoundException e) {
 			return "elovendo/error/error";
 		}
-		
-		model.addAttribute("images", item.getAllImages200h()); // Add other images (other ones than main image)
+
+		model.addAttribute("images", item.getAllImages200h()); // Add other
+																// images (other
+																// ones than
+																// main image)
 		model.addAttribute("item", item);
 		model.addAttribute("votesPositive", voteService.getNumberVotesPositive(item.getUser().getUserId()));
 		model.addAttribute("votesNegative", voteService.getNumberVotesNegative(item.getUser().getUserId()));
@@ -340,8 +359,8 @@ public class ItemWebController {
 
 	/** STUFF **/
 
-	private String fixPaginationUrl(String baseUrl, String title, double dis, double lat, double lng,
-			int prizeMin, int prizeMax) {
+	private String fixPaginationUrl(String baseUrl, String title, double dis, double lat, double lng, int prizeMin,
+			int prizeMax) {
 
 		String tmp = baseUrl + "?lat=" + lat + "&lng=" + lng;
 
@@ -356,7 +375,7 @@ public class ItemWebController {
 
 		return tmp;
 	}
-	
+
 	private String fixSearchPaginationUrl(long categoryId, String title, double dis, double lat, double lng,
 			int prizeMin, int prizeMax) {
 
@@ -373,11 +392,12 @@ public class ItemWebController {
 
 		return tmp;
 	}
-	
+
 	/**
 	 * ADD ITEMS
-	 * @throws UserNotFoundException 
-	 * @throws AnonymousUserAuthenticationException 
+	 * 
+	 * @throws UserNotFoundException
+	 * @throws AnonymousUserAuthenticationException
 	 */
 
 	@SuppressWarnings("unchecked")
@@ -397,39 +417,39 @@ public class ItemWebController {
 	}
 
 	@RequestMapping(value = "add/item", method = RequestMethod.POST)
-	public String processAddItemWeb(
-			@Valid @ModelAttribute(value = "item") ItemForm itemForm, BindingResult result,
-			@RequestParam(value="mI", required=false) MultipartFile mainImage,
-			@RequestParam(value="i1", required=false) MultipartFile image1, 
-			@RequestParam(value="i2", required=false) MultipartFile image2,
-			@RequestParam(value="i3", required=false) MultipartFile image3, 
-			Model model, Locale locale) throws InvalidItemNameMinLenghtException,
-			UserNotFoundException, SubCategoryNotFoundException, IOException, InsufficientPointsException {
+	public String processAddItemWeb(@Valid @ModelAttribute(value = "item") ItemForm itemForm, BindingResult result,
+			@RequestParam(value = "mI", required = false) MultipartFile mainImage,
+			@RequestParam(value = "i1", required = false) MultipartFile image1,
+			@RequestParam(value = "i2", required = false) MultipartFile image2,
+			@RequestParam(value = "i3", required = false) MultipartFile image3, Model model, Locale locale)
+			throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException, IOException,
+			InsufficientPointsException, ParseException {
 
 		User user = null;
 		SecurityContext context = SecurityContextHolder.getContext();
 		if (!(context.getAuthentication() instanceof AnonymousAuthenticationToken))
 			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
+
 		// Validate category and subCategory
-//		if (itemForm.getCategory() == 0) {
-//			result.addError(new FieldError("item", "category", 
-//					messageSource.getMessage("Item.add.Error.category", null, locale)));
-//		}
-		
-//		if (itemForm.getSubCategory() == 0) {
-//			result.addError(new FieldError("item", "subCategory", 
-//					messageSource.getMessage("Item.add.Error.subCategory", null, locale)));
-//		}
+		// if (itemForm.getCategory() == 0) {
+		// result.addError(new FieldError("item", "category",
+		// messageSource.getMessage("Item.add.Error.category", null, locale)));
+		// }
+
+		// if (itemForm.getSubCategory() == 0) {
+		// result.addError(new FieldError("item", "subCategory",
+		// messageSource.getMessage("Item.add.Error.subCategory", null,
+		// locale)));
+		// }
 
 		if (result.hasErrors()) {
 
 			@SuppressWarnings("unchecked")
 			List<Category> categories = IteratorUtils.toList(categoryService.getAllCategories().iterator());
 			model.addAttribute("categories", categories);
-			
-//			model.addAttribute("categoryId", itemForm.getCategory());
-			
+
+			// model.addAttribute("categoryId", itemForm.getCategory());
+
 			model.addAttribute("user", user);
 
 			return "elovendo/item/add_item";
@@ -451,13 +471,12 @@ public class ItemWebController {
 		}
 	}
 
-
 	/**
 	 * EDIT ITEM
 	 * 
 	 * @throws ItemNotFoundException
 	 * @throws NotUserItemException
-	 * @throws AnonymousUserAuthenticationException 
+	 * @throws AnonymousUserAuthenticationException
 	 **/
 
 	@SuppressWarnings("unchecked")
@@ -487,15 +506,12 @@ public class ItemWebController {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "edit/item/{itemId}", method = RequestMethod.POST)
-	public String processEditItemPage(Model model, 
-			@PathVariable long itemId,
-			@Valid @ModelAttribute(value = "item") ItemForm itemForm, 
-			BindingResult result, 
-			@RequestParam("mI") MultipartFile mainImage,
-			@RequestParam("i1") MultipartFile image1, 
-			@RequestParam("i2") MultipartFile image2,
-			@RequestParam("i3") MultipartFile image3) throws ItemNotFoundException, NotUserItemException,
-			SubCategoryNotFoundException, AnonymousUserAuthenticationException {
+	public String processEditItemPage(Model model, @PathVariable long itemId,
+			@Valid @ModelAttribute(value = "item") ItemForm itemForm, BindingResult result,
+			@RequestParam("mI") MultipartFile mainImage, @RequestParam("i1") MultipartFile image1,
+			@RequestParam("i2") MultipartFile image2, @RequestParam("i3") MultipartFile image3)
+			throws ItemNotFoundException, NotUserItemException, SubCategoryNotFoundException,
+			AnonymousUserAuthenticationException {
 
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 
@@ -503,7 +519,7 @@ public class ItemWebController {
 			for (FieldError fe : result.getFieldErrors()) {
 				logger.debug("Edit " + itemId + " error: " + fe.toString());
 			}
-			
+
 			model.addAttribute("user", user);
 			model.addAttribute("item", itemForm);
 
@@ -514,12 +530,11 @@ public class ItemWebController {
 			model.addAttribute("subCategories", subCategories);
 
 			return "elovendo/item/edit/edit_item";
-		}
-		else {
+		} else {
 			logger.debug("Item " + itemId + "succesfully edited");
 			itemForm.setUser(user);
 			itemForm.setItemId(itemId);
-			
+
 			try {
 				itemService.updateItem(itemForm, user, mainImage, image1, image2, image3);
 			} catch (InsufficientPointsException e) {
@@ -534,7 +549,7 @@ public class ItemWebController {
 				model.addAttribute("insPoints", true);
 				return "elovendo/item/add_item";
 			}
-			
+
 			return "elovendo/item/item_create_successful";
 		}
 	}
@@ -546,14 +561,14 @@ public class ItemWebController {
 		itemService.deleteItem(user, itemId);
 		return (int) itemId;
 	}
-	
+
 	@RequestMapping(value = "item/renew", method = RequestMethod.POST)
 	public @ResponseBody int renewItem(@RequestParam(value = "id", required = true, defaultValue = "0") long itemId)
 			throws AnonymousUserAuthenticationException, ItemNotFoundException, NotUserItemException {
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 		try {
 			itemService.renewItem(user, itemId);
-		}catch (RenewItemAfterEndDateException e) {
+		} catch (RenewItemAfterEndDateException e) {
 			return 0;
 		}
 		return (int) 1;
@@ -563,13 +578,14 @@ public class ItemWebController {
 	 * SET ITEM FAVORITE
 	 * 
 	 * @throws ItemNotFoundException
-	 * @throws AnonymousUserAuthenticationException 
+	 * @throws AnonymousUserAuthenticationException
 	 */
 
 	@RequestMapping(value = "item/fav", method = RequestMethod.POST)
 	public @ResponseBody boolean setItemFavorite(
-			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException, AnonymousUserAuthenticationException {
-		
+			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException,
+			AnonymousUserAuthenticationException {
+
 		User user = null;
 		try {
 			user = SessionUserObtainer.getInstance().getSessionUser();
@@ -579,14 +595,16 @@ public class ItemWebController {
 
 		return favoriteService.setFavorite(user, itemId) != null;
 	}
-	
+
 	@RequestMapping(value = "item/unfav", method = RequestMethod.POST)
 	public @ResponseBody boolean unsetItemFavorite(
-			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException, AnonymousUserAuthenticationException {
-		
+			@RequestParam(value = "id", required = true, defaultValue = "") long itemId) throws ItemNotFoundException,
+			AnonymousUserAuthenticationException {
+
 		User user = SessionUserObtainer.getInstance().getSessionUser();
 
-		if (user == null) return false;
+		if (user == null)
+			return false;
 		favoriteService.unsetFavorite(user, itemId);
 		return true;
 	}

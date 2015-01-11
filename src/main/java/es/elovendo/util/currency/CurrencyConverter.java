@@ -17,9 +17,16 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class CurrencyConverter {
+
+	private static String DEFAULT_CURRENCY = "USD";
+	public static Currency USD = Currency.getInstance(DEFAULT_CURRENCY);
 	
+	public static String MAIN_CONVERT_FILE = "mainRates.json";
+	private static String JSON_PATH = "/home/adrian/Proyectos/eclipse/elovendo/src/main/webapp/resources/json/";
+
 	private final static String JSON_RATES = "rates";
-//	private static final String JSON_RATE_FILE = "/home/elovendo/elovendo/latest.json";
+	// private static final String JSON_RATE_FILE =
+	// "/home/elovendo/elovendo/latest.json";
 	private static final String JSON_RATE_FILE = "/home/adrian/Proyectos/eclipse/elovendo/src/main/webapp/resources/json/latest.json";
 
 	private static Logger logger;
@@ -29,9 +36,12 @@ public class CurrencyConverter {
 	private static JSONObject jsonRates;
 
 	/**
-	 * Creates an instance of {@link CurrencyConverter} and initializes the JSON rates file
+	 * Creates an instance of {@link CurrencyConverter} and initializes the JSON
+	 * rates file
+	 * 
 	 * @return
-	 * @throws FileNotFoundException If JSON rate file cannot be found
+	 * @throws FileNotFoundException
+	 *             If JSON rate file cannot be found
 	 * @throws IOException
 	 * @throws ParseException
 	 */
@@ -44,17 +54,35 @@ public class CurrencyConverter {
 		}
 		return currencyConverter;
 	}
-	
-	private CurrencyConverter() {}
+
+	public static CurrencyConverter getInstance(String fileName) throws FileNotFoundException, IOException,
+			ParseException {
+		if (currencyConverter == null) {
+			currencyConverter = new CurrencyConverter();
+			parser = new JSONParser();
+			jsonRates = (JSONObject) ((JSONObject) parser.parse(new FileReader(JSON_PATH + fileName))).get(JSON_RATES);
+			logger = Logger.getLogger(CurrencyConverter.class);
+		}
+		return currencyConverter;
+	}
+
+	private CurrencyConverter() {
+	}
 
 	/**
-	 * Exchanges the given amount from the current currency, to the desired currency as well
-	 * @param amount Amount to exchange
-	 * @param fromCurrency Amount current currency
-	 * @param toCurrency Target currency to exchange
+	 * Exchanges the given amount from the current currency, to the desired
+	 * currency as well
+	 * 
+	 * @param amount
+	 *            Amount to exchange
+	 * @param fromCurrency
+	 *            Amount current currency
+	 * @param toCurrency
+	 *            Target currency to exchange
 	 * @return {@link BigDecimal} with the current exchanged value
-	 * @throws CurrencyConvertException If local JSON file isn't able to get the target rate, and the backup's
-	 * API exchange rate provider isn't able too.
+	 * @throws CurrencyConvertException
+	 *             If local JSON file isn't able to get the target rate, and the
+	 *             backup's API exchange rate provider isn't able too.
 	 * @throws ParseException
 	 */
 	public BigDecimal convert(BigDecimal amount, Currency fromCurrency, Currency toCurrency)
@@ -62,7 +90,7 @@ public class CurrencyConverter {
 		try {
 			float rate = getLocalCurrencyConvertRate(fromCurrency, toCurrency);
 			return amount.divide(new BigDecimal(rate), BigDecimal.ROUND_UP);
-			
+
 		} catch (ArithmeticException e) {
 			logger.error("JSON rates file is corrupted?");
 			try {
@@ -71,7 +99,7 @@ public class CurrencyConverter {
 			} catch (APICurrencyRateException | NullPointerException | IOException ae) {
 				throw new CurrencyConvertException("API exchange error");
 			}
-			
+
 		}
 	}
 
@@ -82,10 +110,10 @@ public class CurrencyConverter {
 	 * @param toCurrency
 	 * @return Convert rate for currencyFrom to currencyTo
 	 * @throws IOException
-	 * @throws APICurrencyRateException 
+	 * @throws APICurrencyRateException
 	 */
-	private float getCurrencyConvertRate(Currency fromCurrency, Currency toCurrency) 
-			throws IOException, NullPointerException, APICurrencyRateException {
+	private float getCurrencyConvertRate(Currency fromCurrency, Currency toCurrency) throws IOException,
+			NullPointerException, APICurrencyRateException {
 		HttpClient httpClient = HttpClientBuilder.create().build();
 
 		HttpGet httpGet = new HttpGet("http://quote.yahoo.com/d/quotes.csv?s=" + fromCurrency.getCurrencyCode()
@@ -101,7 +129,9 @@ public class CurrencyConverter {
 	}
 
 	/**
-	 * Obtains the current exchange rates from the local JSON file at JSON_RATE_FILE.
+	 * Obtains the current exchange rates from the local JSON file at
+	 * JSON_RATE_FILE.
+	 * 
 	 * @param fromCurrency
 	 * @param toCurrency
 	 * @return Exchange rate
@@ -109,19 +139,19 @@ public class CurrencyConverter {
 	private float getLocalCurrencyConvertRate(Currency fromCurrency, Currency toCurrency) {
 		float fromRate = ((Number) jsonRates.get(fromCurrency.getCurrencyCode())).floatValue();
 		float toRate = ((Number) jsonRates.get(toCurrency.getCurrencyCode())).floatValue();
-		
+
 		logger.debug("Obtained *from* rate " + fromRate);
 		logger.debug("Obtained *to* rate " + toRate);
-		
-		return fromRate/toRate;
+
+		return fromRate / toRate;
 	}
-	
+
 	public float getConvertRate(Currency fromCurrency, Currency toCurrency) {
-		
+
 		float fromRate = ((Number) jsonRates.get(fromCurrency.getCurrencyCode())).floatValue();
 		float toRate = ((Number) jsonRates.get(toCurrency.getCurrencyCode())).floatValue();
-		
-		return fromRate/toRate;
+
+		return fromRate / toRate;
 	}
-	
+
 }

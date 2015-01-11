@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -133,6 +134,7 @@ public class MobileUserController {
 	 * @throws SubCategoryNotFoundException 
 	 * @throws UserNotFoundException 
 	 * @throws IOException 
+	 * @throws ParseException 
 	 */
 	// TODO: featured, highlight... etc...
 	@RequestMapping(value = "items/{username}/item", method = RequestMethod.POST)
@@ -150,7 +152,7 @@ public class MobileUserController {
 			@RequestParam(value="prize", required=true) double prize,
 			@RequestParam(value="image") MultipartFile file)
 			throws InvalidItemNameMinLenghtException, UserNotFoundException, 
-				SubCategoryNotFoundException, IOException {
+				SubCategoryNotFoundException, IOException, ParseException {
 		
 		// FIXME check if user if logged!!!
 

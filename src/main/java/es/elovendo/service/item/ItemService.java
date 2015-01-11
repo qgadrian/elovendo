@@ -1,10 +1,13 @@
 package es.elovendo.service.item;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.Nullable;
 
+import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +32,7 @@ public interface ItemService {
 
 	/**
 	 * Adds an item giving parameters
+	 * 
 	 * @param userName
 	 * @param subCategoryId
 	 * @param title
@@ -48,12 +52,15 @@ public interface ItemService {
 	 * @throws InvalidItemNameMinLenghtException
 	 * @throws UserNotFoundException
 	 * @throws SubCategoryNotFoundException
+	 * @throws ParseException
+	 * @throws IOException
+	 * @throws FileNotFoundException
 	 * @throws ProvinceNotFoundException
 	 */
 	public Item addItem(String userName, long subCategoryId, String title, String description, String currency,
 			double prize, byte[] mainImage, byte[] image1, byte[] image2, byte[] image3, String youtubeVideo,
 			boolean featured, boolean highlight, boolean autoRenew, String latitude, String longitude)
-			throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException;
+			throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException, FileNotFoundException, IOException, ParseException;
 
 
 	/**
@@ -68,9 +75,12 @@ public interface ItemService {
 	 * @return Item created
 	 * @throws SubCategoryNotFoundException
 	 * @throws InsufficientPointsException
+	 * @throws ParseException 
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
 	public Item addItem(ItemForm itemForm, User user, MultipartFile mainImage, MultipartFile image1,
-			MultipartFile image2, MultipartFile image3) throws SubCategoryNotFoundException, InsufficientPointsException;
+			MultipartFile image2, MultipartFile image3) throws SubCategoryNotFoundException, InsufficientPointsException, FileNotFoundException, IOException, ParseException;
 
 	/**
 	 * Get all items
@@ -147,7 +157,7 @@ public interface ItemService {
 	 *            Page size
 	 * @return Item page
 	 */
-	public Page<Item> getAllItemsByCategory(String categoryName, int prizeMin, int prizeMax, int page, int size);
+	public Page<Item> getAllItemsByCategory(String categoryName, int prizeMin, int prizeMax, Locale locale, int page, int size);
 
 	/**
 	 * Returns items with the given parameters
@@ -163,7 +173,7 @@ public interface ItemService {
 	 * @return
 	 */
 	public Page<Item> getItemsByParams(String title, String name, double dis, double lat, double lng,
-			int prizeMin, int prizeMax, int page, int size);
+			int prizeMin, int prizeMax, Locale locale, int page, int size);
 	
 	/**
 	 * Returns items with the given parameters
@@ -180,7 +190,7 @@ public interface ItemService {
 	 * @return
 	 */
 	public Page<Item> getItemsByParams(String title, long id, String type, double dis, double lat,
-			double lng, int prizeMin, int prizeMax, int page, int size);
+			double lng, int prizeMin, int prizeMax, Locale locale, int page, int size);
 	
 	/**
 	 * Get items using parameters with localized prize's currency

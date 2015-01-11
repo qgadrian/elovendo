@@ -27,17 +27,26 @@ public class LocaleHelper {
 	 * @throws NoFixLocaleFoundException If no matching Locale found 
 	 */
 	public Locale getFixedLocale(Locale locale) throws NoFixLocaleFoundException {
+		logger.error("LocaleHelper launched for " + locale);
+		
+		if (!locale.getISO3Country().isEmpty()) {
+			logger.error("Already received the correct locale!");
+			return locale;
+		}
+		
 		Locale[] locales = Locale.getAvailableLocales();
 		Locale proLocale = null;
 		
 		for (Locale loc : locales) {
 			if (loc.getDisplayLanguage().equals(locale.getDisplayLanguage()) && !loc.getISO3Country().isEmpty()) {
-				logger.error("found " + loc.getCountry());
-				if (!loc.getCountry().equalsIgnoreCase(locale.toString()) && proLocale != null) {
+				if (!loc.getCountry().equalsIgnoreCase(locale.toString())) {
 					logger.error("Found candidate " + loc.getCountry());
 					proLocale = loc;
 				}
-				else return loc;
+				else {
+					logger.error("Country found: " + loc.getCountry());
+					return loc;
+				}
 			}
 		}
 

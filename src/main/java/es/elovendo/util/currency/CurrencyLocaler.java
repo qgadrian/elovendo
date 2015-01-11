@@ -7,17 +7,14 @@ import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
 
-import javax.annotation.meta.Exhaustive;
-
 import org.apache.log4j.Logger;
 import org.json.simple.parser.ParseException;
 
-import es.elovendo.rest.web.ItemWebController;
 import es.elovendo.util.LocaleHelper;
 
 public class CurrencyLocaler {
 	
-	private static Logger logger = null;
+	private static Logger logger = Logger.getLogger(CurrencyLocaler.class);
 	private static CurrencyLocaler currencyLocaler;
 	
 	private CurrencyLocaler() {}
@@ -35,7 +32,7 @@ public class CurrencyLocaler {
 		try {
 			fromCurrency = Currency.getInstance(locale);
 		} catch (IllegalArgumentException | NullPointerException e) {
-			
+			logger.debug("Error getting currency from lcoale, trying something else...");
 			// Fix locale without country specified
 			LocaleHelper localeHelper = LocaleHelper.getInstance();
 			try {

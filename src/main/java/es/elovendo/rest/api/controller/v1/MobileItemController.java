@@ -126,7 +126,7 @@ public class MobileItemController {
 			@RequestParam(value = "max", required = false, defaultValue = "0") int prizeMax,
 			@RequestParam(value = "p", required = false, defaultValue = "0") int page,
 			@RequestParam(value = "s", required = false, defaultValue = S_ITEMS_PER_PAGE) int size,
-			HttpServletResponse response) {
+			HttpServletResponse response, Locale locale) {
 
 		String[] filterParams = filter.split(",");
 
@@ -134,8 +134,8 @@ public class MobileItemController {
 		// Page<Item> p = itemService.getAllItemsBySubCategory(subCategoryName,
 		// prizeMin, prizeMax, page, size);
 
-		Page<Item> p = itemService.getItemsByParams(title, subCategoryName, dis, lat, lng, prizeMin, prizeMax, page,
-				size);
+		Page<Item> p = itemService.getItemsByParams(title, subCategoryName, dis, lat, lng, prizeMin, prizeMax, locale, 
+				page, size);
 		List<Item> list = p.getContent();
 
 		// Obtain the desired page and format a JSON with data
@@ -188,7 +188,7 @@ public class MobileItemController {
 		// prizeMin, prizeMax, page, size);
 
 		Page<Item> p = itemService.getItemsByParams(title, subCategoryId, Constant.SUBCATEGORY, dis, lat, lng,
-				prizeMin, prizeMax, page,
+				prizeMin, prizeMax, locale, page,
 				size);
 		List<Item> list = p.getContent();
 

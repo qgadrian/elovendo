@@ -61,6 +61,7 @@ public class Item {
 
 	private String currency;
 	private BigDecimal prize;
+	private BigDecimal normalizedPrize;
 
 	@Column(columnDefinition = "DATETIME", name = "startdate")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -106,8 +107,9 @@ public class Item {
 	}
 
 	public Item(User user, SubCategory subCategory, String title, String description, String currency,
-			BigDecimal prize, String mainImage, String image1, String image2, String image3, String youtubeVideo,
-			boolean featured, boolean highlight, boolean autoRenew, double latitude, double longitude) {
+			BigDecimal prize, BigDecimal normalizedPrize, String mainImage, String image1, String image2,
+			String image3, String youtubeVideo, boolean featured, boolean highlight, boolean autoRenew,
+			double latitude, double longitude) {
 
 		this.user = user;
 		this.subCategory = subCategory;
@@ -115,6 +117,7 @@ public class Item {
 		this.description = description;
 		this.currency = currency;
 		this.prize = prize;
+		this.normalizedPrize = normalizedPrize;
 		this.startDate = Calendar.getInstance();
 		this.mainImage = mainImage;
 		this.image1 = image1;
@@ -140,8 +143,8 @@ public class Item {
 	}
 
 	public Item(User user, SubCategory subCategory, String title, String description, String currency,
-			BigDecimal prize, String youtubeVideo, boolean featured, boolean highlight, boolean autoRenew,
-			double latitude, double longitude) {
+			BigDecimal prize, BigDecimal normalizedPrize, String youtubeVideo, boolean featured, boolean highlight,
+			boolean autoRenew, double latitude, double longitude) {
 
 		this.user = user;
 		this.subCategory = subCategory;
@@ -149,6 +152,7 @@ public class Item {
 		this.description = description;
 		this.currency = currency;
 		this.prize = prize;
+		this.normalizedPrize = normalizedPrize;
 		this.startDate = Calendar.getInstance();
 		this.youtubeVideo = youtubeVideo;
 
@@ -177,6 +181,7 @@ public class Item {
 		this.description = item.getDescription();
 		this.currency = item.getCurrency();
 		this.prize = item.getPrize();
+		this.normalizedPrize = item.getNormalizedPrize();
 
 		this.startDate = item.startDate;
 		this.endDate = item.getEndDate();
@@ -226,34 +231,41 @@ public class Item {
 	public String getMainImage200h() {
 		return this.mainImage.concat("-200h.jpg");
 	}
-	
+
 	@Transient
 	public List<String> getAllImages200h() {
 		List<String> images = new ArrayList<>();
-		
-		if (this.image1 != null) images.add(this.image1.concat("-200h.jpg"));
-		if (this.image2 != null) images.add(this.image2.concat("-200h.jpg"));
-		if (this.image3 != null) images.add(this.image3.concat("-200h.jpg"));
-		
+
+		if (this.image1 != null)
+			images.add(this.image1.concat("-200h.jpg"));
+		if (this.image2 != null)
+			images.add(this.image2.concat("-200h.jpg"));
+		if (this.image3 != null)
+			images.add(this.image3.concat("-200h.jpg"));
+
 		return images;
 	}
-	
+
 	@Transient
 	public List<String> getAllImages() {
 		List<String> images = new ArrayList<>();
-		
-		if (this.image1 != null) images.add(this.image1.concat(".jpg"));
-		if (this.image2 != null) images.add(this.image2.concat(".jpg"));
-		if (this.image3 != null) images.add(this.image3.concat(".jpg"));
-		
+
+		if (this.image1 != null)
+			images.add(this.image1.concat(".jpg"));
+		if (this.image2 != null)
+			images.add(this.image2.concat(".jpg"));
+		if (this.image3 != null)
+			images.add(this.image3.concat(".jpg"));
+
 		return images;
 	}
-	
+
 	@Transient
 	public boolean isOtherCurrency(Locale locale) {
 		// Workaround for some language locale's without Country specified
-		if (locale.getISO3Country().isEmpty()) locale = new Locale(locale.toString(), locale.toString());
-		
+		if (locale.getISO3Country().isEmpty())
+			locale = new Locale(locale.toString(), locale.toString());
+
 		try {
 			Currency currency = Currency.getInstance(this.currency);
 			Currency localeCurrency = Currency.getInstance(locale);
@@ -270,43 +282,45 @@ public class Item {
 			}
 		}
 	}
-	
+
 	@Transient
 	public String getCurrencyPrize(Locale locale) {
 		// Workaround for some language locale's without Country specified
-//		if (locale.getISO3Country().isEmpty()) locale = new Locale(locale.toString(), locale.toString());
-//		
-//		try {
-//			CurrencyLocaler localer = CurrencyLocaler.getInstance();
-//			Currency currency = Currency.getInstance(this.currency);
-//			return localer.getFormattedCurrency(prize, locale, currency);
-//			
-//		} catch (Exception e) {
-//			LocaleHelper localeHelper = LocaleHelper.getInstance();
-//			try {
-//				locale = localeHelper.getFixedLocale(locale);
-//				CurrencyLocaler localer = CurrencyLocaler.getInstance();
-//				Currency currency = Currency.getInstance(this.currency);
-//				return localer.getFormattedCurrency(prize, locale, currency);
-//			} catch (NoFixLocaleFoundException e1) {
-//				return this.prize.toString();
-//			}
-//		}
+		// if (locale.getISO3Country().isEmpty()) locale = new
+		// Locale(locale.toString(), locale.toString());
+		//
+		// try {
+		// CurrencyLocaler localer = CurrencyLocaler.getInstance();
+		// Currency currency = Currency.getInstance(this.currency);
+		// return localer.getFormattedCurrency(prize, locale, currency);
+		//
+		// } catch (Exception e) {
+		// LocaleHelper localeHelper = LocaleHelper.getInstance();
+		// try {
+		// locale = localeHelper.getFixedLocale(locale);
+		// CurrencyLocaler localer = CurrencyLocaler.getInstance();
+		// Currency currency = Currency.getInstance(this.currency);
+		// return localer.getFormattedCurrency(prize, locale, currency);
+		// } catch (NoFixLocaleFoundException e1) {
+		// return this.prize.toString();
+		// }
+		// }
 		return CurrencyLocaler.getInstance().getCurrencyFromLocale(locale, this.currency, this.prize);
 	}
-	
+
 	@Transient
 	public String getExchangeCurrencyPrize(Locale locale) {
 		// Workaround for some language locale's without Country specified
-		if (locale.getISO3Country().isEmpty()) locale = new Locale(locale.toString(), locale.toString());
-		
+		if (locale.getISO3Country().isEmpty())
+			locale = new Locale(locale.toString(), locale.toString());
+
 		try {
 			// Try to set locale Currency with the workaround
 			Currency fromCurrency = Currency.getInstance(this.currency);
 			CurrencyLocaler localer = CurrencyLocaler.getInstance();
 			Currency toCurrency = localer.getCurrencyLocaled(locale);
 			return localer.getFormattedCurrency(prize, locale, fromCurrency, toCurrency);
-			
+
 		} catch (Exception e) {
 			System.out.println("WARN!!! WARN!!! WARN!!! WARN!!! WARN!!!");
 			System.out.println("WARN!!! WARN!!! WARN!!! WARN!!! WARN!!!");
@@ -315,14 +329,14 @@ public class Item {
 			System.out.println("Will now enter in a 'safe print mode'");
 			System.out.println("Should print: Item currency, Item currency symbol, and prize formatted");
 			System.out.println(e.getMessage());
-			
+
 			Currency currency = Currency.getInstance(this.currency);
 			System.out.println("Item currency " + currency.getCurrencyCode());
 			System.out.println("Item currency symbol with locale " + currency.getSymbol(locale));
 			NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
 			numberFormat.setCurrency(currency);
 			System.out.println("Return prize formatted " + numberFormat.format(this.prize));
-			
+
 			return numberFormat.format(this.prize);
 		}
 	}
@@ -391,6 +405,10 @@ public class Item {
 		this.currency = currency;
 	}
 
+	public BigDecimal getNormalizedPrize() {
+		return normalizedPrize;
+	}
+
 	public Calendar getStartDate() {
 		return startDate;
 	}
@@ -415,14 +433,6 @@ public class Item {
 	public void setItemId(Long itemId) {
 		this.itemId = itemId;
 	}
-
-	// public Province getProvince() {
-	// return province;
-	// }
-	//
-	// public void setProvince(Province province) {
-	// this.province = province;
-	// }
 
 	public Calendar getEndDate() {
 		return endDate;
@@ -479,7 +489,7 @@ public class Item {
 	public String getImage1() {
 		return image1;
 	}
-	
+
 	@Transient
 	public String getImage1200h() {
 		return image1 != null ? this.image1.concat("-200h.jpg") : null;
@@ -488,7 +498,7 @@ public class Item {
 	public String getImage2() {
 		return image2;
 	}
-	
+
 	@Transient
 	public String getImage2200h() {
 		return image2 != null ? this.image2.concat("-200h.jpg") : null;
@@ -497,7 +507,7 @@ public class Item {
 	public String getImage3() {
 		return image3;
 	}
-	
+
 	@Transient
 	public String getImage3200h() {
 		return image3 != null ? this.image3.concat("-200h.jpg") : null;

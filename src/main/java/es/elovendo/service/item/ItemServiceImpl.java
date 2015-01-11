@@ -3,9 +3,11 @@ package es.elovendo.service.item;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -15,6 +17,7 @@ import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
 import org.elasticsearch.common.Strings;
 import org.imgscalr.Scalr;
+import org.json.simple.parser.ParseException;
 import org.owasp.html.HtmlPolicyBuilder;
 import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +47,9 @@ import es.elovendo.service.item.favorite.FavoriteService;
 import es.elovendo.service.user.UserService;
 import es.elovendo.util.Constant;
 import es.elovendo.util.IOUtil;
+import es.elovendo.util.LocaleHelper;
+import es.elovendo.util.currency.CurrencyConverter;
+import es.elovendo.util.currency.CurrencyLocaler;
 
 /**
  * Created by @adrian on 17/06/14. All rights reserved.
@@ -69,7 +75,8 @@ public class ItemServiceImpl implements ItemService {
 	public Item addItem(String userName, long subCategoryId, String title, String description, String currency,
 			double prize, byte[] mainImage, byte[] image1, byte[] image2, byte[] image3, String youtubeVideo,
 			boolean featured, boolean highlight, boolean autoRenew, String _latitude, String _longitude)
-			throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException {
+			throws InvalidItemNameMinLenghtException, UserNotFoundException, SubCategoryNotFoundException,
+			FileNotFoundException, IOException, ParseException {
 
 		User user = userService.findUserByLogin(userName);
 		// SubCategory subCategory =
@@ -101,9 +108,12 @@ public class ItemServiceImpl implements ItemService {
 		else
 			longitude = longitude - (rangeMin + (rangeMax - rangeMin) * random.nextDouble());
 
+		BigDecimal bdPrize = new BigDecimal(prize);
+		BigDecimal normalizedPrize = normalizePrize(bdPrize, currency);
+
 		// create item
-		Item item = new Item(user, subCategory, title, description, currency, new BigDecimal(prize), null, null, null,
-				null, youtubeVideo, featured, highlight, autoRenew, latitude, longitude);
+		Item item = new Item(user, subCategory, title, description, currency, bdPrize, normalizedPrize, null, null,
+				null, null, youtubeVideo, featured, highlight, autoRenew, latitude, longitude);
 
 		// Produce an unique name for an item
 		if (mainImage != null)
@@ -124,7 +134,7 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public Item addItem(ItemForm itemForm, User user, MultipartFile mainImage, MultipartFile image1,
 			MultipartFile image2, MultipartFile image3) throws SubCategoryNotFoundException,
-			InsufficientPointsException {
+			InsufficientPointsException, FileNotFoundException, IOException, ParseException {
 
 		SubCategory subCategory = categoryService.getSubCategoryBySubCategoryId(itemForm.getSubCategory());
 
@@ -167,9 +177,11 @@ public class ItemServiceImpl implements ItemService {
 			itemForm.setYoutubeVideo(wellYoutubeVideo);
 		}
 
+		BigDecimal normalizedPrize = normalizePrize(itemForm.getPrize(), itemForm.getCurrency());
+
 		Item item = new Item(user, subCategory, itemForm.getTitle(), itemForm.getDescription(), itemForm.getCurrency(),
-				itemForm.getPrize(), itemForm.getYoutubeVideo(), itemForm.isFeatured(), itemForm.isHighlight(),
-				itemForm.isAutoRenew(), itemForm.getLatitude(), itemForm.getLongitude());
+				itemForm.getPrize(), normalizedPrize, itemForm.getYoutubeVideo(), itemForm.isFeatured(),
+				itemForm.isHighlight(), itemForm.isAutoRenew(), itemForm.getLatitude(), itemForm.getLongitude());
 
 		// Save new images (produce an unique name for an item)
 		item = saveMultiPartFileImage(item, mainImage, image1, image2, image3);
@@ -304,9 +316,24 @@ public class ItemServiceImpl implements ItemService {
 	 * BigDecimals
 	 **/
 	@Override
-	public Page<Item> getAllItemsByCategory(String categoryName, int prizeMin, int prizeMax, int page, int size) {
-		BigDecimal bPrizeMin = new BigDecimal(prizeMin);
-		BigDecimal bPrizeMax = new BigDecimal(prizeMax);
+	public Page<Item> getAllItemsByCategory(String categoryName, int prizeMin, int prizeMax, Locale locale, int page, int size) {
+		
+		BigDecimal bPrizeMin;
+		BigDecimal bPrizeMax;
+		try {
+			// Get currency locale to calculate and get the normalized prize
+			LocaleHelper localeHelper = LocaleHelper.getInstance();
+			Locale localed = localeHelper.getFixedLocale(locale);
+			CurrencyLocaler currencyLocaler = CurrencyLocaler.getInstance();
+			Currency currencyLocaled = currencyLocaler.getCurrencyLocaled(localed);
+
+			bPrizeMin = prizeMin > 0 ? normalizePrize(new BigDecimal(prizeMin), currencyLocaled) : new BigDecimal(0);
+			bPrizeMax = prizeMin > prizeMax ? new BigDecimal(0) : new BigDecimal(prizeMax);
+		} catch (Exception e) {
+			logger.error("Error normalizing prizes");
+			bPrizeMin = new BigDecimal(0);
+			bPrizeMax = new BigDecimal(0);
+		}
 
 		// Protect page size
 		if (size > Constant.MAX_PAGE_SIZE)
@@ -329,7 +356,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public Page<Item> getItemsByParams(String title, String name, double dis, double lat, double lng, int prizeMin,
-			int prizeMax, int page, int size) {
+			int prizeMax, Locale locale, int page, int size) {
 
 		// Protect page size
 		if (size > Constant.MAX_PAGE_SIZE)
@@ -338,9 +365,23 @@ public class ItemServiceImpl implements ItemService {
 		// Page Request
 		PageRequest pageRequest = new PageRequest(page, size);
 
-		BigDecimal bPrizeMin = prizeMin > 0 ? new BigDecimal(prizeMin) : new BigDecimal(0);
-		BigDecimal bPrizeMax = prizeMin > prizeMax ? new BigDecimal(0) : new BigDecimal(prizeMax);
+		BigDecimal bPrizeMin;
+		BigDecimal bPrizeMax;
+		try {
+			// Get currency locale to calculate and get the normalized prize
+			LocaleHelper localeHelper = LocaleHelper.getInstance();
+			Locale localed = localeHelper.getFixedLocale(locale);
+			CurrencyLocaler currencyLocaler = CurrencyLocaler.getInstance();
+			Currency currencyLocaled = currencyLocaler.getCurrencyLocaled(localed);
 
+			bPrizeMin = prizeMin > 0 ? normalizePrize(new BigDecimal(prizeMin), currencyLocaled) : new BigDecimal(0);
+			bPrizeMax = prizeMin > prizeMax ? new BigDecimal(0) : new BigDecimal(prizeMax);
+		} catch (Exception e) {
+			logger.error("Error normalizing prizes");
+			bPrizeMin = new BigDecimal(0);
+			bPrizeMax = new BigDecimal(0);
+		}
+		
 		if (dis <= 0)
 			dis = Constant.DEFAULT_RADIUS_SEARCH;
 
@@ -357,7 +398,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public Page<Item> getItemsByParams(String title, long id, String type, double dis, double lat, double lng,
-			int prizeMin, int prizeMax, int page, int size) {
+			int prizeMin, int prizeMax, Locale locale, int page, int size) {
 
 		// Protect page size
 		if (size > Constant.MAX_PAGE_SIZE)
@@ -366,8 +407,24 @@ public class ItemServiceImpl implements ItemService {
 		// Page Request
 		PageRequest pageRequest = new PageRequest(page, size);
 
-		BigDecimal bPrizeMin = prizeMin > 0 ? new BigDecimal(prizeMin) : new BigDecimal(0);
-		BigDecimal bPrizeMax = prizeMin > prizeMax ? new BigDecimal(0) : new BigDecimal(prizeMax);
+		// Normalize the min and max prize to search in DB
+
+		BigDecimal bPrizeMin;
+		BigDecimal bPrizeMax;
+		try {
+			// Get currency locale to calculate and get the normalized prize
+			LocaleHelper localeHelper = LocaleHelper.getInstance();
+			Locale localed = localeHelper.getFixedLocale(locale);
+			CurrencyLocaler currencyLocaler = CurrencyLocaler.getInstance();
+			Currency currencyLocaled = currencyLocaler.getCurrencyLocaled(localed);
+
+			bPrizeMin = prizeMin > 0 ? normalizePrize(new BigDecimal(prizeMin), currencyLocaled) : new BigDecimal(0);
+			bPrizeMax = prizeMin > prizeMax ? new BigDecimal(0) : new BigDecimal(prizeMax);
+		} catch (Exception e) {
+			logger.error("Error normalizing prizes");
+			bPrizeMin = new BigDecimal(0);
+			bPrizeMax = new BigDecimal(0);
+		}
 
 		if (dis <= 0)
 			dis = Constant.DEFAULT_RADIUS_SEARCH;
@@ -382,6 +439,7 @@ public class ItemServiceImpl implements ItemService {
 
 	}
 
+	@Deprecated
 	@Override
 	public Page<Item> getLocaledItemsByParams(Locale locale, String title, long id, String type, double dis,
 			double lat, double lng, int prizeMin, int prizeMax, int page, int size) {
@@ -509,6 +567,31 @@ public class ItemServiceImpl implements ItemService {
 		return itemRepository.findAll(ids);
 	}
 
+	@Override
+	public Item renewItem(User user, Long itemId) throws ItemNotFoundException, NotUserItemException,
+			RenewItemAfterEndDateException {
+		Item item = getItemById(itemId);
+		if (!item.getUser().equals(user)) {
+			throw new NotUserItemException(itemId, user.getUserId());
+		}
+
+		Calendar cal = Calendar.getInstance();
+		if (item.getEndDate().after(cal)) {
+			throw new RenewItemAfterEndDateException("Manually renew of item " + itemId + " before expiring");
+		}
+
+		cal.add(Calendar.DATE, Constant.DEFAULT_RENEW_DAYS);
+		item.setEndDate(cal);
+
+		return itemRepository.save(item);
+	}
+
+	/********************************************************************************************/
+	/**
+	 * PRIVATE METHODS
+	 */
+	/********************************************************************************************/
+
 	/**
 	 * Returns randomized coordinates by the given ones.
 	 * 
@@ -602,7 +685,7 @@ public class ItemServiceImpl implements ItemService {
 	private String saveImage(Item item, byte[] bytes) {
 		String imageFileName = itemHash(item);
 
-		if (bytes != null) // FIXME: Temporal line for test
+		if (bytes != null) {
 			try {
 				/** SAVE IMAGE IN A RESOURCE FOLDER **/
 				// Create folder for
@@ -652,27 +735,26 @@ public class ItemServiceImpl implements ItemService {
 			} catch (NullPointerException | IOException | IllegalArgumentException e) {
 				logger.error("Error writing image '" + imageFileName + "' !");
 			}
+		}
 
 		return null;
 	}
 
-	@Override
-	public Item renewItem(User user, Long itemId) throws ItemNotFoundException, NotUserItemException,
-			RenewItemAfterEndDateException {
-		Item item = getItemById(itemId);
-		if (!item.getUser().equals(user)) {
-			throw new NotUserItemException(itemId, user.getUserId());
-		}
+	private BigDecimal normalizePrize(BigDecimal prize, String currency) throws FileNotFoundException, IOException,
+			ParseException {
+		return normalizePrize(prize, Currency.getInstance(currency));
+	}
 
-		Calendar cal = Calendar.getInstance();
-		if (item.getEndDate().after(cal)) {
-			throw new RenewItemAfterEndDateException("Manually renew of item " + itemId + " before expiring");
-		}
+	private BigDecimal normalizePrize(BigDecimal prize, Currency currency) throws FileNotFoundException, IOException,
+			ParseException {
+		CurrencyConverter converter = CurrencyConverter.getInstance(CurrencyConverter.MAIN_CONVERT_FILE);
+		float convertRate = converter.getConvertRate(currency, CurrencyConverter.USD);
+		float floatPrize = prize.floatValue();
+		float normalizedPrize = floatPrize / convertRate;
+		BigDecimal fixedPrize = new BigDecimal(normalizedPrize);
+		fixedPrize = fixedPrize.setScale(6, BigDecimal.ROUND_HALF_UP);
 
-		cal.add(Calendar.DATE, Constant.DEFAULT_RENEW_DAYS);
-		item.setEndDate(cal);
-
-		return itemRepository.save(item);
+		return fixedPrize;
 	}
 
 }
